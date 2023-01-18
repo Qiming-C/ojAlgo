@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.special.GammaFunction;
 import org.ojalgo.function.special.MissingMath;
 
@@ -35,12 +36,12 @@ public class ChiSquareDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return -Math.expm1(-value / TWO);
         }
 
         @Override
-        double calculateDensity(final double value) {
+        double calculateDensity( double value) {
             return Math.exp(-value / TWO) / TWO;
         }
 
@@ -50,7 +51,7 @@ public class ChiSquareDistribution extends AbstractContinuous {
 
         private final Normal myApproximation;
 
-        NormalApproximation(final double degreesOfFreedom) {
+        NormalApproximation( double degreesOfFreedom) {
 
             super(degreesOfFreedom);
 
@@ -58,7 +59,7 @@ public class ChiSquareDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return myApproximation.getDistribution(value);
         }
 
@@ -68,7 +69,7 @@ public class ChiSquareDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getQuantile(final double probability) {
+        public double getQuantile( double probability) {
             return myApproximation.getQuantile(probability);
         }
 
@@ -83,7 +84,7 @@ public class ChiSquareDistribution extends AbstractContinuous {
         }
 
         @Override
-        double calculateDensity(final double value) {
+        double calculateDensity( double value) {
             return myApproximation.getDensity(value);
         }
 
@@ -93,7 +94,7 @@ public class ChiSquareDistribution extends AbstractContinuous {
 
     static final Normal NORMAL = new Normal();
 
-    public static ChiSquareDistribution of(final int degreesOfFreedom) {
+    public static ChiSquareDistribution of( int degreesOfFreedom) {
         if (degreesOfFreedom == 2) {
             return new Degree2();
         } else if (degreesOfFreedom > 50) {
@@ -105,13 +106,13 @@ public class ChiSquareDistribution extends AbstractContinuous {
 
     private final double myDegreesOfFreedom;
 
-    ChiSquareDistribution(final double degreesOfFreedom) {
+    ChiSquareDistribution( double degreesOfFreedom) {
         super();
         myDegreesOfFreedom = degreesOfFreedom;
     }
 
     @Override
-    public final double getDensity(final double value) {
+    public final double getDensity( double value) {
         if (value <= ZERO) {
             return ZERO;
         } else {
@@ -119,25 +120,25 @@ public class ChiSquareDistribution extends AbstractContinuous {
         }
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
         return GammaFunction.Regularized.lower(myDegreesOfFreedom / TWO, value / TWO);
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myDegreesOfFreedom;
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
-        double retVal = this.approximateQuantile(probability);
+        @Var double retVal = this.approximateQuantile(probability);
 
         if (Double.isInfinite(retVal)) {
             return retVal;
         }
 
-        double reverse = this.getDistribution(retVal);
+        @Var double reverse = this.getDistribution(retVal);
 
-        double lower = retVal, higher = retVal;
+        @Var double lower = retVal, higher = retVal;
 
         if ((probability - reverse) > _0_0001) {
             do {
@@ -169,11 +170,11 @@ public class ChiSquareDistribution extends AbstractContinuous {
         return TWO * myDegreesOfFreedom;
     }
 
-    private double approximateQuantile(final double probability) {
+    private double approximateQuantile( double probability) {
         return MissingMath.power(NORMAL.getQuantile(probability) + Math.sqrt((TWO * myDegreesOfFreedom) - ONE), 2) / TWO;
     }
 
-    double calculateDensity(final double value) {
+    double calculateDensity( double value) {
 
         double halfFreedom = myDegreesOfFreedom / TWO;
 

@@ -21,8 +21,8 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.LongFunction;
-
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.NullaryFunction;
@@ -53,7 +53,7 @@ public abstract class OffHeapArray extends DenseArray<Double> {
         private final LongFunction<OffHeapArray> myConstructor;
         private final MathType myMathType;
 
-        Factory(final MathType mathType, final LongFunction<OffHeapArray> constructor) {
+        Factory( MathType mathType,  LongFunction<OffHeapArray> constructor) {
             super();
             myMathType = mathType;
             myConstructor = constructor;
@@ -70,7 +70,7 @@ public abstract class OffHeapArray extends DenseArray<Double> {
         }
 
         @Override
-        public DenseArray<Double> makeDenseArray(final long size) {
+        public DenseArray<Double> makeDenseArray( long size) {
             return myConstructor.apply(size);
         }
 
@@ -113,7 +113,7 @@ public abstract class OffHeapArray extends DenseArray<Double> {
      * @deprecated Use {@link #R032} instead
      */
     @Deprecated
-    public static OffHeapArray makeNative32(final long count) {
+    public static OffHeapArray makeNative32( long count) {
         return new OffHeapR032(count);
     }
 
@@ -121,82 +121,82 @@ public abstract class OffHeapArray extends DenseArray<Double> {
      * @deprecated Use {@link #R064} instead
      */
     @Deprecated
-    public static OffHeapArray makeNative64(final long count) {
+    public static OffHeapArray makeNative64( long count) {
         return new OffHeapR064(count);
     }
 
     private final long myCount;
 
-    OffHeapArray(final DenseArray.Factory<Double> factory, final long count) {
+    OffHeapArray( DenseArray.Factory<Double> factory,  long count) {
 
         super(factory);
 
         myCount = count;
     }
 
-    public final void add(final long index, final double addend) {
+    @Override public final void add( long index,  double addend) {
         this.set(index, this.doubleValue(index) + addend);
     }
 
-    public final void add(final long index, final float addend) {
+    @Override public final void add( long index,  float addend) {
         this.set(index, this.floatValue(index) + addend);
     }
 
-    public final void add(final long index, final long addend) {
+    @Override public final void add( long index,  long addend) {
         this.set(index, this.longValue(index) + addend);
     }
 
-    public final void add(final long index, final int addend) {
+    @Override public final void add( long index,  int addend) {
         this.set(index, this.intValue(index) + addend);
     }
 
-    public final void add(final long index, final short addend) {
+    @Override public final void add( long index,  short addend) {
         this.set(index, this.shortValue(index) + addend);
     }
 
-    public final void add(final long index, final byte addend) {
+    @Override public final void add( long index,  byte addend) {
         this.set(index, this.byteValue(index) + addend);
     }
 
-    public final long count() {
+    @Override public final long count() {
         return myCount;
     }
 
-    public void fillAll(final Double value) {
+    @Override public void fillAll( Double value) {
         this.fill(0L, this.count(), 1L, value);
     }
 
-    public void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long index,  Access1D<?> values,  long valueIndex) {
         this.set(index, values.doubleValue(valueIndex));
     }
 
-    public void fillOne(final long index, final Double value) {
+    public void fillOne( long index,  Double value) {
         this.set(index, value.doubleValue());
     }
 
-    public void fillOne(final long index, final NullaryFunction<?> supplier) {
+    public void fillOne( long index,  NullaryFunction<?> supplier) {
         this.set(index, supplier.doubleValue());
     }
 
-    public Double get(final long index) {
+    @Override public Double get( long index) {
         return Double.valueOf(this.doubleValue(index));
     }
 
-    public void modifyOne(final long index, final UnaryFunction<Double> modifier) {
+    @Override public void modifyOne( long index,  UnaryFunction<Double> modifier) {
         this.set(index, modifier.invoke(this.doubleValue(index)));
     }
 
-    public void visitOne(final long index, final VoidFunction<Double> visitor) {
+    @Override public void visitOne( long index,  VoidFunction<Double> visitor) {
         visitor.accept(this.doubleValue(index));
     }
 
     @Override
-    protected void exchange(final long firstA, final long firstB, final long step, final long count) {
+    protected void exchange( long firstA,  long firstB,  long step,  long count) {
 
-        long tmpIndexA = firstA;
-        long tmpIndexB = firstB;
+        @Var long tmpIndexA = firstA;
+        @Var long tmpIndexB = firstB;
 
-        double tmpVal;
+        @Var double tmpVal;
 
         for (long i = 0; i < count; i++) {
 
@@ -210,17 +210,17 @@ public abstract class OffHeapArray extends DenseArray<Double> {
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final Access1D<Double> left, final BinaryFunction<Double> function) {
+    void modify( long extIndex,  int intIndex,  Access1D<Double> left,  BinaryFunction<Double> function) {
         this.set(intIndex, function.invoke(left.doubleValue(extIndex), this.doubleValue(intIndex)));
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final BinaryFunction<Double> function, final Access1D<Double> right) {
+    void modify( long extIndex,  int intIndex,  BinaryFunction<Double> function,  Access1D<Double> right) {
         this.set(intIndex, function.invoke(this.doubleValue(intIndex), right.doubleValue(extIndex)));
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final UnaryFunction<Double> function) {
+    void modify( long extIndex,  int intIndex,  UnaryFunction<Double> function) {
         this.set(intIndex, function.invoke(this.doubleValue(intIndex)));
     }
 

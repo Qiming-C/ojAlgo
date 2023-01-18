@@ -21,10 +21,10 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.FunctionSet;
@@ -60,12 +60,12 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
 
         private final BasicArray.Factory<N> myDelegate;
 
-        Factory(final DenseArray.Factory<N> denseArray) {
+        Factory( DenseArray.Factory<N> denseArray) {
             super();
             myDelegate = new BasicArray.Factory<>(denseArray);
         }
 
-        public ArrayAnyD<N> copy(final AccessAnyD<?> source) {
+        @Override public ArrayAnyD<N> copy( AccessAnyD<?> source) {
             return myDelegate.copy(source).wrapInArrayAnyD(source.shape());
         }
 
@@ -75,15 +75,15 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         }
 
         @Override
-        public ArrayAnyD<N> make(final long... structure) {
+        public ArrayAnyD<N> make( long... structure) {
             return this.makeDense(structure);
         }
 
-        public ArrayAnyD<N> makeDense(final long... structure) {
+        @Override public ArrayAnyD<N> makeDense( long... structure) {
             return myDelegate.makeToBeFilled(structure).wrapInArrayAnyD(structure);
         }
 
-        public ArrayAnyD<N> makeFilled(final long[] structure, final NullaryFunction<?> supplier) {
+        @Override public ArrayAnyD<N> makeFilled( long[] structure,  NullaryFunction<?> supplier) {
 
             BasicArray<N> toBeFilled = myDelegate.makeToBeFilled(structure);
 
@@ -92,7 +92,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
             return toBeFilled.wrapInArrayAnyD(structure);
         }
 
-        public ArrayAnyD<N> makeSparse(final long... structure) {
+        @Override public ArrayAnyD<N> makeSparse( long... structure) {
             return myDelegate.makeStructuredZero(structure).wrapInArrayAnyD(structure);
         }
 
@@ -160,7 +160,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     @Deprecated
     public static final Factory<Quaternion> QUATERNION = H256;
 
-    public static <N extends Comparable<N>> ArrayAnyD.Factory<N> factory(final DenseArray.Factory<N> denseArray) {
+    public static <N extends Comparable<N>> ArrayAnyD.Factory<N> factory( DenseArray.Factory<N> denseArray) {
         return new ArrayAnyD.Factory<>(denseArray);
     }
 
@@ -172,7 +172,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         this(null, new long[0]);
     }
 
-    ArrayAnyD(final BasicArray<N> delegate, final long[] structure) {
+    ArrayAnyD( BasicArray<N> delegate,  long[] structure) {
 
         super();
 
@@ -181,103 +181,103 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public void add(final long index, final byte addend) {
+    public void add( long index,  byte addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final Comparable<?> addend) {
+    public void add( long index,  Comparable<?> addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final double addend) {
+    public void add( long index,  double addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final float addend) {
+    public void add( long index,  float addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final int addend) {
+    public void add( long index,  int addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final long addend) {
+    public void add( long index,  long addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long index, final short addend) {
+    public void add( long index,  short addend) {
         myDelegate.add(index, addend);
     }
 
     @Override
-    public void add(final long[] reference, final byte addend) {
+    public void add( long[] reference,  byte addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final Comparable<?> addend) {
+    public void add( long[] reference,  Comparable<?> addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final double addend) {
+    public void add( long[] reference,  double addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final float addend) {
+    public void add( long[] reference,  float addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final int addend) {
+    public void add( long[] reference,  int addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final long addend) {
+    public void add( long[] reference,  long addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public void add(final long[] reference, final short addend) {
+    public void add( long[] reference,  short addend) {
         myDelegate.add(StructureAnyD.index(myStructure, reference), addend);
     }
 
     @Override
-    public N aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    public N aggregateRange( long first,  long limit,  Aggregator aggregator) {
         AggregatorFunction<N> visitor = aggregator.getFunction(myDelegate.factory().aggregator());
         this.visitRange(first, limit, visitor);
         return visitor.get();
     }
 
     @Override
-    public N aggregateSet(final int dimension, final long dimensionalIndex, final Aggregator aggregator) {
+    public N aggregateSet( int dimension,  long dimensionalIndex,  Aggregator aggregator) {
         AggregatorFunction<N> visitor = aggregator.getFunction(myDelegate.factory().aggregator());
         this.visitSet(dimension, dimensionalIndex, visitor);
         return visitor.get();
     }
 
     @Override
-    public N aggregateSet(final long[] initial, final int dimension, final Aggregator aggregator) {
+    public N aggregateSet( long[] initial,  int dimension,  Aggregator aggregator) {
         AggregatorFunction<N> visitor = aggregator.getFunction(myDelegate.factory().aggregator());
         this.visitSet(initial, dimension, visitor);
         return visitor.get();
     }
 
     @Override
-    public byte byteValue(final long index) {
+    public byte byteValue( long index) {
         return myDelegate.byteValue(index);
     }
 
     @Override
-    public byte byteValue(final long... ref) {
+    public byte byteValue( long... ref) {
         return myDelegate.byteValue(StructureAnyD.index(myStructure, ref));
     }
 
@@ -287,29 +287,29 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public long count(final int dimension) {
+    public long count( int dimension) {
         return StructureAnyD.count(myStructure, dimension);
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         return myDelegate.doubleValue(index);
     }
 
     @Override
-    public double doubleValue(final long... ref) {
+    public double doubleValue( long... ref) {
         return myDelegate.doubleValue(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ArrayAnyD)) {
             return false;
         }
-        ArrayAnyD<?> other = (ArrayAnyD<?>) obj;
+        var other = (ArrayAnyD<?>) obj;
         if (!Arrays.equals(myStructure, other.myStructure)) {
             return false;
         }
@@ -323,7 +323,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         return true;
     }
 
-    public ArrayAnyD<N> expand(final int rank) {
+    @Override public ArrayAnyD<N> expand( int rank) {
 
         int r = Math.max(this.rank(), rank);
         long[] shape = new long[r];
@@ -336,67 +336,67 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public void fillAll(final N value) {
+    public void fillAll( N value) {
         myDelegate.fill(0L, this.count(), 1L, value);
     }
 
     @Override
-    public void fillAll(final NullaryFunction<?> supplier) {
+    public void fillAll( NullaryFunction<?> supplier) {
         myDelegate.fill(0L, this.count(), 1L, supplier);
     }
 
     @Override
-    public void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long index,  Access1D<?> values,  long valueIndex) {
         myDelegate.fillOne(index, values, valueIndex);
     }
 
     @Override
-    public void fillOne(final long index, final N value) {
+    public void fillOne( long index,  N value) {
         myDelegate.fillOne(index, value);
     }
 
     @Override
-    public void fillOne(final long index, final NullaryFunction<?> supplier) {
+    public void fillOne( long index,  NullaryFunction<?> supplier) {
         myDelegate.fillOne(index, supplier);
     }
 
     @Override
-    public void fillOne(final long[] reference, final N value) {
+    public void fillOne( long[] reference,  N value) {
         myDelegate.fillOne(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void fillOne(final long[] reference, final NullaryFunction<?> supplier) {
+    public void fillOne( long[] reference,  NullaryFunction<?> supplier) {
         myDelegate.fillOne(StructureAnyD.index(myStructure, reference), supplier);
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final N value) {
+    public void fillRange( long first,  long limit,  N value) {
         myDelegate.fill(first, limit, 1L, value);
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final NullaryFunction<?> supplier) {
+    public void fillRange( long first,  long limit,  NullaryFunction<?> supplier) {
         myDelegate.fill(first, limit, 1L, supplier);
     }
 
     @Override
-    public void fillSet(final int dimension, final long dimensionalIndex, final N value) {
+    public void fillSet( int dimension,  long dimensionalIndex,  N value) {
         this.loop(dimension, dimensionalIndex, (f, l, s) -> myDelegate.fill(f, l, s, value));
     }
 
     @Override
-    public void fillSet(final int dimension, final long dimensionalIndex, final NullaryFunction<?> supplier) {
+    public void fillSet( int dimension,  long dimensionalIndex,  NullaryFunction<?> supplier) {
         this.loop(dimension, dimensionalIndex, (f, l, s) -> myDelegate.fill(f, l, s, supplier));
     }
 
     @Override
-    public void fillSet(final long[] initial, final int dimension, final N value) {
+    public void fillSet( long[] initial,  int dimension,  N value) {
         this.loop(initial, dimension, (f, l, s) -> myDelegate.fill(f, l, s, value));
     }
 
     @Override
-    public void fillSet(final long[] initial, final int dimension, final NullaryFunction<?> supplier) {
+    public void fillSet( long[] initial,  int dimension,  NullaryFunction<?> supplier) {
         this.loop(initial, dimension, (f, l, s) -> myDelegate.fill(f, l, s, supplier));
     }
 
@@ -406,34 +406,34 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
      *
      * @see org.ojalgo.structure.StructureAnyD.Reshapable#flatten()
      */
-    public Array1D<N> flatten() {
+    @Override public Array1D<N> flatten() {
         return myDelegate.wrapInArray1D();
     }
 
     @Override
-    public float floatValue(final long index) {
+    public float floatValue( long index) {
         return myDelegate.floatValue(index);
     }
 
     @Override
-    public float floatValue(final long... ref) {
+    public float floatValue( long... ref) {
         return myDelegate.floatValue(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         return myDelegate.get(index);
     }
 
     @Override
-    public N get(final long... ref) {
+    public N get( long... ref) {
         return myDelegate.get(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
     public int hashCode() {
         int prime = 31;
-        int result = 1;
+        @Var int result = 1;
         result = prime * result + (myDelegate == null ? 0 : myDelegate.hashCode());
         return prime * result + Arrays.hashCode(myStructure);
     }
@@ -444,27 +444,27 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public int intValue(final long index) {
+    public int intValue( long index) {
         return myDelegate.intValue(index);
     }
 
     @Override
-    public int intValue(final long... ref) {
+    public int intValue( long... ref) {
         return myDelegate.intValue(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
-    public long longValue(final long index) {
+    public long longValue( long index) {
         return myDelegate.longValue(index);
     }
 
     @Override
-    public long longValue(final long... ref) {
+    public long longValue( long... ref) {
         return myDelegate.longValue(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
-    public double mix(final long[] reference, final BinaryFunction<N> mixer, final double addend) {
+    public double mix( long[] reference,  BinaryFunction<N> mixer,  double addend) {
         ProgrammingError.throwIfNull(mixer);
         synchronized (myDelegate) {
             double oldValue = this.doubleValue(reference);
@@ -475,7 +475,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public N mix(final long[] reference, final BinaryFunction<N> mixer, final N addend) {
+    public N mix( long[] reference,  BinaryFunction<N> mixer,  N addend) {
         ProgrammingError.throwIfNull(mixer);
         synchronized (myDelegate) {
             N oldValue = this.get(reference);
@@ -486,47 +486,47 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public void modifyAll(final UnaryFunction<N> modifier) {
+    public void modifyAll( UnaryFunction<N> modifier) {
         myDelegate.modify(0L, this.count(), 1L, modifier);
     }
 
     @Override
-    public void modifyAny(final TransformationAnyD<N> modifier) {
+    public void modifyAny( TransformationAnyD<N> modifier) {
         modifier.transform(this);
     }
 
     @Override
-    public void modifyMatching(final Access1D<N> left, final BinaryFunction<N> function) {
+    public void modifyMatching( Access1D<N> left,  BinaryFunction<N> function) {
         myDelegate.modify(0L, this.count(), 1L, left, function);
     }
 
     @Override
-    public void modifyMatching(final BinaryFunction<N> function, final Access1D<N> right) {
+    public void modifyMatching( BinaryFunction<N> function,  Access1D<N> right) {
         myDelegate.modify(0L, this.count(), 1L, function, right);
     }
 
     @Override
-    public void modifyOne(final long index, final UnaryFunction<N> modifier) {
+    public void modifyOne( long index,  UnaryFunction<N> modifier) {
         myDelegate.modifyOne(index, modifier);
     }
 
     @Override
-    public void modifyOne(final long[] reference, final UnaryFunction<N> modifier) {
+    public void modifyOne( long[] reference,  UnaryFunction<N> modifier) {
         myDelegate.modifyOne(StructureAnyD.index(myStructure, reference), modifier);
     }
 
     @Override
-    public void modifyRange(final long first, final long limit, final UnaryFunction<N> modifier) {
+    public void modifyRange( long first,  long limit,  UnaryFunction<N> modifier) {
         myDelegate.modify(first, limit, 1L, modifier);
     }
 
     @Override
-    public void modifySet(final int dimension, final long dimensionalIndex, final UnaryFunction<N> modifier) {
+    public void modifySet( int dimension,  long dimensionalIndex,  UnaryFunction<N> modifier) {
         this.loop(dimension, dimensionalIndex, (f, l, s) -> myDelegate.modify(f, l, s, modifier));
     }
 
     @Override
-    public void modifySet(final long[] initial, final int dimension, final UnaryFunction<N> modifier) {
+    public void modifySet( long[] initial,  int dimension,  UnaryFunction<N> modifier) {
         this.loop(initial, dimension, (f, l, s) -> myDelegate.modify(f, l, s, modifier));
     }
 
@@ -536,7 +536,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public Array1D<N> reduce(final int dimension, final Aggregator aggregator) {
+    public Array1D<N> reduce( int dimension,  Aggregator aggregator) {
         long reduceToCount = StructureAnyD.count(myStructure, dimension);
         Array1D<N> retVal = myDelegate.factory().make(reduceToCount).wrapInArray1D();
         this.reduce(dimension, aggregator, retVal);
@@ -544,7 +544,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public Array2D<N> reduce(final int rowDimension, final int columnDimension, final Aggregator aggregator) {
+    public Array2D<N> reduce( int rowDimension,  int columnDimension,  Aggregator aggregator) {
 
         long[] structure = this.shape();
 
@@ -576,11 +576,11 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         return retVal;
     }
 
-    public void reset() {
+    @Override public void reset() {
         myDelegate.reset();
     }
 
-    public ArrayAnyD<N> reshape(final long... shape) {
+    @Override public ArrayAnyD<N> reshape( long... shape) {
         if (StructureAnyD.count(shape) != this.count()) {
             throw new IllegalArgumentException();
         }
@@ -588,72 +588,72 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public void set(final long index, final byte value) {
+    public void set( long index,  byte value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final Comparable<?> value) {
+    public void set( long index,  Comparable<?> value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final double value) {
+    public void set( long index,  double value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final float value) {
+    public void set( long index,  float value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final int value) {
+    public void set( long index,  int value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final long value) {
+    public void set( long index,  long value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long index, final short value) {
+    public void set( long index,  short value) {
         myDelegate.set(index, value);
     }
 
     @Override
-    public void set(final long[] reference, final byte value) {
+    public void set( long[] reference,  byte value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final Comparable<?> value) {
+    public void set( long[] reference,  Comparable<?> value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final double value) {
+    public void set( long[] reference,  double value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final float value) {
+    public void set( long[] reference,  float value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final int value) {
+    public void set( long[] reference,  int value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final long value) {
+    public void set( long[] reference,  long value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
     @Override
-    public void set(final long[] reference, final short value) {
+    public void set( long[] reference,  short value) {
         myDelegate.set(StructureAnyD.index(myStructure, reference), value);
     }
 
@@ -663,26 +663,26 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public short shortValue(final long index) {
+    public short shortValue( long index) {
         return myDelegate.shortValue(index);
     }
 
     @Override
-    public short shortValue(final long... ref) {
+    public short shortValue( long... ref) {
         return myDelegate.shortValue(StructureAnyD.index(myStructure, ref));
     }
 
     @Override
-    public Array1D<N> sliceRange(final long first, final long limit) {
+    public Array1D<N> sliceRange( long first,  long limit) {
         return myDelegate.wrapInArray1D().sliceRange(first, limit);
     }
 
     @Override
-    public Array1D<N> sliceSet(final long[] initial, final int dimension) {
+    public Array1D<N> sliceSet( long[] initial,  int dimension) {
 
-        AtomicLong first = new AtomicLong();
-        AtomicLong limit = new AtomicLong();
-        AtomicLong step = new AtomicLong();
+        var first = new AtomicLong();
+        var limit = new AtomicLong();
+        var step = new AtomicLong();
 
         this.loop(initial, dimension, (f, l, s) -> {
             first.set(f);
@@ -693,11 +693,11 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         return new Array1D<>(myDelegate, first.longValue(), limit.longValue(), step.longValue());
     }
 
-    public ArrayAnyD<N> squeeze() {
+    @Override public ArrayAnyD<N> squeeze() {
 
         long[] oldShape = this.shape();
 
-        int notOne = 0;
+        @Var int notOne = 0;
         for (int i = 0; i < oldShape.length; i++) {
             if (oldShape[i] > 1) {
                 notOne++;
@@ -719,14 +719,14 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         return this.reshape(shape);
     }
 
-    public void supplyTo(final MutateAnyD receiver) {
+    @Override public void supplyTo( MutateAnyD receiver) {
         myDelegate.supplyTo(receiver);
     }
 
     @Override
     public String toString() {
 
-        StringBuilder retVal = new StringBuilder();
+        var retVal = new StringBuilder();
 
         retVal.append('<');
         retVal.append(myStructure[0]);
@@ -736,7 +736,7 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
         }
         retVal.append('>');
 
-        int tmpLength = (int) this.count();
+        var tmpLength = (int) this.count();
         if (tmpLength >= 1 && tmpLength <= 100) {
             retVal.append(' ');
             retVal.append(myDelegate.toString());
@@ -746,32 +746,32 @@ public final class ArrayAnyD<N extends Comparable<N>> implements AccessAnyD.Visi
     }
 
     @Override
-    public void visitAll(final VoidFunction<N> visitor) {
+    public void visitAll( VoidFunction<N> visitor) {
         myDelegate.visit(0L, this.count(), 1L, visitor);
     }
 
     @Override
-    public void visitOne(final long index, final VoidFunction<N> visitor) {
+    public void visitOne( long index,  VoidFunction<N> visitor) {
         myDelegate.visitOne(index, visitor);
     }
 
     @Override
-    public void visitOne(final long[] reference, final VoidFunction<N> visitor) {
+    public void visitOne( long[] reference,  VoidFunction<N> visitor) {
         myDelegate.visitOne(StructureAnyD.index(myStructure, reference), visitor);
     }
 
     @Override
-    public void visitRange(final long first, final long limit, final VoidFunction<N> visitor) {
+    public void visitRange( long first,  long limit,  VoidFunction<N> visitor) {
         myDelegate.visit(first, limit, 1L, visitor);
     }
 
     @Override
-    public void visitSet(final int dimension, final long dimensionalIndex, final VoidFunction<N> visitor) {
+    public void visitSet( int dimension,  long dimensionalIndex,  VoidFunction<N> visitor) {
         this.loop(dimension, dimensionalIndex, (f, l, s) -> myDelegate.visit(f, l, s, visitor));
     }
 
     @Override
-    public void visitSet(final long[] initial, final int dimension, final VoidFunction<N> visitor) {
+    public void visitSet( long[] initial,  int dimension,  VoidFunction<N> visitor) {
         this.loop(initial, dimension, (f, l, s) -> myDelegate.visit(f, l, s, visitor));
     }
 

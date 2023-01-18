@@ -23,18 +23,17 @@ package org.ojalgo.random.process;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.decomposition.Eigenvalue;
 import org.ojalgo.matrix.decomposition.MatrixDecomposition;
 import org.ojalgo.matrix.decomposition.SingularValue;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
-import org.ojalgo.matrix.store.PhysicalStore.Factory;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.random.Normal1D;
 import org.ojalgo.type.keyvalue.EntryPair;
@@ -65,16 +64,16 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
 
     }
 
-    private static final Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
+    private static final PhysicalStore.Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
 
     private static <K extends Comparable<? super K>> Mean<K> mean() {
         return new Mean<K>() {
 
-            public void calibrate(final Collection<KeyedPrimitive<K>> observations) {
+            @Override public void calibrate( Collection<KeyedPrimitive<K>> observations) {
 
             }
 
-            public double invoke(final K anArg) {
+            @Override public double invoke( K anArg) {
                 return ZERO;
             }
         };
@@ -85,19 +84,19 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
 
     private TreeSet<KeyedPrimitive<K>> myObservations;
 
-    public GaussianField(final Covariance<K> covarFunc) {
+    public GaussianField( Covariance<K> covarFunc) {
         this((Mean<K>) GaussianField.mean(), covarFunc, new TreeSet<KeyedPrimitive<K>>());
     }
 
-    public GaussianField(final Mean<K> meanFunc, final Covariance<K> covarFunc) {
+    public GaussianField( Mean<K> meanFunc,  Covariance<K> covarFunc) {
         this(meanFunc, covarFunc, new TreeSet<KeyedPrimitive<K>>());
     }
 
-    GaussianField(final Covariance<K> covarFunc, final TreeSet<KeyedPrimitive<K>> observations) {
+    GaussianField( Covariance<K> covarFunc,  TreeSet<KeyedPrimitive<K>> observations) {
         this((Mean<K>) GaussianField.mean(), covarFunc, observations);
     }
 
-    GaussianField(final Mean<K> meanFunc, final Covariance<K> covarFunc, final TreeSet<KeyedPrimitive<K>> observations) {
+    GaussianField( Mean<K> meanFunc,  Covariance<K> covarFunc,  TreeSet<KeyedPrimitive<K>> observations) {
 
         super();
 
@@ -106,7 +105,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         myObservations = observations;
     }
 
-    public void addObservation(final K key, final double value) {
+    public void addObservation( K key,  double value) {
         myObservations.add(EntryPair.of(key, value));
     }
 
@@ -115,7 +114,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         myCovarianceFunction.calibrate(myObservations, myMeanFunction);
     }
 
-    public Normal1D getDistribution(final boolean cleanCovariances, final K... evaluationPoint) {
+    public Normal1D getDistribution( boolean cleanCovariances,  K... evaluationPoint) {
 
         MatrixStore<Double> tmpRegCoef = this.getRegressionCoefficients(evaluationPoint);
 
@@ -142,7 +141,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
             double tmpLargest = tmpD.doubleValue(0, 0);
             double tmpLimit = PrimitiveMath.MAX.invoke(PrimitiveMath.MACHINE_EPSILON * tmpLargest, 1E-12);
 
-            int tmpLength = (int) Math.min(tmpD.countRows(), tmpD.countColumns());
+            var tmpLength = (int) Math.min(tmpD.countRows(), tmpD.countColumns());
             for (int ij = 0; ij < tmpLength; ij++) {
                 if (tmpD.doubleValue(ij, ij) < tmpLimit) {
                     tmpD.set(ij, ij, tmpLimit);
@@ -155,11 +154,11 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         return new Normal1D(tmpLocations, tmpCovariances);
     }
 
-    public Normal1D getDistribution(final K... evaluationPoint) {
+    public Normal1D getDistribution( K... evaluationPoint) {
         return this.getDistribution(false, evaluationPoint);
     }
 
-    MatrixStore<Double> getC11(final K[] args) {
+    MatrixStore<Double> getC11( K[] args) {
 
         int tmpLength = args.length;
 
@@ -174,7 +173,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         return retVal;
     }
 
-    MatrixStore<Double> getC12(final K[] args) {
+    MatrixStore<Double> getC12( K[] args) {
 
         List<KeyedPrimitive<K>> tmpObservations = this.getObservations();
 
@@ -192,7 +191,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         return retVal;
     }
 
-    MatrixStore<Double> getC21(final K[] args) {
+    MatrixStore<Double> getC21( K[] args) {
 
         List<KeyedPrimitive<K>> tmpObservations = this.getObservations();
 
@@ -232,7 +231,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         return retVal;
     }
 
-    MatrixStore<Double> getM1(final K[] args) {
+    MatrixStore<Double> getM1( K[] args) {
 
         int tmpLength = args.length;
 
@@ -268,8 +267,8 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
 
         Primitive64Store retVal = FACTORY.make(tmpSize, 1);
 
-        KeyedPrimitive<K> tmpObservation;
-        double tmpDiff;
+        @Var KeyedPrimitive<K> tmpObservation;
+        @Var double tmpDiff;
         for (int i = 0; i < tmpSize; i++) {
             tmpObservation = tmpObservations.get(i);
             tmpDiff = tmpObservation.doubleValue() - myMeanFunction.invoke(tmpObservation.getKey());
@@ -283,7 +282,7 @@ public final class GaussianField<K extends Comparable<? super K>> extends Random
         return new ArrayList<>(myObservations);
     }
 
-    MatrixStore<Double> getRegressionCoefficients(final K[] args) {
+    MatrixStore<Double> getRegressionCoefficients( K[] args) {
         return this.getC22().getSolution(this.getC21(args)).transpose();
     }
 

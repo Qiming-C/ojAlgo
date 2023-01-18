@@ -35,7 +35,7 @@ public class TransformationFormat<N extends Number & Comparable<N>> extends Numb
     private final UnaryFunction<N> myInverseFunc;
     private final NumberFormat myFormat;
 
-    public TransformationFormat(final UnaryFunction<N> transformer, final NumberFormat format, final UnaryFunction<N> inverse) {
+    public TransformationFormat( UnaryFunction<N> transformer,  NumberFormat format,  UnaryFunction<N> inverse) {
 
         super();
 
@@ -45,23 +45,23 @@ public class TransformationFormat<N extends Number & Comparable<N>> extends Numb
     }
 
     @Override
-    public StringBuffer format(final double number, final StringBuffer toAppendTo, final FieldPosition pos) {
+    public StringBuffer format( double number,  StringBuffer toAppendTo,  FieldPosition pos) {
         return myFormat.format(myTransfoFunc.invoke(number), toAppendTo, pos);
     }
 
     @Override
-    public StringBuffer format(final long number, final StringBuffer toAppendTo, final FieldPosition pos) {
+    public StringBuffer format( long number,  StringBuffer toAppendTo,  FieldPosition pos) {
         return myFormat.format(myTransfoFunc.invoke(number), toAppendTo, pos);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public StringBuffer format(final Object obj, final StringBuffer toAppendTo, final FieldPosition pos) {
+    public StringBuffer format( Object obj,  StringBuffer toAppendTo,  FieldPosition pos) {
         return myFormat.format(myTransfoFunc.invoke((N) obj), toAppendTo, pos);
     }
 
     @Override
-    public Number parse(final String source, final ParsePosition parsePosition) {
+    public Number parse( String source,  ParsePosition parsePosition) {
         return myInverseFunc.invoke((N) myFormat.parseObject(source, parsePosition));
     }
 

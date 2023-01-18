@@ -21,6 +21,7 @@
  */
 package org.ojalgo.optimisation.integer;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.function.multiary.MultiaryFunction;
 import org.ojalgo.optimisation.ExpressionsBasedModel;
@@ -40,21 +41,21 @@ public final class GomorySolver extends GenericSolver {
 
     public static final class ModelIntegration extends ExpressionsBasedModel.Integration<GomorySolver> {
 
-        public GomorySolver build(final ExpressionsBasedModel model) {
+        @Override public GomorySolver build( ExpressionsBasedModel model) {
             return new GomorySolver(model);
         }
 
-        public boolean isCapable(final ExpressionsBasedModel model) {
+        @Override public boolean isCapable( ExpressionsBasedModel model) {
             return model.isAnyVariableInteger() && !model.isAnyConstraintQuadratic();
         }
 
         @Override
-        public Result toModelState(final Result solverState, final ExpressionsBasedModel model) {
+        public Result toModelState( Result solverState,  ExpressionsBasedModel model) {
             return solverState;
         }
 
         @Override
-        public Result toSolverState(final Result modelState, final ExpressionsBasedModel model) {
+        public Result toSolverState( Result modelState,  ExpressionsBasedModel model) {
             return modelState;
         }
 
@@ -72,7 +73,7 @@ public final class GomorySolver extends GenericSolver {
     private final MultiaryFunction.TwiceDifferentiable<Double> myFunction;
     private final ExpressionsBasedModel myIntegerModel;
 
-    GomorySolver(final ExpressionsBasedModel model) {
+    GomorySolver( ExpressionsBasedModel model) {
 
         super(model.options);
 
@@ -80,14 +81,14 @@ public final class GomorySolver extends GenericSolver {
         myFunction = myIntegerModel.limitObjective(null, null).toFunction();
     }
 
-    public Result solve(final Result kickStarter) {
+    @Override public Result solve( Result kickStarter) {
 
         ModelStrategy strategy = IntegerStrategy.DEFAULT.withGMICutConfiguration(GMI_CUT_CONFIGURATION).newModelStrategy(myIntegerModel);
 
         ExpressionsBasedModel iteratorModel = myIntegerModel.snapshot();
         NodeSolver iterativeSolver = iteratorModel.prepare(NodeSolver::new);
 
-        Result retVal = iterativeSolver.solve();
+        @Var Result retVal = iterativeSolver.solve();
         this.incrementIterationsCount();
         if (this.isLogProgress()) {
             this.log("Iteration {}: {}", this.countIterations(), retVal);
@@ -106,7 +107,7 @@ public final class GomorySolver extends GenericSolver {
         return retVal;
     }
 
-    protected Optimisation.Result buildResult() {
+    Optimisation.Result buildResult() {
 
         Access1D<?> solution = this.extractSolution();
         double value = this.evaluateFunction(solution);
@@ -115,14 +116,14 @@ public final class GomorySolver extends GenericSolver {
         return new Optimisation.Result(state, value, solution);
     }
 
-    protected double evaluateFunction(final Access1D<?> solution) {
+    double evaluateFunction( Access1D<?> solution) {
         if (myFunction != null && solution != null && myFunction.arity() == solution.count()) {
             return myFunction.invoke(Access1D.asPrimitive1D(solution)).doubleValue();
         }
         return Double.NaN;
     }
 
-    protected Access1D<?> extractSolution() {
+    Access1D<?> extractSolution() {
         return myIntegerModel.getVariableValues();
     }
 

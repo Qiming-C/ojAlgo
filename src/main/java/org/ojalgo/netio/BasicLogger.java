@@ -21,14 +21,19 @@
  */
 package org.ojalgo.netio;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.errorprone.annotations.InlineMe;
+import com.google.errorprone.annotations.Var;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
-
 import org.ojalgo.matrix.MatrixC128;
 import org.ojalgo.scalar.ComplexNumber;
 import org.ojalgo.scalar.Scalar;
@@ -63,17 +68,17 @@ public interface BasicLogger {
 
         private final PrintWriter myPrintWriter;
 
-        public BasicWriter(final OutputStream out) {
+        public BasicWriter( OutputStream out) {
+            super();
+            myPrintWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(out, UTF_8)), true);
+        }
+
+        public BasicWriter( Writer out) {
             super();
             myPrintWriter = new PrintWriter(out, true);
         }
 
-        public BasicWriter(final Writer out) {
-            super();
-            myPrintWriter = new PrintWriter(out, true);
-        }
-
-        public Optional<Writer> asWriter() {
+        @Override public Optional<Writer> asWriter() {
             return Optional.of(this);
         }
 
@@ -87,61 +92,61 @@ public interface BasicLogger {
             myPrintWriter.flush();
         }
 
-        public void print(final boolean value) {
+        @Override public void print( boolean value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final byte value) {
+        @Override public void print( byte value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final char value) {
+        @Override public void print( char value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final double value) {
+        @Override public void print( double value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final float value) {
+        @Override public void print( float value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final int value) {
+        @Override public void print( int value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final long value) {
+        @Override public void print( long value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final Object object) {
+        @Override public void print( Object object) {
             myPrintWriter.append(object.toString());
         }
 
-        public void print(final short value) {
+        @Override public void print( short value) {
             myPrintWriter.print(value);
         }
 
-        public void print(final Throwable throwable) {
+        @Override public void print( Throwable throwable) {
             throwable.printStackTrace(myPrintWriter);
         }
 
-        public void printf(final String format, final Object... args) {
+        @Override public void printf( String format,  Object... args) {
             myPrintWriter.printf(format, args);
             myPrintWriter.println();
         }
 
-        public void println() {
+        @Override public void println() {
             myPrintWriter.println();
         }
 
-        public void println(final Object object) {
+        @Override public void println( Object object) {
             myPrintWriter.println(object);
         }
 
         @Override
-        public void write(final char[] cbuf, final int off, final int len) throws IOException {
+        public void write( char[] cbuf,  int off,  int len) throws IOException {
             myPrintWriter.write(cbuf, off, len);
         }
 
@@ -164,43 +169,43 @@ public interface BasicLogger {
 
     class NotNull {
 
-        static void columns(final BasicLogger appender, final int width, final Object... columns) {
+        static void columns( BasicLogger appender,  int width,  Object... columns) {
             if (appender != null) {
                 appender.columns(width, columns);
             }
         }
 
-        static void println(final BasicLogger appender) {
+        static void println( BasicLogger appender) {
             if (appender != null) {
                 appender.println();
             }
         }
 
-        static void println(final BasicLogger appender, final int tabs, final String messagePattern, final Object... arguments) {
+        static void println( BasicLogger appender,  int tabs,  String messagePattern,  Object... arguments) {
             if (appender != null) {
                 appender.println(tabs, messagePattern, arguments);
             }
         }
 
-        static void println(final BasicLogger appender, final Object message) {
+        static void println( BasicLogger appender,  Object message) {
             if (appender != null) {
                 appender.println(message);
             }
         }
 
-        static void println(final BasicLogger appender, final String messagePattern, final Object... arguments) {
+        static void println( BasicLogger appender,  String messagePattern,  Object... arguments) {
             if (appender != null) {
                 appender.println(messagePattern, arguments);
             }
         }
 
-        static void println(final BasicLogger appender, final Throwable throwable, final String messagePattern, final Object... arguments) {
+        static void println( BasicLogger appender,  Throwable throwable,  String messagePattern,  Object... arguments) {
             if (appender != null) {
                 appender.println(throwable, messagePattern, arguments);
             }
         }
 
-        static void printmtrx(final BasicLogger appender, final String message, final Access2D<?> matrix, final NumberContext context) {
+        static void printmtrx( BasicLogger appender,  String message,  Access2D<?> matrix,  NumberContext context) {
             if (message != null) {
                 appender.printmtrx(message, matrix, context);
             }
@@ -218,16 +223,16 @@ public interface BasicLogger {
 
         static final NumberContext MATRIX_ELEMENT_CONTEXT = NumberContext.ofScale(6);
 
-        private static void printmtrx(final BasicLogger appender, final Access2D<?> matrix, final NumberContext context, final boolean plain) {
+        private static void printmtrx( BasicLogger appender,  Access2D<?> matrix,  NumberContext context,  boolean plain) {
 
-            final int tmpRowDim = (int) matrix.countRows();
-            final int tmpColDim = (int) matrix.countColumns();
+             var tmpRowDim = (int) matrix.countRows();
+             var tmpColDim = (int) matrix.countColumns();
 
-            final String[][] tmpElements = new String[tmpRowDim][tmpColDim];
+             String[][] tmpElements = new String[tmpRowDim][tmpColDim];
 
-            int tmpWidth = 0;
-            Comparable<?> tmpElementNumber;
-            String tmpElementString;
+            @Var int tmpWidth = 0;
+            @Var Comparable<?> tmpElementNumber;
+            @Var String tmpElementString;
             for (int j = 0; j < tmpColDim; j++) {
                 for (int i = 0; i < tmpRowDim; i++) {
                     tmpElementNumber = matrix.get(i, j);
@@ -238,7 +243,7 @@ public interface BasicLogger {
             }
             tmpWidth++;
 
-            int tmpPadding;
+            @Var int tmpPadding;
             for (int i = 0; i < tmpRowDim; i++) {
                 for (int j = 0; j < tmpColDim; j++) {
                     tmpElementString = tmpElements[i][j];
@@ -253,7 +258,7 @@ public interface BasicLogger {
 
         }
 
-        private static String toString(final Comparable<?> number, final NumberContext context, final boolean plain) {
+        private static String toString( Comparable<?> number,  NumberContext context,  boolean plain) {
             if (plain) {
                 if (number instanceof Scalar<?>) {
                     return ((Scalar<?>) number).toPlainString(context);
@@ -279,7 +284,7 @@ public interface BasicLogger {
             }
         }
 
-        static void printmtrx(final BasicLogger appender, final String message, final Access2D<?> matrix, final NumberContext context) {
+        static void printmtrx( BasicLogger appender,  String message,  Access2D<?> matrix,  NumberContext context) {
             appender.println(message);
             if (matrix.count() > 0L) {
                 if (matrix instanceof MatrixC128 || matrix.get(0, 0) instanceof ComplexNumber) {
@@ -298,44 +303,44 @@ public interface BasicLogger {
 
     BasicLogger NULL = new BasicLogger() {
 
-        public Optional<Writer> asWriter() {
+        @Override public Optional<Writer> asWriter() {
             return Optional.empty();
         }
 
-        public void print(final boolean value) {
+        @Override public void print( boolean value) {
         }
 
-        public void print(final byte value) {
+        @Override public void print( byte value) {
         }
 
-        public void print(final char value) {
+        @Override public void print( char value) {
         }
 
-        public void print(final double value) {
+        @Override public void print( double value) {
         }
 
-        public void print(final float value) {
+        @Override public void print( float value) {
         }
 
-        public void print(final int value) {
+        @Override public void print( int value) {
         }
 
-        public void print(final long value) {
+        @Override public void print( long value) {
         }
 
-        public void print(final Object object) {
+        @Override public void print( Object object) {
         }
 
-        public void print(final short value) {
+        @Override public void print( short value) {
         }
 
-        public void print(final Throwable throwable) {
+        @Override public void print( Throwable throwable) {
         }
 
-        public void printf(final String format, final Object... args) {
+        @Override public void printf( String format,  Object... args) {
         }
 
-        public void println() {
+        @Override public void println() {
         }
 
     };
@@ -347,52 +352,55 @@ public interface BasicLogger {
     /**
      * @deprecated Use {@link #debugColumns(int,Object...)} instead
      */
-    @Deprecated
-    static void debug(final int width, final Object... columns) {
+    @InlineMe(replacement = "BasicLogger.debugColumns(width, columns)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void debug( int width,  Object... columns) {
         BasicLogger.debugColumns(width, columns);
     }
 
-    static void debug(final int tabs, final String message, final Object... arguments) {
+    static void debug( int tabs,  String message,  Object... arguments) {
         NotNull.println(DEBUG, tabs, message, arguments);
     }
 
-    static void debug(final Object message) {
+    static void debug( Object message) {
         NotNull.println(DEBUG, message);
     }
 
     /**
      * @deprecated Use {@link #debugMatrix(String,Access2D<?>)} instead
      */
-    @Deprecated
-    static void debug(final String message, final Access2D<?> matrix) {
+    @InlineMe(replacement = "BasicLogger.debugMatrix(message, matrix)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void debug( String message,  Access2D<?> matrix) {
         BasicLogger.debugMatrix(message, matrix);
     }
 
     /**
      * @deprecated Use {@link #debugMatrix(String,Access2D<?>,NumberContext)} instead
      */
-    @Deprecated
-    static void debug(final String message, final Access2D<?> matrix, final NumberContext context) {
+    @InlineMe(replacement = "BasicLogger.debugMatrix(message, matrix, context)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void debug( String message,  Access2D<?> matrix,  NumberContext context) {
         BasicLogger.debugMatrix(message, matrix, context);
     }
 
-    static void debug(final String message, final Object... arguments) {
+    static void debug( String message,  Object... arguments) {
         NotNull.println(DEBUG, message, arguments);
     }
 
-    static void debug(final Throwable throwable, final String message, final Object... arguments) {
+    static void debug( Throwable throwable,  String message,  Object... arguments) {
         NotNull.println(DEBUG, throwable, message, arguments);
     }
 
-    static void debugColumns(final int width, final Object... columns) {
+    static void debugColumns( int width,  Object... columns) {
         NotNull.columns(DEBUG, width, columns);
     }
 
-    static void debugMatrix(final String message, final Access2D<?> matrix) {
+    static void debugMatrix( String message,  Access2D<?> matrix) {
         NotNull.printmtrx(DEBUG, message, matrix, PrivateDetails.MATRIX_ELEMENT_CONTEXT);
     }
 
-    static void debugMatrix(final String message, final Access2D<?> matrix, final NumberContext context) {
+    static void debugMatrix( String message,  Access2D<?> matrix,  NumberContext context) {
         NotNull.printmtrx(DEBUG, message, matrix, context);
     }
 
@@ -403,52 +411,55 @@ public interface BasicLogger {
     /**
      * @deprecated Use {@link #errorColumns(int,Object...)} instead
      */
-    @Deprecated
-    static void error(final int width, final Object... columns) {
+    @InlineMe(replacement = "BasicLogger.errorColumns(width, columns)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void error( int width,  Object... columns) {
         BasicLogger.errorColumns(width, columns);
     }
 
-    static void error(final int tabs, final String message, final Object... arguments) {
+    static void error( int tabs,  String message,  Object... arguments) {
         NotNull.println(ERROR, tabs, message, arguments);
     }
 
-    static void error(final Object message) {
+    static void error( Object message) {
         NotNull.println(ERROR, message);
     }
 
     /**
      * @deprecated Use {@link #errorMatrix(String,Access2D<?>)} instead
      */
-    @Deprecated
-    static void error(final String message, final Access2D<?> matrix) {
+    @InlineMe(replacement = "BasicLogger.errorMatrix(message, matrix)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void error( String message,  Access2D<?> matrix) {
         BasicLogger.errorMatrix(message, matrix);
     }
 
     /**
      * @deprecated Use {@link #errorMatrix(String,Access2D<?>,NumberContext)} instead
      */
-    @Deprecated
-    static void error(final String message, final Access2D<?> matrix, final NumberContext context) {
+    @InlineMe(replacement = "BasicLogger.errorMatrix(message, matrix, context)", imports = "org.ojalgo.netio.BasicLogger")
+@Deprecated
+    static void error( String message,  Access2D<?> matrix,  NumberContext context) {
         BasicLogger.errorMatrix(message, matrix, context);
     }
 
-    static void error(final String message, final Object... arguments) {
+    static void error( String message,  Object... arguments) {
         NotNull.println(ERROR, message, arguments);
     }
 
-    static void error(final Throwable throwable, final String message, final Object... arguments) {
+    static void error( Throwable throwable,  String message,  Object... arguments) {
         NotNull.println(ERROR, throwable, message, arguments);
     }
 
-    static void errorColumns(final int width, final Object... columns) {
+    static void errorColumns( int width,  Object... columns) {
         NotNull.columns(ERROR, width, columns);
     }
 
-    static void errorMatrix(final String message, final Access2D<?> matrix) {
+    static void errorMatrix( String message,  Access2D<?> matrix) {
         NotNull.printmtrx(ERROR, message, matrix, PrivateDetails.MATRIX_ELEMENT_CONTEXT);
     }
 
-    static void errorMatrix(final String message, final Access2D<?> matrix, final NumberContext context) {
+    static void errorMatrix( String message,  Access2D<?> matrix,  NumberContext context) {
         NotNull.printmtrx(ERROR, message, matrix, context);
     }
 
@@ -460,11 +471,11 @@ public interface BasicLogger {
      * @param width The exact witdth of each column
      * @param columns The column objects, {@link #toString()} and then fix the length/width
      */
-    default void columns(final int width, final Object... columns) {
+    default void columns( int width,  Object... columns) {
 
         char[] chars = new char[width];
         Arrays.fill(chars, ASCII.SP);
-        String padder = new String(chars);
+        var padder = new String(chars);
 
         String[] strings = new String[columns.length];
 
@@ -507,7 +518,7 @@ public interface BasicLogger {
 
     void println();
 
-    default void println(final int tabs, final String message, final Object... args) {
+    default void println( int tabs,  String message,  Object... args) {
         for (int i = 0; i < tabs; i++) {
             this.print(ASCII.HT);
         }
@@ -515,27 +526,27 @@ public interface BasicLogger {
         this.println();
     }
 
-    default void println(final Object object) {
+    default void println( Object object) {
         this.print(object);
         this.println();
     }
 
-    default void println(final String message, final Object... args) {
+    default void println( String message,  Object... args) {
         this.print(TypeUtils.format(message, args));
         this.println();
     }
 
-    default void println(final Throwable throwable, final String message, final Object... args) {
+    default void println( Throwable throwable,  String message,  Object... args) {
         this.print(TypeUtils.format(message, args));
         this.println();
         this.print(throwable);
     }
 
-    default void printmtrx(final String message, final Access2D<?> matrix) {
+    default void printmtrx( String message,  Access2D<?> matrix) {
         BasicLogger.PrivateDetails.printmtrx(this, message, matrix, PrivateDetails.MATRIX_ELEMENT_CONTEXT);
     }
 
-    default void printmtrx(final String message, final Access2D<?> matrix, final NumberContext context) {
+    default void printmtrx( String message,  Access2D<?> matrix,  NumberContext context) {
         BasicLogger.PrivateDetails.printmtrx(this, message, matrix, context);
     }
 

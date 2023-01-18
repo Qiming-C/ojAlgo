@@ -43,7 +43,7 @@ public interface ParameterFunction<N extends Comparable<N>> extends BasicFunctio
             this(null, 0);
         }
 
-        FixedParameter(final ParameterFunction<N> function, final int param) {
+        FixedParameter( ParameterFunction<N> function,  int param) {
 
             super();
 
@@ -59,83 +59,83 @@ public interface ParameterFunction<N extends Comparable<N>> extends BasicFunctio
             return myParameter;
         }
 
-        public double invoke(final double arg) {
+        @Override public double invoke( double arg) {
             return myFunction.invoke(arg, myParameter);
         }
 
-        public float invoke(final float arg) {
+        @Override public float invoke( float arg) {
             return myFunction.invoke(arg, myParameter);
         }
 
-        public N invoke(final N arg) {
+        @Override public N invoke( N arg) {
             return myFunction.invoke(arg, myParameter);
         }
 
     }
 
-    default ParameterFunction<N> andThen(final UnaryFunction<N> after) {
+    default ParameterFunction<N> andThen( UnaryFunction<N> after) {
         ProgrammingError.throwIfNull(after);
         return new ParameterFunction<N>() {
 
-            public double invoke(final double arg, final int param) {
+            @Override public double invoke( double arg,  int param) {
                 return after.invoke(ParameterFunction.this.invoke(arg, param));
             }
 
-            public float invoke(final float arg, final int param) {
+            @Override public float invoke( float arg,  int param) {
                 return after.invoke(ParameterFunction.this.invoke(arg, param));
             }
 
-            public N invoke(final N arg, final int param) {
+            @Override public N invoke( N arg,  int param) {
                 return after.invoke(ParameterFunction.this.invoke(arg, param));
             }
 
         };
     }
 
-    default N apply(final N arg, final Integer param) {
+    @Override default N apply( N arg,  Integer param) {
         return this.invoke(arg, param.intValue());
     }
 
-    default ParameterFunction<N> compose(final UnaryFunction<N> before) {
+    default ParameterFunction<N> compose( UnaryFunction<N> before) {
         ProgrammingError.throwIfNull(before);
         return new ParameterFunction<N>() {
 
-            public double invoke(final double arg, final int param) {
+            @Override public double invoke( double arg,  int param) {
                 return ParameterFunction.this.invoke(before.invoke(arg), param);
             }
 
-            public float invoke(final float arg, final int param) {
+            @Override public float invoke( float arg,  int param) {
                 return ParameterFunction.this.invoke(before.invoke(arg), param);
             }
 
-            public N invoke(final N arg, final int param) {
+            @Override public N invoke( N arg,  int param) {
                 return ParameterFunction.this.invoke(before.invoke(arg), param);
             }
 
         };
     }
 
-    default byte invoke(final byte arg, final int param) {
+    default byte invoke( byte arg,  int param) {
         return (byte) this.invoke((double) arg, param);
     }
 
     double invoke(double arg, int param);
 
-    default float invoke(final float arg, final int param) {
+    default float invoke( float arg,  int param) {
         return (float) this.invoke((double) arg, param);
     }
 
-    default int invoke(final int arg, final int param) {
+    default int invoke( int arg,  int param) {
         return NumberDefinition.toInt(this.invoke((double) arg, param));
     }
 
-    default long invoke(final long arg, final int param) {
+    default long invoke( long arg,  int param) {
         return NumberDefinition.toLong(this.invoke((double) arg, param));
     }
 
     N invoke(N arg, int param);
 
-    default short invoke(final short arg, final int param) {
+    default short invoke( short arg,  int param) {
         return (short) this.invoke((double) arg, param);
     }
 
@@ -146,7 +146,7 @@ public interface ParameterFunction<N extends Comparable<N>> extends BasicFunctio
      * @param param The parameter of the parameter function.
      * @return The resulting unary function.
      */
-    default UnaryFunction<N> parameter(final int param) {
+    default UnaryFunction<N> parameter( int param) {
         return new FixedParameter<>(this, param);
     }
 

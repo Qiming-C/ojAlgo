@@ -21,8 +21,8 @@
  */
 package org.ojalgo.type.keyvalue;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Map;
-
 import org.ojalgo.type.PrimitiveNumber;
 
 /**
@@ -42,7 +42,7 @@ public interface KeyValue<K, V> {
         public final T first;
         public final T second;
 
-        Dual(final T obj1, final T obj2) {
+        Dual( T obj1,  T obj2) {
 
             super();
 
@@ -51,14 +51,14 @@ public interface KeyValue<K, V> {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Dual)) {
                 return false;
             }
-            Dual<?> other = (Dual<?>) obj;
+            var other = (Dual<?>) obj;
             if (first == null) {
                 if (other.first != null) {
                     return false;
@@ -76,77 +76,77 @@ public interface KeyValue<K, V> {
             return true;
         }
 
-        public T getKey() {
+        @Override public T getKey() {
             return first;
         }
 
-        public T getValue() {
+        @Override public T getValue() {
             return second;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + ((first == null) ? 0 : first.hashCode());
             return prime * result + ((second == null) ? 0 : second.hashCode());
         }
 
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final byte value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  byte value) {
         return EntryPair.of(key, value);
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final double value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  double value) {
         return EntryPair.of(key, value);
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final float value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  float value) {
         return EntryPair.of(key, value);
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final int value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  int value) {
         return EntryPair.of(key, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final byte value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  byte value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final double value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  double value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final float value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  float value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final int value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  int value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final long value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  long value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of(final K key1, final K key2, final short value) {
+    static <K> KeyValue<KeyValue.Dual<K>, PrimitiveNumber> of( K key1,  K key2,  short value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K, V> EntryPair<KeyValue.Dual<K>, V> of(final K key1, final K key2, final V value) {
+    static <K, V> EntryPair<KeyValue.Dual<K>, V> of( K key1,  K key2,  V value) {
         return EntryPair.of(key1, key2, value);
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final long value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  long value) {
         return EntryPair.of(key, value);
     }
 
-    static <K> KeyValue<K, PrimitiveNumber> of(final K key, final short value) {
+    static <K> KeyValue<K, PrimitiveNumber> of( K key,  short value) {
         return EntryPair.of(key, value);
     }
 
-    static <K, V> KeyValue<K, V> of(final K key, final V value) {
+    static <K, V> KeyValue<K, V> of( K key,  V value) {
         return EntryPair.of(key, value);
     }
 

@@ -21,6 +21,7 @@
  */
 package org.ojalgo.series;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -28,7 +29,6 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-
 import org.ojalgo.netio.ASCII;
 import org.ojalgo.series.primitive.ExplicitTimeSeries;
 import org.ojalgo.type.CalendarDate;
@@ -44,11 +44,11 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
         this(CalendarDateUnit.MILLIS);
     }
 
-    public CalendarDateSeries(final CalendarDateUnit resolution) {
+    public CalendarDateSeries( CalendarDateUnit resolution) {
         this(new TreeMap<>(), resolution);
     }
 
-    CalendarDateSeries(final NavigableMap<CalendarDate, N> delegate, final CalendarDateUnit resolution) {
+    CalendarDateSeries( NavigableMap<CalendarDate, N> delegate,  CalendarDateUnit resolution) {
 
         super(delegate);
 
@@ -56,12 +56,12 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
         myResolution = resolution;
     }
 
-    public void complete() {
+    @Override public void complete() {
         this.complete(key -> key.step(1, myResolution));
     }
 
     @Override
-    public N get(final CalendarDate key) {
+    public N get( CalendarDate key) {
         return myDelegate.get(key.filter(myResolution));
     }
 
@@ -71,10 +71,10 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
 
     public long[] getPrimitiveKeys() {
 
-        final long[] retVal = new long[this.size()];
+         long[] retVal = new long[this.size()];
 
-        int i = 0;
-        for (final CalendarDate tmpKey : this.keySet()) {
+        @Var int i = 0;
+        for ( CalendarDate tmpKey : this.keySet()) {
             retVal[i] = tmpKey.millis;
             i++;
         }
@@ -91,12 +91,12 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
     }
 
     @Override
-    public CalendarDateSeries<N> headMap(final CalendarDate toKey) {
+    public CalendarDateSeries<N> headMap( CalendarDate toKey) {
         return this.headMap(toKey, false);
     }
 
     @Override
-    public CalendarDateSeries<N> headMap(final CalendarDate toKey, final boolean inclusive) {
+    public CalendarDateSeries<N> headMap( CalendarDate toKey,  boolean inclusive) {
 
         CalendarDateSeries<N> retVal = new CalendarDateSeries<>(myDelegate.headMap(toKey, inclusive), this.getResolution());
 
@@ -106,44 +106,44 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
         return retVal;
     }
 
-    public CalendarDate nextKey() {
+    @Override public CalendarDate nextKey() {
         return this.lastKey().step(1, myResolution);
     }
 
-    public N put(final Calendar key, final N value) {
+    public N put( Calendar key,  N value) {
         return super.put(CalendarDate.make(key, myResolution), value);
     }
 
     @Override
-    public N put(final CalendarDate key, final N value) {
+    public N put( CalendarDate key,  N value) {
         return super.put(key.filter(myResolution), value);
     }
 
-    public N put(final Date key, final N value) {
+    public N put( Date key,  N value) {
         return super.put(CalendarDate.make(key, myResolution), value);
     }
 
     @Override
-    public void putAll(final Map<? extends CalendarDate, ? extends N> data) {
-        for (final Map.Entry<? extends CalendarDate, ? extends N> tmpEntry : data.entrySet()) {
+    public void putAll( Map<? extends CalendarDate, ? extends N> data) {
+        for ( Map.Entry<? extends CalendarDate, ? extends N> tmpEntry : data.entrySet()) {
             this.put(tmpEntry.getKey(), tmpEntry.getValue());
         }
     }
 
-    public BasicSeries<CalendarDate, N> resample(final CalendarDateUnit resolution) {
+    public BasicSeries<CalendarDate, N> resample( CalendarDateUnit resolution) {
         return this.resample(resolution, resolution::adjustInto);
     }
 
-    public BasicSeries<CalendarDate, N> resample(final UnaryOperator<CalendarDate> keyTranslator) {
+    @Override public BasicSeries<CalendarDate, N> resample( UnaryOperator<CalendarDate> keyTranslator) {
         return this.resample(myResolution, keyTranslator);
     }
 
-    public CalendarDate step(final CalendarDate key) {
+    @Override public CalendarDate step( CalendarDate key) {
         return key.step(1, myResolution);
     }
 
     @Override
-    public CalendarDateSeries<N> subMap(final CalendarDate fromKey, final boolean inclusiveFromKey, final CalendarDate toKey, final boolean inclusiveToKey) {
+    public CalendarDateSeries<N> subMap( CalendarDate fromKey,  boolean inclusiveFromKey,  CalendarDate toKey,  boolean inclusiveToKey) {
 
         CalendarDateSeries<N> retVal = new CalendarDateSeries<>(myDelegate.subMap(fromKey, inclusiveFromKey, toKey, inclusiveToKey), this.getResolution());
 
@@ -154,17 +154,17 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
     }
 
     @Override
-    public CalendarDateSeries<N> subMap(final CalendarDate fromKey, final CalendarDate toKey) {
+    public CalendarDateSeries<N> subMap( CalendarDate fromKey,  CalendarDate toKey) {
         return this.subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public CalendarDateSeries<N> tailMap(final CalendarDate fromKey) {
+    public CalendarDateSeries<N> tailMap( CalendarDate fromKey) {
         return this.tailMap(fromKey, true);
     }
 
     @Override
-    public CalendarDateSeries<N> tailMap(final CalendarDate fromKey, final boolean inclusive) {
+    public CalendarDateSeries<N> tailMap( CalendarDate fromKey,  boolean inclusive) {
 
         CalendarDateSeries<N> retVal = new CalendarDateSeries<>(myDelegate.tailMap(fromKey, inclusive), this.getResolution());
 
@@ -187,7 +187,7 @@ public final class CalendarDateSeries<N extends Comparable<N>> extends TreeSerie
         return retVal.toString();
     }
 
-    private BasicSeries<CalendarDate, N> resample(final CalendarDateUnit resolution, final Function<CalendarDate, CalendarDate> keyMapper) {
+    private BasicSeries<CalendarDate, N> resample( CalendarDateUnit resolution,  Function<CalendarDate, CalendarDate> keyMapper) {
 
         CalendarDateSeries<N> retVal = new CalendarDateSeries<>(resolution);
 

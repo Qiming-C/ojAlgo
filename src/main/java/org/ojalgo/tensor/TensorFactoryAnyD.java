@@ -21,11 +21,10 @@
  */
 package org.ojalgo.tensor;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.scalar.Scalar;
-import org.ojalgo.scalar.Scalar.Factory;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Access2D;
 import org.ojalgo.structure.AccessAnyD;
@@ -34,13 +33,13 @@ import org.ojalgo.structure.MutateAnyD;
 
 public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAnyD> implements FactoryAnyD<T> {
 
-    public static <N extends Comparable<N>, T extends MutateAnyD> TensorFactoryAnyD<N, T> of(final FactoryAnyD<T> factory) {
+    public static <N extends Comparable<N>, T extends MutateAnyD> TensorFactoryAnyD<N, T> of( FactoryAnyD<T> factory) {
         return new TensorFactoryAnyD<>(factory);
     }
 
     private final FactoryAnyD<T> myFactory;
 
-    TensorFactoryAnyD(final FactoryAnyD<T> factory) {
+    TensorFactoryAnyD( FactoryAnyD<T> factory) {
 
         super();
 
@@ -50,16 +49,16 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
     /**
      * Same as {@link TensorFactory2D#blocks(Access2D...)} but for higher/aribitrary rank tensors.
      */
-    public T blocks(final AccessAnyD<N>... tensors) {
+    public T blocks( AccessAnyD<N>... tensors) {
 
-        int rank = 1;
+        @Var int rank = 1;
         for (AccessAnyD<N> tensor : tensors) {
             rank = Math.max(rank, tensor.shape().length);
         }
 
         long[] structure = new long[rank];
         for (int r = 0; r < structure.length; r++) {
-            long count = 0L;
+            @Var long count = 0L;
             for (int t = 0; t < tensors.length; t++) {
                 count += tensors[t].count(r);
             }
@@ -93,7 +92,7 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         return retVal;
     }
 
-    public T copy(final Access1D<N> elements) {
+    public T copy( Access1D<N> elements) {
 
         T retVal = myFactory.make(elements.count());
 
@@ -104,7 +103,7 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         return retVal;
     }
 
-    public T copy(final Access2D<N> elements) {
+    public T copy( Access2D<N> elements) {
 
         T retVal = myFactory.make(elements.countRows(), elements.countColumns());
 
@@ -115,7 +114,7 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         return retVal;
     }
 
-    public T copy(final AccessAnyD<N> elements) {
+    public T copy( AccessAnyD<N> elements) {
 
         T retVal = myFactory.make(elements);
 
@@ -127,14 +126,14 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof TensorFactoryAnyD)) {
             return false;
         }
-        TensorFactoryAnyD other = (TensorFactoryAnyD) obj;
+        var other = (TensorFactoryAnyD) obj;
         if (myFactory == null) {
             if (other.myFactory != null) {
                 return false;
@@ -145,28 +144,28 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         return true;
     }
 
-    public FunctionSet<N> function() {
+    @Override public FunctionSet<N> function() {
         return (FunctionSet<N>) myFactory.function();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = super.hashCode();
         return prime * result + (myFactory == null ? 0 : myFactory.hashCode());
     }
 
-    public T make(final long... structure) {
+    @Override public T make( long... structure) {
         return myFactory.make(structure);
     }
 
-    public T power(final Access1D<N> vector, final int exponent) {
-        Access1D<N>[] vectors = (Access1D<N>[]) new Access1D<?>[exponent];
+    public T power( Access1D<N> vector,  int exponent) {
+        var vectors = (Access1D<N>[]) new Access1D<?>[exponent];
         Arrays.fill(vectors, vector);
         return this.product(vectors);
     }
 
-    public T product(final Access1D<?>... vectors) {
+    public T product( Access1D<?>... vectors) {
 
         int rank = vectors.length;
 
@@ -178,7 +177,7 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         T retVal = myFactory.make(shape);
 
         retVal.loopAllReferences(ref -> {
-            double val = 1.0;
+            @Var double val = 1.0;
             for (int d = 0; d < ref.length; d++) {
                 val *= vectors[d].doubleValue(ref[d]);
             }
@@ -188,8 +187,8 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
         return retVal;
     }
 
-    public Scalar.Factory<N> scalar() {
-        return (Factory<N>) myFactory.scalar();
+    @Override public Scalar.Factory<N> scalar() {
+        return (Scalar.Factory<N>) myFactory.scalar();
     }
 
     /**
@@ -197,16 +196,16 @@ public final class TensorFactoryAnyD<N extends Comparable<N>, T extends MutateAn
      *
      * @see TensorFactory1D#sum(Access1D...)
      */
-    public T sum(final Access1D<N>... vectors) {
+    public T sum( Access1D<N>... vectors) {
 
-        long dimensions = 0;
+        @Var long dimensions = 0;
         for (Access1D<N> vector : vectors) {
             dimensions += vector.count();
         }
 
         T retVal = myFactory.make(dimensions);
 
-        long offset = 0L;
+        @Var long offset = 0L;
         for (Access1D<N> vector : vectors) {
             long limit = vector.count();
             for (int i = 0; i < limit; i++) {

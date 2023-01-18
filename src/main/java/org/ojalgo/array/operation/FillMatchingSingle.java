@@ -21,8 +21,8 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.scalar.Scalar;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Access2D;
@@ -32,17 +32,17 @@ public abstract class FillMatchingSingle implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static void conjugate(final BigDecimal[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source) {
+    public static void conjugate( BigDecimal[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source) {
         FillMatchingSingle.transpose(data, structure, firstColumn, limitColumn, source);
     }
 
-    public static void conjugate(final double[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source) {
+    public static void conjugate( double[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source) {
         FillMatchingSingle.transpose(data, structure, firstColumn, limitColumn, source);
     }
 
-    public static <N extends Scalar<N>> void conjugate(final N[] data, final int structure, final int firstColumn, final int limitColumn,
-            final Access2D<?> source, final Scalar.Factory<N> scalar) {
-        int index = structure * firstColumn;
+    public static <N extends Scalar<N>> void conjugate( N[] data,  int structure,  int firstColumn,  int limitColumn,
+             Access2D<?> source,  Scalar.Factory<N> scalar) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = scalar.cast(source.get(j, i)).conjugate().get();
@@ -50,9 +50,9 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void copy(final BigDecimal[] data, final int structure, final int firstColumn, final int limitColumn,
-            final Access2D<? extends Comparable<?>> source) {
-        int index = structure * firstColumn;
+    public static void copy( BigDecimal[] data,  int structure,  int firstColumn,  int limitColumn,
+             Access2D<? extends Comparable<?>> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = TypeUtils.toBigDecimal(source.get(i, j));
@@ -60,9 +60,9 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void copy(final double[] data, final int structure, final int firstColumn, final int limitColumn,
-            final Access2D<? extends Comparable<?>> source) {
-        int index = structure * firstColumn;
+    public static void copy( double[] data,  int structure,  int firstColumn,  int limitColumn,
+             Access2D<? extends Comparable<?>> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = source.doubleValue(i, j);
@@ -70,9 +70,9 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void copy(final float[] data, final int structure, final int firstColumn, final int limitColumn,
-            final Access2D<? extends Comparable<?>> source) {
-        int index = structure * firstColumn;
+    public static void copy( float[] data,  int structure,  int firstColumn,  int limitColumn,
+             Access2D<? extends Comparable<?>> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = source.floatValue(i, j);
@@ -80,9 +80,9 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void copy(final N[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source,
-            final Scalar.Factory<N> scalar) {
-        int index = structure * firstColumn;
+    public static <N extends Scalar<N>> void copy( N[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source,
+             Scalar.Factory<N> scalar) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = scalar.cast(source.get(i, j));
@@ -90,50 +90,50 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void fill(final double[] data, final Access1D<?> values) {
+    public static void fill( double[] data,  Access1D<?> values) {
         int limit = Math.min(data.length, values.size());
         for (int i = 0; i < limit; i++) {
             data[i] = values.doubleValue(i);
         }
     }
 
-    public static void fill(final double[] data, final double[] values) {
+    public static void fill( double[] data,  double[] values) {
         int limit = Math.min(data.length, values.length);
         for (int i = 0; i < limit; i++) {
             data[i] = values[i];
         }
     }
 
-    public static void fill(final float[] data, final Access1D<?> values) {
+    public static void fill( float[] data,  Access1D<?> values) {
         int limit = Math.min(data.length, values.size());
         for (int i = 0; i < limit; i++) {
             data[i] = values.floatValue(i);
         }
     }
 
-    public static void fill(final float[] data, final float[] values) {
+    public static void fill( float[] data,  float[] values) {
         int limit = Math.min(data.length, values.length);
         for (int i = 0; i < limit; i++) {
             data[i] = values[i];
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final N[] data, final Access1D<?> values, final Scalar.Factory<N> scalar) {
+    public static <N extends Comparable<N>> void fill( N[] data,  Access1D<?> values,  Scalar.Factory<N> scalar) {
         int limit = Math.min(data.length, values.size());
         for (int i = 0; i < limit; i++) {
             data[i] = scalar.cast(values.get(i));
         }
     }
 
-    public static void invoke(final double[] source, final int sourceOffset, final double[] destination, final int destinationOffset, final int first,
-            final int limit) {
+    public static void invoke( double[] source,  int sourceOffset,  double[] destination,  int destinationOffset,  int first,
+             int limit) {
         for (int i = first; i < limit; i++) {
             destination[destinationOffset + i] = source[sourceOffset + i];
         }
     }
 
-    public static void transpose(final BigDecimal[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source) {
-        int index = structure * firstColumn;
+    public static void transpose( BigDecimal[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = TypeUtils.toBigDecimal(source.get(j, i));
@@ -141,8 +141,8 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void transpose(final double[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source) {
-        int index = structure * firstColumn;
+    public static void transpose( double[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = source.doubleValue(j, i);
@@ -150,8 +150,8 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static void transpose(final float[] data, final int structure, final int firstColumn, final int limitColumn, final Access2D<?> source) {
-        int index = structure * firstColumn;
+    public static void transpose( float[] data,  int structure,  int firstColumn,  int limitColumn,  Access2D<?> source) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = source.floatValue(j, i);
@@ -159,9 +159,9 @@ public abstract class FillMatchingSingle implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void transpose(final N[] data, final int structure, final int firstColumn, final int limitColumn,
-            final Access2D<?> source, final Scalar.Factory<N> scalar) {
-        int index = structure * firstColumn;
+    public static <N extends Scalar<N>> void transpose( N[] data,  int structure,  int firstColumn,  int limitColumn,
+             Access2D<?> source,  Scalar.Factory<N> scalar) {
+        @Var int index = structure * firstColumn;
         for (int j = firstColumn; j < limitColumn; j++) {
             for (int i = 0; i < structure; i++) {
                 data[index++] = scalar.cast(source.get(j, i));

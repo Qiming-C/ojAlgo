@@ -37,28 +37,25 @@ public final class BinaryContext extends FormatContext<byte[]> {
         super(DEFAULT_FORMAT);
     }
 
-    private BinaryContext(final Format format) {
-        super(format);
-        ProgrammingError.throwForIllegalInvocation();
-    }
+    
 
     @Override
-    public byte[] enforce(final byte[] object) {
+    public byte[] enforce( byte[] object) {
         return object;
     }
 
     @Override
-    protected void configureFormat(final Format format, final Object object) {
+    protected void configureFormat( Format format,  Object object) {
 
     }
 
     @Override
-    protected String handleFormatException(final Format format, final Object object) {
+    protected String handleFormatException( Format format,  Object object) {
         return "";
     }
 
     @Override
-    protected byte[] handleParseException(final Format format, final String string) {
+    protected byte[] handleParseException( Format format,  String string) {
         return new byte[] { };
     }
 

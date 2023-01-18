@@ -45,7 +45,7 @@ abstract class AbstractProcess<D extends Distribution> implements RandomProcess<
      * argumant <code>1.0</code>, and then {@link ContinuousDistribution#getQuantile(double)} (but with
      * different input argument).
      */
-    public final double getLowerConfidenceQuantile(final double confidence) {
+    public final double getLowerConfidenceQuantile( double confidence) {
         return this.getLowerConfidenceQuantile(ONE, confidence);
     }
 
@@ -62,7 +62,7 @@ abstract class AbstractProcess<D extends Distribution> implements RandomProcess<
      * argumant <code>1.0</code>, and then {@link ContinuousDistribution#getQuantile(double)} (but with
      * different input argument).
      */
-    public final double getUpperConfidenceQuantile(final double confidence) {
+    public final double getUpperConfidenceQuantile( double confidence) {
         return this.getUpperConfidenceQuantile(ONE, confidence);
     }
 
@@ -90,9 +90,9 @@ abstract class AbstractProcess<D extends Distribution> implements RandomProcess<
 
     abstract double getVariance(double stepSize);
 
-    abstract void setCurrentValue(final double currentValue);
+    abstract void setCurrentValue( double currentValue);
 
-    final double step(final double stepSize) {
+    final double step( double stepSize) {
         return this.doStep(stepSize, this.getNormalisedRandomIncrement());
     }
 

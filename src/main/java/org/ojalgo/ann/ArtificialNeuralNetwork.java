@@ -23,6 +23,7 @@ package org.ojalgo.ann;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-
 import org.ojalgo.data.DataBatch;
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.function.aggregator.Aggregator;
@@ -81,17 +81,17 @@ public final class ArtificialNeuralNetwork {
         private final Consumer<PhysicalStore<Double>> myFunction;
         private final boolean mySingleFolded;
 
-        Activator(final Consumer<PhysicalStore<Double>> function, final PrimitiveFunction.Unary derivativeInTermsOfOutput, final boolean singleFolded) {
+        Activator( Consumer<PhysicalStore<Double>> function,  PrimitiveFunction.Unary derivativeInTermsOfOutput,  boolean singleFolded) {
             myFunction = function;
             myDerivativeInTermsOfOutput = derivativeInTermsOfOutput;
             mySingleFolded = singleFolded;
         }
 
-        void activate(final PhysicalStore<Double> output) {
+        void activate( PhysicalStore<Double> output) {
             myFunction.accept(output);
         }
 
-        void activate(final PhysicalStore<Double> output, final double probabilityToKeep) {
+        void activate( PhysicalStore<Double> output,  double probabilityToKeep) {
 
             if (ZERO >= probabilityToKeep || probabilityToKeep > ONE) {
                 throw new IllegalArgumentException();
@@ -126,21 +126,21 @@ public final class ArtificialNeuralNetwork {
         private final PrimitiveFunction.Binary myDerivative;
         private final PrimitiveFunction.Binary myFunction;
 
-        Error(final PrimitiveFunction.Binary function, final PrimitiveFunction.Binary derivative) {
+        Error( PrimitiveFunction.Binary function,  PrimitiveFunction.Binary derivative) {
             myFunction = function;
             myDerivative = derivative;
         }
 
-        public double invoke(final Access1D<?> target, final Access1D<?> current) {
+        public double invoke( Access1D<?> target,  Access1D<?> current) {
             int limit = MissingMath.toMinIntExact(target.count(), current.count());
-            double retVal = ZERO;
+            @Var double retVal = ZERO;
             for (int i = 0; i < limit; i++) {
                 retVal += myFunction.invoke(target.doubleValue(i), current.doubleValue(i));
             }
             return retVal;
         }
 
-        public double invoke(final double target, final double current) {
+        @Override public double invoke( double target,  double current) {
             return myFunction.invoke(target, current);
         }
 
@@ -150,7 +150,7 @@ public final class ArtificialNeuralNetwork {
 
     }
 
-    public static NetworkBuilder builder(final int numberOfNetworkInputNodes) {
+    public static NetworkBuilder builder( int numberOfNetworkInputNodes) {
         return ArtificialNeuralNetwork.builder(Primitive64Store.FACTORY, numberOfNetworkInputNodes);
     }
 
@@ -158,11 +158,11 @@ public final class ArtificialNeuralNetwork {
      * @deprecated Use {@link #builder(int)} instead
      */
     @Deprecated
-    public static NetworkTrainer builder(final int numberOfInputNodes, final int... nodesPerCalculationLayer) {
+    public static NetworkTrainer builder( int numberOfInputNodes,  int... nodesPerCalculationLayer) {
         return ArtificialNeuralNetwork.builder(Primitive64Store.FACTORY, numberOfInputNodes, nodesPerCalculationLayer);
     }
 
-    public static NetworkBuilder builder(final PhysicalStore.Factory<Double, ?> factory, final int numberOfNetworkInputNodes) {
+    public static NetworkBuilder builder( PhysicalStore.Factory<Double, ?> factory,  int numberOfNetworkInputNodes) {
         return new NetworkBuilder(factory, numberOfNetworkInputNodes);
     }
 
@@ -170,7 +170,7 @@ public final class ArtificialNeuralNetwork {
      * @deprecated Use {@link #builder(org.ojalgo.matrix.store.PhysicalStore.Factory, int)} instead
      */
     @Deprecated
-    public static NetworkTrainer builder(final PhysicalStore.Factory<Double, ?> factory, final int numberOfInputNodes, final int... nodesPerCalculationLayer) {
+    public static NetworkTrainer builder( PhysicalStore.Factory<Double, ?> factory,  int numberOfInputNodes,  int... nodesPerCalculationLayer) {
         NetworkBuilder builder = ArtificialNeuralNetwork.builder(factory, numberOfInputNodes);
         for (int i = 0; i < nodesPerCalculationLayer.length; i++) {
             builder.layer(nodesPerCalculationLayer[i]);
@@ -181,35 +181,38 @@ public final class ArtificialNeuralNetwork {
     /**
      * Read (reconstruct) an ANN from the specified input previously written by {@link #writeTo(DataOutput)}.
      */
-    public static ArtificialNeuralNetwork from(final DataInput input) throws IOException {
+    public static ArtificialNeuralNetwork from( DataInput input) throws IOException {
         return FileFormat.read(null, input);
     }
 
     /**
-     * @see #from(DataInput)
+     *See {@link #from(DataInput)}.
+ 
      */
-    public static ArtificialNeuralNetwork from(final File file) {
+    public static ArtificialNeuralNetwork from( File file) {
         return ArtificialNeuralNetwork.from(null, file);
     }
 
     /**
-     * @see #from(DataInput)
+     *See {@link #from(DataInput)}.
+ 
      */
-    public static ArtificialNeuralNetwork from(final Path path, final OpenOption... options) {
+    public static ArtificialNeuralNetwork from( Path path,  OpenOption... options) {
         return ArtificialNeuralNetwork.from(null, path, options);
     }
 
     /**
      * Read (reconstruct) an ANN from the specified input previously written by {@link #writeTo(DataOutput)}.
      */
-    public static ArtificialNeuralNetwork from(final PhysicalStore.Factory<Double, ?> factory, final DataInput input) throws IOException {
+    public static ArtificialNeuralNetwork from( PhysicalStore.Factory<Double, ?> factory,  DataInput input) throws IOException {
         return FileFormat.read(factory, input);
     }
 
     /**
-     * @see #from(DataInput)
+     *See {@link #from(DataInput)}.
+ 
      */
-    public static ArtificialNeuralNetwork from(final PhysicalStore.Factory<Double, ?> factory, final File file) {
+    public static ArtificialNeuralNetwork from( PhysicalStore.Factory<Double, ?> factory,  File file) {
         try (DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
             return ArtificialNeuralNetwork.from(factory, input);
         } catch (IOException cause) {
@@ -218,9 +221,10 @@ public final class ArtificialNeuralNetwork {
     }
 
     /**
-     * @see #from(DataInput)
+     *See {@link #from(DataInput)}.
+ 
      */
-    public static ArtificialNeuralNetwork from(final PhysicalStore.Factory<Double, ?> factory, final Path path, final OpenOption... options) {
+    public static ArtificialNeuralNetwork from( PhysicalStore.Factory<Double, ?> factory,  Path path,  OpenOption... options) {
         try (DataInputStream input = new DataInputStream(new BufferedInputStream(Files.newInputStream(path, options)))) {
             return ArtificialNeuralNetwork.from(factory, input);
         } catch (IOException cause) {
@@ -228,25 +232,25 @@ public final class ArtificialNeuralNetwork {
         }
     }
 
-    static void doIdentity(final PhysicalStore<Double> output) {
+    static void doIdentity( PhysicalStore<Double> output) {
         // no-op activator
     }
 
-    static void doReLU(final PhysicalStore<Double> output) {
+    static void doReLU( PhysicalStore<Double> output) {
         output.modifyAll(MAX.second(ZERO));
     }
 
-    static void doSigmoid(final PhysicalStore<Double> output) {
+    static void doSigmoid( PhysicalStore<Double> output) {
         output.modifyAll(LOGISTIC);
     }
 
-    static void doSoftMax(final PhysicalStore<Double> output) {
+    static void doSoftMax( PhysicalStore<Double> output) {
         output.modifyAll(EXP);
         Primitive64Store totals = output.reduceRows(Aggregator.SUM).collect(Primitive64Store.FACTORY);
         output.onRows(DIVIDE, totals).supplyTo(output);
     }
 
-    static void doTanh(final PhysicalStore<Double> output) {
+    static void doTanh( PhysicalStore<Double> output) {
         output.modifyAll(PrimitiveMath.TANH);
     }
 
@@ -254,7 +258,7 @@ public final class ArtificialNeuralNetwork {
     private final PhysicalStore.Factory<Double, ?> myFactory;
     private final CalculationLayer[] myLayers;
 
-    ArtificialNeuralNetwork(final NetworkBuilder builder) {
+    ArtificialNeuralNetwork( NetworkBuilder builder) {
 
         super();
 
@@ -268,14 +272,14 @@ public final class ArtificialNeuralNetwork {
         }
     }
 
-    ArtificialNeuralNetwork(final PhysicalStore.Factory<Double, ?> factory, final int inputs, final int[] layers) {
+    ArtificialNeuralNetwork( PhysicalStore.Factory<Double, ?> factory,  int inputs,  int[] layers) {
 
         super();
 
         myFactory = factory;
         myLayers = new CalculationLayer[layers.length];
-        int tmpIn = inputs;
-        int tmpOut = inputs;
+        @Var int tmpIn = inputs;
+        @Var int tmpOut = inputs;
         for (int i = 0; i < layers.length; i++) {
             tmpIn = tmpOut;
             tmpOut = layers[i];
@@ -284,42 +288,43 @@ public final class ArtificialNeuralNetwork {
     }
 
     /**
-     * @return The number of calculation layers
+     *Returns the number of calculation layers.
+ 
      */
     public int depth() {
         return myLayers.length;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || !(obj instanceof ArtificialNeuralNetwork)) {
             return false;
         }
-        ArtificialNeuralNetwork other = (ArtificialNeuralNetwork) obj;
+        var other = (ArtificialNeuralNetwork) obj;
         if (!Arrays.equals(myLayers, other.myLayers)) {
             return false;
         }
         return true;
     }
 
-    public Activator getActivator(final int layer) {
+    public Activator getActivator( int layer) {
         return myLayers[layer].getActivator();
     }
 
-    public double getBias(final int layer, final int output) {
+    public double getBias( int layer,  int output) {
         return myLayers[layer].getBias(output);
     }
 
-    public double getWeight(final int layer, final int input, final int output) {
+    public double getWeight( int layer,  int input,  int output) {
         return myLayers[layer].getWeight(input, output);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         return prime * result + Arrays.hashCode(myLayers);
     }
@@ -340,7 +345,7 @@ public final class ArtificialNeuralNetwork {
      * @param batchSize The batch size - the number of batched invocations
      * @return The invoker
      */
-    public NetworkInvoker newInvoker(final int batchSize) {
+    public NetworkInvoker newInvoker( int batchSize) {
         return new NetworkInvoker(this, batchSize);
     }
 
@@ -359,8 +364,8 @@ public final class ArtificialNeuralNetwork {
      * @param batchSize The batch size - the number of batched training examples
      * @return The trainer
      */
-    public NetworkTrainer newTrainer(final int batchSize) {
-        NetworkTrainer trainer = new NetworkTrainer(this, batchSize);
+    public NetworkTrainer newTrainer( int batchSize) {
+        var trainer = new NetworkTrainer(this, batchSize);
         if (this.getOutputActivator() == Activator.SOFTMAX) {
             trainer.error(Error.CROSS_ENTROPY);
         } else {
@@ -382,7 +387,7 @@ public final class ArtificialNeuralNetwork {
 
     @Override
     public String toString() {
-        StringBuilder tmpBuilder = new StringBuilder();
+        var tmpBuilder = new StringBuilder();
         tmpBuilder.append("ArtificialNeuralNetwork [Layers=");
         for (CalculationLayer calculationLayer : myLayers) {
             tmpBuilder.append("\n");
@@ -394,10 +399,11 @@ public final class ArtificialNeuralNetwork {
     }
 
     /**
-     * @return The max number of nodes in any layer
+     *Returns the max number of nodes in any layer.
+ 
      */
     public int width() {
-        int retVal = myLayers[0].countInputNodes();
+        @Var int retVal = myLayers[0].countInputNodes();
         for (CalculationLayer layer : myLayers) {
             retVal = Math.max(retVal, layer.countOutputNodes());
         }
@@ -408,15 +414,16 @@ public final class ArtificialNeuralNetwork {
      * Will write (save) the ANN to the specified output. Can then later be read back by using
      * {@link #from(DataInput)}.
      */
-    public void writeTo(final DataOutput output) throws IOException {
+    public void writeTo( DataOutput output) throws IOException {
         int version = myFactory == Primitive32Store.FACTORY ? 2 : 1;
         FileFormat.write(this, version, output);
     }
 
     /**
-     * @see #writeTo(DataOutput)
+     *See {@link #writeTo(DataOutput)}.
+ 
      */
-    public void writeTo(final File file) {
+    public void writeTo( File file) {
         try (DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             this.writeTo(output);
         } catch (IOException cause) {
@@ -425,9 +432,10 @@ public final class ArtificialNeuralNetwork {
     }
 
     /**
-     * @see #writeTo(DataOutput)
+     *See {@link #writeTo(DataOutput)}.
+ 
      */
-    public void writeTo(final Path path, final OpenOption... options) {
+    public void writeTo( Path path,  OpenOption... options) {
         try (DataOutputStream output = new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(path, options)))) {
             this.writeTo(output);
         } catch (IOException cause) {
@@ -435,8 +443,8 @@ public final class ArtificialNeuralNetwork {
         }
     }
 
-    void adjust(final int layer, final PhysicalStore<Double> input, final PhysicalStore<Double> output, final PhysicalStore<Double> upstreamGradient,
-            final PhysicalStore<Double> downstreamGradient) {
+    void adjust( int layer,  PhysicalStore<Double> input,  PhysicalStore<Double> output,  PhysicalStore<Double> upstreamGradient,
+             PhysicalStore<Double> downstreamGradient) {
         myLayers[layer].adjust(input, output, upstreamGradient, downstreamGradient, -myConfiguration.learningRate,
                 myConfiguration.probabilityDidKeepInput(layer), myConfiguration.regularisation());
     }
@@ -445,7 +453,7 @@ public final class ArtificialNeuralNetwork {
         return myLayers[0].countInputNodes();
     }
 
-    int countInputNodes(final int layer) {
+    int countInputNodes( int layer) {
         return myLayers[layer].countInputNodes();
     }
 
@@ -453,7 +461,7 @@ public final class ArtificialNeuralNetwork {
         return myLayers[myLayers.length - 1].countOutputNodes();
     }
 
-    int countOutputNodes(final int layer) {
+    int countOutputNodes( int layer) {
         return myLayers[layer].countOutputNodes();
     }
 
@@ -462,25 +470,25 @@ public final class ArtificialNeuralNetwork {
     }
 
     List<MatrixStore<Double>> getWeights() {
-        final ArrayList<MatrixStore<Double>> retVal = new ArrayList<>();
+         ArrayList<MatrixStore<Double>> retVal = new ArrayList<>();
         for (int i = 0; i < myLayers.length; i++) {
             retVal.add(myLayers[i].getLogicalWeights());
         }
         return retVal;
     }
 
-    PhysicalStore<Double> invoke(final int layer, final PhysicalStore<Double> input, final PhysicalStore<Double> output) {
+    PhysicalStore<Double> invoke( int layer,  PhysicalStore<Double> input,  PhysicalStore<Double> output) {
         if (myConfiguration != null) {
             return myLayers[layer].invoke(input, output, myConfiguration.probabilityWillKeepOutput(layer, this.depth()));
         }
         return myLayers[layer].invoke(input, output);
     }
 
-    DataBatch newBatch(final int rows, final int columns) {
+    DataBatch newBatch( int rows,  int columns) {
         return DataBatch.from(myFactory, rows, columns);
     }
 
-    PhysicalStore<Double> newStore(final int rows, final int columns) {
+    PhysicalStore<Double> newStore( int rows,  int columns) {
         return myFactory.make(rows, columns);
     }
 
@@ -490,19 +498,19 @@ public final class ArtificialNeuralNetwork {
         }
     }
 
-    void scale(final int layer, final double factor) {
+    void scale( int layer,  double factor) {
         myLayers[layer].scale(factor);
     }
 
-    void setActivator(final int layer, final Activator activator) {
+    void setActivator( int layer,  Activator activator) {
         myLayers[layer].setActivator(activator);
     }
 
-    void setBias(final int layer, final int output, final double bias) {
+    void setBias( int layer,  int output,  double bias) {
         myLayers[layer].setBias(output, bias);
     }
 
-    void setConfiguration(final TrainingConfiguration configuration) {
+    void setConfiguration( TrainingConfiguration configuration) {
         if (myConfiguration != null && configuration == null) {
             for (int l = 1, limit = this.depth(); l < limit; l++) {
                 this.scale(l, myConfiguration.probabilityDidKeepInput(l));
@@ -511,7 +519,7 @@ public final class ArtificialNeuralNetwork {
         myConfiguration = configuration;
     }
 
-    void setWeight(final int layer, final int input, final int output, final double weight) {
+    void setWeight( int layer,  int input,  int output,  double weight) {
         myLayers[layer].setWeight(input, output, weight);
     }
 

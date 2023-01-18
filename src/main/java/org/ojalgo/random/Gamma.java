@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.PrimitiveScalar;
 
 /**
@@ -39,7 +40,7 @@ public class Gamma extends RandomNumber {
         this(ONE, ONE);
     }
 
-    public Gamma(final double aShape, final double aRate) {
+    public Gamma( double aShape,  double aRate) {
 
         super();
 
@@ -47,7 +48,7 @@ public class Gamma extends RandomNumber {
         myRate = aRate;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myShape / myRate;
     }
 
@@ -64,22 +65,22 @@ public class Gamma extends RandomNumber {
     @Override
     protected double generate() {
 
-        final int tmpInteger = (int) myShape;
-        final double tmpFraction = myShape - tmpInteger;
+         var tmpInteger = (int) myShape;
+         double tmpFraction = myShape - tmpInteger;
 
-        double tmpIntegralPart = ZERO;
+        @Var double tmpIntegralPart = ZERO;
         for (int i = 0; i < tmpInteger; i++) {
             tmpIntegralPart -= LOG.invoke(this.random().nextDouble());
         }
 
-        double tmpFractionalPart = ZERO;
+        @Var double tmpFractionalPart = ZERO;
         if (!PrimitiveScalar.isSmall(ONE, tmpFraction)) {
 
-            final double tmpFractionMinusOne = tmpFraction - ONE;
+             double tmpFractionMinusOne = tmpFraction - ONE;
 
-            double tmpNegHalfFraction;
-            double tmpNumer;
-            double tmpDenom;
+            @Var double tmpNegHalfFraction;
+            @Var double tmpNumer;
+            @Var double tmpDenom;
 
             do {
 

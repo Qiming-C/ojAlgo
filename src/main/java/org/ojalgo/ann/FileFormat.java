@@ -21,10 +21,10 @@
  */
 package org.ojalgo.ann;
 
+import com.google.errorprone.annotations.Var;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
 import org.ojalgo.ann.ArtificialNeuralNetwork.Activator;
 import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.matrix.store.Primitive32Store;
@@ -40,9 +40,9 @@ abstract class FileFormat {
 
         static final int ID = 1;
 
-        static ArtificialNeuralNetwork read(final PhysicalStore.Factory<Double, ?> factory, final DataInput input) throws IOException {
+        static ArtificialNeuralNetwork read( PhysicalStore.Factory<Double, ?> factory,  DataInput input) throws IOException {
 
-            int numberOfInputs = input.readInt();
+            @Var int numberOfInputs = input.readInt();
 
             int numberOfLayers = input.readInt();
 
@@ -51,9 +51,9 @@ abstract class FileFormat {
                 layerOutputs[i] = input.readInt();
             }
 
-            ArtificialNeuralNetwork retVal = new ArtificialNeuralNetwork(factory != null ? factory : Primitive64Store.FACTORY, numberOfInputs, layerOutputs);
+            var retVal = new ArtificialNeuralNetwork(factory != null ? factory : Primitive64Store.FACTORY, numberOfInputs, layerOutputs);
 
-            int numberOfOutputs;
+            @Var int numberOfOutputs;
             for (int l = 0; l < numberOfLayers; l++) {
                 numberOfOutputs = layerOutputs[l];
 
@@ -74,7 +74,7 @@ abstract class FileFormat {
             return retVal;
         }
 
-        static void write(final ArtificialNeuralNetwork network, final DataOutput output) throws IOException {
+        static void write( ArtificialNeuralNetwork network,  DataOutput output) throws IOException {
 
             Structure2D[] structure = network.structure();
 
@@ -86,7 +86,7 @@ abstract class FileFormat {
                 output.writeInt(Math.toIntExact(structure[l].countColumns()));
             }
 
-            int numberofInputs, numberofOutputs;
+            @Var int numberofInputs, numberofOutputs;
 
             for (int l = 0; l < structure.length; l++) {
                 numberofInputs = Math.toIntExact(structure[l].countRows());
@@ -114,9 +114,9 @@ abstract class FileFormat {
 
         static final int ID = 2;
 
-        static ArtificialNeuralNetwork read(final PhysicalStore.Factory<Double, ?> factory, final DataInput input) throws IOException {
+        static ArtificialNeuralNetwork read( PhysicalStore.Factory<Double, ?> factory,  DataInput input) throws IOException {
 
-            int numberOfInputs = input.readInt();
+            @Var int numberOfInputs = input.readInt();
 
             int numberOfLayers = input.readInt();
 
@@ -125,9 +125,9 @@ abstract class FileFormat {
                 layerOutputs[i] = input.readInt();
             }
 
-            ArtificialNeuralNetwork retVal = new ArtificialNeuralNetwork(factory != null ? factory : Primitive32Store.FACTORY, numberOfInputs, layerOutputs);
+            var retVal = new ArtificialNeuralNetwork(factory != null ? factory : Primitive32Store.FACTORY, numberOfInputs, layerOutputs);
 
-            int numberOfOutputs;
+            @Var int numberOfOutputs;
             for (int l = 0; l < numberOfLayers; l++) {
                 numberOfOutputs = layerOutputs[l];
 
@@ -148,7 +148,7 @@ abstract class FileFormat {
             return retVal;
         }
 
-        static void write(final ArtificialNeuralNetwork network, final DataOutput output) throws IOException {
+        static void write( ArtificialNeuralNetwork network,  DataOutput output) throws IOException {
 
             Structure2D[] structure = network.structure();
 
@@ -160,7 +160,7 @@ abstract class FileFormat {
                 output.writeInt(Math.toIntExact(structure[l].countColumns()));
             }
 
-            int numberofInputs, numberofOutputs;
+            @Var int numberofInputs, numberofOutputs;
 
             for (int l = 0; l < structure.length; l++) {
                 numberofInputs = Math.toIntExact(structure[l].countRows());
@@ -183,7 +183,7 @@ abstract class FileFormat {
 
     private static final String FORMAT = "ojAlgo ANN";
 
-    static ArtificialNeuralNetwork read(final PhysicalStore.Factory<Double, ?> factory, final DataInput input) throws IOException {
+    static ArtificialNeuralNetwork read( PhysicalStore.Factory<Double, ?> factory,  DataInput input) throws IOException {
 
         String format = input.readUTF();
         if (!FORMAT.equals(format)) {
@@ -202,7 +202,7 @@ abstract class FileFormat {
         }
     }
 
-    static void write(final ArtificialNeuralNetwork network, final int version, final DataOutput output) throws IOException {
+    static void write( ArtificialNeuralNetwork network,  int version,  DataOutput output) throws IOException {
 
         output.writeUTF(FORMAT);
 

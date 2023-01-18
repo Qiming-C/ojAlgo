@@ -6,23 +6,23 @@ import org.ojalgo.function.UnaryFunction;
 
 public interface OperateAnyD<N extends Comparable<N>, P extends OperateAnyD<N, P>> {
 
-    default P onAll(final BinaryFunction<N> operator, final double right) {
+    default P onAll( BinaryFunction<N> operator,  double right) {
         return this.onAll(operator.second(right));
     }
 
-    default P onAll(final BinaryFunction<N> operator, final N right) {
+    default P onAll( BinaryFunction<N> operator,  N right) {
         return this.onAll(operator.second(right));
     }
 
-    default P onAll(final double left, final BinaryFunction<N> operator) {
+    default P onAll( double left,  BinaryFunction<N> operator) {
         return this.onAll(operator.first(left));
     }
 
-    default P onAll(final N left, final BinaryFunction<N> operator) {
+    default P onAll( N left,  BinaryFunction<N> operator) {
         return this.onAll(operator.first(left));
     }
 
-    default P onAll(final ParameterFunction<N> operator, final int parameter) {
+    default P onAll( ParameterFunction<N> operator,  int parameter) {
         return this.onAll(operator.parameter(parameter));
     }
 

@@ -19,7 +19,7 @@ public final class AlphaVantageFetcher implements DataFetcher {
     private final CalendarDateUnit myResolution;
     private final String mySymbol;
 
-    public AlphaVantageFetcher(final String symbol, final CalendarDateUnit resolution, final String apiKey, final boolean fullOutputSize) {
+    public AlphaVantageFetcher( String symbol,  CalendarDateUnit resolution,  String apiKey,  boolean fullOutputSize) {
 
         super();
 
@@ -47,7 +47,7 @@ public final class AlphaVantageFetcher implements DataFetcher {
         }
     }
 
-    public InputStream getInputStream() {
+    @Override public InputStream getInputStream() {
         Response<InputStream> response = myRequest.send(BodyHandlers.ofInputStream());
         if (response.isResponseOK()) {
             return response.getBody();
@@ -56,11 +56,11 @@ public final class AlphaVantageFetcher implements DataFetcher {
         }
     }
 
-    public CalendarDateUnit getResolution() {
+    @Override public CalendarDateUnit getResolution() {
         return myResolution;
     }
 
-    public String getSymbol() {
+    @Override public String getSymbol() {
         return mySymbol;
     }
 

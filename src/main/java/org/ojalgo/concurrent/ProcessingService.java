@@ -1,5 +1,6 @@
 package org.ojalgo.concurrent;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +17,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
-
 import org.ojalgo.type.function.TwoStepMapper;
 
 public final class ProcessingService {
@@ -26,15 +26,15 @@ public final class ProcessingService {
         private final Consumer<W> myConsumer;
         private final Queue<W> myWork;
 
-        CallableConsumer(final Queue<W> work, final Consumer<W> consumer) {
+        CallableConsumer( Queue<W> work,  Consumer<W> consumer) {
             super();
             myWork = work;
             myConsumer = consumer;
         }
 
-        public Boolean call() throws Exception {
+        @Override public Boolean call() throws Exception {
 
-            W item = null;
+            @Var W item = null;
             while ((item = myWork.poll()) != null) {
                 myConsumer.accept(item);
             }
@@ -49,15 +49,15 @@ public final class ProcessingService {
         private final TwoStepMapper<W, R> myMapper;
         private final Queue<W> myWork;
 
-        CallableMapper(final Queue<W> work, final TwoStepMapper<W, R> mapper) {
+        CallableMapper( Queue<W> work,  TwoStepMapper<W, R> mapper) {
             super();
             myWork = work;
             myMapper = mapper;
         }
 
-        public TwoStepMapper<W, R> call() throws Exception {
+        @Override public TwoStepMapper<W, R> call() throws Exception {
 
-            W item = null;
+            @Var W item = null;
             while ((item = myWork.poll()) != null) {
                 myMapper.consume(item);
             }
@@ -69,13 +69,13 @@ public final class ProcessingService {
 
     public static final ProcessingService INSTANCE = new ProcessingService(DaemonPoolExecutor.INSTANCE);
 
-    public static ProcessingService newInstance(final String name) {
+    public static ProcessingService newInstance( String name) {
         return new ProcessingService(DaemonPoolExecutor.newCachedThreadPool(name));
     }
 
     private final ExecutorService myExecutor;
 
-    public ProcessingService(final ExecutorService executor) {
+    public ProcessingService( ExecutorService executor) {
         super();
         myExecutor = executor;
     }
@@ -85,7 +85,7 @@ public final class ProcessingService {
      *
      * @see ProcessingService#compute(Collection, IntSupplier, Function)
      */
-    public <W, R> Map<W, R> compute(final Collection<W> work, final Function<W, R> computer) {
+    public <W, R> Map<W, R> compute( Collection<W> work,  Function<W, R> computer) {
         return this.compute(work, Parallelism.CORES, computer);
     }
 
@@ -104,14 +104,15 @@ public final class ProcessingService {
      * @param computer The processing code
      * @return A map of function input to output
      */
-    public <W, R> Map<W, R> compute(final Collection<W> work, final int parallelism, final Function<W, R> computer) {
+    public <W, R> Map<W, R> compute( Collection<W> work,  int parallelism,  Function<W, R> computer) {
         return this.reduce(work, parallelism, () -> new TwoStepMapper.SimpleCache<>(computer));
     }
 
     /**
-     * @see ProcessingService#compute(Collection, int, Function)
+     *See {@link ProcessingService#compute(Collection, int, Function)}.
+ 
      */
-    public <W, R> Map<W, R> compute(final Collection<W> work, final IntSupplier parallelism, final Function<W, R> computer) {
+    public <W, R> Map<W, R> compute( Collection<W> work,  IntSupplier parallelism,  Function<W, R> computer) {
         return this.compute(work, parallelism.getAsInt(), computer);
     }
 
@@ -120,7 +121,8 @@ public final class ProcessingService {
     }
 
     /**
-     * @return The underlying {@link ExecutorService}
+     *Returns the underlying {@link ExecutorService}.
+ 
      */
     public ExecutorService getExecutor() {
         return myExecutor;
@@ -131,7 +133,7 @@ public final class ProcessingService {
      *
      * @see ProcessingService#map(Collection, IntSupplier, Function)
      */
-    public <W, R> Collection<R> map(final Collection<W> work, final Function<W, R> mapper) {
+    public <W, R> Collection<R> map( Collection<W> work,  Function<W, R> mapper) {
         return this.map(work, Parallelism.CORES, mapper);
     }
 
@@ -148,14 +150,15 @@ public final class ProcessingService {
      * @param mapper The mapper functiom
      * @return The mapped results
      */
-    public <W, R> Collection<R> map(final Collection<W> work, final int parallelism, final Function<W, R> mapper) {
+    public <W, R> Collection<R> map( Collection<W> work,  int parallelism,  Function<W, R> mapper) {
         return this.compute(work, parallelism, mapper).values();
     }
 
     /**
-     * @see ProcessingService#map(Collection, int, Function)
+     *See {@link ProcessingService#map(Collection, int, Function)}.
+ 
      */
-    public <W, R> Collection<R> map(final Collection<W> work, final IntSupplier parallelism, final Function<W, R> mapper) {
+    public <W, R> Collection<R> map( Collection<W> work,  IntSupplier parallelism,  Function<W, R> mapper) {
         return this.map(work, parallelism.getAsInt(), mapper);
     }
 
@@ -164,7 +167,7 @@ public final class ProcessingService {
      *
      * @see ProcessingService#process(Collection, IntSupplier, Consumer)
      */
-    public <W> void process(final Collection<? extends W> work, final Consumer<W> processor) {
+    public <W> void process( Collection<? extends W> work,  Consumer<W> processor) {
         this.process(work, Parallelism.CORES, processor);
     }
 
@@ -177,7 +180,7 @@ public final class ProcessingService {
      * @param parallelism The maximum number of concurrent workers that will process the work items
      * @param processor The processing code
      */
-    public <W> void process(final Collection<? extends W> work, final int parallelism, final Consumer<W> processor) {
+    public <W> void process( Collection<? extends W> work,  int parallelism,  Consumer<W> processor) {
 
         int concurrency = Math.min(work.size(), parallelism);
 
@@ -198,9 +201,10 @@ public final class ProcessingService {
     }
 
     /**
-     * @see ProcessingService#process(Collection, int, Consumer)
+     *See {@link ProcessingService#process(Collection, int, Consumer)}.
+ 
      */
-    public <W> void process(final Collection<? extends W> work, final IntSupplier parallelism, final Consumer<W> processor) {
+    public <W> void process( Collection<? extends W> work,  IntSupplier parallelism,  Consumer<W> processor) {
         this.process(work, parallelism.getAsInt(), processor);
     }
 
@@ -209,7 +213,7 @@ public final class ProcessingService {
      *
      * @see #process(Collection, Consumer)
      */
-    public <W> void processPair(final W work1, final W work2, final Consumer<W> processor) {
+    public <W> void processPair( W work1,  W work2,  Consumer<W> processor) {
         this.process(Arrays.asList(work1, work2), processor);
     }
 
@@ -218,7 +222,7 @@ public final class ProcessingService {
      *
      * @see #process(Collection, Consumer)
      */
-    public <W> void processTriplet(final W work1, final W work2, final W work3, final Consumer<W> processor) {
+    public <W> void processTriplet( W work1,  W work2,  W work3,  Consumer<W> processor) {
         this.process(Arrays.asList(work1, work2, work3), processor);
     }
 
@@ -233,7 +237,7 @@ public final class ProcessingService {
      * @param reducer Providing a {@link TwoStepMapper} implementation that does what you want is the key.
      * @return The results...
      */
-    public <W, R> R reduce(final Collection<W> work, final int parallelism, final Supplier<TwoStepMapper<W, R>> reducer) {
+    public <W, R> R reduce( Collection<W> work,  int parallelism,  Supplier<TwoStepMapper<W, R>> reducer) {
 
         int concurrency = Math.min(work.size(), parallelism);
 
@@ -260,16 +264,18 @@ public final class ProcessingService {
     }
 
     /**
-     * @see ProcessingService#reduce(Collection, int, Supplier)
+     *See {@link ProcessingService#reduce(Collection, int, Supplier)}.
+ 
      */
-    public <W, R> R reduce(final Collection<W> work, final IntSupplier parallelism, final Supplier<TwoStepMapper<W, R>> reducer) {
+    public <W, R> R reduce( Collection<W> work,  IntSupplier parallelism,  Supplier<TwoStepMapper<W, R>> reducer) {
         return this.reduce(work, parallelism.getAsInt(), reducer);
     }
 
     /**
-     * @see ProcessingService#reduce(Collection, int, Supplier)
+     *See {@link ProcessingService#reduce(Collection, int, Supplier)}.
+ 
      */
-    public <W, R> R reduce(final Collection<W> work, final Supplier<TwoStepMapper<W, R>> reducer) {
+    public <W, R> R reduce( Collection<W> work,  Supplier<TwoStepMapper<W, R>> reducer) {
         return this.reduce(work, Parallelism.CORES, reducer);
     }
 
@@ -279,7 +285,7 @@ public final class ProcessingService {
      * @param parallelism The number of concurrent workers/threads that will run
      * @param processor The processing code
      */
-    public void run(final int parallelism, final Runnable processor) {
+    public void run( int parallelism,  Runnable processor) {
 
         List<Callable<Object>> tasks = new ArrayList<>(parallelism);
         for (int i = 0; i < parallelism; i++) {
@@ -296,9 +302,10 @@ public final class ProcessingService {
     }
 
     /**
-     * @see ProcessingService#run(int, Runnable)
+     *See {@link ProcessingService#run(int, Runnable)}.
+ 
      */
-    public void run(final IntSupplier parallelism, final Runnable processor) {
+    public void run( IntSupplier parallelism,  Runnable processor) {
         this.run(parallelism.getAsInt(), processor);
     }
 

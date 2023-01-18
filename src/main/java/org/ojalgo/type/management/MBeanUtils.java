@@ -16,14 +16,14 @@ public abstract class MBeanUtils {
 
     private static final AtomicInteger ID = new AtomicInteger();
 
-    public static void register(final Object mbean) {
+    public static void register( Object mbean) {
         MBeanUtils.register(mbean, mbean.getClass().getSimpleName());
     }
 
-    public static void register(final Object mbean, final String type) {
+    public static void register( Object mbean,  String type) {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-            ObjectName on = new ObjectName("ojAlgo:type=" + type + "-" + ID.incrementAndGet());
+            var on = new ObjectName("ojAlgo:type=" + type + "-" + ID.incrementAndGet());
             mbs.registerMBean(mbean, on);
         } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException cause) {
             BasicLogger.error("Error creating MBean", cause);

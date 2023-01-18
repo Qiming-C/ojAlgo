@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Access2D;
@@ -28,9 +29,9 @@ import org.ojalgo.structure.Access2D;
 abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> {
 
     @SafeVarargs
-    static <N extends Comparable<N>> MatrixStore<N> buildColumn(final PhysicalStore.Factory<N, ?> factory, final long rowsCount,
-            final Access2D<N>... columnStores) {
-        MatrixStore<N> retVal = AbstractStore.cast(factory, columnStores[0]);
+    static <N extends Comparable<N>> MatrixStore<N> buildColumn( PhysicalStore.Factory<N, ?> factory,  long rowsCount,
+             Access2D<N>... columnStores) {
+        @Var MatrixStore<N> retVal = AbstractStore.cast(factory, columnStores[0]);
         for (int i = 1; i < columnStores.length; i++) {
             retVal = new AboveBelowStore<>(retVal, AbstractStore.cast(factory, columnStores[i]));
         }
@@ -41,9 +42,9 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         return retVal;
     }
 
-    static <N extends Comparable<N>> MatrixStore<N> buildColumn(final PhysicalStore.Factory<N, ?> factory, final long rowsCount,
-            final Access2D<N> columnStore) {
-        MatrixStore<N> retVal = AbstractStore.cast(factory, columnStore);
+    static <N extends Comparable<N>> MatrixStore<N> buildColumn( PhysicalStore.Factory<N, ?> factory,  long rowsCount,
+             Access2D<N> columnStore) {
+        @Var MatrixStore<N> retVal = AbstractStore.cast(factory, columnStore);
         long rowsSoFar = retVal.countRows();
         if (rowsSoFar < rowsCount) {
             retVal = new AboveBelowStore<>(retVal, new ZeroStore<>(retVal.physical(), rowsCount - rowsSoFar, retVal.countColumns()));
@@ -52,8 +53,8 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
     }
 
     @SafeVarargs
-    static <N extends Comparable<N>> MatrixStore<N> buildColumn(final PhysicalStore.Factory<N, ?> factory, final long rowsCount, final N... columnElements) {
-        MatrixStore<N> retVal = factory.columns(columnElements);
+    static <N extends Comparable<N>> MatrixStore<N> buildColumn( PhysicalStore.Factory<N, ?> factory,  long rowsCount,  N... columnElements) {
+        @Var MatrixStore<N> retVal = factory.columns(columnElements);
         long rowsSoFar = retVal.countRows();
         if (rowsSoFar < rowsCount) {
             retVal = new AboveBelowStore<>(retVal, new ZeroStore<>(factory, rowsCount - rowsSoFar, retVal.countColumns()));
@@ -62,8 +63,8 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
     }
 
     @SafeVarargs
-    static <N extends Comparable<N>> MatrixStore<N> buildRow(final PhysicalStore.Factory<N, ?> factory, final long colsCount, final Access2D<N>... rowStores) {
-        MatrixStore<N> retVal = AbstractStore.cast(factory, rowStores[0]);
+    static <N extends Comparable<N>> MatrixStore<N> buildRow( PhysicalStore.Factory<N, ?> factory,  long colsCount,  Access2D<N>... rowStores) {
+        @Var MatrixStore<N> retVal = AbstractStore.cast(factory, rowStores[0]);
         for (int j = 1; j < rowStores.length; j++) {
             retVal = new LeftRightStore<>(retVal, AbstractStore.cast(factory, rowStores[j]));
         }
@@ -74,8 +75,8 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         return retVal;
     }
 
-    static <N extends Comparable<N>> MatrixStore<N> buildRow(final PhysicalStore.Factory<N, ?> factory, final long colsCount, final Access2D<N> rowStore) {
-        MatrixStore<N> retVal = AbstractStore.cast(factory, rowStore);
+    static <N extends Comparable<N>> MatrixStore<N> buildRow( PhysicalStore.Factory<N, ?> factory,  long colsCount,  Access2D<N> rowStore) {
+        @Var MatrixStore<N> retVal = AbstractStore.cast(factory, rowStore);
         long colsSoFar = retVal.countColumns();
         if (colsSoFar < colsCount) {
             retVal = new LeftRightStore<>(retVal, new ZeroStore<>(retVal.physical(), retVal.countRows(), colsCount - colsSoFar));
@@ -84,8 +85,8 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
     }
 
     @SafeVarargs
-    static <N extends Comparable<N>> MatrixStore<N> buildRow(final PhysicalStore.Factory<N, ?> factory, final long colsCount, final N... rowElements) {
-        MatrixStore<N> retVal = new TransposedStore<>(factory.columns(rowElements));
+    static <N extends Comparable<N>> MatrixStore<N> buildRow( PhysicalStore.Factory<N, ?> factory,  long colsCount,  N... rowElements) {
+        @Var MatrixStore<N> retVal = new TransposedStore<>(factory.columns(rowElements));
         long colsSoFar = retVal.countColumns();
         if (colsSoFar < colsCount) {
             retVal = new LeftRightStore<>(retVal, new ZeroStore<>(factory, retVal.countRows(), colsCount - colsSoFar));
@@ -93,7 +94,7 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         return retVal;
     }
 
-    static <N extends Comparable<N>> MatrixStore<N> cast(final PhysicalStore.Factory<N, ?> factory, final Access2D<?> access) {
+    static <N extends Comparable<N>> MatrixStore<N> cast( PhysicalStore.Factory<N, ?> factory,  Access2D<?> access) {
         if (access instanceof MatrixStore<?>) {
             return (MatrixStore<N>) access;
         }
@@ -112,7 +113,7 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         ProgrammingError.throwForIllegalInvocation();
     }
 
-    protected AbstractStore(final int numberOfRows, final int numberOfColumns) {
+    protected AbstractStore( int numberOfRows,  int numberOfColumns) {
 
         super();
 
@@ -120,27 +121,27 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         myColDim = numberOfColumns;
     }
 
-    protected AbstractStore(final long numberOfRows, final long numberOfColumns) {
+    protected AbstractStore( long numberOfRows,  long numberOfColumns) {
         this(Math.toIntExact(numberOfRows), Math.toIntExact(numberOfColumns));
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myColDim;
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myRowDim;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof AbstractStore)) {
             return false;
         }
-        AbstractStore other = (AbstractStore) obj;
+        var other = (AbstractStore) obj;
         if (myColDim != other.myColDim) {
             return false;
         }
@@ -157,48 +158,48 @@ abstract class AbstractStore<N extends Comparable<N>> implements MatrixStore<N> 
         return true;
     }
 
-    public final int getColDim() {
+    @Override public final int getColDim() {
         return myColDim;
     }
 
-    public final int getMaxDim() {
+    @Override public final int getMaxDim() {
         return Math.max(myRowDim, myColDim);
     }
 
-    public final int getMinDim() {
+    @Override public final int getMinDim() {
         return Math.min(myRowDim, myColDim);
     }
 
-    public final int getRowDim() {
+    @Override public final int getRowDim() {
         return myRowDim;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + myColDim;
         result = prime * result + (myComponentType == null ? 0 : myComponentType.hashCode());
         result = prime * result + myRowDim;
         return result;
     }
 
-    public int limitOfColumn(final int col) {
+    @Override public int limitOfColumn( int col) {
         return myRowDim;
     }
 
-    public int limitOfRow(final int row) {
+    @Override public int limitOfRow( int row) {
         return myColDim;
     }
 
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    @Override public N multiplyBoth( Access1D<N> leftAndRight) {
 
         if (this.isPrimitive()) {
 
-            final PhysicalStore<N> tmpStep1 = this.physical().make(1L, leftAndRight.count());
+             PhysicalStore<N> tmpStep1 = this.physical().make(1L, leftAndRight.count());
             tmpStep1.fillByMultiplying(leftAndRight, this);
 
-            final PhysicalStore<N> tmpStep2 = this.physical().make(1L, 1L);
+             PhysicalStore<N> tmpStep2 = this.physical().make(1L, 1L);
             tmpStep2.fillByMultiplying(tmpStep1, leftAndRight);
 
             return tmpStep2.get(0L);

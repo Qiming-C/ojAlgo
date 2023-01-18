@@ -37,51 +37,51 @@ public abstract class AXPY implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void invoke(final BigDecimal[] y, final int basey, final BigDecimal a, final BigDecimal[] x, final int basex, final int first,
-            final int limit) {
+    public static void invoke( BigDecimal[] y,  int basey,  BigDecimal a,  BigDecimal[] x,  int basex,  int first,
+             int limit) {
         for (int i = first; i < limit; i++) {
             y[basey + i] = BigMath.ADD.invoke(y[basey + i], BigMath.MULTIPLY.invoke(a, x[basex + i])); // y += a*x
         }
     }
 
-    public static void invoke(final double[] y, final int basey, final double a, final double[] x, final int basex, final int first, final int limit) {
+    public static void invoke( double[] y,  int basey,  double a,  double[] x,  int basex,  int first,  int limit) {
         for (int i = first; i < limit; i++) {
             y[basey + i] += a * x[basex + i];
         }
     }
 
-    public static void invoke(final float[] y, final int basey, final float a, final float[] x, final int basex, final int first, final int limit) {
+    public static void invoke( float[] y,  int basey,  float a,  float[] x,  int basex,  int first,  int limit) {
         for (int i = first; i < limit; i++) {
             y[basey + i] += a * x[basex + i];
         }
     }
 
-    public static void invoke(final Mutate1D.Modifiable<?> y, final double a, final BigDecimal[] x) {
-        BigDecimal tmpA = new BigDecimal(a);
+    public static void invoke( Mutate1D.Modifiable<?> y,  double a,  BigDecimal[] x) {
+        var tmpA = new BigDecimal(a);
         for (int i = 0; i < x.length; i++) {
             y.add(i, x[i].multiply(tmpA));
         }
     }
 
-    public static void invoke(final Mutate1D.Modifiable<?> y, final double a, final double[] x) {
+    public static void invoke( Mutate1D.Modifiable<?> y,  double a,  double[] x) {
         for (int i = 0; i < x.length; i++) {
             y.add(i, a * x[i]);
         }
     }
 
-    public static void invoke(final Mutate1D.Modifiable<?> y, final double a, final float[] x) {
+    public static void invoke( Mutate1D.Modifiable<?> y,  double a,  float[] x) {
         for (int i = 0; i < x.length; i++) {
             y.add(i, a * x[i]);
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final Mutate1D.Modifiable<?> y, final double a, final N[] x) {
+    public static <N extends Scalar<N>> void invoke( Mutate1D.Modifiable<?> y,  double a,  N[] x) {
         for (int i = 0; i < x.length; i++) {
             y.add(i, x[i].multiply(a).get());
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] y, final int basey, final N a, final N[] x, final int basex, final int first, final int limit) {
+    public static <N extends Scalar<N>> void invoke( N[] y,  int basey,  N a,  N[] x,  int basex,  int first,  int limit) {
         for (int i = first; i < limit; i++) {
             y[basey + i] = y[basey + i].add(a.multiply(x[basex + i])).get();
         }

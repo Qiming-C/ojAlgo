@@ -29,18 +29,18 @@ import org.ojalgo.function.PrimitiveFunction;
 
 final class NodeDropper implements PrimitiveFunction.Unary {
 
-    static NodeDropper of(final double probabilityToKeep) {
+    static NodeDropper of( double probabilityToKeep) {
         return new NodeDropper(probabilityToKeep);
     }
 
     private final double myProbabilityToKeep;
 
-    NodeDropper(final double probabilityToKeep) {
+    NodeDropper( double probabilityToKeep) {
         super();
         myProbabilityToKeep = probabilityToKeep;
     }
 
-    public double invoke(final double arg) {
+    @Override public double invoke( double arg) {
         if (ThreadLocalRandom.current().nextDouble() <= myProbabilityToKeep) {
             return arg;
         }

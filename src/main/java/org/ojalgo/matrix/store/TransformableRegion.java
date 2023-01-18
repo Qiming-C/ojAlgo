@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Mutate2D.ModifiableReceiver;
 import org.ojalgo.structure.Transformation2D;
@@ -37,14 +38,14 @@ public interface TransformableRegion<N extends Comparable<N>> extends Modifiable
 
         void invoke(TransformableRegion<N> product, Access1D<N> left, int complexity, Access1D<N> right);
 
-        default void invoke(final TransformableRegion<N> product, final Access1D<N> left, final long complexity, final Access1D<N> right) {
+        default void invoke( TransformableRegion<N> product,  Access1D<N> left,  long complexity,  Access1D<N> right) {
             this.invoke(product, left, Math.toIntExact(complexity), right);
         }
 
     }
 
-    default void exchangeColumns(final long colA, final long colB) {
-        N valA, valB;
+    @Override default void exchangeColumns( long colA,  long colB) {
+        @Var N valA, valB;
         for (long i = 0L, limit = this.countRows(); i < limit; i++) {
             valA = this.get(i, colA);
             valB = this.get(i, colB);
@@ -53,8 +54,8 @@ public interface TransformableRegion<N extends Comparable<N>> extends Modifiable
         }
     }
 
-    default void exchangeRows(final long rowA, final long rowB) {
-        N valA, valB;
+    @Override default void exchangeRows( long rowA,  long rowB) {
+        @Var N valA, valB;
         for (long j = 0L, limit = this.countColumns(); j < limit; j++) {
             valA = this.get(rowA, j);
             valB = this.get(rowB, j);
@@ -63,34 +64,39 @@ public interface TransformableRegion<N extends Comparable<N>> extends Modifiable
         }
     }
 
-    void fillByMultiplying(final Access1D<N> left, final Access1D<N> right);
+    void fillByMultiplying( Access1D<N> left,  Access1D<N> right);
 
-    default void modifyAny(final Transformation2D<N> modifier) {
+    @Override default void modifyAny( Transformation2D<N> modifier) {
         modifier.transform(this);
     }
 
     /**
-     * @return A consumer (sub)region
+     *Returns a consumer (sub)region.
+ 
      */
     TransformableRegion<N> regionByColumns(int... columns);
 
     /**
-     * @return A consumer (sub)region
+     *Returns a consumer (sub)region.
+ 
      */
     TransformableRegion<N> regionByLimits(int rowLimit, int columnLimit);
 
     /**
-     * @return A consumer (sub)region
+     *Returns a consumer (sub)region.
+ 
      */
     TransformableRegion<N> regionByOffsets(int rowOffset, int columnOffset);
 
     /**
-     * @return A consumer (sub)region
+     *Returns a consumer (sub)region.
+ 
      */
     TransformableRegion<N> regionByRows(int... rows);
 
     /**
-     * @return A transposed consumer region
+     *Returns a transposed consumer region.
+ 
      */
     TransformableRegion<N> regionByTransposing();
 

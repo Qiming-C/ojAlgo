@@ -21,12 +21,12 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.PlainArray;
@@ -74,25 +74,25 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
         public final ComplexNumber value;
         public final Access1D<ComplexNumber> vector;
 
-        public Eigenpair(final ComplexNumber aValue, final Access1D<ComplexNumber> aVector) {
+        public Eigenpair( ComplexNumber aValue,  Access1D<ComplexNumber> aVector) {
             super();
             value = aValue;
             vector = aVector;
         }
 
-        public int compareTo(final Eigenpair other) {
+        @Override public int compareTo( Eigenpair other) {
             return DESCENDING_NORM.compare(value, other.value);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (obj == null || !(obj instanceof Eigenpair)) {
                 return false;
             }
-            final Eigenpair other = (Eigenpair) obj;
+             var other = (Eigenpair) obj;
             if (value == null) {
                 if (other.value != null) {
                     return false;
@@ -112,8 +112,8 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (value == null ? 0 : value.hashCode());
             return prime * result + (vector == null ? 0 : vector.hashCode());
         }
@@ -122,25 +122,25 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
 
     interface Factory<N extends Comparable<N>> extends MatrixDecomposition.Factory<Eigenvalue<N>> {
 
-        default Eigenvalue<N> make(final boolean hermitian) {
+        default Eigenvalue<N> make( boolean hermitian) {
             return this.make(TYPICAL, hermitian);
         }
 
-        default Eigenvalue<N> make(final int dimension, final boolean hermitian) {
+        default Eigenvalue<N> make( int dimension,  boolean hermitian) {
             return this.make(new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return dimension;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return dimension;
                 }
 
             }, hermitian);
         }
 
-        default Eigenvalue<N> make(final Structure2D typical) {
+        @Override default Eigenvalue<N> make( Structure2D typical) {
             if (typical instanceof MatrixStore) {
                 return this.make(typical, ((MatrixStore<?>) typical).isHermitian());
             }
@@ -152,7 +152,7 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
         /**
          * [A][V] = [B][V][D]
          */
-        default Eigenvalue.Generalised<N> makeGeneralised(final Structure2D typical) {
+        default Eigenvalue.Generalised<N> makeGeneralised( Structure2D typical) {
             return this.makeGeneralised(typical, Eigenvalue.Generalisation.A_B);
         }
 
@@ -199,8 +199,8 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
          *
          * @see #computeValuesOnly(org.ojalgo.structure.Access2D.Collectable)
          */
-        default boolean computeValuesOnly(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrixA,
-                final Access2D.Collectable<N, ? super PhysicalStore<N>> matrixB) {
+        default boolean computeValuesOnly( Access2D.Collectable<N, ? super PhysicalStore<N>> matrixA,
+                 Access2D.Collectable<N, ? super PhysicalStore<N>> matrixB) {
             return this.prepare(matrixB) && this.computeValuesOnly(matrixA);
         }
 
@@ -210,8 +210,8 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
          *
          * @see #decompose(org.ojalgo.structure.Access2D.Collectable)
          */
-        default boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrixA,
-                final Access2D.Collectable<N, ? super PhysicalStore<N>> matrixB) {
+        default boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrixA,
+                 Access2D.Collectable<N, ? super PhysicalStore<N>> matrixB) {
             return this.prepare(matrixB) && this.decompose(matrixA);
         }
 
@@ -222,12 +222,12 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     Factory<ComplexNumber> C128 = new Factory<>() {
 
         @Override
-        public Eigenvalue<ComplexNumber> make(final Structure2D typical, final boolean hermitian) {
+        public Eigenvalue<ComplexNumber> make( Structure2D typical,  boolean hermitian) {
             return hermitian ? new HermitianEvD.C128() : null;
         }
 
         @Override
-        public Eigenvalue.Generalised<ComplexNumber> makeGeneralised(final Structure2D typical, final Eigenvalue.Generalisation type) {
+        public Eigenvalue.Generalised<ComplexNumber> makeGeneralised( Structure2D typical,  Eigenvalue.Generalisation type) {
 
             PhysicalStore.Factory<ComplexNumber, GenericStore<ComplexNumber>> factory = GenericStore.C128;
             Cholesky<ComplexNumber> cholesky = Cholesky.COMPLEX.make(typical);
@@ -241,7 +241,7 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     Factory<Double> R064 = new Factory<>() {
 
         @Override
-        public Eigenvalue<Double> make(final Structure2D typical) {
+        public Eigenvalue<Double> make( Structure2D typical) {
             if (8192L < typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE) {
                 return new DynamicEvD.R064();
             }
@@ -249,7 +249,7 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
         }
 
         @Override
-        public Eigenvalue<Double> make(final Structure2D typical, final boolean hermitian) {
+        public Eigenvalue<Double> make( Structure2D typical,  boolean hermitian) {
             if (hermitian) {
                 if (8192L < typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE) {
                     return new HermitianEvD.R064();
@@ -263,7 +263,7 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
         }
 
         @Override
-        public Eigenvalue.Generalised<Double> makeGeneralised(final Structure2D typical, final Eigenvalue.Generalisation type) {
+        public Eigenvalue.Generalised<Double> makeGeneralised( Structure2D typical,  Eigenvalue.Generalisation type) {
 
             PhysicalStore.Factory<Double, Primitive64Store> factory = Primitive64Store.FACTORY;
             Cholesky<Double> cholesky = Cholesky.PRIMITIVE.make(typical);
@@ -277,12 +277,12 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     Factory<Quaternion> H256 = new Factory<>() {
 
         @Override
-        public Eigenvalue<Quaternion> make(final Structure2D typical, final boolean hermitian) {
+        public Eigenvalue<Quaternion> make( Structure2D typical,  boolean hermitian) {
             return hermitian ? new HermitianEvD.H256() : null;
         }
 
         @Override
-        public Eigenvalue.Generalised<Quaternion> makeGeneralised(final Structure2D typical, final Eigenvalue.Generalisation type) {
+        public Eigenvalue.Generalised<Quaternion> makeGeneralised( Structure2D typical,  Eigenvalue.Generalisation type) {
 
             PhysicalStore.Factory<Quaternion, GenericStore<Quaternion>> factory = GenericStore.H256;
             Cholesky<Quaternion> cholesky = Cholesky.QUATERNION.make(typical);
@@ -296,12 +296,12 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     Factory<RationalNumber> Q128 = new Factory<>() {
 
         @Override
-        public Eigenvalue<RationalNumber> make(final Structure2D typical, final boolean hermitian) {
+        public Eigenvalue<RationalNumber> make( Structure2D typical,  boolean hermitian) {
             return hermitian ? new HermitianEvD.Q128() : null;
         }
 
         @Override
-        public Eigenvalue.Generalised<RationalNumber> makeGeneralised(final Structure2D typical, final Eigenvalue.Generalisation type) {
+        public Eigenvalue.Generalised<RationalNumber> makeGeneralised( Structure2D typical,  Eigenvalue.Generalisation type) {
 
             PhysicalStore.Factory<RationalNumber, GenericStore<RationalNumber>> factory = GenericStore.Q128;
             Cholesky<RationalNumber> cholesky = Cholesky.RATIONAL.make(typical);
@@ -315,12 +315,12 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     Factory<Quadruple> R128 = new Factory<>() {
 
         @Override
-        public Eigenvalue<Quadruple> make(final Structure2D typical, final boolean hermitian) {
+        public Eigenvalue<Quadruple> make( Structure2D typical,  boolean hermitian) {
             return hermitian ? new HermitianEvD.R128() : null;
         }
 
         @Override
-        public Eigenvalue.Generalised<Quadruple> makeGeneralised(final Structure2D typical, final Eigenvalue.Generalisation type) {
+        public Eigenvalue.Generalised<Quadruple> makeGeneralised( Structure2D typical,  Eigenvalue.Generalisation type) {
 
             PhysicalStore.Factory<Quadruple, GenericStore<Quadruple>> factory = GenericStore.R128;
             Cholesky<Quadruple> cholesky = Cholesky.QUADRUPLE.make(typical);
@@ -373,26 +373,26 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     @Deprecated
     Factory<Quadruple> QUADRUPLE = R128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final Eigenvalue<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  Eigenvalue<N> decomposition,  NumberContext context) {
 
-        final MatrixStore<N> tmpD = decomposition.getD();
-        final MatrixStore<N> tmpV = decomposition.getV();
+         MatrixStore<N> tmpD = decomposition.getD();
+         MatrixStore<N> tmpV = decomposition.getV();
 
         // Check that [A][V] == [V][D] ([A] == [V][D][V]<sup>T</sup> is not always true)
-        final MatrixStore<N> tmpStore1 = matrix.multiply(tmpV);
-        final MatrixStore<N> tmpStore2 = tmpV.multiply(tmpD);
+         MatrixStore<N> tmpStore1 = matrix.multiply(tmpV);
+         MatrixStore<N> tmpStore2 = tmpV.multiply(tmpD);
 
         return Access2D.equals(tmpStore1, tmpStore2, context);
     }
 
-    private void copyEigenvector(final int index, final Array1D<ComplexNumber> destination) {
+    private void copyEigenvector( int index,  Array1D<ComplexNumber> destination) {
 
-        final MatrixStore<N> tmpV = this.getV();
-        final MatrixStore<N> tmpD = this.getD();
-        final long tmpDimension = tmpD.countColumns();
+         MatrixStore<N> tmpV = this.getV();
+         MatrixStore<N> tmpD = this.getD();
+         long tmpDimension = tmpD.countColumns();
 
-        final int prevCol = index - 1;
-        final int nextCol = index + 1;
+         int prevCol = index - 1;
+         int nextCol = index + 1;
 
         if (index < tmpDimension - 1L && tmpD.doubleValue(nextCol, index) != 0.0) {
             for (int i = 0; i < tmpDimension; i++) {
@@ -423,15 +423,15 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
      */
     MatrixStore<N> getD();
 
-    default Eigenpair getEigenpair(final int index) {
+    default Eigenpair getEigenpair( int index) {
 
-        final long dim = this.getV().countColumns();
+         long dim = this.getV().countColumns();
 
-        final Array1D<ComplexNumber> vector = Array1D.C128.make(dim);
+         Array1D<ComplexNumber> vector = Array1D.C128.make(dim);
         this.copyEigenvector(index, vector);
 
-        final Array1D<ComplexNumber> values = this.getEigenvalues();
-        final ComplexNumber value = values.get(index);
+         Array1D<ComplexNumber> values = this.getEigenvalues();
+         ComplexNumber value = values.get(index);
 
         return new Eigenpair(value, vector);
     }
@@ -442,7 +442,7 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
      *
      * @see org.ojalgo.matrix.Provider2D.Eigenpairs#getEigenpairs()
      */
-    default List<Eigenpair> getEigenpairs() {
+    @Override default List<Eigenpair> getEigenpairs() {
 
         List<Eigenpair> retVal = new ArrayList<>();
 
@@ -474,18 +474,18 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
      * @param imaginaryParts An optional array that, if present, will receive the imaginary parts of the
      *        eigenvalues
      */
-    default void getEigenvalues(final double[] realParts, final Optional<double[]> imaginaryParts) {
+    default void getEigenvalues( double[] realParts,  Optional<double[]> imaginaryParts) {
 
         ProgrammingError.throwIfNull(realParts, imaginaryParts);
 
-        final Array1D<ComplexNumber> values = this.getEigenvalues();
+         Array1D<ComplexNumber> values = this.getEigenvalues();
 
-        final int length = realParts.length;
+         int length = realParts.length;
 
         if (imaginaryParts.isPresent()) {
-            final double[] imagParts = imaginaryParts.get();
+             double[] imagParts = imaginaryParts.get();
             for (int i = 0; i < length; i++) {
-                final ComplexNumber value = values.get(i);
+                 ComplexNumber value = values.get(i);
                 realParts[i] = value.getReal();
                 imagParts[i] = value.getImaginary();
             }
@@ -528,13 +528,14 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
     //    }
 
     /**
-     * @return A complex valued alternative to {@link #getV()}.
+     *Returns a complex valued alternative to {@link #getV()}.
+ 
      */
     default MatrixStore<ComplexNumber> getEigenvectors() {
 
-        final long tmpDimension = this.getV().countColumns();
+         long tmpDimension = this.getV().countColumns();
 
-        final GenericStore<ComplexNumber> retVal = GenericStore.C128.make(tmpDimension, tmpDimension);
+         GenericStore<ComplexNumber> retVal = GenericStore.C128.make(tmpDimension, tmpDimension);
 
         for (int j = 0; j < tmpDimension; j++) {
             this.copyEigenvector(j, retVal.sliceColumn(0, j));
@@ -569,10 +570,10 @@ public interface Eigenvalue<N extends Comparable<N>> extends MatrixDecomposition
      *
      * @return true if they are ordered
      */
-    boolean isOrdered();
+    @Override boolean isOrdered();
 
-    default MatrixStore<N> reconstruct() {
-        final MatrixStore<N> mtrxV = this.getV();
+    @Override default MatrixStore<N> reconstruct() {
+         MatrixStore<N> mtrxV = this.getV();
         MatrixStore<N> mtrxD = this.getD();
         return mtrxV.multiply(mtrxD).multiply(mtrxV.conjugate());
     }

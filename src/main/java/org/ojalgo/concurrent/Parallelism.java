@@ -64,11 +64,11 @@ public enum Parallelism implements ParallelismSupplier {
 
     private final IntSupplier myValue;
 
-    Parallelism(final IntSupplier value) {
+    Parallelism( IntSupplier value) {
         myValue = value;
     }
 
-    public int getAsInt() {
+    @Override public int getAsInt() {
         return myValue.getAsInt();
     }
 

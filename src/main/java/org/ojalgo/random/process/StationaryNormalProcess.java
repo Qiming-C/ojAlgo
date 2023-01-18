@@ -39,34 +39,34 @@ import org.ojalgo.structure.Access1D;
  */
 public final class StationaryNormalProcess extends SingleValueBasedProcess<Normal> implements Process1D.ComponentProcess<Normal> {
 
-    public static StationaryNormalProcess estimateARCH(final Access1D<?> series, final int q) {
+    public static StationaryNormalProcess estimateARCH( Access1D<?> series,  int q) {
         return new StationaryNormalProcess(ARCH.estimate(series, q));
     }
 
-    public static StationaryNormalProcess estimateGARCH(final Access1D<?> series, final int p, final int q) {
+    public static StationaryNormalProcess estimateGARCH( Access1D<?> series,  int p,  int q) {
         return new StationaryNormalProcess(GARCH.estimate(series, p, q));
     }
 
-    public static StationaryNormalProcess of(final ScedasticityModel scedasticityModel) {
+    public static StationaryNormalProcess of( ScedasticityModel scedasticityModel) {
         return new StationaryNormalProcess(scedasticityModel);
     }
 
     private final ScedasticityModel myScedasticityModel;
 
-    StationaryNormalProcess(final ScedasticityModel scedasticityModel) {
+    StationaryNormalProcess( ScedasticityModel scedasticityModel) {
         super();
         myScedasticityModel = scedasticityModel;
     }
 
-    public Normal getDistribution(final double evaluationPoint) {
+    @Override public Normal getDistribution( double evaluationPoint) {
         return Normal.of(this.getExpected(evaluationPoint), this.getStandardDeviation(evaluationPoint));
     }
 
-    public double getValue() {
+    @Override public double getValue() {
         return this.getCurrentValue();
     }
 
-    public void setValue(final double newValue) {
+    @Override public void setValue( double newValue) {
         this.setCurrentValue(newValue);
         myScedasticityModel.update(newValue);
     }
@@ -75,12 +75,12 @@ public final class StationaryNormalProcess extends SingleValueBasedProcess<Norma
         return this.step(ONE);
     }
 
-    public double step(final double stepSize, final double standardGaussianInnovation) {
+    @Override public double step( double stepSize,  double standardGaussianInnovation) {
         return this.doStep(stepSize, standardGaussianInnovation);
     }
 
     @Override
-    double doStep(final double stepSize, final double normalisedRandomIncrement) {
+    double doStep( double stepSize,  double normalisedRandomIncrement) {
 
         double stdDev = this.getStandardDeviation(stepSize);
 
@@ -94,12 +94,12 @@ public final class StationaryNormalProcess extends SingleValueBasedProcess<Norma
     }
 
     @Override
-    double getExpected(final double stepSize) {
+    double getExpected( double stepSize) {
         return myScedasticityModel.getMean();
     }
 
     @Override
-    double getLowerConfidenceQuantile(final double stepSize, final double confidence) {
+    double getLowerConfidenceQuantile( double stepSize,  double confidence) {
         return this.getExpected(stepSize) - (this.getStandardDeviation(stepSize) * SQRT_TWO * ErrorFunction.erfi(confidence));
     }
 
@@ -109,17 +109,17 @@ public final class StationaryNormalProcess extends SingleValueBasedProcess<Norma
     }
 
     @Override
-    double getStandardDeviation(final double stepSize) {
+    double getStandardDeviation( double stepSize) {
         return SQRT.invoke(this.getVariance(stepSize));
     }
 
     @Override
-    double getUpperConfidenceQuantile(final double stepSize, final double confidence) {
+    double getUpperConfidenceQuantile( double stepSize,  double confidence) {
         return this.getExpected(stepSize) + (this.getStandardDeviation(stepSize) * SQRT_TWO * ErrorFunction.erfi(confidence));
     }
 
     @Override
-    double getVariance(final double stepSize) {
+    double getVariance( double stepSize) {
         return stepSize * myScedasticityModel.getVariance();
     }
 

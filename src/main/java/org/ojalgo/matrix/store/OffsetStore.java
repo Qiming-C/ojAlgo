@@ -25,7 +25,7 @@ final class OffsetStore<N extends Comparable<N>> extends SelectingStore<N> {
 
     private final int myRowOffset, myColumnOffset; // origin/offset
 
-    OffsetStore(final MatrixStore<N> base, final int rowOffset, final int columnOffset) {
+    OffsetStore( MatrixStore<N> base,  int rowOffset,  int columnOffset) {
 
         super(base, base.countRows() - rowOffset, base.countColumns() - columnOffset);
 
@@ -33,7 +33,7 @@ final class OffsetStore<N extends Comparable<N>> extends SelectingStore<N> {
         myColumnOffset = columnOffset;
     }
 
-    OffsetStore(final MatrixStore<N> base, final long rowOffset, final long columnOffset) {
+    OffsetStore( MatrixStore<N> base,  long rowOffset,  long columnOffset) {
 
         super(base, base.countRows() - rowOffset, base.countColumns() - columnOffset);
 
@@ -41,11 +41,11 @@ final class OffsetStore<N extends Comparable<N>> extends SelectingStore<N> {
         myColumnOffset = Math.toIntExact(columnOffset);
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return this.base().doubleValue(myRowOffset + row, myColumnOffset + col);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return this.base().get(myRowOffset + row, myColumnOffset + col);
     }
 

@@ -21,6 +21,7 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +36,6 @@ import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipOutputStream;
-
 import org.ojalgo.type.function.AutoConsumer;
 import org.ojalgo.type.keyvalue.EntryPair.KeyedPrimitive;
 
@@ -43,21 +43,21 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
 
     public static final class Builder extends ReaderWriterBuilder<ToFileWriter.Builder> {
 
-        Builder(final File[] files) {
+        Builder( File[] files) {
             super(files);
 
         }
 
-        public <T> AutoConsumer<T> build(final Function<File, ToFileWriter<T>> factory) {
+        public <T> AutoConsumer<T> build( Function<File, ToFileWriter<T>> factory) {
             return this.build(Object::hashCode, factory);
         }
 
         @SuppressWarnings("resource")
-        public <T> AutoConsumer<T> build(final ToIntFunction<T> distributor, final Function<File, ? extends AutoConsumer<T>> factory) {
+        public <T> AutoConsumer<T> build( ToIntFunction<T> distributor,  Function<File, ? extends AutoConsumer<T>> factory) {
 
             File[] files = this.getFiles();
 
-            AutoConsumer<T>[] shards = (AutoConsumer<T>[]) new AutoConsumer<?>[files.length];
+            var shards = (AutoConsumer<T>[]) new AutoConsumer<?>[files.length];
             for (int i = 0; i < shards.length; i++) {
                 shards[i] = factory.apply(files[i]);
             }
@@ -85,7 +85,7 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
 
             } else if (numberOfQueues == numberOfShards) {
 
-                AutoConsumer<T>[] queuedWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[numberOfQueues];
+                var queuedWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[numberOfQueues];
 
                 for (int q = 0; q < numberOfQueues; q++) {
                     LinkedBlockingQueue<T> queue = new LinkedBlockingQueue<>(capacityPerQueue);
@@ -96,13 +96,13 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
 
             } else {
 
-                int candidateShardsPerQueue = numberOfShards / numberOfQueues;
+                @Var int candidateShardsPerQueue = numberOfShards / numberOfQueues;
                 while (candidateShardsPerQueue * numberOfQueues < numberOfShards) {
                     candidateShardsPerQueue++;
                 }
                 int shardsPerQueue = candidateShardsPerQueue;
 
-                AutoConsumer<T>[] queuedWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[numberOfQueues];
+                var queuedWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[numberOfQueues];
 
                 ToIntFunction<T> toQueueDistributor = item -> Math.abs(distributor.applyAsInt(item) % numberOfShards) / shardsPerQueue;
                 ToIntFunction<T> toShardDistributor = item -> Math.abs(distributor.applyAsInt(item) % numberOfShards) % shardsPerQueue;
@@ -110,7 +110,7 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
                 for (int q = 0; q < numberOfQueues; q++) {
                     int offset = q * shardsPerQueue;
 
-                    AutoConsumer<T>[] shardWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[shardsPerQueue];
+                    var shardWriters = (AutoConsumer<T>[]) new AutoConsumer<?>[shardsPerQueue];
                     Arrays.fill(shardWriters, AutoConsumer.NULL);
                     for (int b = 0; b < shardsPerQueue && offset + b < numberOfShards; b++) {
                         shardWriters[b] = shards[offset + b];
@@ -131,7 +131,7 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
             }
         }
 
-        public <T> AutoConsumer<KeyedPrimitive<T>> buildMapped(final Function<File, ToFileWriter<T>> factory) {
+        public <T> AutoConsumer<KeyedPrimitive<T>> buildMapped( Function<File, ToFileWriter<T>> factory) {
 
             Function<KeyedPrimitive<T>, T> mapper = KeyedPrimitive::getKey;
             ToIntFunction<KeyedPrimitive<T>> distributor = KeyedPrimitive::intValue;
@@ -146,27 +146,27 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
     /**
      * Make sure this directory exists, create if necessary
      */
-    static void mkdirs(final File dir) {
+    static void mkdirs( File dir) {
         if (!dir.exists() && (!dir.mkdirs() && !dir.exists())) {
             throw new RuntimeException("Failed to create " + dir.getAbsolutePath());
         }
     }
 
-    static Builder newBuilder(final File... file) {
+    static Builder newBuilder( File... file) {
         return new Builder(file);
     }
 
-    static Builder newBuilder(final ShardedFile shards) {
+    static Builder newBuilder( ShardedFile shards) {
         return new Builder(shards.shards());
     }
 
-    static OutputStream output(final File file) {
+    static OutputStream output( File file) {
 
         try {
 
             ToFileWriter.mkdirs(file.getParentFile());
             String name = file.getName();
-            OutputStream retVal = new FileOutputStream(file);
+            @Var OutputStream retVal = new FileOutputStream(file);
 
             if (name.endsWith(".gz")) {
                 retVal = new GZIPOutputStream(retVal);
@@ -181,7 +181,7 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
         }
     }
 
-    static <T extends Serializable> void serializeObjectToFile(final T object, final File file) {
+    static <T extends Serializable> void serializeObjectToFile( T object,  File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(ToFileWriter.output(file))) {
             oos.writeObject(object);
         } catch (IOException cause) {
@@ -189,7 +189,7 @@ public interface ToFileWriter<T> extends AutoConsumer<T>, Closeable {
         }
     }
 
-    default void close() throws IOException {
+    @Override default void close() throws IOException {
         try {
             AutoConsumer.super.close();
         } catch (Exception cause) {

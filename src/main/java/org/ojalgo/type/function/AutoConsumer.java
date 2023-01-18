@@ -45,9 +45,9 @@ public interface AutoConsumer<T> extends AutoCloseable, Consumer<T>, AutoFunctio
     /**
      * Will create a JMX bean, with the given name, that keeps track of the consumer's throughput.
      */
-    static <T> AutoConsumer<T> managed(final String name, final Consumer<T> consumer) {
+    static <T> AutoConsumer<T> managed( String name,  Consumer<T> consumer) {
 
-        Throughput manager = new Throughput();
+        var manager = new Throughput();
 
         MBeanUtils.register(manager, name);
 
@@ -57,14 +57,14 @@ public interface AutoConsumer<T> extends AutoCloseable, Consumer<T>, AutoFunctio
     /**
      * If you want that throughput manager to be registered as a JMX bean, that's up to you.
      */
-    static <T> AutoConsumer<T> managed(final Throughput manager, final Consumer<T> consumer) {
+    static <T> AutoConsumer<T> managed( Throughput manager,  Consumer<T> consumer) {
         return new ManagedConsumer<>(manager, consumer);
     }
 
     /**
      * Map/transform and then consume
      */
-    static <S, T> AutoConsumer<S> mapped(final Function<S, T> mapper, final Consumer<T> consumer) {
+    static <S, T> AutoConsumer<S> mapped( Function<S, T> mapper,  Consumer<T> consumer) {
         return new MappedConsumer<>(mapper, consumer);
     }
 
@@ -72,28 +72,28 @@ public interface AutoConsumer<T> extends AutoCloseable, Consumer<T>, AutoFunctio
      * Put on the queue, and then the consumers work off that queue. There will be 1 thread (executor task)
      * per consumer.
      */
-    static <T> AutoConsumer<T> queued(final ExecutorService executor, final BlockingQueue<T> queue, final Consumer<T>... consumers) {
+    static <T> AutoConsumer<T> queued( ExecutorService executor,  BlockingQueue<T> queue,  Consumer<T>... consumers) {
         return new QueuedConsumer<>(executor, queue, consumers);
     }
 
     /**
      * Distribute to 1 of the consumers
      */
-    static <T> AutoConsumer<T> sharded(final ToIntFunction<T> distributor, final Consumer<T>... consumers) {
+    static <T> AutoConsumer<T> sharded( ToIntFunction<T> distributor,  Consumer<T>... consumers) {
         return ShardedConsumer.of(distributor, consumers);
     }
 
-    default void accept(final T item) {
+    @Override default void accept( T item) {
         this.write(item);
     }
 
-    default void close() throws Exception {
+    @Override default void close() throws Exception {
         // Default implementation does nothing
     }
 
     void write(T item);
 
-    default void writeBatch(final Iterable<? extends T> batch) {
+    default void writeBatch( Iterable<? extends T> batch) {
         for (T item : batch) {
             this.write(item);
         }

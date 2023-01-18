@@ -23,6 +23,7 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.optimisation.Optimisation;
 
@@ -36,7 +37,7 @@ import org.ojalgo.optimisation.Optimisation;
  */
 final class UnconstrainedSolver extends ConvexSolver {
 
-    UnconstrainedSolver(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    UnconstrainedSolver( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
         super(convexSolverBuilder, optimisationOptions);
     }
 
@@ -58,14 +59,14 @@ final class UnconstrainedSolver extends ConvexSolver {
     @Override
     protected void performIteration() {
 
-        boolean solved = false;
+        @Var boolean solved = false;
 
-        if (solved = this.isSolvableQ()) {
+        if ((solved = this.isSolvableQ())) {
             // Q is SPD
 
             this.getSolutionQ(this.getMatrixC(), this.getSolutionX());
 
-        } else if (solved = this.solveFullKKT(this.getSolutionX())) {
+        } else if ((solved = this.solveFullKKT(this.getSolutionX()))) {
             // Q not SPD, but the KKT system is solvable
         }
 

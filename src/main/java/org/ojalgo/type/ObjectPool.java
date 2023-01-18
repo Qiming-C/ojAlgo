@@ -21,9 +21,9 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import org.ojalgo.ProgrammingError;
 
 public abstract class ObjectPool<T> {
@@ -37,7 +37,7 @@ public abstract class ObjectPool<T> {
         myLimited = false;
     }
 
-    public ObjectPool(final int capacity) {
+    public ObjectPool( int capacity) {
         super();
         myObjects = new LinkedBlockingQueue<>(capacity);
         myLimited = true;
@@ -47,7 +47,7 @@ public abstract class ObjectPool<T> {
     }
 
     public final T borrow() {
-        T retVal;
+        @Var T retVal;
         if (myLimited) {
             try {
                 retVal = myObjects.take();
@@ -60,7 +60,7 @@ public abstract class ObjectPool<T> {
         return retVal;
     }
 
-    public final void giveBack(final T object) {
+    public final void giveBack( T object) {
         ProgrammingError.throwIfNull(object);
         this.reset(object);
         if (myLimited) {

@@ -35,33 +35,33 @@ public class ColourData {
 
     public static ColourData random() {
 
-        final int tmpR = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
-        final int tmpG = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
-        final int tmpB = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
+         var tmpR = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
+         var tmpG = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
+         var tmpB = (int) PrimitiveMath.FLOOR.invoke(LIMIT * Math.random());
 
         return new ColourData(tmpR, tmpG, tmpB);
     }
 
-    public static ColourData valueOf(final String colourAsHexString) {
-        final int i = Integer.decode(colourAsHexString).intValue();
+    public static ColourData valueOf( String colourAsHexString) {
+         int i = Integer.decode(colourAsHexString).intValue();
         return new ColourData((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
 
     private final int myValue;
 
-    public ColourData(final float r, final float g, final float b) {
+    public ColourData( float r,  float g,  float b) {
         this((int) ((r * 255F) + 0.5F), (int) ((g * 255F) + 0.5F), (int) ((b * 255F) + 0.5F));
     }
 
-    public ColourData(final float r, final float g, final float b, final float a) {
+    public ColourData( float r,  float g,  float b,  float a) {
         this((int) ((r * 255F) + 0.5F), (int) ((g * 255F) + 0.5F), (int) ((b * 255F) + 0.5F), (int) ((a * 255F) + 0.5F));
     }
 
-    public ColourData(final int rgb) {
+    public ColourData( int rgb) {
         myValue = 0xff000000 | rgb;
     }
 
-    public ColourData(final int rgba, final boolean alpha) {
+    public ColourData( int rgba,  boolean alpha) {
         if (alpha) {
             myValue = rgba;
         } else {
@@ -69,11 +69,11 @@ public class ColourData {
         }
     }
 
-    public ColourData(final int r, final int g, final int b) {
+    public ColourData( int r,  int g,  int b) {
         this(r, g, b, 255);
     }
 
-    public ColourData(final int r, final int g, final int b, final int a) {
+    public ColourData( int r,  int g,  int b,  int a) {
         myValue = ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0);
     }
 

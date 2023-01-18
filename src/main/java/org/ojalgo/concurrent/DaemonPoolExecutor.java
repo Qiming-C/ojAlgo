@@ -35,93 +35,96 @@ public final class DaemonPoolExecutor extends ThreadPoolExecutor {
             new SynchronousQueue<Runnable>(), DaemonPoolExecutor.newThreadFactory("ojAlgo-daemon-"));
 
     /**
-     * @see java.util.concurrent.AbstractExecutorService#submit(java.util.concurrent.Callable)
+     *See {@link java.util.concurrent.AbstractExecutorService#submit(java.util.concurrent.Callable)}.
+ 
      */
-    public static <T> Future<T> invoke(final Callable<T> task) {
+    public static <T> Future<T> invoke( Callable<T> task) {
         return INSTANCE.submit(task);
     }
 
     /**
-     * @see java.util.concurrent.AbstractExecutorService#submit(java.lang.Runnable)
+     *See {@link java.util.concurrent.AbstractExecutorService#submit(java.lang.Runnable)}.
+ 
      */
-    public static Future<?> invoke(final Runnable task) {
+    public static Future<?> invoke( Runnable task) {
         return INSTANCE.submit(task);
     }
 
     /**
-     * @see java.util.concurrent.AbstractExecutorService#submit(java.lang.Runnable, java.lang.Object)
+     *See {@link java.util.concurrent.AbstractExecutorService#submit(java.lang.Runnable, java.lang.Object)}.
+ 
      */
-    public static <T> Future<T> invoke(final Runnable task, final T result) {
+    public static <T> Future<T> invoke( Runnable task,  T result) {
         return INSTANCE.submit(task, result);
     }
 
     /**
      * Like {@link Executors#newCachedThreadPool()} but with identifiable (daemon) threads
      */
-    public static ExecutorService newCachedThreadPool(final String name) {
+    public static ExecutorService newCachedThreadPool( String name) {
         return Executors.newCachedThreadPool(DaemonPoolExecutor.newThreadFactory(name));
     }
 
     /**
      * Like {@link Executors#newFixedThreadPool(int)} but with identifiable (daemon) threads
      */
-    public static ExecutorService newFixedThreadPool(final String name, final int nThreads) {
+    public static ExecutorService newFixedThreadPool( String name,  int nThreads) {
         return Executors.newFixedThreadPool(nThreads, DaemonPoolExecutor.newThreadFactory(name));
     }
 
     /**
      * Like {@link Executors#newScheduledThreadPool(int)} but with identifiable (daemon) threads
      */
-    public static ExecutorService newScheduledThreadPool(final String name, final int corePoolSize) {
+    public static ExecutorService newScheduledThreadPool( String name,  int corePoolSize) {
         return Executors.newScheduledThreadPool(corePoolSize, DaemonPoolExecutor.newThreadFactory(name));
     }
 
     /**
      * Like {@link Executors#newSingleThreadExecutor()} but with identifiable (daemon) threads
      */
-    public static ExecutorService newSingleThreadExecutor(final String name) {
+    public static ExecutorService newSingleThreadExecutor( String name) {
         return Executors.newSingleThreadExecutor(DaemonPoolExecutor.newThreadFactory(name));
     }
 
     /**
      * Like {@link Executors#newSingleThreadScheduledExecutor()} but with identifiable (daemon) threads
      */
-    public static ExecutorService newSingleThreadScheduledExecutor(final String name) {
+    public static ExecutorService newSingleThreadScheduledExecutor( String name) {
         return Executors.newSingleThreadScheduledExecutor(DaemonPoolExecutor.newThreadFactory(name));
     }
 
-    public static ThreadFactory newThreadFactory(final String name) {
+    public static ThreadFactory newThreadFactory( String name) {
         return DaemonPoolExecutor.newThreadFactory(GROUP, name);
     }
 
-    public static ThreadFactory newThreadFactory(final ThreadGroup group, final String name) {
+    public static ThreadFactory newThreadFactory( ThreadGroup group,  String name) {
 
         String prefix = name.endsWith("-") ? name : name + "-";
 
         return target -> {
-            Thread thread = new Thread(group, target, prefix + DaemonPoolExecutor.COUNTER.incrementAndGet());
+            var thread = new Thread(group, target, prefix + DaemonPoolExecutor.COUNTER.incrementAndGet());
             thread.setDaemon(true);
             return thread;
         };
     }
 
-    DaemonPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit,
-            final BlockingQueue<Runnable> workQueue) {
+    DaemonPoolExecutor( int corePoolSize,  int maximumPoolSize,  long keepAliveTime,  TimeUnit unit,
+             BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
-    DaemonPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit,
-            final BlockingQueue<Runnable> workQueue, final RejectedExecutionHandler handler) {
+    DaemonPoolExecutor( int corePoolSize,  int maximumPoolSize,  long keepAliveTime,  TimeUnit unit,
+             BlockingQueue<Runnable> workQueue,  RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, handler);
     }
 
-    DaemonPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit,
-            final BlockingQueue<Runnable> workQueue, final ThreadFactory threadFactory) {
+    DaemonPoolExecutor( int corePoolSize,  int maximumPoolSize,  long keepAliveTime,  TimeUnit unit,
+             BlockingQueue<Runnable> workQueue,  ThreadFactory threadFactory) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
     }
 
-    DaemonPoolExecutor(final int corePoolSize, final int maximumPoolSize, final long keepAliveTime, final TimeUnit unit,
-            final BlockingQueue<Runnable> workQueue, final ThreadFactory threadFactory, final RejectedExecutionHandler handler) {
+    DaemonPoolExecutor( int corePoolSize,  int maximumPoolSize,  long keepAliveTime,  TimeUnit unit,
+             BlockingQueue<Runnable> workQueue,  ThreadFactory threadFactory,  RejectedExecutionHandler handler) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
     }
 

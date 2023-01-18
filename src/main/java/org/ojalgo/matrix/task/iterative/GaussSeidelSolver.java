@@ -23,8 +23,8 @@ package org.ojalgo.matrix.task.iterative;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.List;
-
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.equation.Equation;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -47,20 +47,20 @@ public final class GaussSeidelSolver extends StationaryIterativeSolver implement
         super();
     }
 
-    public double resolve(final List<Equation> equations, final PhysicalStore<Double> solution) {
+    @Override public double resolve( List<Equation> equations,  PhysicalStore<Double> solution) {
 
-        double tmpNormErr = POSITIVE_INFINITY;
-        double tmpNormRHS = ZERO;
+        @Var double tmpNormErr = POSITIVE_INFINITY;
+        @Var double tmpNormRHS = ZERO;
 
-        final int tmpCountRows = equations.size();
+         int tmpCountRows = equations.size();
         for (int r = 0; r < tmpCountRows; r++) {
             tmpNormRHS = HYPOT.invoke(tmpNormRHS, equations.get(r).getRHS());
         }
 
-        int tmpIterations = 0;
-        final int tmpLimit = this.getIterationsLimit();
-        final NumberContext tmpCntxt = this.getAccuracyContext();
-        final double tmpRelaxationFactor = this.getRelaxationFactor();
+        @Var int tmpIterations = 0;
+         int tmpLimit = this.getIterationsLimit();
+         NumberContext tmpCntxt = this.getAccuracyContext();
+         double tmpRelaxationFactor = this.getRelaxationFactor();
 
         do {
 
@@ -81,9 +81,9 @@ public final class GaussSeidelSolver extends StationaryIterativeSolver implement
         return tmpNormErr / tmpNormRHS;
     }
 
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> current) throws RecoverableCondition {
+    @Override public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> current) throws RecoverableCondition {
 
-        final List<Equation> equations = IterativeSolverTask.toListOfRows(body, rhs);
+         List<Equation> equations = IterativeSolverTask.toListOfRows(body, rhs);
 
         this.resolve(equations, current);
 

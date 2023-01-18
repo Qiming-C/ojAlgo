@@ -30,19 +30,19 @@ import org.ojalgo.scalar.Quaternion;
 @Deprecated
 public class QuaternionArray extends ArrayH256 {
 
-    public static QuaternionArray make(final int size) {
+    public static QuaternionArray make( int size) {
         return new QuaternionArray(size);
     }
 
-    public static QuaternionArray wrap(final Quaternion... data) {
+    public static QuaternionArray wrap( Quaternion... data) {
         return new QuaternionArray(data);
     }
 
-    QuaternionArray(final Quaternion[] data) {
+    QuaternionArray( Quaternion[] data) {
         super(data);
     }
 
-    QuaternionArray(final int size) {
+    QuaternionArray( int size) {
         super(size);
     }
 

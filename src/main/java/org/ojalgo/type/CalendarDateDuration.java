@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.time.Duration;
 import java.time.Period;
 import java.time.temporal.Temporal;
@@ -28,7 +29,6 @@ import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
 import java.util.Collections;
 import java.util.List;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -44,14 +44,14 @@ import org.ojalgo.function.constant.PrimitiveMath;
  */
 public final class CalendarDateDuration implements TemporalAmount, CalendarDate.Resolution, ComparableNumber<CalendarDateDuration> {
 
-    static CalendarDateDuration of(final long nanos) {
+    static CalendarDateDuration of( long nanos) {
         return new CalendarDateDuration(nanos, CalendarDateUnit.NANOS);
     }
 
     public final double measure;
     public final CalendarDateUnit unit;
 
-    public CalendarDateDuration(final double aMeasure, final CalendarDateUnit aUnit) {
+    public CalendarDateDuration( double aMeasure,  CalendarDateUnit aUnit) {
 
         super();
 
@@ -63,11 +63,11 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         this(PrimitiveMath.ZERO, CalendarDateUnit.MILLIS);
     }
 
-    public long addTo(final long epochMilli) {
+    @Override public long addTo( long epochMilli) {
         return epochMilli + this.toDurationInMillis();
     }
 
-    public Temporal addTo(final Temporal temporal) {
+    @Override public Temporal addTo( Temporal temporal) {
         if (temporal instanceof CalendarDate) {
             return new CalendarDate(((CalendarDate) temporal).millis + this.toDurationInMillis());
         } else {
@@ -75,7 +75,7 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         }
     }
 
-    public Temporal adjustInto(final Temporal temporal) {
+    @Override public Temporal adjustInto( Temporal temporal) {
         if (temporal instanceof CalendarDate) {
             long millis = ((CalendarDate) temporal).millis;
             long adjusted = this.adjustInto(millis);
@@ -86,13 +86,13 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         }
     }
 
-    public int compareTo(final CalendarDateDuration reference) {
+    @Override public int compareTo( CalendarDateDuration reference) {
         long tmpVal = this.toDurationInNanos();
         long refVal = reference.toDurationInNanos();
         return Long.signum(tmpVal - refVal);
     }
 
-    public CalendarDateDuration convertTo(final CalendarDateUnit newUnit) {
+    public CalendarDateDuration convertTo( CalendarDateUnit newUnit) {
         double newMeasure = newUnit.convert(measure, unit);
         return new CalendarDateDuration(newMeasure, newUnit);
     }
@@ -103,14 +103,14 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if ((obj == null) || !(obj instanceof CalendarDateDuration)) {
             return false;
         }
-        CalendarDateDuration other = (CalendarDateDuration) obj;
+        var other = (CalendarDateDuration) obj;
         if ((Double.doubleToLongBits(measure) != Double.doubleToLongBits(other.measure)) || (unit != other.unit)) {
             return false;
         }
@@ -122,7 +122,7 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         return (float) measure;
     }
 
-    public long get(final TemporalUnit unit) {
+    @Override public long get( TemporalUnit unit) {
         if (unit == this.unit) {
             return (long) measure;
         } else {
@@ -130,14 +130,14 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         }
     }
 
-    public List<TemporalUnit> getUnits() {
+    @Override public List<TemporalUnit> getUnits() {
         return Collections.singletonList(unit);
     }
 
     @Override
     public int hashCode() {
         int prime = 31;
-        int result = 1;
+        @Var int result = 1;
         long temp;
         temp = Double.doubleToLongBits(measure);
         result = (prime * result) + (int) (temp ^ (temp >>> 32));
@@ -154,15 +154,15 @@ public final class CalendarDateDuration implements TemporalAmount, CalendarDate.
         return (long) measure;
     }
 
-    public Temporal subtractFrom(final Temporal temporal) {
+    @Override public Temporal subtractFrom( Temporal temporal) {
         return temporal.minus(this.toDurationInMillis(), CalendarDateUnit.MILLIS);
     }
 
-    public long toDurationInMillis() {
+    @Override public long toDurationInMillis() {
         return Math.round(measure * unit.toDurationInMillis());
     }
 
-    public long toDurationInNanos() {
+    @Override public long toDurationInNanos() {
         return Math.round(measure * unit.toDurationInNanos());
     }
 

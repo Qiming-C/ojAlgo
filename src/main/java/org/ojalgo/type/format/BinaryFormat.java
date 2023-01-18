@@ -21,6 +21,8 @@
  */
 package org.ojalgo.type.format;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -34,13 +36,13 @@ public class BinaryFormat extends Format {
     }
 
     @Override
-    public StringBuffer format(final Object someObj, final StringBuffer aBufferToAppendTo, final FieldPosition aPosition) {
-        return aBufferToAppendTo.append(new String((byte[]) someObj));
+    public StringBuffer format( Object someObj,  StringBuffer aBufferToAppendTo,  FieldPosition aPosition) {
+        return aBufferToAppendTo.append(new String((byte[]) someObj, UTF_8));
     }
 
     @Override
-    public byte[] parseObject(final String someSource, final ParsePosition somePos) {
-        return someSource.getBytes();
+    public byte[] parseObject( String someSource,  ParsePosition somePos) {
+        return someSource.getBytes(UTF_8);
     }
 
 }

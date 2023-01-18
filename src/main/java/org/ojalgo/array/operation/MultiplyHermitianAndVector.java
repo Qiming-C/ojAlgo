@@ -23,6 +23,7 @@ package org.ojalgo.array.operation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 
 /**
@@ -35,12 +36,12 @@ public abstract class MultiplyHermitianAndVector implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static void invoke(final double[] productMatrix, final int firstRow, final int rowLimit, final double[] hermitianMatrix, final double[] rightVector,
-            final int firstColumn) {
+    public static void invoke( double[] productMatrix,  int firstRow,  int rowLimit,  double[] hermitianMatrix,  double[] rightVector,
+             int firstColumn) {
 
         int structure = rightVector.length;
 
-        double tmpVal;
+        @Var double tmpVal;
         for (int i = firstRow; i < rowLimit; i++) {
             tmpVal = ZERO;
             for (int c = firstColumn; c < i; c++) {
@@ -53,12 +54,12 @@ public abstract class MultiplyHermitianAndVector implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] productMatrix, final int firstRow, final int rowLimit, final N[] hermitianMatrix,
-            final N[] rightVector, final int firstColumn, final Scalar.Factory<N> scalar) {
+    public static <N extends Scalar<N>> void invoke( N[] productMatrix,  int firstRow,  int rowLimit,  N[] hermitianMatrix,
+             N[] rightVector,  int firstColumn,  Scalar.Factory<N> scalar) {
 
         int structure = rightVector.length;
 
-        Scalar<N> tmpVal;
+        @Var Scalar<N> tmpVal;
         for (int i = firstRow; i < rowLimit; i++) {
             tmpVal = scalar.zero();
             for (int c = firstColumn; c < i; c++) {

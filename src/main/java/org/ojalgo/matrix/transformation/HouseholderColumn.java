@@ -14,7 +14,7 @@ final class HouseholderColumn<N extends Comparable<N>> extends ColumnView<N> imp
     private final MatrixStore<N> myStore;
     private transient Householder<N> myWorker = null;
 
-    public HouseholderColumn(final MatrixStore<N> store) {
+    public HouseholderColumn( MatrixStore<N> store) {
 
         super(store);
 
@@ -27,7 +27,7 @@ final class HouseholderColumn<N extends Comparable<N>> extends ColumnView<N> imp
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         if (index > myFirst) {
             return myStore.doubleValue(index, this.column());
         }
@@ -37,12 +37,12 @@ final class HouseholderColumn<N extends Comparable<N>> extends ColumnView<N> imp
         return PrimitiveMath.ZERO;
     }
 
-    public int first() {
+    @Override public int first() {
         return myFirst;
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         if (index > myFirst) {
             return myStore.get(index, this.column());
         }
@@ -52,20 +52,20 @@ final class HouseholderColumn<N extends Comparable<N>> extends ColumnView<N> imp
         return myStore.physical().scalar().zero().get();
     }
 
-    @SuppressWarnings("unchecked")
-    public <P extends Householder<N>> P getWorker(final PhysicalStore.Factory<N, ?> factory) {
+    @Override @SuppressWarnings("unchecked")
+    public <P extends Householder<N>> P getWorker( PhysicalStore.Factory<N, ?> factory) {
         if (myWorker == null) {
             myWorker = factory.makeHouseholder((int) this.count());
         }
         return (P) myWorker;
     }
 
-    public boolean isZero() {
+    @Override public boolean isZero() {
         double largest = NumberDefinition.doubleValue(myStore.aggregateColumn(myFirst + 1L, this.column(), Aggregator.LARGEST));
         return PrimitiveScalar.isSmall(PrimitiveMath.ONE, largest);
     }
 
-    public void point(final long row, final long col) {
+    @Override public void point( long row,  long col) {
         this.goToColumn(col);
         myFirst = (int) row;
     }

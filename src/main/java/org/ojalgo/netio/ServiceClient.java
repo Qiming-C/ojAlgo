@@ -21,6 +21,7 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.CookieManager;
@@ -45,10 +46,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.netio.ResourceLocator.KeyedValues;
 import org.ojalgo.netio.ResourceLocator.Method;
@@ -73,7 +72,7 @@ public final class ServiceClient {
         private final ResourceSpecification myResourceSpecification;
         private final ServiceClient.Session mySession;
 
-        Request(final ServiceClient.Session session) {
+        Request( ServiceClient.Session session) {
 
             super();
 
@@ -84,7 +83,7 @@ public final class ServiceClient {
             this.copy(session.getParameters());
         }
 
-        Request(final ServiceClient.Session session, final URI uri) {
+        Request( ServiceClient.Session session,  URI uri) {
 
             super();
 
@@ -95,7 +94,7 @@ public final class ServiceClient {
             this.copy(session.getParameters());
         }
 
-        public ServiceClient.Request body(final Object body) {
+        public ServiceClient.Request body( Object body) {
             myBody = body;
             myForm.clear();
             myRequest = null;
@@ -103,14 +102,14 @@ public final class ServiceClient {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Request)) {
                 return false;
             }
-            Request other = (Request) obj;
+            var other = (Request) obj;
             if (myBody == null) {
                 if (other.myBody != null) {
                     return false;
@@ -145,19 +144,19 @@ public final class ServiceClient {
             return true;
         }
 
-        public ServiceClient.Request expectContinue(final boolean enable) {
+        public ServiceClient.Request expectContinue( boolean enable) {
             myBuilder.expectContinue(enable);
             return this;
         }
 
-        public ServiceClient.Request form(final String form) {
+        public ServiceClient.Request form( String form) {
             myForm.parse(form);
             myBody = myForm;
             myRequest = null;
             return this;
         }
 
-        public ServiceClient.Request form(final String key, final String value) {
+        public ServiceClient.Request form( String key,  String value) {
             ProgrammingError.throwIfNull(key);
             if (value != null) {
                 myForm.put(key, value);
@@ -169,24 +168,24 @@ public final class ServiceClient {
             return this;
         }
 
-        public ServiceClient.Request fragment(final String fragment) {
+        public ServiceClient.Request fragment( String fragment) {
             myResourceSpecification.setFragment(fragment);
             myRequest = null;
             return this;
         }
 
-        public String getFormValue(final String key) {
+        public String getFormValue( String key) {
             return myForm.get(key);
         }
 
-        public String getQueryValue(final String key) {
+        public String getQueryValue( String key) {
             return myResourceSpecification.getQueryValue(key);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + ((myBody == null) ? 0 : myBody.hashCode());
             result = prime * result + ((myBuilder == null) ? 0 : myBuilder.hashCode());
             result = prime * result + myForm.hashCode();
@@ -195,29 +194,29 @@ public final class ServiceClient {
             return prime * result + ((mySession == null) ? 0 : mySession.hashCode());
         }
 
-        public ServiceClient.Request header(final String name, final String value) {
+        public ServiceClient.Request header( String name,  String value) {
             myBuilder.header(name, value);
             return this;
         }
 
-        public ServiceClient.Request host(final String host) {
+        public ServiceClient.Request host( String host) {
             myResourceSpecification.setHost(host);
             myRequest = null;
             return this;
         }
 
-        public ServiceClient.Request method(final ResourceLocator.Method method) {
+        public ServiceClient.Request method( ResourceLocator.Method method) {
             myMethod = method;
             myRequest = null;
             return this;
         }
 
-        public ServiceClient.Request method(final String method, final BodyPublisher bodyPublisher) {
+        public ServiceClient.Request method( String method,  BodyPublisher bodyPublisher) {
             myBuilder.method(method, bodyPublisher);
             return this;
         }
 
-        public ServiceClient.Request path(final String path) {
+        public ServiceClient.Request path( String path) {
             myResourceSpecification.setPath(path);
             myRequest = null;
             return this;
@@ -226,13 +225,13 @@ public final class ServiceClient {
         /**
          * The default (null) value is -1.
          */
-        public ServiceClient.Request port(final int port) {
+        public ServiceClient.Request port( int port) {
             myResourceSpecification.setPort(port);
             myRequest = null;
             return this;
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             mySession.print(receiver);
             receiver.println("Request URI: {}", this.getURI());
             if (myForm.size() > 0) {
@@ -240,13 +239,13 @@ public final class ServiceClient {
             }
         }
 
-        public ServiceClient.Request query(final String query) {
+        public ServiceClient.Request query( String query) {
             myResourceSpecification.setQuery(query);
             myRequest = null;
             return this;
         }
 
-        public ServiceClient.Request query(final String key, final String value) {
+        public ServiceClient.Request query( String key,  String value) {
             myResourceSpecification.putQueryEntry(key, value);
             myRequest = null;
             return this;
@@ -255,7 +254,7 @@ public final class ServiceClient {
         /**
          * https or http ?
          */
-        public ServiceClient.Request secure(final boolean secure) {
+        public ServiceClient.Request secure( boolean secure) {
             if (secure) {
                 myResourceSpecification.setScheme("https");
             } else {
@@ -265,11 +264,11 @@ public final class ServiceClient {
             return this;
         }
 
-        public <T> Response<T> send(final BodyHandler<T> responseBodyHandler) {
+        public <T> Response<T> send( BodyHandler<T> responseBodyHandler) {
             return this.getSession().send(this, responseBodyHandler);
         }
 
-        public ServiceClient.Request timeout(final Duration duration) {
+        public ServiceClient.Request timeout( Duration duration) {
             myBuilder.timeout(duration);
             return this;
         }
@@ -279,12 +278,12 @@ public final class ServiceClient {
             return this.getURI().toString();
         }
 
-        public ServiceClient.Request version(final Version version) {
+        public ServiceClient.Request version( Version version) {
             myBuilder.version(version);
             return this;
         }
 
-        private void copy(final KeyedValues sessionParameters) {
+        private void copy( KeyedValues sessionParameters) {
             for (Entry<String, String> entry : sessionParameters.entrySet()) {
                 myBuilder.setHeader(entry.getKey(), entry.getValue());
             }
@@ -358,7 +357,7 @@ public final class ServiceClient {
         private final CompletableFuture<HttpResponse<T>> myFutureResponse;
         private final ServiceClient.Session mySession;
 
-        Response(final ServiceClient.Request request, final CompletableFuture<HttpResponse<T>> response) {
+        Response( ServiceClient.Request request,  CompletableFuture<HttpResponse<T>> response) {
 
             super();
 
@@ -371,14 +370,14 @@ public final class ServiceClient {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Response)) {
                 return false;
             }
-            Response other = (Response) obj;
+            var other = (Response) obj;
             if (!myFutureResponse.equals(other.myFutureResponse)) {
                 return false;
             }
@@ -413,8 +412,9 @@ public final class ServiceClient {
         }
 
         /**
-         * @return The http response status code, or -1 if this is not http/hhtps or if the code cannot be
-         *         discerned from the response
+         *Returns the http response status code, or -1 if this is not http/hhtps or if the code cannot be
+         discerned from the response.
+ 
          */
         public int getStatusCode() {
             return this.getResponse().statusCode();
@@ -426,8 +426,8 @@ public final class ServiceClient {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + ((myFutureResponse == null) ? 0 : myFutureResponse.hashCode());
             return prime * result + ((mySession == null) ? 0 : mySession.hashCode());
         }
@@ -437,7 +437,8 @@ public final class ServiceClient {
         }
 
         /**
-         * @return true if the status (response) code is in [200,300)
+         *Returns true if the status (response) code is in [200,300).
+ 
          */
         public boolean isResponseOK() {
             int statusCode = this.getStatusCode();
@@ -448,7 +449,7 @@ public final class ServiceClient {
             }
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             receiver.println("Response body: {}", this.toString());
             receiver.println("Response headers: {}", this.getResponse().headers().map());
             receiver.println("<Recreated>");
@@ -483,7 +484,7 @@ public final class ServiceClient {
         private final CookieManager myCookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         private final KeyedValues myParameters = new KeyedValues(ResourceLocator.DEFAULTS.getValues());
 
-        Session(final HttpClient.Builder builder) {
+        Session( HttpClient.Builder builder) {
 
             super();
 
@@ -493,9 +494,10 @@ public final class ServiceClient {
         }
 
         /**
-         * @see #parameter(String, String)
+         *See {@link #parameter(String, String)}.
+ 
          */
-        public String getParameter(final String key) {
+        public String getParameter( String key) {
             return myParameters.get(key);
         }
 
@@ -503,7 +505,7 @@ public final class ServiceClient {
             return new Request(this);
         }
 
-        public Request newRequest(final String url) {
+        public Request newRequest( String url) {
             try {
                 return new Request(this, new URI(url));
             } catch (URISyntaxException cause) {
@@ -514,7 +516,7 @@ public final class ServiceClient {
         /**
          * Session parameters are transferred to requests as headers
          */
-        public ServiceClient.Session parameter(final String key, final String value) {
+        public ServiceClient.Session parameter( String key,  String value) {
             Objects.requireNonNull(key);
             if (value != null) {
                 myParameters.put(key, value);
@@ -524,7 +526,7 @@ public final class ServiceClient {
             return this;
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             receiver.println("Session parameters: {}", myParameters);
             receiver.println("Session cookies: {}", myCookieManager.getCookieStore().getCookies());
         }
@@ -537,7 +539,7 @@ public final class ServiceClient {
             return myParameters;
         }
 
-        <T> Response<T> send(final Request request, final BodyHandler<T> responseBodyHandler) {
+        <T> Response<T> send( Request request,  BodyHandler<T> responseBodyHandler) {
             HttpClient client = this.getClient();
             CompletableFuture<HttpResponse<T>> futureResponse = client.sendAsync(request.getRequest(), responseBodyHandler);
             return new Response<>(request, futureResponse);
@@ -545,7 +547,7 @@ public final class ServiceClient {
 
     }
 
-    public static Response<String> get(final String url) {
+    public static Response<String> get( String url) {
         return ServiceClient.newRequest(url).method(Method.GET).send(BodyHandlers.ofString());
     }
 
@@ -553,20 +555,20 @@ public final class ServiceClient {
         return ServiceClient.newSession().newRequest();
     }
 
-    public static Request newRequest(final String url) {
+    public static Request newRequest( String url) {
         return ServiceClient.newSession().newRequest(url);
     }
 
     public static ServiceClient.Session newSession() {
-        ServiceClient serviceClient = new ServiceClient();
+        var serviceClient = new ServiceClient();
         return serviceClient.getSession();
     }
 
-    public static Response<String> post(final String url, final byte[] body) {
+    public static Response<String> post( String url,  byte[] body) {
         return ServiceClient.newRequest(url).method(Method.POST).body(body).send(BodyHandlers.ofString());
     }
 
-    public static Response<String> post(final String url, final KeyedValues body) {
+    public static Response<String> post( String url,  KeyedValues body) {
         return ServiceClient.newRequest(url).method(Method.POST).body(body).send(BodyHandlers.ofString());
     }
 
@@ -579,25 +581,25 @@ public final class ServiceClient {
         myBuilder.executor(ReaderWriterBuilder.executor());
     }
 
-    public ServiceClient authenticator(final Authenticator authenticator) {
+    public ServiceClient authenticator( Authenticator authenticator) {
         myBuilder.authenticator(authenticator);
         return this;
     }
 
-    public ServiceClient connectTimeout(final Duration duration) {
+    public ServiceClient connectTimeout( Duration duration) {
         myBuilder.connectTimeout(duration);
         return this;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ServiceClient)) {
             return false;
         }
-        ServiceClient other = (ServiceClient) obj;
+        var other = (ServiceClient) obj;
         if (myBuilder == null) {
             if (other.myBuilder != null) {
                 return false;
@@ -608,12 +610,12 @@ public final class ServiceClient {
         return true;
     }
 
-    public ServiceClient executor(final Executor executor) {
+    public ServiceClient executor( Executor executor) {
         myBuilder.executor(executor);
         return this;
     }
 
-    public ServiceClient followRedirects(final Redirect policy) {
+    public ServiceClient followRedirects( Redirect policy) {
         myBuilder.followRedirects(policy);
         return this;
     }
@@ -624,32 +626,32 @@ public final class ServiceClient {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         return prime * result + ((myBuilder == null) ? 0 : myBuilder.hashCode());
     }
 
-    public ServiceClient priority(final int priority) {
+    public ServiceClient priority( int priority) {
         myBuilder.priority(priority);
         return this;
     }
 
-    public ServiceClient proxy(final ProxySelector proxySelector) {
+    public ServiceClient proxy( ProxySelector proxySelector) {
         myBuilder.proxy(proxySelector);
         return this;
     }
 
-    public ServiceClient sslContext(final SSLContext sslContext) {
+    public ServiceClient sslContext( SSLContext sslContext) {
         myBuilder.sslContext(sslContext);
         return this;
     }
 
-    public ServiceClient sslParameters(final SSLParameters sslParameters) {
+    public ServiceClient sslParameters( SSLParameters sslParameters) {
         myBuilder.sslParameters(sslParameters);
         return this;
     }
 
-    public ServiceClient version(final Version version) {
+    public ServiceClient version( Version version) {
         myBuilder.version(version);
         return this;
     }

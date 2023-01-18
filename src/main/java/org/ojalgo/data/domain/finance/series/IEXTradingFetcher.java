@@ -29,7 +29,7 @@ public class IEXTradingFetcher implements DataFetcher {
      *
      * @param symbol Symbol of stock
      */
-    public IEXTradingFetcher(final String symbol) {
+    public IEXTradingFetcher( String symbol) {
 
         super();
 
@@ -38,7 +38,7 @@ public class IEXTradingFetcher implements DataFetcher {
         myRequest = ServiceClient.newRequest().host("cloud.iexapis.com").path("/1.0/stock/" + symbol + "/chart/5y").query("format", "csv");
     }
 
-    public InputStream getInputStream() {
+    @Override public InputStream getInputStream() {
         Response<InputStream> response = myRequest.send(BodyHandlers.ofInputStream());
         if (response.isResponseOK()) {
             return response.getBody();
@@ -52,11 +52,11 @@ public class IEXTradingFetcher implements DataFetcher {
      *
      * @see org.ojalgo.data.domain.finance.series.DataFetcher#getResolution()
      */
-    public CalendarDateUnit getResolution() {
+    @Override public CalendarDateUnit getResolution() {
         return CalendarDateUnit.DAY;
     }
 
-    public String getSymbol() {
+    @Override public String getSymbol() {
         return mySymbol;
     }
 

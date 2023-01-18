@@ -46,17 +46,17 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
 
     static final Structure1D.IndexMapper<Double> MAPPER = new Structure1D.IndexMapper<Double>() {
 
-        public long toIndex(final Double key) {
+        @Override public long toIndex( Double key) {
             return MappedIndexSeries.toIndex(key);
         }
 
-        public Double toKey(final long index) {
+        @Override public Double toKey( long index) {
             return MappedIndexSeries.toKey(index);
         }
 
     };
 
-    static long toIndex(final double key) {
+    static long toIndex( double key) {
         if (key >= PrimitiveMath.ZERO) {
             return Double.doubleToLongBits(key);
         } else {
@@ -64,7 +64,7 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         }
     }
 
-    static double toKey(final long index) {
+    static double toKey( long index) {
         return Double.longBitsToDouble(index);
     }
 
@@ -74,38 +74,38 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
     private final IndexMapper<K> myMapper;
     private String myName = null;
 
-    MappedIndexSeries(final DenseArray.Factory<N> denseArrayFactory, final IndexMapper<K> indexMapper, final BinaryFunction<N> accumulator) {
+    MappedIndexSeries( DenseArray.Factory<N> denseArrayFactory,  IndexMapper<K> indexMapper,  BinaryFunction<N> accumulator) {
         super();
         myDelegate = LongToNumberMap.factory(denseArrayFactory).make();
         myMapper = indexMapper;
         myAccumulator = accumulator;
     }
 
-    MappedIndexSeries(final IndexMapper<K> indexMapper, final LongToNumberMap<N> delegate, final BinaryFunction<N> accumulator) {
+    MappedIndexSeries( IndexMapper<K> indexMapper,  LongToNumberMap<N> delegate,  BinaryFunction<N> accumulator) {
         super();
         myDelegate = delegate;
         myMapper = indexMapper;
         myAccumulator = accumulator;
     }
 
-    public PrimitiveSeries asPrimitive() {
+    @Override public PrimitiveSeries asPrimitive() {
         return PrimitiveSeries.wrap(myDelegate.values());
     }
 
-    public MappedIndexSeries<K, N> colour(final ColourData colour) {
+    @Override public MappedIndexSeries<K, N> colour( ColourData colour) {
         this.setColour(colour);
         return this;
     }
 
-    public Comparator<? super K> comparator() {
+    @Override public Comparator<? super K> comparator() {
         return null;
     }
 
-    public void complete() {
+    @Override public void complete() {
         this.complete(key -> myMapper.next(key));
     }
 
-    public double doubleValue(final K key) {
+    @Override public double doubleValue( K key) {
         return myDelegate.doubleValue(myMapper.toIndex(key));
     }
 
@@ -120,25 +120,25 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
 
                 return new Iterator<Map.Entry<K, N>>() {
 
-                    public boolean hasNext() {
+                    @Override public boolean hasNext() {
                         return tmpDelegateIterator.hasNext();
                     }
 
-                    public Map.Entry<K, N> next() {
+                    @Override public Map.Entry<K, N> next() {
 
                         Map.Entry<Long, N> tmpDelegateNext = tmpDelegateIterator.next();
 
                         return new Map.Entry<K, N>() {
 
-                            public K getKey() {
+                            @Override public K getKey() {
                                 return myMapper.toKey(tmpDelegateNext.getKey());
                             }
 
-                            public N getValue() {
+                            @Override public N getValue() {
                                 return tmpDelegateNext.getValue();
                             }
 
-                            public N setValue(final N value) {
+                            @Override public N setValue( N value) {
                                 return tmpDelegateNext.setValue(value);
                             }
 
@@ -155,20 +155,20 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         };
     }
 
-    public K firstKey() {
+    @Override public K firstKey() {
         return myMapper.toKey(myDelegate.firstKey());
     }
 
-    public N firstValue() {
+    @Override public N firstValue() {
         return this.get(this.firstKey());
     }
 
-    public N get(final K key) {
+    @Override public N get( K key) {
         return myDelegate.get(myMapper.toIndex(key));
     }
 
     @Override
-    public N get(final Object key) {
+    public N get( Object key) {
         if (key instanceof Comparable<?>) {
             return myDelegate.get(myMapper.toIndex((K) key));
         } else {
@@ -176,14 +176,14 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         }
     }
 
-    public ColourData getColour() {
+    @Override public ColourData getColour() {
         if (myColour == null) {
             myColour = ColourData.random();
         }
         return myColour;
     }
 
-    public String getName() {
+    @Override public String getName() {
         if (myName == null) {
             myName = UUID.randomUUID().toString();
         }
@@ -191,15 +191,15 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
     }
 
     @Override
-    public MappedIndexSeries<K, N> headMap(final K toKey) {
+    public MappedIndexSeries<K, N> headMap( K toKey) {
         return this.subMap(this.firstKey(), toKey);
     }
 
-    public K lastKey() {
+    @Override public K lastKey() {
         return myMapper.toKey(myDelegate.lastKey());
     }
 
-    public N lastValue() {
+    @Override public N lastValue() {
         return this.get(this.lastKey());
     }
 
@@ -207,16 +207,16 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         return myMapper;
     }
 
-    public MappedIndexSeries<K, N> name(final String name) {
+    @Override public MappedIndexSeries<K, N> name( String name) {
         this.setName(name);
         return this;
     }
 
-    public K nextKey() {
+    @Override public K nextKey() {
         return myMapper.toKey(myDelegate.lastKey() + 1L);
     }
 
-    public double put(final K key, final double value) {
+    @Override public double put( K key,  double value) {
         long index = myMapper.toIndex(key);
         if (myAccumulator != null) {
             return myDelegate.mix(index, myAccumulator, value);
@@ -226,7 +226,7 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
     }
 
     @Override
-    public N put(final K key, final N value) {
+    public N put( K key,  N value) {
         long index = myMapper.toIndex(key);
         if (myAccumulator != null) {
             return myDelegate.mix(index, myAccumulator, value);
@@ -235,7 +235,7 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         }
     }
 
-    public BasicSeries<K, N> resample(final UnaryOperator<K> keyTranslator) {
+    @Override public BasicSeries<K, N> resample( UnaryOperator<K> keyTranslator) {
 
         MappedIndexSeries<K, N> retVal = new MappedIndexSeries<>(myMapper, this.newDelegateInstance(), this.getAccumulator());
 
@@ -251,34 +251,34 @@ final class MappedIndexSeries<K extends Comparable<? super K>, N extends Compara
         return retVal;
     }
 
-    public void setColour(final ColourData colour) {
+    @Override public void setColour( ColourData colour) {
         myColour = colour;
     }
 
-    public void setName(final String name) {
+    @Override public void setName( String name) {
         myName = name;
     }
 
-    public K step(final K key) {
+    @Override public K step( K key) {
         return myMapper.next(key);
     }
 
     @Override
-    public MappedIndexSeries<K, N> subMap(final K fromKey, final K toKey) {
+    public MappedIndexSeries<K, N> subMap( K fromKey,  K toKey) {
         long fromIndex = myMapper.toIndex(fromKey);
         long toIndex = myMapper.toIndex(toKey);
         LongToNumberMap<N> delegateSubMap = myDelegate.subMap(fromIndex, toIndex);
         return new MappedIndexSeries<>(myMapper, delegateSubMap, myAccumulator);
     }
 
-    public MappedIndexSeries<K, N> tailMap(final K fromKey) {
+    @Override public MappedIndexSeries<K, N> tailMap( K fromKey) {
         return this.subMap(fromKey, this.nextKey());
     }
 
     @Override
     public String toString() {
 
-        StringBuilder retVal = new StringBuilder();
+        var retVal = new StringBuilder();
 
         if (myName != null) {
             retVal.append(myName);

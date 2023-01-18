@@ -27,7 +27,7 @@ import org.ojalgo.type.keyvalue.KeyValue;
 @FunctionalInterface
 public interface ScoredDualConsumer<T> extends AutoConsumer<EntryPair.KeyedPrimitive<KeyValue.Dual<T>>> {
 
-    default void write(final EntryPair.KeyedPrimitive<KeyValue.Dual<T>> item) {
+    @Override default void write( EntryPair.KeyedPrimitive<KeyValue.Dual<T>> item) {
         KeyValue.Dual<T> key = item.getKey();
         this.write(key.first, key.second, item.floatValue());
     }

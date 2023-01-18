@@ -29,12 +29,12 @@ package org.ojalgo.matrix.store;
  */
 abstract class ShadingStore<N extends Comparable<N>> extends LogicalStore<N> {
 
-    protected ShadingStore(final MatrixStore<N> base) {
+    protected ShadingStore( MatrixStore<N> base) {
         super(base, base.getRowDim(), base.getColDim());
     }
 
     @Override
-    public void supplyTo(final TransformableRegion<N> consumer) {
+    public void supplyTo( TransformableRegion<N> consumer) {
 
         consumer.reset();
 

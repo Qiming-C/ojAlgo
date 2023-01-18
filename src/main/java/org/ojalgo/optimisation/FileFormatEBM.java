@@ -21,6 +21,9 @@
  */
 package org.ojalgo.optimisation;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.errorprone.annotations.Var;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -30,7 +33,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.util.Map.Entry;
-
 import org.ojalgo.netio.ASCII;
 import org.ojalgo.structure.Structure1D.IntIndex;
 import org.ojalgo.structure.Structure2D.IntRowColumn;
@@ -39,7 +41,7 @@ abstract class FileFormatEBM {
 
     private static final String TAB = String.valueOf(ASCII.HT);
 
-    private static Expression readExpression(final ExpressionsBasedModel model, final String[] fields) {
+    private static Expression readExpression( ExpressionsBasedModel model,  String[] fields) {
 
         Expression expression = model.newExpression(fields[1]);
 
@@ -48,17 +50,17 @@ abstract class FileFormatEBM {
         return expression;
     }
 
-    private static void readLinear(final Expression current, final String[] fields) {
+    private static void readLinear( Expression current,  String[] fields) {
 
         int index = Integer.parseInt(fields[1]);
 
-        BigDecimal value = new BigDecimal(fields[2]);
+        var value = new BigDecimal(fields[2]);
 
         current.set(index, value);
 
     }
 
-    private static void readModelEntity(final ModelEntity<?> entity, final String[] fields) {
+    private static void readModelEntity( ModelEntity<?> entity,  String[] fields) {
 
         if (fields.length > 2 && fields[2].length() > 0) {
             entity.lower(new BigDecimal(fields[2]));
@@ -73,19 +75,19 @@ abstract class FileFormatEBM {
         }
     }
 
-    private static void readQuadratic(final Expression current, final String[] fields) {
+    private static void readQuadratic( Expression current,  String[] fields) {
 
         int row = Integer.parseInt(fields[1]);
 
         int col = Integer.parseInt(fields[2]);
 
-        BigDecimal value = new BigDecimal(fields[3]);
+        var value = new BigDecimal(fields[3]);
 
         current.set(row, col, value);
 
     }
 
-    private static void readVariable(final ExpressionsBasedModel model, final String[] fields) {
+    private static void readVariable( ExpressionsBasedModel model,  String[] fields) {
 
         Variable variable = model.newVariable(fields[1]);
 
@@ -98,13 +100,13 @@ abstract class FileFormatEBM {
         }
     }
 
-    private static void writeExpression(final Expression expression, final BufferedWriter writer) throws IOException {
+    private static void writeExpression( Expression expression,  BufferedWriter writer) throws IOException {
         writer.write("E");
         FileFormatEBM.writeModelEntity(expression, writer);
         writer.newLine();
     }
 
-    private static void writeLinear(final Entry<IntIndex, BigDecimal> entry, final BufferedWriter writer) throws IOException {
+    private static void writeLinear( Entry<IntIndex, BigDecimal> entry,  BufferedWriter writer) throws IOException {
         writer.write("L");
         writer.write(ASCII.HT);
         writer.write(Integer.toString(entry.getKey().index));
@@ -113,7 +115,7 @@ abstract class FileFormatEBM {
         writer.newLine();
     }
 
-    private static void writeModelEntity(final ModelEntity<?> entity, final BufferedWriter writer) throws IOException {
+    private static void writeModelEntity( ModelEntity<?> entity,  BufferedWriter writer) throws IOException {
 
         String name = entity.getName().replace(ASCII.HT, ASCII.NBSP);
         BigDecimal lower = entity.getLowerLimit();
@@ -139,7 +141,7 @@ abstract class FileFormatEBM {
         }
     }
 
-    private static void writeQuadratic(final Entry<IntRowColumn, BigDecimal> entry, final BufferedWriter writer) throws IOException {
+    private static void writeQuadratic( Entry<IntRowColumn, BigDecimal> entry,  BufferedWriter writer) throws IOException {
         writer.write("Q");
         writer.write(ASCII.HT);
         writer.write(Integer.toString(entry.getKey().row));
@@ -150,7 +152,7 @@ abstract class FileFormatEBM {
         writer.newLine();
     }
 
-    private static void writeVariable(final Variable variable, final BufferedWriter writer) throws IOException {
+    private static void writeVariable( Variable variable,  BufferedWriter writer) throws IOException {
         writer.write("V");
         FileFormatEBM.writeModelEntity(variable, writer);
         writer.write(ASCII.HT);
@@ -163,15 +165,15 @@ abstract class FileFormatEBM {
         writer.newLine();
     }
 
-    static ExpressionsBasedModel read(final InputStream input) {
+    static ExpressionsBasedModel read( InputStream input) {
 
-        ExpressionsBasedModel retVal = new ExpressionsBasedModel();
+        var retVal = new ExpressionsBasedModel();
 
-        Expression current = null;
+        @Var Expression current = null;
 
-        String line;
+        @Var String line;
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, UTF_8))) {
 
             while ((line = reader.readLine()) != null) {
 
@@ -208,9 +210,9 @@ abstract class FileFormatEBM {
         return retVal;
     }
 
-    static void write(final ExpressionsBasedModel model, final OutputStream output) {
+    static void write( ExpressionsBasedModel model,  OutputStream output) {
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, UTF_8))) {
 
             for (Variable variable : model.getVariables()) {
                 FileFormatEBM.writeVariable(variable, writer);

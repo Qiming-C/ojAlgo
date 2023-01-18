@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 
 /**
@@ -30,7 +31,7 @@ import org.ojalgo.scalar.Scalar;
  */
 final class ConjugatedStore<N extends Comparable<N>> extends TransjugatedStore<N> {
 
-    ConjugatedStore(final MatrixStore<N> base) {
+    ConjugatedStore( MatrixStore<N> base) {
         super(base);
     }
 
@@ -39,14 +40,14 @@ final class ConjugatedStore<N extends Comparable<N>> extends TransjugatedStore<N
         return this.base();
     }
 
-    public N get(final long aRow, final long aCol) {
-        return this.base().toScalar((int) aCol, (int) aRow).conjugate().get();
+    @Override public N get( long aRow,  long aCol) {
+        return this.base().toScalar(aCol, (int) aRow).conjugate().get();
     }
 
     @Override
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    public MatrixStore<N> multiply( MatrixStore<N> right) {
 
-        MatrixStore<N> retVal;
+        @Var MatrixStore<N> retVal;
 
         if (right instanceof ConjugatedStore<?>) {
 
@@ -62,7 +63,7 @@ final class ConjugatedStore<N extends Comparable<N>> extends TransjugatedStore<N
         return retVal;
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
         return this.base().toScalar(column, row).conjugate();
     }
 

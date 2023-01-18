@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 
 /**
@@ -56,14 +57,14 @@ public abstract class HermitianRank2Update implements ArrayOperation {
     //        }
     //    }
 
-    public static void invoke(final double[] data, final int firstColumn, final int columnLimit, final double[] vector1, final double[] vector2) {
+    public static void invoke( double[] data,  int firstColumn,  int columnLimit,  double[] vector1,  double[] vector2) {
 
         int structure = vector1.length;
 
-        double tmpVal1j;
-        double tmpVal2j;
+        @Var double tmpVal1j;
+        @Var double tmpVal2j;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int j = firstColumn; j < columnLimit; j++) {
 
             tmpVal1j = vector1[j];
@@ -76,14 +77,14 @@ public abstract class HermitianRank2Update implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] data, final int firstColumn, final int columnLimit, final N[] vector1, final N[] vector2) {
+    public static <N extends Scalar<N>> void invoke( N[] data,  int firstColumn,  int columnLimit,  N[] vector1,  N[] vector2) {
 
         int structure = vector1.length;
 
-        Scalar<N> tmpVal1j;
-        Scalar<N> tmpVal2j;
+        @Var Scalar<N> tmpVal1j;
+        @Var Scalar<N> tmpVal2j;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int j = firstColumn; j < columnLimit; j++) {
 
             tmpVal1j = vector1[j].conjugate();

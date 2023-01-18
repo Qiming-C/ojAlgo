@@ -23,10 +23,10 @@ package org.ojalgo.optimisation;
 
 import static org.ojalgo.function.constant.BigMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
-
 import org.ojalgo.function.aggregator.AggregatorFunction;
 import org.ojalgo.function.aggregator.AggregatorSet;
 import org.ojalgo.function.aggregator.BigAggregator;
@@ -46,7 +46,7 @@ public final class Variable extends ModelEntity<Variable> {
      * @deprecated v53 Use {@link #ExpressionsBasedModel()} and {@link #newVariable(String)} instead.
      */
     @Deprecated
-    public static Variable make(final String name) {
+    public static Variable make( String name) {
         return new Variable(name);
     }
 
@@ -54,7 +54,7 @@ public final class Variable extends ModelEntity<Variable> {
      * @deprecated v53 Use {@link #ExpressionsBasedModel()} and {@link #newVariable(String)} instead.
      */
     @Deprecated
-    public static Variable makeBinary(final String name) {
+    public static Variable makeBinary( String name) {
         return Variable.make(name).binary();
     }
 
@@ -62,7 +62,7 @@ public final class Variable extends ModelEntity<Variable> {
      * @deprecated v53 Use {@link #ExpressionsBasedModel()} and {@link #newVariable(String)} instead.
      */
     @Deprecated
-    public static Variable makeInteger(final String name) {
+    public static Variable makeInteger( String name) {
         return Variable.make(name).integer();
     }
 
@@ -75,11 +75,11 @@ public final class Variable extends ModelEntity<Variable> {
      * @deprecated v53 Use {@link #ExpressionsBasedModel()} and {@link #newVariable(String)} instead.
      */
     @Deprecated
-    public Variable(final String name) {
+    public Variable( String name) {
         super(name);
     }
 
-    protected Variable(final Variable variableToCopy) {
+    Variable( Variable variableToCopy) {
 
         super(variableToCopy);
 
@@ -89,7 +89,7 @@ public final class Variable extends ModelEntity<Variable> {
     }
 
     @Override
-    public void addTo(final Expression target, final BigDecimal scale) {
+    public void addTo( Expression target,  BigDecimal scale) {
         target.add(this, scale);
     }
 
@@ -104,12 +104,13 @@ public final class Variable extends ModelEntity<Variable> {
         return this.lower(ZERO).upper(ONE).integer(true);
     }
 
-    public int compareTo(final Variable obj) {
+    @Override public int compareTo( Variable obj) {
         return this.getIndex().compareTo(obj.getIndex());
     }
 
     /**
-     * @return A copy that can be used with other models
+     *Returns a copy that can be used with other models.
+ 
      */
     public Variable copy() {
         return new Variable(this);
@@ -117,7 +118,7 @@ public final class Variable extends ModelEntity<Variable> {
 
     public BigDecimal getLowerSlack() {
 
-        BigDecimal retVal = null;
+        @Var BigDecimal retVal = null;
 
         if (this.getLowerLimit() != null) {
 
@@ -140,7 +141,7 @@ public final class Variable extends ModelEntity<Variable> {
 
     public BigDecimal getUpperSlack() {
 
-        BigDecimal retVal = null;
+        @Var BigDecimal retVal = null;
 
         if (this.getUpperLimit() != null) {
 
@@ -175,7 +176,7 @@ public final class Variable extends ModelEntity<Variable> {
     /**
      * See {@link #isInteger()}.
      */
-    public Variable integer(final boolean integer) {
+    public Variable integer( boolean integer) {
         this.setInteger(integer);
         return this;
     }
@@ -214,7 +215,7 @@ public final class Variable extends ModelEntity<Variable> {
     }
 
     @Override
-    public Variable lower(final Comparable<?> lower) {
+    public Variable lower( Comparable<?> lower) {
         Variable retVal = super.lower(lower);
         this.assertFixedValue();
         return retVal;
@@ -222,7 +223,7 @@ public final class Variable extends ModelEntity<Variable> {
 
     public BigDecimal quantifyContribution() {
 
-        BigDecimal retVal = ZERO;
+        @Var BigDecimal retVal = ZERO;
 
         BigDecimal contributionWeight = this.getContributionWeight();
         if (contributionWeight != null && myValue != null) {
@@ -236,12 +237,12 @@ public final class Variable extends ModelEntity<Variable> {
         return this.integer(false);
     }
 
-    public void setInteger(final boolean integer) {
+    public void setInteger( boolean integer) {
         myInteger = integer;
     }
 
-    public void setValue(final Comparable<?> value) {
-        BigDecimal tmpValue = null;
+    public void setValue( Comparable<?> value) {
+        @Var BigDecimal tmpValue = null;
         if (value != null) {
             tmpValue = TypeUtils.toBigDecimal(value);
             if (this.isUpperLimitSet()) {
@@ -255,7 +256,7 @@ public final class Variable extends ModelEntity<Variable> {
     }
 
     @Override
-    public Variable upper(final Comparable<?> upper) {
+    public Variable upper( Comparable<?> upper) {
         Variable retVal = super.upper(upper);
         this.assertFixedValue();
         return retVal;
@@ -268,7 +269,7 @@ public final class Variable extends ModelEntity<Variable> {
     }
 
     @Override
-    protected void appendMiddlePart(final StringBuilder builder, final NumberContext display) {
+    protected void appendMiddlePart( StringBuilder builder,  NumberContext display) {
 
         builder.append(this.getName());
 
@@ -307,7 +308,7 @@ public final class Variable extends ModelEntity<Variable> {
     }
 
     @Override
-    protected boolean validate(final BigDecimal value, final NumberContext context, final BasicLogger appender) {
+    protected boolean validate( BigDecimal value,  NumberContext context,  BasicLogger appender) {
         return this.validate(value, context, appender, false);
     }
 
@@ -351,7 +352,7 @@ public final class Variable extends ModelEntity<Variable> {
     @Override
     void doIntegerRounding() {
         if (myInteger) {
-            BigDecimal limit;
+            @Var BigDecimal limit;
             if ((limit = this.getUpperLimit()) != null && limit.scale() > 0) {
                 this.upper(limit.setScale(0, RoundingMode.FLOOR));
             }
@@ -373,11 +374,11 @@ public final class Variable extends ModelEntity<Variable> {
         return myUnbounded;
     }
 
-    void setFixed(final BigDecimal value) {
+    void setFixed( BigDecimal value) {
         this.level(value).setValue(value);
     }
 
-    void setIndex(final IntIndex index) {
+    void setIndex( IntIndex index) {
         Objects.requireNonNull(index, "The index cannot be null!");
         if (myIndex != null && myIndex.index != index.index) {
             throw new IllegalStateException("Cannot change a variable's index, or add a variable to more than one model!");
@@ -385,18 +386,18 @@ public final class Variable extends ModelEntity<Variable> {
         myIndex = index;
     }
 
-    void setUnbounded(final boolean uncorrelated) {
+    void setUnbounded( boolean uncorrelated) {
         myUnbounded = uncorrelated;
     }
 
-    boolean validate(final BigDecimal value, final NumberContext context, final BasicLogger appender, final boolean relaxed) {
+    boolean validate( BigDecimal value,  NumberContext context,  BasicLogger appender,  boolean relaxed) {
 
-        boolean retVal = super.validate(value, context, appender);
+        @Var boolean retVal = super.validate(value, context, appender);
 
         if (retVal && !relaxed && myInteger) {
             try {
                 context.enforce(value).longValueExact();
-            } catch (final ArithmeticException ex) {
+            } catch ( ArithmeticException ex) {
                 if (appender != null) {
                     appender.println(value + " ! Integer: " + this.getName());
                 }

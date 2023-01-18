@@ -43,7 +43,7 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
         super();
     }
 
-    public int compareTo(final RandomNumber o) {
+    @Override public int compareTo( RandomNumber o) {
         return Double.compare(this.getExpected(), o.getExpected());
     }
 
@@ -63,7 +63,7 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
      * @see org.ojalgo.random.Distribution#getStandardDeviation()
      * @see org.ojalgo.random.Distribution#getVariance()
      */
-    public double getStandardDeviation() {
+    @Override public double getStandardDeviation() {
         return PrimitiveMath.SQRT.invoke(this.getVariance());
     }
 
@@ -73,8 +73,8 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
      * @see org.ojalgo.random.Distribution#getStandardDeviation()
      * @see org.ojalgo.random.Distribution#getVariance()
      */
-    public double getVariance() {
-        final double stdDev = this.getStandardDeviation();
+    @Override public double getVariance() {
+         double stdDev = this.getStandardDeviation();
         return stdDev * stdDev;
     }
 
@@ -83,7 +83,7 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
         return (int) this.longValue();
     }
 
-    public final Double invoke() {
+    @Override public final Double invoke() {
         return this.generate();
     }
 
@@ -92,7 +92,7 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
         return Math.round(this.generate());
     }
 
-    public SampleSet newSampleSet(final int numberOfSamples) {
+    public SampleSet newSampleSet( int numberOfSamples) {
         return SampleSet.make(this, numberOfSamples);
     }
 
@@ -105,11 +105,11 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
      * <li>...
      * </ul>
      */
-    public void setRandom(final Random random) {
+    public void setRandom( Random random) {
         myRandom = random;
     }
 
-    public void setSeed(final long seed) {
+    public void setSeed( long seed) {
         this.setRandom(new Random(seed));
     }
 
@@ -118,7 +118,7 @@ public abstract class RandomNumber implements Distribution, NullaryFunction<Doub
         return this.getExpected() + "±" + this.getStandardDeviation();
     }
 
-    protected void checkProbabilty(final double probabilty) {
+    protected void checkProbabilty( double probabilty) {
         if ((probabilty < ZERO) || (ONE < probabilty)) {
             throw new IllegalArgumentException("Probabilty must be [0,1]");
         }

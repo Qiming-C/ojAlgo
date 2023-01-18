@@ -36,19 +36,19 @@ public interface ElementView1D<N extends Comparable<N>, V extends ElementView1D<
     int CHARACTERISTICS = Spliterator.CONCURRENT | Spliterator.DISTINCT | Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.ORDERED | Spliterator.SIZED
             | Spliterator.SORTED | Spliterator.SUBSIZED;
 
-    default int characteristics() {
+    @Override default int characteristics() {
         return CHARACTERISTICS;
     }
 
-    default int compareTo(final V other) {
+    @Override default int compareTo( V other) {
         return Long.compare(this.index(), other.index());
     }
 
-    default void forEachRemaining(final Consumer<? super V> action) {
+    @Override default void forEachRemaining( Consumer<? super V> action) {
         Spliterator.super.forEachRemaining(action);
     }
 
-    default Comparator<? super V> getComparator() {
+    @Override default Comparator<? super V> getComparator() {
         return null;
     }
 
@@ -56,7 +56,7 @@ public interface ElementView1D<N extends Comparable<N>, V extends ElementView1D<
 
     long index();
 
-    V iterator();
+    @Override V iterator();
 
     default long nextIndex() {
         return this.index() + 1L;
@@ -68,7 +68,7 @@ public interface ElementView1D<N extends Comparable<N>, V extends ElementView1D<
         return this.index() - 1L;
     }
 
-    default void remove() {
+    @Override default void remove() {
         ProgrammingError.throwForUnsupportedOptionalOperation();
     }
 
@@ -85,7 +85,7 @@ public interface ElementView1D<N extends Comparable<N>, V extends ElementView1D<
         return StreamSupport.stream(this, false);
     }
 
-    default boolean tryAdvance(final Consumer<? super V> action) {
+    @Override default boolean tryAdvance( Consumer<? super V> action) {
         if (this.hasNext()) {
             action.accept(this.next());
             return true;
@@ -94,6 +94,6 @@ public interface ElementView1D<N extends Comparable<N>, V extends ElementView1D<
         }
     }
 
-    V trySplit();
+    @Override V trySplit();
 
 }

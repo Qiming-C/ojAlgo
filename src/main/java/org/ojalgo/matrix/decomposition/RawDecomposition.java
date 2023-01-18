@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.matrix.store.DiagonalStore;
@@ -44,11 +45,11 @@ import org.ojalgo.type.context.NumberContext;
  */
 abstract class RawDecomposition extends AbstractDecomposition<Double> {
 
-    static RawStore make(final int nbRows, final int nbCols) {
+    static RawStore make( int nbRows,  int nbCols) {
         return RawStore.FACTORY.make(nbRows, nbCols);
     }
 
-    final static <D extends Access1D<?>> DiagonalStore.Builder<Double, D> makeDiagonal(final D mainDiag) {
+    final static <D extends Access1D<?>> DiagonalStore.Builder<Double, D> makeDiagonal( D mainDiag) {
         return DiagonalStore.builder(RawStore.FACTORY, mainDiag);
     }
 
@@ -72,13 +73,13 @@ abstract class RawDecomposition extends AbstractDecomposition<Double> {
     }
 
     @Override
-    protected Primitive64Store allocate(final long numberOfRows, final long numberOfColumns) {
+    protected Primitive64Store allocate( long numberOfRows,  long numberOfColumns) {
         // TODO Should use RawStore.FACTORY rather than PrimitiveDenseStore.FACTORY
         return Primitive64Store.FACTORY.make(numberOfRows, numberOfColumns);
     }
 
     protected boolean checkSymmetry() {
-        boolean retVal = myRowDim == myColDim;
+        @Var boolean retVal = myRowDim == myColDim;
         for (int i = 0; retVal && i < myRowDim; i++) {
             for (int j = 0; retVal && j < i; j++) {
                 retVal &= NumberContext.compare(myInternalData[i][j], myInternalData[j][i]) == 0;
@@ -88,7 +89,7 @@ abstract class RawDecomposition extends AbstractDecomposition<Double> {
     }
 
     @SuppressWarnings("unchecked")
-    protected MatrixStore<Double> collect(final Access2D.Collectable<Double, ? super DecompositionStore<Double>> source) {
+    protected MatrixStore<Double> collect( Access2D.Collectable<Double, ? super DecompositionStore<Double>> source) {
         // TODO Should use RawStore.FACTORY rather than PrimitiveDenseStore.FACTORY
         if (source instanceof MatrixStore) {
             return (MatrixStore<Double>) source;
@@ -117,23 +118,23 @@ abstract class RawDecomposition extends AbstractDecomposition<Double> {
         return PrimitiveScalar.FACTORY;
     }
 
-    protected Collectable<Double, ? super PhysicalStore<Double>> wrap(final Access2D<?> matrix) {
+    protected Collectable<Double, ? super PhysicalStore<Double>> wrap( Access2D<?> matrix) {
         return Primitive64Store.FACTORY.makeWrapper(matrix);
     }
 
-    RawStore newRawStore(final int m, final int n) {
+    RawStore newRawStore( int m,  int n) {
         return RawStore.FACTORY.make(m, n);
     }
 
-    double[][] reset(final Structure2D template, final boolean transpose) {
+    double[][] reset( Structure2D template,  boolean transpose) {
 
         this.reset();
 
-        final int templateRows = template.getRowDim();
-        final int templateCols = template.getColDim();
+         int templateRows = template.getRowDim();
+         int templateCols = template.getColDim();
 
-        final int internalRows = transpose ? templateCols : templateRows;
-        final int internalCols = transpose ? templateRows : templateCols;
+         int internalRows = transpose ? templateCols : templateRows;
+         int internalCols = transpose ? templateRows : templateCols;
 
         if (myInternalData == null || myRowDim != templateRows || myColDim != templateCols) {
 
@@ -147,7 +148,7 @@ abstract class RawDecomposition extends AbstractDecomposition<Double> {
         return myInternalData;
     }
 
-    RawStore wrap(final double[][] data) {
+    RawStore wrap( double[][] data) {
         return RawStore.wrap(data);
     }
 

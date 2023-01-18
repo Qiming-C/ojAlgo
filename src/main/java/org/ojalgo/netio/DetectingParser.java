@@ -42,12 +42,12 @@ public abstract class DetectingParser<T> implements BasicParser<T> {
     private Parser<? extends T> mySelectedParser = null;
     private final TextLineReader.Parser<T> myDefaultParser;
 
-    protected DetectingParser(final Parser<T> defaultParser) {
+    protected DetectingParser( Parser<T> defaultParser) {
         super();
         myDefaultParser = defaultParser;
     }
 
-    public T parse(final String line) {
+    @Override public T parse( String line) {
 
         if (mySelectedParser == null) {
 
@@ -69,7 +69,7 @@ public abstract class DetectingParser<T> implements BasicParser<T> {
         return mySelectedParser.parse(line);
     }
 
-    protected void addPotentialParser(final Predicate<String> predicate, final Parser<? extends T> parser) {
+    protected void addPotentialParser( Predicate<String> predicate,  Parser<? extends T> parser) {
         myPotentialParsers.add(KeyValue.of(predicate, parser));
     }
 

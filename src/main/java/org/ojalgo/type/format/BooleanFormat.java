@@ -45,11 +45,11 @@ public final class BooleanFormat extends Format {
         this(Boolean.TRUE.toString(), Boolean.FALSE.toString());
     }
 
-    public BooleanFormat(final String trueValue, final String falseValue) {
+    public BooleanFormat( String trueValue,  String falseValue) {
         this(trueValue, falseValue, "?");
     }
 
-    public BooleanFormat(final String trueValue, final String falseValue, final String nullValue) {
+    public BooleanFormat( String trueValue,  String falseValue,  String nullValue) {
         super();
         myTrueValue = trueValue;
         myFalseValue = falseValue;
@@ -57,7 +57,7 @@ public final class BooleanFormat extends Format {
     }
 
     @Override
-    public StringBuffer format(final Object object, final StringBuffer buffer, final FieldPosition position) {
+    public StringBuffer format( Object object,  StringBuffer buffer,  FieldPosition position) {
 
         if ((object == null) || !(object instanceof Boolean)) {
             buffer.append(myNullValue);
@@ -71,7 +71,7 @@ public final class BooleanFormat extends Format {
     }
 
     @Override
-    public Boolean parseObject(final String source, final ParsePosition position) {
+    public Boolean parseObject( String source,  ParsePosition position) {
 
         if (myTrueValue.equals(source)) {
             return Boolean.TRUE;

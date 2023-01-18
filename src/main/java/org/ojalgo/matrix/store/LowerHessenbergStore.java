@@ -32,25 +32,25 @@ import org.ojalgo.scalar.Scalar;
  */
 final class LowerHessenbergStore<N extends Comparable<N>> extends ShadingStore<N> {
 
-    LowerHessenbergStore(final MatrixStore<N> base) {
+    LowerHessenbergStore( MatrixStore<N> base) {
         super(base);
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         if (row + 1 < col) {
             return PrimitiveMath.ZERO;
         }
         return this.base().doubleValue(row, col);
     }
 
-    public int firstInColumn(final int col) {
+    @Override public int firstInColumn( int col) {
         if (col == 0) {
             return 0;
         }
         return col - 1;
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         if (row + 1 < col) {
             return this.zero().get();
         }
@@ -58,11 +58,11 @@ final class LowerHessenbergStore<N extends Comparable<N>> extends ShadingStore<N
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         return Math.min(row + 2, this.getColDim());
     }
 
-    public Scalar<N> toScalar(final long row, final long col) {
+    @Override public Scalar<N> toScalar( long row,  long col) {
         if (row + 1 < col) {
             return this.zero();
         }

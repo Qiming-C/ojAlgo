@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.matrix.decomposition.function.ExchangeColumns;
@@ -35,14 +36,14 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
     /**
      * Sort eigenvalues and corresponding vectors.
      */
-    static void sort(final double[] d, final ExchangeColumns mtrxV) {
+    static void sort( double[] d,  ExchangeColumns mtrxV) {
 
         int size = d.length;
 
         for (int i = 0, limit = size - 1; i < limit; i++) {
 
-            int k = i;
-            double p = Math.abs(d[i]);
+            @Var int k = i;
+            @Var double p = Math.abs(d[i]);
 
             for (int j = i + 1; j < size; j++) {
                 double m = Math.abs(d[j]);
@@ -67,20 +68,20 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
     private MatrixStore<N> myV = null;
     private boolean myValuesOnly = false;
 
-    protected EigenvalueDecomposition(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
+    protected EigenvalueDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
         super(aFactory);
     }
 
-    public N calculateDeterminant(final Access2D<?> matrix) {
+    @Override public N calculateDeterminant( Access2D<?> matrix) {
         this.decompose(this.wrap(matrix));
         return this.getDeterminant();
     }
 
-    public boolean computeValuesOnly(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public boolean computeValuesOnly( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
         return this.decompose(matrix, true);
     }
 
-    public final boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public final boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
         return this.decompose(matrix, false);
     }
 
@@ -89,7 +90,7 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
         return mySquareDim;
     }
 
-    public final MatrixStore<N> getD() {
+    @Override public final MatrixStore<N> getD() {
 
         if (myD == null && this.isComputed()) {
             myD = this.makeD();
@@ -102,7 +103,7 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
         return myD;
     }
 
-    public final Array1D<ComplexNumber> getEigenvalues() {
+    @Override public final Array1D<ComplexNumber> getEigenvalues() {
 
         if (myEigenvalues == null && this.isComputed()) {
             myEigenvalues = this.makeEigenvalues();
@@ -126,7 +127,7 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
         return mySquareDim;
     }
 
-    public final MatrixStore<N> getV() {
+    @Override public final MatrixStore<N> getV() {
 
         if (myV == null && !myValuesOnly && this.isComputed()) {
             myV = this.makeV();
@@ -153,7 +154,7 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
         mySquareDim = 0;
     }
 
-    private final boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly) {
+    private final boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly) {
 
         this.reset();
 
@@ -172,7 +173,7 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
         return this.computed(retVal);
     }
 
-    protected abstract boolean doDecompose(final Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly);
+    protected abstract boolean doDecompose( Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly);
 
     protected abstract MatrixStore<N> makeD();
 
@@ -180,15 +181,15 @@ abstract class EigenvalueDecomposition<N extends Comparable<N>> extends GenericD
 
     protected abstract MatrixStore<N> makeV();
 
-    final void setD(final MatrixStore<N> newD) {
+    final void setD( MatrixStore<N> newD) {
         myD = newD;
     }
 
-    final void setEigenvalues(final Array1D<ComplexNumber> eigenvalues) {
+    final void setEigenvalues( Array1D<ComplexNumber> eigenvalues) {
         myEigenvalues = eigenvalues;
     }
 
-    final void setV(final MatrixStore<N> newV) {
+    final void setV( MatrixStore<N> newV) {
         myV = newV;
     }
 

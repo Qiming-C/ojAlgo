@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ONE;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.Array2D;
 import org.ojalgo.function.constant.PrimitiveMath;
@@ -31,18 +32,18 @@ import org.ojalgo.structure.Access2D;
 
 public final class Normal1D extends AbstractDistribution1D {
 
-    static Access2D<?> correlations(final Access2D<?> covariances) {
+    static Access2D<?> correlations( Access2D<?> covariances) {
 
-        final int tmpDim = (int) covariances.countRows();
+         var tmpDim = (int) covariances.countRows();
 
-        final Array2D<Double> retVal = Array2D.R064.make(tmpDim, tmpDim);
-        final Array1D<Double> tmpStdDev = Array1D.R064.make(tmpDim);
+         Array2D<Double> retVal = Array2D.R064.make(tmpDim, tmpDim);
+         Array1D<Double> tmpStdDev = Array1D.R064.make(tmpDim);
 
         for (int ij = 0; ij < tmpDim; ij++) {
             tmpStdDev.set(ij, PrimitiveMath.SQRT.invoke(covariances.doubleValue(ij, ij)));
         }
 
-        double tmpCorrelation;
+        @Var double tmpCorrelation;
         for (int j = 0; j < tmpDim; j++) {
 
             retVal.set(j, j, ONE);
@@ -62,11 +63,11 @@ public final class Normal1D extends AbstractDistribution1D {
     private final Array1D<Double> myLocations;
     private final Array1D<Double> myScales;
 
-    public Normal1D(final Access1D<?> locations, final Access2D<?> covariances) {
+    public Normal1D( Access1D<?> locations,  Access2D<?> covariances) {
 
         super(Normal1D.correlations(covariances));
 
-        final int tmpDim = (int) covariances.countRows();
+         var tmpDim = (int) covariances.countRows();
 
         myLocations = Array1D.R064.copy(locations);
         myScales = Array1D.R064.make(tmpDim);
@@ -75,15 +76,11 @@ public final class Normal1D extends AbstractDistribution1D {
         }
     }
 
-    private Normal1D(final Access2D<?> correlations) {
-        super(correlations);
-        myLocations = null;
-        myScales = null;
-    }
+    
 
     public Array1D<Double> doubleValue() {
 
-        final Array1D<Double> retVal = this.random().nextGaussian();
+         Array1D<Double> retVal = this.random().nextGaussian();
 
         for (int i = 0; i < retVal.length; i++) {
             retVal.set(i, myLocations.doubleValue(i) + (myScales.doubleValue(i) * retVal.doubleValue(i)));

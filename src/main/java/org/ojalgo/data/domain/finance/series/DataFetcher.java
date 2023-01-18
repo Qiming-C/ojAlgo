@@ -21,10 +21,11 @@
  */
 package org.ojalgo.data.domain.finance.series;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-
 import org.ojalgo.netio.TextLineReader;
 import org.ojalgo.netio.TextLineReader.Parser;
 import org.ojalgo.type.CalendarDateUnit;
@@ -34,13 +35,14 @@ public interface DataFetcher {
 
     InputStream getInputStream();
 
-    default <T> AutoSupplier<T> getReader(final Parser<T> parser) {
-        TextLineReader reader = new TextLineReader(this.getInputStream());
+    default <T> AutoSupplier<T> getReader( Parser<T> parser) {
+        var reader = new TextLineReader(this.getInputStream());
         return reader.withFilteredParser(parser);
     }
 
     /**
-     * @return Typically DAY(ly), WEEK(ly) or MONTH(ly)
+     *Returns typically DAY(ly), WEEK(ly) or MONTH(ly).
+ 
      */
     CalendarDateUnit getResolution();
 
@@ -50,11 +52,12 @@ public interface DataFetcher {
      */
     @Deprecated
     default Reader getStreamOfCSV() {
-        return new InputStreamReader(this.getInputStream());
+        return new InputStreamReader(this.getInputStream(), UTF_8);
     }
 
     /**
-     * @return Data identifier
+     *Returns data identifier.
+ 
      */
     String getSymbol();
 

@@ -33,7 +33,7 @@ final class Pivot {
         super();
     }
 
-    void change(final int ind1, final int ind2) {
+    void change( int ind1,  int ind2) {
 
         if (ind1 != ind2) {
 
@@ -66,7 +66,7 @@ final class Pivot {
         return myModified;
     }
 
-    void reset(final int numberOf) {
+    void reset( int numberOf) {
 
         if ((myOrder == null) || (myOrder.length != numberOf)) {
             myOrder = Structure1D.newIncreasingRange(0, numberOf);

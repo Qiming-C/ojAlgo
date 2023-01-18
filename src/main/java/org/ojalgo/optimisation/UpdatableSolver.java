@@ -73,15 +73,16 @@ public interface UpdatableSolver extends Optimisation.Solver {
     }
 
     /**
-     * @param index The, solver specific, variable index
+     *Returns true if fixing is supported and was successful, otherwise false.
+ @param index The, solver specific, variable index
      * @param value The value to fix that variable to
-     * @return true if fixing is supported and was successful, otherwise false
+     * 
      */
-    default boolean fixVariable(final int index, final double value) {
+    default boolean fixVariable( int index,  double value) {
         return false;
     }
 
-    default Collection<Equation> generateCutCandidates(final double fractionality, final boolean... integer) {
+    default Collection<Equation> generateCutCandidates( double fractionality,  boolean... integer) {
         return Collections.emptySet();
     }
 

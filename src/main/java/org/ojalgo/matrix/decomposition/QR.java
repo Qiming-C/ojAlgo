@@ -57,11 +57,11 @@ public interface QR<N extends Comparable<N>> extends MatrixDecomposition<N>, Mat
 
     interface Factory<N extends Comparable<N>> extends MatrixDecomposition.Factory<QR<N>> {
 
-        default QR<N> make(final boolean fullSize) {
+        default QR<N> make( boolean fullSize) {
             return this.make(TYPICAL, fullSize);
         }
 
-        default QR<N> make(final Structure2D typical) {
+        @Override default QR<N> make( Structure2D typical) {
             return this.make(typical, false);
         }
 
@@ -72,7 +72,7 @@ public interface QR<N extends Comparable<N>> extends MatrixDecomposition<N>, Mat
     Factory<ComplexNumber> C128 = (typical, fullSize) -> new QRDecomposition.C128(fullSize);
 
     Factory<Double> R064 = (typical, fullSize) -> {
-        if (fullSize || typical.isFat() || 64L >= typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE) {
+        if (fullSize || typical.isFat() || (64L >= typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE)) {
             return new QRDecomposition.R064(fullSize);
         }
         return new RawQR();
@@ -114,12 +114,12 @@ public interface QR<N extends Comparable<N>> extends MatrixDecomposition<N>, Mat
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final QR<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  QR<N> decomposition,  NumberContext context) {
 
-        final MatrixStore<N> tmpQ = decomposition.getQ();
-        final MatrixStore<N> tmpR = decomposition.getR();
+         MatrixStore<N> tmpQ = decomposition.getQ();
+         MatrixStore<N> tmpR = decomposition.getR();
 
-        final MatrixStore<N> tmpStore = tmpQ.multiply(tmpR);
+         MatrixStore<N> tmpStore = tmpQ.multiply(tmpR);
 
         return Access2D.equals(tmpStore, matrix, context);
     }
@@ -128,11 +128,11 @@ public interface QR<N extends Comparable<N>> extends MatrixDecomposition<N>, Mat
 
     MatrixStore<N> getR();
 
-    default boolean isOrdered() {
+    @Override default boolean isOrdered() {
         return false;
     }
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxQ = this.getQ();
         MatrixStore<N> mtrxR = this.getR();
         return mtrxQ.multiply(mtrxR);

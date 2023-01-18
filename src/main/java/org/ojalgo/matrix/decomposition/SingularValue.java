@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.PlainArray;
@@ -56,11 +57,11 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
 
     interface Factory<N extends Comparable<N>> extends MatrixDecomposition.Factory<SingularValue<N>> {
 
-        default SingularValue<N> make(final boolean fullSize) {
+        default SingularValue<N> make( boolean fullSize) {
             return this.make(TYPICAL, fullSize);
         }
 
-        default SingularValue<N> make(final Structure2D typical) {
+        @Override default SingularValue<N> make( Structure2D typical) {
             return this.make(typical, false);
         }
 
@@ -71,7 +72,7 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
     Factory<ComplexNumber> C128 = (typical, fullSize) -> new SingularValueDecomposition.C128(fullSize);
 
     Factory<Double> R064 = (typical, fullSize) -> {
-        if (fullSize || 1024L < typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE) {
+        if (fullSize || (1024L < typical.countColumns() && typical.count() <= PlainArray.MAX_SIZE)) {
             return new SingularValueDecomposition.R064(fullSize);
         }
         return new RawSingularValue();
@@ -113,7 +114,7 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final SingularValue<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  SingularValue<N> decomposition,  NumberContext context) {
 
         int nbRows = matrix.getRowDim();
         int nbCols = matrix.getColDim();
@@ -122,10 +123,10 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
         MatrixStore<N> tmpD = decomposition.getD();
         MatrixStore<N> tmpV = decomposition.getV();
 
-        MatrixStore<N> tmpThis;
-        MatrixStore<N> tmpThat;
+        @Var MatrixStore<N> tmpThis;
+        @Var MatrixStore<N> tmpThat;
 
-        boolean retVal = nbRows == tmpU.countRows() && tmpV.countRows() == nbCols;
+        @Var boolean retVal = nbRows == tmpU.countRows() && tmpV.countRows() == nbCols;
 
         // Check that [A][V] == [U][D]
         if (retVal) {
@@ -182,15 +183,17 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
      *
      * @return The largest singular value divided by the smallest singular value.
      */
-    double getCondition();
+    @Override double getCondition();
 
     /**
-     * @return [[A]<sup>T</sup>[A]]<sup>-1</sup> Where [A] is the original matrix.
+     *Returns [[A]<sup>T</sup>[A]]<sup>-1</sup> Where [A] is the original matrix.
+ 
      */
     MatrixStore<N> getCovariance();
 
     /**
-     * @return The diagonal matrix of singular values.
+     *Returns the diagonal matrix of singular values.
+ 
      */
     MatrixStore<N> getD();
 
@@ -216,19 +219,21 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
     double getKyFanNorm(int k);
 
     /**
-     * @return 2-norm
+     *Returns 2-norm.
+ 
      */
     double getOperatorNorm();
 
     /**
-     * @return The singular values ordered in descending order.
+     *Returns the singular values ordered in descending order.
+ 
      */
     Array1D<Double> getSingularValues();
 
     /**
      * @param values An array that will receive the singular values
      */
-    default void getSingularValues(final double[] values) {
+    default void getSingularValues( double[] values) {
 
         ProgrammingError.throwIfNull(values);
 
@@ -262,7 +267,7 @@ public interface SingularValue<N extends Comparable<N>> extends MatrixDecomposit
      */
     MatrixStore<N> getV();
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxQ1 = this.getU();
         MatrixStore<N> mtrxD = this.getD();
         MatrixStore<N> mtrxQ2 = this.getV();

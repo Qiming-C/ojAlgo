@@ -95,7 +95,7 @@ public enum MathType {
     private final JavaType myJavaType;
     private final NumberSet myNumberSet;
 
-    MathType(final NumberSet numberSet, final int components, final JavaType javaType) {
+    MathType( NumberSet numberSet,  int components,  JavaType javaType) {
         myNumberSet = numberSet;
         myJavaType = javaType;
         myComponents = components;

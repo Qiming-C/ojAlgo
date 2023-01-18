@@ -21,11 +21,11 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.netio.ASCII;
@@ -44,19 +44,19 @@ public abstract class TypeUtils {
     /**
      * Compatible with slf4j. {} in the message pattern will be replaced by the arguments.
      */
-    public static String format(final String messagePattern, final Object... args) {
+    public static String format( String messagePattern,  Object... args) {
 
         if (messagePattern == null) {
             return null;
         }
 
-        final int patternLength = messagePattern.length();
-        final int argsCount = args.length;
+         int patternLength = messagePattern.length();
+         int argsCount = args.length;
 
-        int first = 0;
-        int limit = patternLength;
+        @Var int first = 0;
+        @Var int limit = patternLength;
 
-        final StringBuilder retVal = new StringBuilder(patternLength + (argsCount * 20));
+         var retVal = new StringBuilder(patternLength + (argsCount * 20));
 
         for (int a = 0; a < argsCount; a++) {
 
@@ -105,7 +105,7 @@ public abstract class TypeUtils {
 
     public static final GregorianCalendar getHundredYearsAgo() {
 
-        final GregorianCalendar retVal = new GregorianCalendar();
+         var retVal = new GregorianCalendar();
 
         retVal.add(Calendar.YEAR, -100);
 
@@ -114,7 +114,7 @@ public abstract class TypeUtils {
 
     public static final GregorianCalendar getThousandYearsAgo() {
 
-        final GregorianCalendar retVal = new GregorianCalendar();
+         var retVal = new GregorianCalendar();
 
         retVal.add(Calendar.YEAR, -1000);
 
@@ -123,7 +123,7 @@ public abstract class TypeUtils {
 
     public static final GregorianCalendar getThousandYearsFromNow() {
 
-        final GregorianCalendar retVal = new GregorianCalendar();
+         var retVal = new GregorianCalendar();
 
         retVal.add(Calendar.YEAR, 1000);
 
@@ -139,7 +139,7 @@ public abstract class TypeUtils {
      * @param number Any Number
      * @return A corresponding BigDecimal
      */
-    public static BigDecimal toBigDecimal(final Comparable<?> number) {
+    public static BigDecimal toBigDecimal( Comparable<?> number) {
 
         if (number == null) {
             return BigMath.ZERO;
@@ -159,9 +159,9 @@ public abstract class TypeUtils {
 
                 return new BigDecimal(number.toString());
 
-            } catch (final NumberFormatException cause) {
+            } catch ( NumberFormatException cause) {
 
-                double value = PrimitiveMath.NaN;
+                @Var double value = PrimitiveMath.NaN;
                 if (number instanceof NumberDefinition) {
                     value = ((NumberDefinition) number).doubleValue();
                 } else if (number instanceof Number) {
@@ -181,29 +181,29 @@ public abstract class TypeUtils {
         }
     }
 
-    public static BigDecimal toBigDecimal(final Comparable<?> number, final NumberContext context) {
+    public static BigDecimal toBigDecimal( Comparable<?> number,  NumberContext context) {
         return context.enforce(TypeUtils.toBigDecimal(number));
     }
 
     /**
      * The way colours are specified in html pages.
      */
-    public static String toHexString(final int colour) {
+    public static String toHexString( int colour) {
         return HEX + Integer.toHexString(colour).substring(2);
     }
 
-    static boolean isSameDate(final Calendar aCal1, final Calendar aCal2) {
+    static boolean isSameDate( Calendar aCal1,  Calendar aCal2) {
 
-        boolean retVal = aCal1.get(Calendar.YEAR) == aCal2.get(Calendar.YEAR);
+        @Var boolean retVal = aCal1.get(Calendar.YEAR) == aCal2.get(Calendar.YEAR);
 
         retVal = retVal && (aCal1.get(Calendar.MONTH) == aCal2.get(Calendar.MONTH));
 
         return retVal && (aCal1.get(Calendar.DAY_OF_MONTH) == aCal2.get(Calendar.DAY_OF_MONTH));
     }
 
-    static boolean isSameTime(final Calendar aCal1, final Calendar aCal2) {
+    static boolean isSameTime( Calendar aCal1,  Calendar aCal2) {
 
-        boolean retVal = aCal1.get(Calendar.HOUR_OF_DAY) == aCal2.get(Calendar.HOUR_OF_DAY);
+        @Var boolean retVal = aCal1.get(Calendar.HOUR_OF_DAY) == aCal2.get(Calendar.HOUR_OF_DAY);
 
         retVal = retVal && (aCal1.get(Calendar.MINUTE) == aCal2.get(Calendar.MINUTE));
 

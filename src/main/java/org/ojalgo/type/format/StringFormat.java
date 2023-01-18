@@ -34,12 +34,12 @@ public final class StringFormat extends Format {
     }
 
     @Override
-    public StringBuffer format(final Object anObject, final StringBuffer aBuffer, final FieldPosition aPosition) {
+    public StringBuffer format( Object anObject,  StringBuffer aBuffer,  FieldPosition aPosition) {
         return aBuffer.append(anObject);
     }
 
     @Override
-    public String parseObject(final String aSource, final ParsePosition aPosition) {
+    public String parseObject( String aSource,  ParsePosition aPosition) {
         return aSource;
     }
 

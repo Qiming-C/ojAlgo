@@ -32,7 +32,7 @@ abstract class InPlaceDecomposition<N extends Comparable<N>> extends GenericDeco
     private DecompositionStore<N> myInPlace;
     private int myRowDim;
 
-    protected InPlaceDecomposition(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected InPlaceDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         super(factory);
     }
 
@@ -45,7 +45,7 @@ abstract class InPlaceDecomposition<N extends Comparable<N>> extends GenericDeco
         return this.getInverse(this.allocate(this.getRowDim(), this.getRowDim()));
     }
 
-    public MatrixStore<N> getInverse(final PhysicalStore<N> preallocated) {
+    public MatrixStore<N> getInverse( PhysicalStore<N> preallocated) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
         return null;
     }
@@ -59,10 +59,10 @@ abstract class InPlaceDecomposition<N extends Comparable<N>> extends GenericDeco
         return myInPlace;
     }
 
-    DecompositionStore<N> setInPlace(final Access2D.Collectable<N, ? super DecompositionStore<N>> matrix) {
+    DecompositionStore<N> setInPlace( Access2D.Collectable<N, ? super DecompositionStore<N>> matrix) {
 
-        int tmpRowDim = (int) matrix.countRows();
-        int tmpColDim = (int) matrix.countColumns();
+        var tmpRowDim = (int) matrix.countRows();
+        var tmpColDim = (int) matrix.countColumns();
 
         if (myInPlace != null && myRowDim == tmpRowDim && myColDim == tmpColDim) {
 

@@ -55,9 +55,10 @@ public interface LDL<N extends Comparable<N>> extends LDU<N>, MatrixDecompositio
     interface Factory<N extends Comparable<N>> extends MatrixDecomposition.Factory<LDL<N>> {
 
         /**
-         * @see LDL#modified(Factory, Comparable)
+         *See {@link LDL#modified(Factory, Comparable)}.
+ 
          */
-        default Factory<N> modified(final N threshold) {
+        default Factory<N> modified( N threshold) {
             return new ModifiedFactory<>(this, threshold);
         }
 
@@ -68,13 +69,13 @@ public interface LDL<N extends Comparable<N>> extends LDU<N>, MatrixDecompositio
         private final Factory<N> myDelegate;
         private final N myThreshold;
 
-        ModifiedFactory(final Factory<N> delegate, final N threshold) {
+        ModifiedFactory( Factory<N> delegate,  N threshold) {
             super();
             myDelegate = delegate;
             myThreshold = threshold;
         }
 
-        public LDL<N> make(final Structure2D typical) {
+        @Override public LDL<N> make( Structure2D typical) {
             LDL<N> retVal = myDelegate.make(typical);
             if (myThreshold != null && retVal instanceof LDLDecomposition) {
                 ((LDLDecomposition<N>) retVal).setThreshold(myThreshold);
@@ -124,7 +125,7 @@ public interface LDL<N extends Comparable<N>> extends LDU<N>, MatrixDecompositio
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final LDL<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  LDL<N> decomposition,  NumberContext context) {
         return Access2D.equals(matrix, decomposition.reconstruct(), context);
     }
 
@@ -137,7 +138,7 @@ public interface LDL<N extends Comparable<N>> extends LDU<N>, MatrixDecompositio
      * triangular (Cholesky) matrices, is set to something very large. More correctly, it is assumed to be
      * very large and therefore resulting in a negligible contribution to the algorithm.
      */
-    static <N extends Comparable<N>> Factory<N> modified(final Factory<N> delegate, final N threshold) {
+    static <N extends Comparable<N>> Factory<N> modified( Factory<N> delegate,  N threshold) {
         return new ModifiedFactory<>(delegate, threshold);
     }
 
@@ -157,7 +158,7 @@ public interface LDL<N extends Comparable<N>> extends LDU<N>, MatrixDecompositio
         return this.getL().conjugate();
     }
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
 
         MatrixStore<N> mtrxL = this.getL();
         MatrixStore<N> mtrxD = this.getD();

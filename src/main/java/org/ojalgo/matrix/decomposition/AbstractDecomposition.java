@@ -39,19 +39,19 @@ abstract class AbstractDecomposition<N extends Comparable<N>> implements MatrixD
         super();
     }
 
-    public final long countColumns() {
+    @Override public final long countColumns() {
         return this.getColDim();
     }
 
-    public final long countRows() {
+    @Override public final long countRows() {
         return this.getRowDim();
     }
 
-    public final boolean isComputed() {
+    @Override public final boolean isComputed() {
         return myComputed;
     }
 
-    public void reset() {
+    @Override public void reset() {
         myComputed = false;
         mySolvable = null;
     }
@@ -62,7 +62,7 @@ abstract class AbstractDecomposition<N extends Comparable<N>> implements MatrixD
         return false;
     }
 
-    protected final boolean computed(final boolean computed) {
+    protected final boolean computed( boolean computed) {
         return myComputed = computed;
     }
 

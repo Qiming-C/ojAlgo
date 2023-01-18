@@ -30,19 +30,19 @@ import org.ojalgo.scalar.RationalNumber;
 @Deprecated
 public class RationalArray extends ArrayQ128 {
 
-    public static RationalArray make(final int size) {
+    public static RationalArray make( int size) {
         return new RationalArray(size);
     }
 
-    public static RationalArray wrap(final RationalNumber... data) {
+    public static RationalArray wrap( RationalNumber... data) {
         return new RationalArray(data);
     }
 
-    RationalArray(final RationalNumber[] data) {
+    RationalArray( RationalNumber[] data) {
         super(data);
     }
 
-    RationalArray(final int size) {
+    RationalArray( int size) {
         super(size);
     }
 

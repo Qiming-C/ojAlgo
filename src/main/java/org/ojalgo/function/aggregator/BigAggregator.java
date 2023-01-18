@@ -33,15 +33,15 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
     static abstract class BigAggregatorFunction implements AggregatorFunction<BigDecimal> {
 
-        public final double doubleValue() {
+        @Override public final double doubleValue() {
             return this.get().doubleValue();
         }
 
-        public final void invoke(final double anArg) {
+        @Override public final void invoke( double anArg) {
             this.invoke(new BigDecimal(anArg));
         }
 
-        public final void invoke(final float anArg) {
+        @Override public final void invoke( float anArg) {
             this.invoke(new BigDecimal(anArg));
         }
 
@@ -60,20 +60,20 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
                 private int myCount = 0;
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return BigMath.DIVIDE.invoke(myNumber, BigDecimal.valueOf(myCount));
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myCount++;
                     myNumber = BigMath.ADD.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myCount = 0;
                     myNumber = ZERO;
                     return this;
@@ -91,21 +91,21 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private int myCount = 0;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return new BigDecimal(myCount);
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return myCount;
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     if (anArg.signum() != 0) {
                         myCount++;
                     }
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myCount = 0;
                     return this;
                 }
@@ -122,19 +122,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.MAX.invoke(myNumber, BigMath.ABS.invoke(anArg));
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ZERO;
                     return this;
                 }
@@ -151,19 +151,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = VERY_NEGATIVE;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.MAX.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = VERY_NEGATIVE;
                     return this;
                 }
@@ -180,22 +180,22 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = VERY_POSITIVE;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     if (myNumber.compareTo(VERY_POSITIVE) == 0) {
                         return ZERO;
                     }
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.MIN.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = VERY_POSITIVE;
                     return this;
                 }
@@ -212,19 +212,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.ADD.invoke(myNumber, anArg.abs());
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ZERO;
                     return this;
                 }
@@ -241,19 +241,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return BigMath.SQRT.invoke(myNumber);
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.ADD.invoke(myNumber, BigMath.MULTIPLY.invoke(anArg, anArg));
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ZERO;
                     return this;
                 }
@@ -270,19 +270,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ONE;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.MULTIPLY.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ONE;
                     return this;
                 }
@@ -299,19 +299,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ONE;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.MULTIPLY.invoke(myNumber, BigMath.MULTIPLY.invoke(anArg, anArg));
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ONE;
                     return this;
                 }
@@ -330,24 +330,24 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = VERY_POSITIVE;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     if (myNumber.compareTo(VERY_POSITIVE) == 0) {
                         return ZERO;
                     }
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     if (anArg.signum() != 0) {
                         myNumber = BigMath.MIN.invoke(myNumber, BigMath.ABS.invoke(anArg));
                     }
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = VERY_POSITIVE;
                     return this;
                 }
@@ -364,19 +364,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.ADD.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ZERO;
                     return this;
                 }
@@ -393,19 +393,19 @@ public final class BigAggregator extends AggregatorSet<BigDecimal> {
 
                 private BigDecimal myNumber = ZERO;
 
-                public BigDecimal get() {
+                @Override public BigDecimal get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final BigDecimal anArg) {
+                @Override public void invoke( BigDecimal anArg) {
                     myNumber = BigMath.ADD.invoke(myNumber, BigMath.MULTIPLY.invoke(anArg, anArg));
                 }
 
-                public AggregatorFunction<BigDecimal> reset() {
+                @Override public AggregatorFunction<BigDecimal> reset() {
                     myNumber = ZERO;
                     return this;
                 }

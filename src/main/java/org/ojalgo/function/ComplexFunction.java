@@ -32,11 +32,11 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     @FunctionalInterface
     public interface Binary extends BinaryFunction<ComplexNumber> {
 
-        default double invoke(final double arg1, final double arg2) {
+        @Override default double invoke( double arg1,  double arg2) {
             return this.invoke(ComplexNumber.valueOf(arg1), ComplexNumber.valueOf(arg2)).doubleValue();
         }
 
-        default float invoke(final float arg1, final float arg2) {
+        @Override default float invoke( float arg1,  float arg2) {
             return this.invoke(ComplexNumber.valueOf(arg1), ComplexNumber.valueOf(arg2)).floatValue();
         }
 
@@ -45,11 +45,11 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     @FunctionalInterface
     public interface Consumer extends VoidFunction<ComplexNumber> {
 
-        default void invoke(final double arg) {
+        @Override default void invoke( double arg) {
             this.invoke(ComplexNumber.valueOf(arg));
         }
 
-        default void invoke(final float arg) {
+        @Override default void invoke( float arg) {
             this.invoke(ComplexNumber.valueOf(arg));
         }
 
@@ -58,11 +58,11 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     @FunctionalInterface
     public interface Parameter extends ParameterFunction<ComplexNumber> {
 
-        default double invoke(final double arg, final int param) {
+        @Override default double invoke( double arg,  int param) {
             return this.invoke(ComplexNumber.valueOf(arg), param).doubleValue();
         }
 
-        default float invoke(final float arg, final int param) {
+        @Override default float invoke( float arg,  int param) {
             return this.invoke(ComplexNumber.valueOf(arg), param).floatValue();
         }
 
@@ -71,11 +71,11 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     @FunctionalInterface
     public interface Predicate extends PredicateFunction<ComplexNumber> {
 
-        default boolean invoke(final double arg) {
+        @Override default boolean invoke( double arg) {
             return this.invoke(ComplexNumber.valueOf(arg));
         }
 
-        default boolean invoke(final float arg) {
+        @Override default boolean invoke( float arg) {
             return this.invoke(ComplexNumber.valueOf(arg));
         }
 
@@ -84,11 +84,11 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     @FunctionalInterface
     public interface Unary extends UnaryFunction<ComplexNumber> {
 
-        default double invoke(final double arg) {
+        @Override default double invoke( double arg) {
             return this.invoke(ComplexNumber.valueOf(arg)).doubleValue();
         }
 
-        default float invoke(final float arg) {
+        @Override default float invoke( float arg) {
             return this.invoke(ComplexNumber.valueOf(arg)).floatValue();
         }
 
@@ -190,7 +190,7 @@ public final class ComplexFunction extends FunctionSet<ComplexNumber> {
     }
 
     @Override
-    public Unary enforce(final NumberContext context) {
+    public Unary enforce( NumberContext context) {
         return t -> ComplexNumber.valueOf(context.enforce(t));
     }
 

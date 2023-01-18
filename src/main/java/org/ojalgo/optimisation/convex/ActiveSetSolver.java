@@ -23,8 +23,8 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.RoundingMode;
-
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.function.aggregator.AggregatorFunction;
@@ -53,12 +53,12 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
     private boolean myShrinkSwitch = true;
     private final Primitive64Store mySlackI;
 
-    ActiveSetSolver(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    ActiveSetSolver( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
 
         super(convexSolverBuilder, optimisationOptions);
 
         int nbVars = this.countVariables();
-        int nbEqus = this.countEqualityConstraints();
+        
         int nbInes = this.countInequalityConstraints();
 
         myActivator = new IndexSelector(nbInes);
@@ -68,7 +68,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         mySlackI = MATRIX_FACTORY.make(nbInes, 1L);
     }
 
-    private void handleIterationSolution(final Primitive64Store iterX, final int[] excluded) {
+    private void handleIterationSolution( Primitive64Store iterX,  int[] excluded) {
         // Subproblem solved successfully
 
         PhysicalStore<Double> soluX = this.getSolutionX();
@@ -100,7 +100,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         if (!SOLUTION.isSmall(normCurrX, normStepX)) {
             // Non-zero solution
 
-            double stepLength = ONE;
+            @Var double stepLength = ONE;
 
             if (excluded.length > 0) {
 
@@ -128,7 +128,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
 
                     double currentSlack = slack.doubleValue(i);
                     double slackChange = excludedInequalityRow.dot(iterX);
-                    double fraction = Math.abs(currentSlack) / slackChange;
+                    @Var double fraction = Math.abs(currentSlack) / slackChange;
                     // If the current slack is negative something has already gone wrong.
                     // Taking the abs value is to handle small negative values due to rounding errors
                     if (slackChange > ZERO && !SLACK.isZero(slackChange) && SLACK.isSmall(slackChange, currentSlack)) {
@@ -185,7 +185,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
 
     private void shrink() {
 
-        int toExclude = this.suggestConstraintToExclude();
+        @Var int toExclude = this.suggestConstraintToExclude();
 
         if (toExclude < 0) {
             if (myShrinkSwitch) {
@@ -209,8 +209,8 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         Primitive64Store soluL = this.getSolutionL();
         int numbEqus = this.countEqualityConstraints();
 
-        int toExclude = incl[0];
-        double maxWeight = ZERO;
+        @Var int toExclude = incl[0];
+        @Var double maxWeight = ZERO;
 
         for (int i = 0; i < incl.length; i++) {
             double value = soluL.doubleValue(numbEqus + incl[i]);
@@ -234,8 +234,8 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         lastRow.visitAll(aggregator);
         double lastNorm = aggregator.doubleValue();
 
-        int toExclude = lastIncluded;
-        double maxWeight = ZERO;
+        @Var int toExclude = lastIncluded;
+        @Var double maxWeight = ZERO;
         // The weight is the absolute value of the cosine of the angle between the vectors (the constraint rows).
         for (int i = 0; i < incl.length; i++) {
             aggregator.reset();
@@ -260,7 +260,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         return myActivator.countIncluded();
     }
 
-    protected void exclude(final int indexToExclude) {
+    protected void exclude( int indexToExclude) {
         myActivator.exclude(indexToExclude);
         myExcluded = null;
         myIncluded = null;
@@ -278,7 +278,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         return myExcluded;
     }
 
-    protected int getExcluded(final int indexAmongExcluded) {
+    protected int getExcluded( int indexAmongExcluded) {
         return this.getExcluded()[indexAmongExcluded];
     }
 
@@ -289,7 +289,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         return myIncluded;
     }
 
-    protected final int getIncluded(final int indexAmongIncluded) {
+    protected final int getIncluded( int indexAmongIncluded) {
         return this.getIncluded()[indexAmongIncluded];
     }
 
@@ -301,20 +301,20 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         return myActivator.getLastIncluded();
     }
 
-    protected void include(final int indexToInclude) {
+    protected void include( int indexToInclude) {
         myActivator.include(indexToInclude);
         myExcluded = null;
         myIncluded = null;
     }
 
     @Override
-    protected boolean initialise(final Result kickStarter) {
+    protected boolean initialise( Result kickStarter) {
 
         boolean ok = super.initialise(kickStarter);
 
         myInvQC = this.getSolutionQ(this.getIterationC());
 
-        Optimisation.State state = this.getState();
+        @Var Optimisation.State state = this.getState();
 
         boolean usableKickStarter = kickStarter != null && kickStarter.getState().isApproximate();
 
@@ -372,8 +372,8 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
             this.log("\nNeedsAnotherIteration?");
         }
 
-        int toInclude = -1;
-        int toExclude = -1;
+        @Var int toInclude = -1;
+        @Var int toExclude = -1;
 
         if ((toInclude = this.suggestConstraintToInclude()) >= 0) {
             if (this.isLogDebug()) {
@@ -404,14 +404,14 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
      */
     protected int suggestConstraintToExclude() {
 
-        int retVal = -1;
+        @Var int retVal = -1;
 
         int[] included = this.getIncluded();
         int lastIncluded = this.getLastIncluded();
-        int indexOfLastIncluded = -1;
+        @Var int indexOfLastIncluded = -1;
 
-        double tmpMin = ZERO;
-        double tmpVal;
+        @Var double tmpMin = ZERO;
+        @Var double tmpVal;
 
         int nbEqus = this.countEqualityConstraints();
         Primitive64Store soluL = this.getSolutionL();
@@ -479,7 +479,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
 
     boolean checkFeasibility() {
 
-        boolean retVal = true;
+        @Var boolean retVal = true;
 
         PhysicalStore<Double> slackE = this.getSlackE();
         PhysicalStore<Double> slackI = this.getSlackI();
@@ -595,11 +595,11 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         return mySlackI;
     }
 
-    MatrixStore<Double> getSlackI(final int[] rows) {
+    MatrixStore<Double> getSlackI( int[] rows) {
         return this.getSlackI().rows(rows);
     }
 
-    void handleIterationResults(final boolean solved, final Primitive64Store iterX, final int[] included, final int[] excluded) {
+    void handleIterationResults( boolean solved,  Primitive64Store iterX,  int[] included,  int[] excluded) {
 
         this.incrementIterationsCount();
 
@@ -675,7 +675,7 @@ abstract class ActiveSetSolver extends ConstrainedSolver {
         }
     }
 
-    void setConstraintToInclude(final int constraintToInclude) {
+    void setConstraintToInclude( int constraintToInclude) {
         myConstraintToInclude = constraintToInclude;
     }
 

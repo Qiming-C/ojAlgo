@@ -42,23 +42,11 @@ public abstract class SeriesForecaster extends SeriesExtrapolator<CalendarDate> 
     private final CalendarDate myLastKey;
     private final CalendarDateUnit myResolution;
 
-    private SeriesForecaster(final BasicSeries<CalendarDate, ? extends Number> data) {
+    
 
-        super(data);
+    
 
-        myLastKey = null;
-        myResolution = null;
-    }
-
-    private SeriesForecaster(final Map<String, ? extends BasicSeries<CalendarDate, ? extends Comparable<?>>> data) {
-
-        super(data);
-
-        myLastKey = null;
-        myResolution = null;
-    }
-
-    protected SeriesForecaster(final CalendarDateSeries<? extends Comparable<?>> data) {
+    protected SeriesForecaster( CalendarDateSeries<? extends Comparable<?>> data) {
 
         super(data);
 
@@ -66,7 +54,7 @@ public abstract class SeriesForecaster extends SeriesExtrapolator<CalendarDate> 
         myResolution = data.getResolution();
     }
 
-    protected SeriesForecaster(final CoordinationSet<? extends Comparable<?>> coordinatedHistoricalData) {
+    protected SeriesForecaster( CoordinationSet<? extends Comparable<?>> coordinatedHistoricalData) {
 
         super(coordinatedHistoricalData);
 
@@ -75,14 +63,14 @@ public abstract class SeriesForecaster extends SeriesExtrapolator<CalendarDate> 
     }
 
     @Override
-    public Map<String, Access1D<?>> invoke(final CalendarDate... key) {
+    public Map<String, Access1D<?>> invoke( CalendarDate... key) {
 
-        final CalendarDate tmpLastKey = this.getLastKey();
-        final CalendarDateUnit tmpResolution = this.getResolution();
+         CalendarDate tmpLastKey = this.getLastKey();
+         CalendarDateUnit tmpResolution = this.getResolution();
 
-        final CalendarDateDuration[] tmpHorizon = new CalendarDateDuration[key.length];
+         CalendarDateDuration[] tmpHorizon = new CalendarDateDuration[key.length];
         for (int h = 0; h < tmpHorizon.length; h++) {
-            final double tmpMeassure = tmpResolution.count(tmpLastKey.millis, key[h].millis);
+             double tmpMeassure = tmpResolution.count(tmpLastKey.millis, key[h].millis);
             tmpHorizon[h] = new CalendarDateDuration(tmpMeassure, tmpResolution);
         }
 

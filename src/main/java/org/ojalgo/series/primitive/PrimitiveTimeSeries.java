@@ -27,7 +27,7 @@ public abstract class PrimitiveTimeSeries extends PrimitiveSeries {
 
     private final PrimitiveSeries myValueSeries;
 
-    protected PrimitiveTimeSeries(final PrimitiveSeries valueSeries) {
+    protected PrimitiveTimeSeries( PrimitiveSeries valueSeries) {
 
         super();
 
@@ -52,7 +52,7 @@ public abstract class PrimitiveTimeSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myValueSeries.value(index);
     }
 

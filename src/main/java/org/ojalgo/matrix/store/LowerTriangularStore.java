@@ -28,14 +28,14 @@ final class LowerTriangularStore<N extends Comparable<N>> extends ShadingStore<N
 
     private final boolean myUnitDiagonal;
 
-    LowerTriangularStore(final MatrixStore<N> base, final boolean unitDiagonal) {
+    LowerTriangularStore( MatrixStore<N> base,  boolean unitDiagonal) {
 
         super(base);
 
         myUnitDiagonal = unitDiagonal;
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         if (row < col) {
             return PrimitiveMath.ZERO;
         }
@@ -46,11 +46,11 @@ final class LowerTriangularStore<N extends Comparable<N>> extends ShadingStore<N
         }
     }
 
-    public int firstInColumn(final int col) {
+    @Override public int firstInColumn( int col) {
         return col;
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         if (row < col) {
             return this.zero().get();
         }
@@ -62,11 +62,11 @@ final class LowerTriangularStore<N extends Comparable<N>> extends ShadingStore<N
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         return Math.min(row + 1, this.getColDim());
     }
 
-    public Scalar<N> toScalar(final long row, final long col) {
+    @Override public Scalar<N> toScalar( long row,  long col) {
         if (row < col) {
             return this.zero();
         }

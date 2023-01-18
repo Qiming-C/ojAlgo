@@ -23,8 +23,8 @@ package org.ojalgo.ann;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.DoubleUnaryOperator;
-
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -37,8 +37,8 @@ final class CalculationLayer {
     private final PhysicalStore<Double> myBias;
     private final PhysicalStore<Double> myWeights;
 
-    CalculationLayer(final PhysicalStore.Factory<Double, ?> factory, final int numberOfInputs, final int numberOfOutputs,
-            final ArtificialNeuralNetwork.Activator activator) {
+    CalculationLayer( PhysicalStore.Factory<Double, ?> factory,  int numberOfInputs,  int numberOfOutputs,
+             ArtificialNeuralNetwork.Activator activator) {
 
         super();
 
@@ -49,14 +49,14 @@ final class CalculationLayer {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || !(obj instanceof CalculationLayer)) {
             return false;
         }
-        CalculationLayer other = (CalculationLayer) obj;
+        var other = (CalculationLayer) obj;
         if (myActivator != other.myActivator) {
             return false;
         }
@@ -79,8 +79,8 @@ final class CalculationLayer {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + (myActivator == null ? 0 : myActivator.hashCode());
         result = prime * result + (myBias == null ? 0 : myBias.hashCode());
         result = prime * result + (myWeights == null ? 0 : myWeights.hashCode());
@@ -89,7 +89,7 @@ final class CalculationLayer {
 
     @Override
     public String toString() {
-        StringBuilder tmpBuilder = new StringBuilder();
+        var tmpBuilder = new StringBuilder();
         tmpBuilder.append("CalculationLayer [Weights=");
         tmpBuilder.append(myWeights);
         tmpBuilder.append(", Bias=");
@@ -100,8 +100,8 @@ final class CalculationLayer {
         return tmpBuilder.toString();
     }
 
-    void adjust(final PhysicalStore<Double> input, final PhysicalStore<Double> output, final PhysicalStore<Double> upstreamGradient,
-            final PhysicalStore<Double> downstreamGradient, final double learningRate, final double dropoutsFactor, final DoubleUnaryOperator regularisation) {
+    void adjust( PhysicalStore<Double> input,  PhysicalStore<Double> output,  PhysicalStore<Double> upstreamGradient,
+             PhysicalStore<Double> downstreamGradient,  double learningRate,  double dropoutsFactor,  DoubleUnaryOperator regularisation) {
 
         downstreamGradient.modifyMatching(MULTIPLY, output.onAll(myActivator.getDerivativeInTermsOfOutput()).transpose());
 
@@ -142,7 +142,7 @@ final class CalculationLayer {
         return myActivator;
     }
 
-    double getBias(final int output) {
+    double getBias( int output) {
         return myBias.doubleValue(output);
     }
 
@@ -154,17 +154,17 @@ final class CalculationLayer {
         return myWeights;
     }
 
-    double getWeight(final int input, final int output) {
+    double getWeight( int input,  int output) {
         return myWeights.doubleValue(input, output);
     }
 
-    PhysicalStore<Double> invoke(final PhysicalStore<Double> input, final PhysicalStore<Double> output) {
+    PhysicalStore<Double> invoke( PhysicalStore<Double> input,  PhysicalStore<Double> output) {
         myWeights.premultiply(input).onColumns(ADD, myBias).supplyTo(output);
         myActivator.activate(output);
         return output;
     }
 
-    PhysicalStore<Double> invoke(final PhysicalStore<Double> input, final PhysicalStore<Double> output, final double probabilityToKeep) {
+    PhysicalStore<Double> invoke( PhysicalStore<Double> input,  PhysicalStore<Double> output,  double probabilityToKeep) {
         myWeights.premultiply(input).onColumns(ADD, myBias).supplyTo(output);
         myActivator.activate(output, probabilityToKeep);
         return output;
@@ -174,26 +174,26 @@ final class CalculationLayer {
 
         double magnitude = ONE / Math.sqrt(this.countInputNodes());
 
-        Uniform randomiser = new Uniform(-magnitude, 2 * magnitude);
+        var randomiser = new Uniform(-magnitude, 2 * magnitude);
 
         myWeights.fillAll(randomiser);
 
         myBias.fillAll(randomiser);
     }
 
-    void scale(final double factor) {
+    void scale( double factor) {
         myWeights.modifyAll(MULTIPLY.second(factor));
     }
 
-    void setActivator(final ArtificialNeuralNetwork.Activator activator) {
+    void setActivator( ArtificialNeuralNetwork.Activator activator) {
         myActivator = activator;
     }
 
-    void setBias(final int output, final double bias) {
+    void setBias( int output,  double bias) {
         myBias.set(output, bias);
     }
 
-    void setWeight(final int input, final int output, final double weight) {
+    void setWeight( int input,  int output,  double weight) {
         myWeights.set(input, output, weight);
     }
 

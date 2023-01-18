@@ -44,27 +44,27 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
 
     public static abstract class Factory<N extends Comparable<N>> {
 
-        public SolverTask<N> make(final int numberOfEquations, final int numberOfVariables, final int numberOfSolutions, final boolean symmetric,
-                final boolean positiveDefinite) {
+        public SolverTask<N> make( int numberOfEquations,  int numberOfVariables,  int numberOfSolutions,  boolean symmetric,
+                 boolean positiveDefinite) {
 
-            Structure2D templateBody = new Structure2D() {
+            var templateBody = new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return numberOfVariables;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return numberOfEquations;
                 }
             };
 
-            Structure2D templateRHS = new Structure2D() {
+            var templateRHS = new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return numberOfSolutions;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return numberOfEquations;
                 }
             };
@@ -72,7 +72,7 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
             return this.make(templateBody, templateRHS, symmetric, positiveDefinite);
         }
 
-        public SolverTask<N> make(final MatrixStore<N> templateBody, final MatrixStore<N> templateRHS) {
+        public SolverTask<N> make( MatrixStore<N> templateBody,  MatrixStore<N> templateRHS) {
             return this.make(templateBody, templateRHS, templateBody.isHermitian(), false);
         }
 
@@ -81,7 +81,7 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
         /**
          * [A][X]=[B] or [body][return]=[rhs]
          */
-        public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs) throws RecoverableCondition {
+        public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs) throws RecoverableCondition {
             return this.make(body, rhs, false, false).solve(body, rhs);
         }
 
@@ -90,8 +90,8 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<ComplexNumber> COMPLEX = new Factory<>() {
 
         @Override
-        public SolverTask<ComplexNumber> make(final Structure2D templateBody, final Structure2D templateRHS, final boolean symmetric,
-                final boolean positiveDefinite) {
+        public SolverTask<ComplexNumber> make( Structure2D templateBody,  Structure2D templateRHS,  boolean symmetric,
+                 boolean positiveDefinite) {
             if (templateBody.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.COMPLEX.make(templateBody);
@@ -109,7 +109,7 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Double> PRIMITIVE = new Factory<>() {
 
         @Override
-        public SolverTask<Double> make(final Structure2D templateBody, final Structure2D templateRHS, final boolean symmetric, final boolean positiveDefinite) {
+        public SolverTask<Double> make( Structure2D templateBody,  Structure2D templateRHS,  boolean symmetric,  boolean positiveDefinite) {
 
             boolean tmpVectorRHS = templateRHS.countColumns() == 1L;
 
@@ -172,8 +172,8 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Quadruple> QUADRUPLE = new Factory<>() {
 
         @Override
-        public SolverTask<Quadruple> make(final Structure2D templateBody, final Structure2D templateRHS, final boolean symmetric,
-                final boolean positiveDefinite) {
+        public SolverTask<Quadruple> make( Structure2D templateBody,  Structure2D templateRHS,  boolean symmetric,
+                 boolean positiveDefinite) {
             if (templateBody.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.QUADRUPLE.make(templateBody);
@@ -191,8 +191,8 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Quaternion> QUATERNION = new Factory<>() {
 
         @Override
-        public SolverTask<Quaternion> make(final Structure2D templateBody, final Structure2D templateRHS, final boolean symmetric,
-                final boolean positiveDefinite) {
+        public SolverTask<Quaternion> make( Structure2D templateBody,  Structure2D templateRHS,  boolean symmetric,
+                 boolean positiveDefinite) {
             if (templateBody.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.QUATERNION.make(templateBody);
@@ -210,8 +210,8 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<RationalNumber> RATIONAL = new Factory<>() {
 
         @Override
-        public SolverTask<RationalNumber> make(final Structure2D templateBody, final Structure2D templateRHS, final boolean symmetric,
-                final boolean positiveDefinite) {
+        public SolverTask<RationalNumber> make( Structure2D templateBody,  Structure2D templateRHS,  boolean symmetric,
+                 boolean positiveDefinite) {
             if (templateBody.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.RATIONAL.make(templateBody);
@@ -226,26 +226,26 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
 
     };
 
-    default PhysicalStore<N> preallocate(final int numberOfEquations, final int numberOfVariables, final int numberOfSolutions) {
+    default PhysicalStore<N> preallocate( int numberOfEquations,  int numberOfVariables,  int numberOfSolutions) {
 
-        Structure2D templateBody = new Structure2D() {
+        var templateBody = new Structure2D() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return numberOfVariables;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return numberOfEquations;
             }
         };
 
-        Structure2D templateRHS = new Structure2D() {
+        var templateRHS = new Structure2D() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return numberOfSolutions;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return numberOfEquations;
             }
         };
@@ -269,7 +269,7 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
     /**
      * [A][X]=[B] or [body][return]=[rhs]
      */
-    default MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs) throws RecoverableCondition {
+    default MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs) throws RecoverableCondition {
         return this.solve(body, rhs, this.preallocate(body, rhs));
     }
 
@@ -292,8 +292,8 @@ public interface SolverTask<N extends Comparable<N>> extends MatrixTask<N> {
      */
     MatrixStore<N> solve(Access2D<?> body, Access2D<?> rhs, PhysicalStore<N> preallocated) throws RecoverableCondition;
 
-    default Provider2D.Solution<Optional<MatrixStore<N>>> toSolutionProvider(final ElementsSupplier<N> body,
-            final Supplier<MatrixStore<N>> alternativeBodySupplier, final Access2D<?> rhs) {
+    default Provider2D.Solution<Optional<MatrixStore<N>>> toSolutionProvider( ElementsSupplier<N> body,
+             Supplier<MatrixStore<N>> alternativeBodySupplier,  Access2D<?> rhs) {
         try {
             MatrixStore<N> solution = this.solve(alternativeBodySupplier.get(), rhs);
             return r -> Optional.of(solution);

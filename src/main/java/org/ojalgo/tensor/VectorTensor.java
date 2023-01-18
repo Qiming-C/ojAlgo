@@ -21,6 +21,7 @@
  */
 package org.ojalgo.tensor;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.DenseArray;
 import org.ojalgo.structure.Access1D;
@@ -33,7 +34,7 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
 
         private final Array1D.Factory<N> myFactory;
 
-        Factory(final DenseArray.Factory<N> arrayFactory) {
+        Factory( DenseArray.Factory<N> arrayFactory) {
 
             super(arrayFactory);
 
@@ -41,14 +42,14 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!super.equals(obj) || !(obj instanceof Factory)) {
                 return false;
             }
-            Factory other = (Factory) obj;
+            var other = (Factory) obj;
             if (myFactory == null) {
                 if (other.myFactory != null) {
                     return false;
@@ -61,25 +62,25 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
 
         @Override
         public int hashCode() {
-            final int prime = 31;
+             int prime = 31;
             int result = super.hashCode();
             return prime * result + (myFactory == null ? 0 : myFactory.hashCode());
         }
 
-        public VectorTensor<N> make(final long count) {
+        @Override public VectorTensor<N> make( long count) {
             return new VectorTensor<>(myFactory, Math.toIntExact(count));
         }
 
     }
 
-    public static <N extends Comparable<N>> TensorFactory1D<N, VectorTensor<N>> factory(final DenseArray.Factory<N> arrayFactory) {
+    public static <N extends Comparable<N>> TensorFactory1D<N, VectorTensor<N>> factory( DenseArray.Factory<N> arrayFactory) {
         return new TensorFactory1D<>(new VectorTensor.Factory<>(arrayFactory));
     }
 
     private final Array1D<N> myArray;
     private final Array1D.Factory<N> myFactory;
 
-    VectorTensor(final Array1D.Factory<N> factory, final int dimensions) {
+    VectorTensor( Array1D.Factory<N> factory,  int dimensions) {
 
         super(1, dimensions, factory.function(), factory.scalar());
 
@@ -87,7 +88,7 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         myArray = factory.make(dimensions);
     }
 
-    public VectorTensor<N> add(final VectorTensor<N> addend) {
+    @Override public VectorTensor<N> add( VectorTensor<N> addend) {
 
         VectorTensor<N> retVal = this.newSameShape();
 
@@ -96,31 +97,31 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         return retVal;
     }
 
-    public byte byteValue(final long index) {
+    @Override public byte byteValue( long index) {
         return myArray.byteValue(index);
     }
 
-    public VectorTensor<N> conjugate() {
+    @Override public VectorTensor<N> conjugate() {
         return this;
     }
 
-    public long count() {
+    @Override public long count() {
         return myArray.count();
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return myArray.doubleValue(index);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof VectorTensor)) {
             return false;
         }
-        VectorTensor other = (VectorTensor) obj;
+        var other = (VectorTensor) obj;
         if (myArray == null) {
             if (other.myArray != null) {
                 return false;
@@ -138,31 +139,31 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         return true;
     }
 
-    public float floatValue(final long index) {
+    @Override public float floatValue( long index) {
         return myArray.floatValue(index);
     }
 
-    public N get(final long index) {
+    @Override public N get( long index) {
         return myArray.get(index);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + (myArray == null ? 0 : myArray.hashCode());
         return prime * result + (myFactory == null ? 0 : myFactory.hashCode());
     }
 
-    public int intValue(final long index) {
+    @Override public int intValue( long index) {
         return myArray.intValue(index);
     }
 
-    public long longValue(final long index) {
+    @Override public long longValue( long index) {
         return myArray.longValue(index);
     }
 
-    public VectorTensor<N> multiply(final double scalarMultiplicand) {
+    @Override public VectorTensor<N> multiply( double scalarMultiplicand) {
 
         VectorTensor<N> retVal = this.newSameShape();
 
@@ -171,7 +172,7 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         return retVal;
     }
 
-    public VectorTensor<N> multiply(final N scalarMultiplicand) {
+    @Override public VectorTensor<N> multiply( N scalarMultiplicand) {
 
         VectorTensor<N> retVal = this.newSameShape();
 
@@ -180,7 +181,7 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         return retVal;
     }
 
-    public VectorTensor<N> negate() {
+    @Override public VectorTensor<N> negate() {
 
         VectorTensor<N> retVal = this.newSameShape();
 
@@ -189,39 +190,39 @@ public final class VectorTensor<N extends Comparable<N>> extends ArrayBasedTenso
         return retVal;
     }
 
-    public double norm() {
+    @Override public double norm() {
         return this.norm(myArray);
     }
 
-    public void set(final long index, final byte value) {
+    @Override public void set( long index,  byte value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final Comparable<?> value) {
+    @Override public void set( long index,  Comparable<?> value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final double value) {
+    @Override public void set( long index,  double value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final float value) {
+    @Override public void set( long index,  float value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final int value) {
+    @Override public void set( long index,  int value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final long value) {
+    @Override public void set( long index,  long value) {
         myArray.set(index, value);
     }
 
-    public void set(final long index, final short value) {
+    @Override public void set( long index,  short value) {
         myArray.set(index, value);
     }
 
-    public short shortValue(final long index) {
+    @Override public short shortValue( long index) {
         return myArray.shortValue(index);
     }
 

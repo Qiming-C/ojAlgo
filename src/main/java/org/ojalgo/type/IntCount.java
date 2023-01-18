@@ -21,8 +21,8 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.ojalgo.concurrent.ParallelismSupplier;
 
 /**
@@ -41,7 +41,7 @@ public final class IntCount {
     public final int count;
     public final boolean modified;
 
-    public IntCount(final int aCount) {
+    public IntCount( int aCount) {
         this(aCount, BOOLEAN_FALSE);
     }
 
@@ -50,7 +50,7 @@ public final class IntCount {
         this(INT_ZERO, BOOLEAN_FALSE);
     }
 
-    private IntCount(final int aCount, final boolean aModified) {
+    private IntCount( int aCount,  boolean aModified) {
 
         super();
 
@@ -59,28 +59,30 @@ public final class IntCount {
     }
 
     /**
-     * @return count - 1
+     *Returns count - 1.
+ 
      */
     public IntCount decrement() {
         return new IntCount(count - INT_ONE, BOOLEAN_TRUE);
     }
 
     /**
-     * @return count * 2
+     *Returns count * 2.
+ 
      */
     public IntCount duplicate() {
         return new IntCount(count * INT_TWO, BOOLEAN_TRUE);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if ((obj == null) || !(obj instanceof IntCount)) {
             return false;
         }
-        final IntCount other = (IntCount) obj;
+         var other = (IntCount) obj;
         if ((count != other.count) || (modified != other.modified)) {
             return false;
         }
@@ -88,7 +90,8 @@ public final class IntCount {
     }
 
     /**
-     * @return count / 2
+     *Returns count / 2.
+ 
      */
     public IntCount halve() {
         return new IntCount(count / INT_TWO, BOOLEAN_TRUE);
@@ -96,14 +99,15 @@ public final class IntCount {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = (prime * result) + count;
         return (prime * result) + (modified ? 1231 : 1237);
     }
 
     /**
-     * @return count + 1
+     *Returns count + 1.
+ 
      */
     public IntCount increment() {
         return new IntCount(count + INT_ONE, BOOLEAN_TRUE);

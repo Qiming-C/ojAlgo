@@ -26,7 +26,7 @@ final class QuotientsSeries extends PrimitiveSeries {
     private final PrimitiveSeries myBase;
     private final int myPeriod;
 
-    QuotientsSeries(final PrimitiveSeries base) {
+    QuotientsSeries( PrimitiveSeries base) {
 
         super();
 
@@ -34,7 +34,7 @@ final class QuotientsSeries extends PrimitiveSeries {
         myPeriod = 1;
     }
 
-    QuotientsSeries(final PrimitiveSeries base, final int period) {
+    QuotientsSeries( PrimitiveSeries base,  int period) {
 
         super();
 
@@ -48,7 +48,7 @@ final class QuotientsSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myBase.value(index + myPeriod) / myBase.value(index);
     }
 

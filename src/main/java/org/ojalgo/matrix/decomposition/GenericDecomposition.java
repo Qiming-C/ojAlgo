@@ -43,7 +43,7 @@ abstract class GenericDecomposition<N extends Comparable<N>> extends AbstractDec
 
     private final PhysicalStore.Factory<N, ? extends DecompositionStore<N>> myFactory;
 
-    protected GenericDecomposition(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected GenericDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
 
         super();
 
@@ -55,11 +55,11 @@ abstract class GenericDecomposition<N extends Comparable<N>> extends AbstractDec
     }
 
     @Override
-    protected final DecompositionStore<N> allocate(final long numberOfRows, final long numberOfColumns) {
+    protected final DecompositionStore<N> allocate( long numberOfRows,  long numberOfColumns) {
         return myFactory.make(numberOfRows, numberOfColumns);
     }
 
-    protected final MatrixStore<N> collect(final Access2D.Collectable<N, ? super DecompositionStore<N>> source) {
+    protected final MatrixStore<N> collect( Access2D.Collectable<N, ? super DecompositionStore<N>> source) {
         if (source instanceof MatrixStore) {
             return (MatrixStore<N>) source;
         }
@@ -69,7 +69,7 @@ abstract class GenericDecomposition<N extends Comparable<N>> extends AbstractDec
         return source.collect(myFactory);
     }
 
-    protected final DecompositionStore<N> copy(final Access2D<?> source) {
+    protected final DecompositionStore<N> copy( Access2D<?> source) {
         return myFactory.copy(source);
     }
 
@@ -78,39 +78,39 @@ abstract class GenericDecomposition<N extends Comparable<N>> extends AbstractDec
         return myFactory.function();
     }
 
-    protected final BasicArray<N> makeArray(final int length) {
+    protected final BasicArray<N> makeArray( int length) {
         return myFactory.array().make(length);
     }
 
-    protected final <D extends Access1D<?>> DiagonalStore.Builder<N, D> makeDiagonal(final D mainDiag) {
+    protected final <D extends Access1D<?>> DiagonalStore.Builder<N, D> makeDiagonal( D mainDiag) {
         return DiagonalStore.builder(myFactory, mainDiag);
     }
 
-    protected final DecompositionStore<N> makeEye(final int numberOfRows, final int numberOfColumns) {
+    protected final DecompositionStore<N> makeEye( int numberOfRows,  int numberOfColumns) {
         return myFactory.makeEye(numberOfRows, numberOfColumns);
     }
 
-    protected final Householder<N> makeHouseholder(final int dimension) {
+    protected final Householder<N> makeHouseholder( int dimension) {
         return myFactory.makeHouseholder(dimension);
     }
 
-    protected final MatrixStore<N> makeIdentity(final int dimension) {
+    protected final MatrixStore<N> makeIdentity( int dimension) {
         return myFactory.makeIdentity(dimension);
     }
 
-    protected final Rotation<N> makeRotation(final int low, final int high, final double cos, final double sin) {
+    protected final Rotation<N> makeRotation( int low,  int high,  double cos,  double sin) {
         return myFactory.makeRotation(low, high, cos, sin);
     }
 
-    protected final Rotation<N> makeRotation(final int low, final int high, final N cos, final N sin) {
+    protected final Rotation<N> makeRotation( int low,  int high,  N cos,  N sin) {
         return myFactory.makeRotation(low, high, cos, sin);
     }
 
-    protected final DecompositionStore<N> makeZero(final int numberOfRows, final int numberOfColumns) {
+    protected final DecompositionStore<N> makeZero( int numberOfRows,  int numberOfColumns) {
         return myFactory.make(numberOfRows, numberOfColumns);
     }
 
-    protected final DecompositionStore<N> makeZero(final Structure2D shape) {
+    protected final DecompositionStore<N> makeZero( Structure2D shape) {
         return myFactory.make(shape);
     }
 
@@ -119,7 +119,7 @@ abstract class GenericDecomposition<N extends Comparable<N>> extends AbstractDec
         return myFactory.scalar();
     }
 
-    protected final MatrixStore<N> wrap(final Access2D<?> source) {
+    protected final MatrixStore<N> wrap( Access2D<?> source) {
         return myFactory.makeWrapper(source);
     }
 

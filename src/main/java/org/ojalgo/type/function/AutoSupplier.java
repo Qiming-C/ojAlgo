@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type.function;
 
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,7 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
 import org.ojalgo.type.management.MBeanUtils;
 import org.ojalgo.type.management.Throughput;
 
@@ -49,9 +49,9 @@ public interface AutoSupplier<T> extends AutoCloseable, Supplier<T>, AutoFunctio
     /**
      * Will create a JMX bean, with the given name, that keeps track of the supplier's throughput.
      */
-    static <T> AutoSupplier<T> managed(final String name, final Supplier<T> supplier) {
+    static <T> AutoSupplier<T> managed( String name,  Supplier<T> supplier) {
 
-        Throughput manager = new Throughput();
+        var manager = new Throughput();
 
         MBeanUtils.register(manager, name);
 
@@ -61,21 +61,21 @@ public interface AutoSupplier<T> extends AutoCloseable, Supplier<T>, AutoFunctio
     /**
      * If you want that throughput manager to be registered as a JMX bean, that's up to you.
      */
-    static <T> AutoSupplier<T> managed(final Throughput manager, final Supplier<T> supplier) {
+    static <T> AutoSupplier<T> managed( Throughput manager,  Supplier<T> supplier) {
         return new ManagedSupplier<>(manager, supplier);
     }
 
     /**
      * Get something and map/transform before returning it
      */
-    static <T, U> AutoSupplier<U> mapped(final Supplier<T> supplier, final Function<T, U> mapper) {
+    static <T, U> AutoSupplier<U> mapped( Supplier<T> supplier,  Function<T, U> mapper) {
         return new MappedSupplier<>(supplier, mapper);
     }
 
     /**
      * Get something, that passes the test, and map/transform before returning it
      */
-    static <T, U> AutoSupplier<U> mapped(final Supplier<T> supplier, final Predicate<T> filter, final Function<T, U> mapper) {
+    static <T, U> AutoSupplier<U> mapped( Supplier<T> supplier,  Predicate<T> filter,  Function<T, U> mapper) {
         return new MappedSupplier<>(supplier, filter, mapper);
     }
 
@@ -83,11 +83,11 @@ public interface AutoSupplier<T> extends AutoCloseable, Supplier<T>, AutoFunctio
      * Multiple suppliers supply to a queue, then you get from that queue. There will be 1 thread (executor
      * task) per supplier.
      */
-    static <T> AutoSupplier<T> queued(final ExecutorService executor, final BlockingQueue<T> queue, final Supplier<T>... suppliers) {
+    static <T> AutoSupplier<T> queued( ExecutorService executor,  BlockingQueue<T> queue,  Supplier<T>... suppliers) {
         return new QueuedSupplier<>(executor, queue, suppliers);
     }
 
-    static <T> AutoSupplier<T> sequenced(final BlockingQueue<? extends Supplier<T>> sources) {
+    static <T> AutoSupplier<T> sequenced( BlockingQueue<? extends Supplier<T>> sources) {
         return new SequencedSupplier<>(sources, s -> s);
     }
 
@@ -101,19 +101,19 @@ public interface AutoSupplier<T> extends AutoCloseable, Supplier<T>, AutoFunctio
      * @param factory A factory method that can take one of the "containers" and return an item suppiler.
      * @return A sequenced supplier.
      */
-    static <S, T> AutoSupplier<T> sequenced(final BlockingQueue<S> sources, final Function<S, ? extends Supplier<T>> factory) {
+    static <S, T> AutoSupplier<T> sequenced( BlockingQueue<S> sources,  Function<S, ? extends Supplier<T>> factory) {
         return new SequencedSupplier<>(sources, factory);
     }
 
-    default void close() throws Exception {
+    @Override default void close() throws Exception {
         // Default implementation does nothing
     }
 
-    default int drainTo(final Collection<? super T> container, final int maxElements) {
+    default int drainTo( Collection<? super T> container,  int maxElements) {
 
-        int retVal = 0;
+        @Var int retVal = 0;
 
-        T item = null;
+        @Var T item = null;
         while (retVal < maxElements && (item = this.get()) != null) {
             container.add(item);
             retVal++;
@@ -122,15 +122,15 @@ public interface AutoSupplier<T> extends AutoCloseable, Supplier<T>, AutoFunctio
         return retVal;
     }
 
-    default T get() {
+    @Override default T get() {
         return this.read();
     }
 
-    default Iterator<T> iterator() {
+    @Override default Iterator<T> iterator() {
         return new SupplierIterator<>(this);
     }
 
-    default void processAll(final Consumer<T> processor) {
+    default void processAll( Consumer<T> processor) {
         for (T item : this) {
             processor.accept(item);
         }

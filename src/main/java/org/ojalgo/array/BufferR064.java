@@ -32,17 +32,17 @@ final class BufferR064 extends BufferArray {
 
     private final DoubleBuffer myBuffer;
 
-    BufferR064(final BufferArray.Factory factory, final ByteBuffer buffer, final AutoCloseable closeable) {
+    BufferR064( BufferArray.Factory factory,  ByteBuffer buffer,  AutoCloseable closeable) {
         this(factory, buffer.asDoubleBuffer(), closeable);
     }
 
-    BufferR064(final BufferArray.Factory factory, final DoubleBuffer buffer, final AutoCloseable closeable) {
+    BufferR064( BufferArray.Factory factory,  DoubleBuffer buffer,  AutoCloseable closeable) {
         super(factory, buffer, closeable);
         myBuffer = buffer;
     }
 
     @Override
-    public void supplyTo(final Mutate1D receiver) {
+    public void supplyTo( Mutate1D receiver) {
         int limit = Math.min(this.size(), receiver.size());
         for (int i = 0; i < limit; i++) {
             receiver.set(i, this.doubleValue(i));
@@ -50,47 +50,47 @@ final class BufferR064 extends BufferArray {
     }
 
     @Override
-    protected byte byteValue(final int index) {
+    protected byte byteValue( int index) {
         return (byte) Math.round(myBuffer.get(index));
     }
 
     @Override
-    protected double doubleValue(final int index) {
+    protected double doubleValue( int index) {
         return myBuffer.get(index);
     }
 
     @Override
-    protected void fillOne(final int index, final NullaryFunction<?> supplier) {
+    protected void fillOne( int index,  NullaryFunction<?> supplier) {
         myBuffer.put(index, supplier.doubleValue());
     }
 
     @Override
-    protected float floatValue(final int index) {
+    protected float floatValue( int index) {
         return (float) myBuffer.get(index);
     }
 
     @Override
-    protected int intValue(final int index) {
+    protected int intValue( int index) {
         return (int) Math.round(myBuffer.get(index));
     }
 
     @Override
-    protected long longValue(final int index) {
+    protected long longValue( int index) {
         return Math.round(myBuffer.get(index));
     }
 
     @Override
-    protected void set(final int index, final double value) {
+    protected void set( int index,  double value) {
         myBuffer.put(index, value);
     }
 
     @Override
-    protected void set(final int index, final long value) {
-        myBuffer.put(index, value);
+    protected void set( int index,  long value) {
+        myBuffer.put(index, (double) value);
     }
 
     @Override
-    protected void add(final int index, final Comparable<?> addend) {
+    protected void add( int index,  Comparable<?> addend) {
         this.set(index, this.doubleValue(index) + NumberDefinition.doubleValue(addend));
     }
 }

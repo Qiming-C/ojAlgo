@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.NullaryFunction;
 import org.ojalgo.function.UnaryFunction;
@@ -52,7 +53,7 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
      */
     private final long mySegmentSize;
 
-    SegmentedArray(final BasicArray<N>[] segments, final ArrayFactory<N, ?> segmentFactory) {
+    SegmentedArray( BasicArray<N>[] segments,  ArrayFactory<N, ?> segmentFactory) {
 
         super(segmentFactory);
 
@@ -79,13 +80,13 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @SuppressWarnings("unchecked")
-    SegmentedArray(final long count, final int indexBits, final ArrayFactory<N, ?> segmentFactory) {
+    SegmentedArray( long count,  int indexBits,  ArrayFactory<N, ?> segmentFactory) {
 
         super(segmentFactory);
 
         long tmpSegmentSize = 1L << indexBits; // 2^bits
 
-        int tmpNumberOfUniformSegments = (int) (count / tmpSegmentSize);
+        var tmpNumberOfUniformSegments = (int) (count / tmpSegmentSize);
         long tmpRemainder = count % tmpSegmentSize;
 
         int tmpTotalNumberOfSegments = tmpRemainder == 0L ? (int) tmpNumberOfUniformSegments : tmpNumberOfUniformSegments + 1;
@@ -107,17 +108,17 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    public void add(final long index, final Comparable<?> addend) {
+    public void add( long index,  Comparable<?> addend) {
         mySegments[(int) (index >> myIndexBits)].add(index & myIndexMask, addend);
     }
 
     @Override
-    public void add(final long index, final double addend) {
+    public void add( long index,  double addend) {
         mySegments[(int) (index >> myIndexBits)].add(index & myIndexMask, addend);
     }
 
     @Override
-    public void add(final long index, final float addend) {
+    public void add( long index,  float addend) {
         mySegments[(int) (index >> myIndexBits)].add(index & myIndexMask, addend);
     }
 
@@ -127,46 +128,46 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         return mySegments[(int) (index >> myIndexBits)].doubleValue(index & myIndexMask);
     }
 
     @Override
-    public void fillAll(final N value) {
+    public void fillAll( N value) {
         for (BasicArray<N> tmpSegment : mySegments) {
             tmpSegment.fillAll(value);
         }
     }
 
     @Override
-    public void fillAll(final NullaryFunction<?> supplier) {
+    public void fillAll( NullaryFunction<?> supplier) {
         for (BasicArray<N> tmpSegment : mySegments) {
             tmpSegment.fillAll(supplier);
         }
     }
 
     @Override
-    public void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long index,  Access1D<?> values,  long valueIndex) {
         mySegments[(int) (index >> myIndexBits)].fillOne(index & myIndexMask, values, valueIndex);
     }
 
     @Override
-    public void fillOne(final long index, final N value) {
+    public void fillOne( long index,  N value) {
         mySegments[(int) (index >> myIndexBits)].fillOne(index & myIndexMask, value);
     }
 
     @Override
-    public void fillOne(final long index, final NullaryFunction<?> supplier) {
+    public void fillOne( long index,  NullaryFunction<?> supplier) {
         mySegments[(int) (index >> myIndexBits)].fillOne(index & myIndexMask, supplier);
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final N value) {
+    public void fillRange( long first,  long limit,  N value) {
 
-        int tmpFirstSegment = (int) (first / mySegmentSize);
-        int tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
+        var tmpFirstSegment = (int) (first / mySegmentSize);
+        var tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
 
-        long tmpFirstInSegment = first % mySegmentSize;
+        @Var long tmpFirstInSegment = first % mySegmentSize;
 
         for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
             mySegments[s].fillRange(tmpFirstInSegment, mySegmentSize, value);
@@ -177,12 +178,12 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final NullaryFunction<?> supplier) {
+    public void fillRange( long first,  long limit,  NullaryFunction<?> supplier) {
 
-        int tmpFirstSegment = (int) (first / mySegmentSize);
-        int tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
+        var tmpFirstSegment = (int) (first / mySegmentSize);
+        var tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
 
-        long tmpFirstInSegment = first % mySegmentSize;
+        @Var long tmpFirstInSegment = first % mySegmentSize;
 
         for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
             mySegments[s].fillRange(tmpFirstInSegment, mySegmentSize, supplier);
@@ -193,12 +194,12 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         return mySegments[(int) (index >> myIndexBits)].get(index & myIndexMask);
     }
 
     @Override
-    public void modifyOne(final long index, final UnaryFunction<N> modifier) {
+    public void modifyOne( long index,  UnaryFunction<N> modifier) {
         BasicArray<N> tmpSegment = mySegments[(int) (index >> myIndexBits)];
         long tmpIndex = index & myIndexMask;
         tmpSegment.set(tmpIndex, modifier.invoke(tmpSegment.get(tmpIndex)));
@@ -212,22 +213,22 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    public void set(final long index, final Comparable<?> value) {
+    public void set( long index,  Comparable<?> value) {
         mySegments[(int) (index >> myIndexBits)].set(index & myIndexMask, value);
     }
 
     @Override
-    public void set(final long index, final double value) {
+    public void set( long index,  double value) {
         mySegments[(int) (index >> myIndexBits)].set(index & myIndexMask, value);
     }
 
     @Override
-    public void set(final long index, final float value) {
+    public void set( long index,  float value) {
         mySegments[(int) (index >> myIndexBits)].set(index & myIndexMask, value);
     }
 
     @Override
-    public void visitOne(final long index, final VoidFunction<N> visitor) {
+    public void visitOne( long index,  VoidFunction<N> visitor) {
         if (this.isPrimitive()) {
             visitor.invoke(this.doubleValue(index));
         } else {
@@ -236,14 +237,14 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void exchange(final long firstA, final long firstB, final long step, final long count) {
+    protected void exchange( long firstA,  long firstB,  long step,  long count) {
 
         if (this.isPrimitive()) {
 
-            long tmpIndexA = firstA;
-            long tmpIndexB = firstB;
+            @Var long tmpIndexA = firstA;
+            @Var long tmpIndexB = firstB;
 
-            double tmpVal;
+            @Var double tmpVal;
 
             for (long i = 0L; i < count; i++) {
 
@@ -257,10 +258,10 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
 
         } else {
 
-            long tmpIndexA = firstA;
-            long tmpIndexB = firstB;
+            @Var long tmpIndexA = firstA;
+            @Var long tmpIndexB = firstB;
 
-            N tmpVal;
+            @Var N tmpVal;
 
             for (long i = 0L; i < count; i++) {
 
@@ -275,15 +276,15 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void fill(final long first, final long limit, final long step, final N value) {
+    protected void fill( long first,  long limit,  long step,  N value) {
 
         if (step <= mySegmentSize) {
             // Will use a continuous range of segements
 
-            int tmpFirstSegment = (int) (first / mySegmentSize);
-            int tmpLastSegemnt = (int) ((limit - 1L) / mySegmentSize);
+            var tmpFirstSegment = (int) (first / mySegmentSize);
+            var tmpLastSegemnt = (int) ((limit - 1L) / mySegmentSize);
 
-            long tmpFirstInSegment = first % mySegmentSize;
+            @Var long tmpFirstInSegment = first % mySegmentSize;
 
             for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
                 mySegments[s].fill(tmpFirstInSegment, mySegmentSize, step, value);
@@ -308,15 +309,15 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void fill(final long first, final long limit, final long step, final NullaryFunction<?> supplier) {
+    protected void fill( long first,  long limit,  long step,  NullaryFunction<?> supplier) {
 
         if (step <= mySegmentSize) {
             // Will use a continuous range of segements
 
-            int tmpFirstSegment = (int) (first / mySegmentSize);
-            int tmpLastSegemnt = (int) ((limit - 1L) / mySegmentSize);
+            var tmpFirstSegment = (int) (first / mySegmentSize);
+            var tmpLastSegemnt = (int) ((limit - 1L) / mySegmentSize);
 
-            long tmpFirstInSegment = first % mySegmentSize;
+            @Var long tmpFirstInSegment = first % mySegmentSize;
 
             for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
                 mySegments[s].fill(tmpFirstInSegment, mySegmentSize, step, supplier);
@@ -340,7 +341,7 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void modify(final long first, final long limit, final long step, final Access1D<N> left, final BinaryFunction<N> function) {
+    protected void modify( long first,  long limit,  long step,  Access1D<N> left,  BinaryFunction<N> function) {
         if (this.isPrimitive()) {
             for (long l = first; l < limit; l += step) {
                 this.set(l, function.invoke(left.doubleValue(l), this.doubleValue(l)));
@@ -353,7 +354,7 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void modify(final long first, final long limit, final long step, final BinaryFunction<N> function, final Access1D<N> right) {
+    protected void modify( long first,  long limit,  long step,  BinaryFunction<N> function,  Access1D<N> right) {
         if (this.isPrimitive()) {
             for (long l = first; l < limit; l += step) {
                 this.set(l, function.invoke(this.doubleValue(l), right.doubleValue(l)));
@@ -366,15 +367,15 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void modify(final long first, final long limit, final long step, final UnaryFunction<N> function) {
+    protected void modify( long first,  long limit,  long step,  UnaryFunction<N> function) {
 
         if (step <= mySegmentSize) {
             // Will use a continuous range of segements
 
-            int tmpFirstSegment = (int) (first / mySegmentSize);
-            int tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
+            var tmpFirstSegment = (int) (first / mySegmentSize);
+            var tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
 
-            long tmpFirstInSegment = first % mySegmentSize;
+            @Var long tmpFirstInSegment = first % mySegmentSize;
 
             for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
                 mySegments[s].modify(tmpFirstInSegment, mySegmentSize, step, function);
@@ -398,15 +399,15 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
     }
 
     @Override
-    protected void visit(final long first, final long limit, final long step, final VoidFunction<N> visitor) {
+    protected void visit( long first,  long limit,  long step,  VoidFunction<N> visitor) {
 
         if (step <= mySegmentSize) {
             // Will use a continuous range of segements
 
-            int tmpFirstSegment = (int) (first / mySegmentSize);
-            int tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
+            var tmpFirstSegment = (int) (first / mySegmentSize);
+            var tmpLastSegemnt = (int) ((limit - 1) / mySegmentSize);
 
-            long tmpFirstInSegment = first % mySegmentSize;
+            @Var long tmpFirstInSegment = first % mySegmentSize;
 
             for (int s = tmpFirstSegment; s < tmpLastSegemnt; s++) {
                 mySegments[s].visit(tmpFirstInSegment, mySegmentSize, step, visitor);
@@ -455,7 +456,7 @@ final class SegmentedArray<N extends Comparable<N>> extends BasicArray<N> {
             throw new IllegalStateException();
         }
         @SuppressWarnings("unchecked")
-        BasicArray<N>[] tmpSegments = (BasicArray<N>[]) new BasicArray<?>[mySegments.length + 1];
+        var tmpSegments = (BasicArray<N>[]) new BasicArray<?>[mySegments.length + 1];
 
         for (int i = 0; i < mySegments.length; i++) {
             tmpSegments[i] = mySegments[i];

@@ -79,26 +79,26 @@ abstract class HessenbergDecomposition<N extends Comparable<N>> extends InPlaceD
 
     private boolean myUpper = true;
 
-    protected HessenbergDecomposition(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
+    protected HessenbergDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
         super(aFactory);
     }
 
-    public final boolean compute(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix, final boolean upper) {
+    @Override public final boolean compute( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix,  boolean upper) {
 
         this.reset();
 
         myUpper = upper;
 
-        final DecompositionStore<N> tmpStore = this.setInPlace(matrix);
+         DecompositionStore<N> tmpStore = this.setInPlace(matrix);
 
-        final int tmpRowDim = this.getRowDim();
-        final int tmpColDim = this.getColDim();
+         int tmpRowDim = this.getRowDim();
+         int tmpColDim = this.getColDim();
 
         if (upper) {
 
-            final Householder<N> tmpHouseholderCol = this.makeHouseholder(tmpRowDim);
+             Householder<N> tmpHouseholderCol = this.makeHouseholder(tmpRowDim);
 
-            final int tmpLimit = Math.min(tmpRowDim, tmpColDim) - 2;
+             int tmpLimit = Math.min(tmpRowDim, tmpColDim) - 2;
 
             for (int ij = 0; ij < tmpLimit; ij++) {
                 if (tmpStore.generateApplyAndCopyHouseholderColumn(ij + 1, ij, tmpHouseholderCol)) {
@@ -109,9 +109,9 @@ abstract class HessenbergDecomposition<N extends Comparable<N>> extends InPlaceD
 
         } else {
 
-            final Householder<N> tmpHouseholderRow = this.makeHouseholder(tmpColDim);
+             Householder<N> tmpHouseholderRow = this.makeHouseholder(tmpColDim);
 
-            final int tmpLimit = Math.min(tmpRowDim, tmpColDim) - 2;
+             int tmpLimit = Math.min(tmpRowDim, tmpColDim) - 2;
 
             for (int ij = 0; ij < tmpLimit; ij++) {
                 if (tmpStore.generateApplyAndCopyHouseholderRow(ij, ij + 1, tmpHouseholderRow)) {
@@ -124,22 +124,22 @@ abstract class HessenbergDecomposition<N extends Comparable<N>> extends InPlaceD
         return this.computed(true);
     }
 
-    public final boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public final boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
         return this.compute(matrix, true);
     }
 
-    public final MatrixStore<N> getH() {
+    @Override public final MatrixStore<N> getH() {
         return this.getInPlace().hessenberg(myUpper);
     }
 
-    public final MatrixStore<N> getQ() {
+    @Override public final MatrixStore<N> getQ() {
         if (myQ == null) {
             myQ = this.makeQ(this.makeEye(this.getRowDim(), this.getColDim()), myUpper, true);
         }
         return myQ;
     }
 
-    public boolean isUpper() {
+    @Override public boolean isUpper() {
         return myUpper;
     }
 
@@ -152,11 +152,11 @@ abstract class HessenbergDecomposition<N extends Comparable<N>> extends InPlaceD
         myUpper = true;
     }
 
-    private final DecompositionStore<N> makeQ(final DecompositionStore<N> storeToTransform, final boolean upper, final boolean eye) {
+    private final DecompositionStore<N> makeQ( DecompositionStore<N> storeToTransform,  boolean upper,  boolean eye) {
 
-        final int tmpRowAndColDim = (int) storeToTransform.countRows();
+         var tmpRowAndColDim = (int) storeToTransform.countRows();
 
-        final HouseholderReference<N> tmpReference = HouseholderReference.make(this.getInPlace(), upper);
+         HouseholderReference<N> tmpReference = HouseholderReference.make(this.getInPlace(), upper);
 
         for (int ij = tmpRowAndColDim - 3; ij >= 0; ij--) {
 
@@ -170,7 +170,7 @@ abstract class HessenbergDecomposition<N extends Comparable<N>> extends InPlaceD
         return storeToTransform;
     }
 
-    final DecompositionStore<N> doQ(final DecompositionStore<N> aStoreToTransform) {
+    final DecompositionStore<N> doQ( DecompositionStore<N> aStoreToTransform) {
         return this.makeQ(aStoreToTransform, myUpper, false);
     }
 

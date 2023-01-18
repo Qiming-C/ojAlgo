@@ -21,8 +21,8 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.scalar.ComplexNumber;
@@ -39,128 +39,128 @@ public abstract class DOT implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static double invoke(final Access1D<?> array1, final int offset1, final double[] array2, final int offset2, final int first, final int limit) {
-        double retVal = PrimitiveMath.ZERO;
+    public static double invoke( Access1D<?> array1,  int offset1,  double[] array2,  int offset2,  int first,  int limit) {
+        @Var double retVal = PrimitiveMath.ZERO;
         for (int i = first; i < limit; i++) {
             retVal += array1.doubleValue(offset1 + i) * array2[offset2 + i];
         }
         return retVal;
     }
 
-    public static float invoke(final Access1D<?> array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
-        float retVal = 0F;
+    public static float invoke( Access1D<?> array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
+        @Var float retVal = 0F;
         for (int i = first; i < limit; i++) {
             retVal += array1.floatValue(offset1 + i) * array2[offset2 + i];
         }
         return retVal;
     }
 
-    public static <N extends Scalar<N>> N invoke(final Access1D<N> array2, final int offset2, final N[] array1, final int offset1, final int first,
-            final int limit, final Scalar.Factory<N> factory) {
+    public static <N extends Scalar<N>> N invoke( Access1D<N> array2,  int offset2,  N[] array1,  int offset1,  int first,
+             int limit,  Scalar.Factory<N> factory) {
         return DOT.invoke(array1, offset1, array2, offset2, first, limit, factory);
     }
 
-    public static BigDecimal invoke(final BigDecimal[] array1, final int offset1, final BigDecimal[] array2, final int offset2, final int first,
-            final int limit) {
-        BigDecimal retVal = BigMath.ZERO;
+    public static BigDecimal invoke( BigDecimal[] array1,  int offset1,  BigDecimal[] array2,  int offset2,  int first,
+             int limit) {
+        @Var BigDecimal retVal = BigMath.ZERO;
         for (int i = first; i < limit; i++) {
             retVal = retVal.add(array1[offset1 + i].multiply(array2[offset2 + i]));
         }
         return retVal;
     }
 
-    public static ComplexNumber invoke(final ComplexNumber[] array1, final int offset1, final ComplexNumber[] array2, final int offset2, final int first,
-            final int limit) {
-        ComplexNumber retVal = ComplexNumber.ZERO;
+    public static ComplexNumber invoke( ComplexNumber[] array1,  int offset1,  ComplexNumber[] array2,  int offset2,  int first,
+             int limit) {
+        @Var ComplexNumber retVal = ComplexNumber.ZERO;
         for (int i = first; i < limit; i++) {
             retVal = retVal.add(array1[offset1 + i].multiply(array2[offset2 + i]));
         }
         return retVal;
     }
 
-    public static double invoke(final double[] array1, final int offset1, final Access1D<?> array2, final int offset2, final int first, final int limit) {
-        double retVal = PrimitiveMath.ZERO;
+    public static double invoke( double[] array1,  int offset1,  Access1D<?> array2,  int offset2,  int first,  int limit) {
+        @Var double retVal = PrimitiveMath.ZERO;
         for (int i = first; i < limit; i++) {
             retVal += array1[offset1 + i] * array2.doubleValue(offset2 + i);
         }
         return retVal;
     }
 
-    public static double invoke(final double[] array1, final int offset1, final double[] array2, final int offset2, final int first, final int limit) {
+    public static double invoke( double[] array1,  int offset1,  double[] array2,  int offset2,  int first,  int limit) {
         return DOT.unrolled04(array1, offset1, array2, offset2, first, limit);
     }
 
-    public static float invoke(final float[] array1, final int offset1, final Access1D<?> array2, final int offset2, final int first, final int limit) {
-        float retVal = 0F;
+    public static float invoke( float[] array1,  int offset1,  Access1D<?> array2,  int offset2,  int first,  int limit) {
+        @Var float retVal = 0F;
         for (int i = first; i < limit; i++) {
             retVal += array1[offset1 + i] * array2.floatValue(offset2 + i);
         }
         return retVal;
     }
 
-    public static float invoke(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    public static float invoke( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
         return DOT.unrolled04(array1, offset1, array2, offset2, first, limit);
     }
 
-    public static <N extends Scalar<N>> N invoke(final N[] array1, final int offset1, final Access1D<N> array2, final int offset2, final int first,
-            final int limit, final Scalar.Factory<N> factory) {
-        Scalar<N> retVal = factory.zero();
+    public static <N extends Scalar<N>> N invoke( N[] array1,  int offset1,  Access1D<N> array2,  int offset2,  int first,
+             int limit,  Scalar.Factory<N> factory) {
+        @Var Scalar<N> retVal = factory.zero();
         for (int i = first; i < limit; i++) {
             retVal = retVal.add(array1[offset1 + i].multiply(array2.get(offset2 + i)));
         }
         return retVal.get();
     }
 
-    public static <N extends Scalar<N>> N invoke(final N[] array1, final int offset1, final N[] array2, final int offset2, final int first, final int limit,
-            final Scalar.Factory<N> factory) {
-        Scalar<N> retVal = factory.zero();
+    public static <N extends Scalar<N>> N invoke( N[] array1,  int offset1,  N[] array2,  int offset2,  int first,  int limit,
+             Scalar.Factory<N> factory) {
+        @Var Scalar<N> retVal = factory.zero();
         for (int i = first; i < limit; i++) {
             retVal = retVal.add(array1[offset1 + i].multiply(array2[offset2 + i]));
         }
         return retVal.get();
     }
 
-    public static <N extends Scalar<N>> N invokeG(final Access1D<N> array1, final int offset1, final Access1D<N> array2, final int offset2, final int first,
-            final int limit, final Scalar.Factory<N> scalar) {
-        Scalar<N> retVal = scalar.zero();
+    public static <N extends Scalar<N>> N invokeG( Access1D<N> array1,  int offset1,  Access1D<N> array2,  int offset2,  int first,
+             int limit,  Scalar.Factory<N> scalar) {
+        @Var Scalar<N> retVal = scalar.zero();
         for (int i = first; i < limit; i++) {
             retVal = retVal.add(array1.get(offset1 + i).multiply(array2.get(offset2 + i)));
         }
         return retVal.get();
     }
 
-    public static double invokeP64(final Access1D<?> array1, final int offset1, final Access1D<?> array2, final int offset2, final int first, final int limit) {
-        double retVal = PrimitiveMath.ZERO;
+    public static double invokeP64( Access1D<?> array1,  int offset1,  Access1D<?> array2,  int offset2,  int first,  int limit) {
+        @Var double retVal = PrimitiveMath.ZERO;
         for (int i = first; i < limit; i++) {
             retVal += array1.doubleValue(offset1 + i) * array2.doubleValue(offset2 + i);
         }
         return retVal;
     }
 
-    static double plain(final double[] array1, final int offset1, final double[] array2, final int offset2, final int first, final int limit) {
+    static double plain( double[] array1,  int offset1,  double[] array2,  int offset2,  int first,  int limit) {
 
-        double retVal = 0F;
+        @Var double retVal = 0F;
         for (int i = first; i < limit; i++) {
             retVal += array1[offset1 + i] * array2[offset2 + i];
         }
         return retVal;
     }
 
-    static float plain(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    static float plain( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
 
-        float retVal = 0F;
+        @Var float retVal = 0F;
         for (int i = first; i < limit; i++) {
             retVal += array1[offset1 + i] * array2[offset2 + i];
         }
         return retVal;
     }
 
-    static float unrolled02(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    static float unrolled02( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
 
         int remainder = (limit - first) % 2;
 
-        float sum0 = 0F;
-        float sum1 = 0F;
+        @Var float sum0 = 0F;
+        @Var float sum1 = 0F;
 
         int shift10 = offset1 + 0;
         int shift11 = offset1 + 1;
@@ -168,7 +168,7 @@ public abstract class DOT implements ArrayOperation {
         int shift20 = offset2 + 0;
         int shift21 = offset2 + 1;
 
-        int i = first;
+        @Var int i = first;
         for (int lim = limit - remainder; i < lim; i += 2) {
             sum0 += array1[shift10 + i] * array2[shift20 + i];
             sum1 += array1[shift11 + i] * array2[shift21 + i];
@@ -180,14 +180,14 @@ public abstract class DOT implements ArrayOperation {
         return sum0 + sum1;
     }
 
-    static double unrolled04(final double[] array1, final int offset1, final double[] array2, final int offset2, final int first, final int limit) {
+    static double unrolled04( double[] array1,  int offset1,  double[] array2,  int offset2,  int first,  int limit) {
 
         int remainder = (limit - first) % 4;
 
-        double sum0 = 0F;
-        double sum1 = 0F;
-        double sum2 = 0F;
-        double sum3 = 0F;
+        @Var double sum0 = 0F;
+        @Var double sum1 = 0F;
+        @Var double sum2 = 0F;
+        @Var double sum3 = 0F;
 
         int shift10 = offset1 + 0;
         int shift11 = offset1 + 1;
@@ -199,7 +199,7 @@ public abstract class DOT implements ArrayOperation {
         int shift22 = offset2 + 2;
         int shift23 = offset2 + 3;
 
-        int i = first;
+        @Var int i = first;
         for (int lim = limit - remainder; i < lim; i += 4) {
             sum0 += array1[shift10 + i] * array2[shift20 + i];
             sum1 += array1[shift11 + i] * array2[shift21 + i];
@@ -213,14 +213,14 @@ public abstract class DOT implements ArrayOperation {
         return sum0 + sum1 + sum2 + sum3;
     }
 
-    static float unrolled04(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    static float unrolled04( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
 
         int remainder = (limit - first) % 4;
 
-        float sum0 = 0F;
-        float sum1 = 0F;
-        float sum2 = 0F;
-        float sum3 = 0F;
+        @Var float sum0 = 0F;
+        @Var float sum1 = 0F;
+        @Var float sum2 = 0F;
+        @Var float sum3 = 0F;
 
         int shift10 = offset1 + 0;
         int shift11 = offset1 + 1;
@@ -232,7 +232,7 @@ public abstract class DOT implements ArrayOperation {
         int shift22 = offset2 + 2;
         int shift23 = offset2 + 3;
 
-        int i = first;
+        @Var int i = first;
         for (int lim = limit - remainder; i < lim; i += 4) {
             sum0 += array1[shift10 + i] * array2[shift20 + i];
             sum1 += array1[shift11 + i] * array2[shift21 + i];
@@ -246,18 +246,18 @@ public abstract class DOT implements ArrayOperation {
         return sum0 + sum1 + sum2 + sum3;
     }
 
-    static float unrolled08(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    static float unrolled08( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
 
         int remainder = (limit - first) % 8;
 
-        float sum0 = 0F;
-        float sum1 = 0F;
-        float sum2 = 0F;
-        float sum3 = 0F;
-        float sum4 = 0F;
-        float sum5 = 0F;
-        float sum6 = 0F;
-        float sum7 = 0F;
+        @Var float sum0 = 0F;
+        @Var float sum1 = 0F;
+        @Var float sum2 = 0F;
+        @Var float sum3 = 0F;
+        @Var float sum4 = 0F;
+        @Var float sum5 = 0F;
+        @Var float sum6 = 0F;
+        @Var float sum7 = 0F;
 
         int shift10 = offset1 + 0;
         int shift11 = offset1 + 1;
@@ -277,7 +277,7 @@ public abstract class DOT implements ArrayOperation {
         int shift26 = offset2 + 6;
         int shift27 = offset2 + 7;
 
-        int i = first;
+        @Var int i = first;
         for (int lim = limit - remainder; i < lim; i += 8) {
             sum0 += array1[shift10 + i] * array2[shift20 + i];
             sum1 += array1[shift11 + i] * array2[shift21 + i];
@@ -295,26 +295,26 @@ public abstract class DOT implements ArrayOperation {
         return sum0 + sum1 + sum2 + sum3 + sum4 + sum5 + sum6 + sum7;
     }
 
-    static float unrolled16(final float[] array1, final int offset1, final float[] array2, final int offset2, final int first, final int limit) {
+    static float unrolled16( float[] array1,  int offset1,  float[] array2,  int offset2,  int first,  int limit) {
 
         int remainder = (limit - first) % 16;
 
-        float sum00 = 0F;
-        float sum01 = 0F;
-        float sum02 = 0F;
-        float sum03 = 0F;
-        float sum04 = 0F;
-        float sum05 = 0F;
-        float sum06 = 0F;
-        float sum07 = 0F;
-        float sum08 = 0F;
-        float sum09 = 0F;
-        float sum10 = 0F;
-        float sum11 = 0F;
-        float sum12 = 0F;
-        float sum13 = 0F;
-        float sum14 = 0F;
-        float sum15 = 0F;
+        @Var float sum00 = 0F;
+        @Var float sum01 = 0F;
+        @Var float sum02 = 0F;
+        @Var float sum03 = 0F;
+        @Var float sum04 = 0F;
+        @Var float sum05 = 0F;
+        @Var float sum06 = 0F;
+        @Var float sum07 = 0F;
+        @Var float sum08 = 0F;
+        @Var float sum09 = 0F;
+        @Var float sum10 = 0F;
+        @Var float sum11 = 0F;
+        @Var float sum12 = 0F;
+        @Var float sum13 = 0F;
+        @Var float sum14 = 0F;
+        @Var float sum15 = 0F;
 
         int shift100 = offset1 + 0;
         int shift101 = offset1 + 1;
@@ -350,7 +350,7 @@ public abstract class DOT implements ArrayOperation {
         int shift214 = offset2 + 14;
         int shift215 = offset2 + 15;
 
-        int i = first;
+        @Var int i = first;
         for (int lim = limit - remainder; i < lim; i += 16) {
             sum00 += array1[shift100 + i] * array2[shift200 + i];
             sum01 += array1[shift101 + i] * array2[shift201 + i];

@@ -2,6 +2,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.ComplexNumber;
 import org.ojalgo.type.context.NumberContext;
 
@@ -10,34 +11,34 @@ public abstract class EvD1D {
     /**
      * hqr2
      */
-    public static double[][] hqr2(final double[] mtrxH, final double[] mtrxV, final boolean allTheWay) {
+    public static double[][] hqr2( double[] mtrxH,  double[] mtrxV,  boolean allTheWay) {
 
-        final int tmpDiagDim = SQRT.invoke(mtrxH.length);
-        final int tmpDiagDimMinusOne = tmpDiagDim - 1;
+         int tmpDiagDim = SQRT.invoke(mtrxH.length);
+         int tmpDiagDimMinusOne = tmpDiagDim - 1;
 
         // Store roots isolated by balanc and compute matrix norm
-        double tmpVal = ZERO;
+        @Var double tmpVal = ZERO;
         for (int j = 0; j < tmpDiagDim; j++) {
             for (int i = Math.min(j + 1, tmpDiagDim - 1); i >= 0; i--) {
                 tmpVal += ABS.invoke(mtrxH[i + tmpDiagDim * j]);
             }
         }
-        final double tmpNorm1 = tmpVal;
+         double tmpNorm1 = tmpVal;
 
-        final double[] d = new double[tmpDiagDim];
-        final double[] e = new double[tmpDiagDim];
+         double[] d = new double[tmpDiagDim];
+         double[] e = new double[tmpDiagDim];
 
-        double exshift = ZERO;
-        double p = 0, q = 0, r = 0, s = 0, z = 0;
+        @Var double exshift = ZERO;
+        @Var double p = 0, q = 0, r = 0, s = 0, z = 0;
 
-        double w, x, y;
+        @Var double w, x, y;
         // Outer loop over eigenvalue index
-        int iter = 0;
-        int n = tmpDiagDimMinusOne;
+        @Var int iter = 0;
+        @Var int n = tmpDiagDimMinusOne;
         while (n >= 0) {
 
             // Look for single small sub-diagonal element
-            int l = n;
+            @Var int l = n;
             while (l > 0) {
                 s = ABS.invoke(mtrxH[l - 1 + tmpDiagDim * (l - 1)]) + ABS.invoke(mtrxH[l + tmpDiagDim * l]);
                 // if (s ==  ZERO) {
@@ -166,7 +167,7 @@ public abstract class EvD1D {
                 iter++; // (Could check iteration count here.)
 
                 // Look for two consecutive small sub-diagonal elements
-                int m = n - 2;
+                @Var int m = n - 2;
                 while (m >= l) {
                     z = mtrxH[m + tmpDiagDim * m];
                     r = x - z;
@@ -194,7 +195,7 @@ public abstract class EvD1D {
 
                 // Double QR step involving rows l:n and columns m:n
                 for (int k = m; k <= n - 1; k++) {
-                    final boolean notlast = k != n - 1;
+                     boolean notlast = k != n - 1;
                     if (k != m) {
                         p = mtrxH[k + tmpDiagDim * (k - 1)];
                         q = mtrxH[k + 1 + tmpDiagDim * (k - 1)];
@@ -266,17 +267,17 @@ public abstract class EvD1D {
         // Backsubstitute to find vectors of upper triangular form
         // if (allTheWay && (tmpNorm1 !=  ZERO)) {
         if (allTheWay && NumberContext.compare(tmpNorm1, ZERO) != 0) {
-            final int tmpDiagDim1 = SQRT.invoke(mtrxH.length);
-            final int tmpDiagDimMinusOne1 = tmpDiagDim1 - 1;
+             int tmpDiagDim1 = SQRT.invoke(mtrxH.length);
+             int tmpDiagDimMinusOne1 = tmpDiagDim1 - 1;
 
             // BasicLogger.debug("r={}, s={}, z={}", r, s, z);
 
-            double p1;
-            double q1;
-            double t;
-            double w1;
-            double x1;
-            double y1;
+            @Var double p1;
+            @Var double q1;
+            @Var double t;
+            @Var double w1;
+            @Var double x1;
+            @Var double y1;
 
             for (int ij = tmpDiagDimMinusOne1; ij >= 0; ij--) {
 
@@ -285,7 +286,7 @@ public abstract class EvD1D {
 
                 // Real vector
                 if (q1 == 0) {
-                    int l = ij;
+                    @Var int l = ij;
                     mtrxH[ij + tmpDiagDim1 * ij] = 1.0;
                     for (int i = ij - 1; i >= 0; i--) {
                         w1 = mtrxH[i + tmpDiagDim1 * i] - p1;
@@ -332,7 +333,7 @@ public abstract class EvD1D {
 
                     // Complex vector
                 } else if (q1 < 0) {
-                    int l = ij - 1;
+                    @Var int l = ij - 1;
 
                     // Last vector component imaginary so matrix is triangular
                     if (ABS.invoke(mtrxH[ij + tmpDiagDim1 * (ij - 1)]) > ABS.invoke(mtrxH[ij - 1 + tmpDiagDim1 * ij])) {
@@ -340,11 +341,11 @@ public abstract class EvD1D {
                         mtrxH[ij - 1 + tmpDiagDim1 * ij] = -(mtrxH[ij + tmpDiagDim1 * ij] - p1) / mtrxH[ij + tmpDiagDim1 * (ij - 1)];
                     } else {
 
-                        final ComplexNumber tmpX = ComplexNumber.of(ZERO, -mtrxH[ij - 1 + tmpDiagDim1 * ij]);
-                        final double imaginary = q1;
-                        final ComplexNumber tmpY = ComplexNumber.of(mtrxH[ij - 1 + tmpDiagDim1 * (ij - 1)] - p1, imaginary);
+                         var tmpX = ComplexNumber.of(ZERO, -mtrxH[ij - 1 + tmpDiagDim1 * ij]);
+                         double imaginary = q1;
+                         var tmpY = ComplexNumber.of(mtrxH[ij - 1 + tmpDiagDim1 * (ij - 1)] - p1, imaginary);
 
-                        final ComplexNumber tmpZ = tmpX.divide(tmpY);
+                         ComplexNumber tmpZ = tmpX.divide(tmpY);
 
                         mtrxH[ij - 1 + tmpDiagDim1 * (ij - 1)] = tmpZ.doubleValue();
                         mtrxH[ij - 1 + tmpDiagDim1 * ij] = tmpZ.i;
@@ -352,7 +353,7 @@ public abstract class EvD1D {
                     mtrxH[ij + tmpDiagDim1 * (ij - 1)] = ZERO;
                     mtrxH[ij + tmpDiagDim1 * ij] = 1.0;
                     for (int i = ij - 2; i >= 0; i--) {
-                        double ra, sa, vr, vi;
+                        @Var double ra, sa, vr, vi;
                         ra = ZERO;
                         sa = ZERO;
                         for (int j = l; j <= ij; j++) {
@@ -368,12 +369,12 @@ public abstract class EvD1D {
                         } else {
                             l = i;
                             if (e[i] == 0) {
-                                final ComplexNumber tmpX = ComplexNumber.of(-ra, -sa);
-                                final double real = w1;
-                                final double imaginary = q1;
-                                final ComplexNumber tmpY = ComplexNumber.of(real, imaginary);
+                                 var tmpX = ComplexNumber.of(-ra, -sa);
+                                 double real = w1;
+                                 double imaginary = q1;
+                                 var tmpY = ComplexNumber.of(real, imaginary);
 
-                                final ComplexNumber tmpZ = tmpX.divide(tmpY);
+                                 ComplexNumber tmpZ = tmpX.divide(tmpY);
 
                                 mtrxH[i + tmpDiagDim1 * (ij - 1)] = tmpZ.doubleValue();
                                 mtrxH[i + tmpDiagDim1 * ij] = tmpZ.i;
@@ -389,12 +390,12 @@ public abstract class EvD1D {
                                     vr = MACHINE_EPSILON * tmpNorm1 * (ABS.invoke(w1) + ABS.invoke(q1) + ABS.invoke(x1) + ABS.invoke(y1) + ABS.invoke(z));
                                 }
 
-                                final ComplexNumber tmpX = ComplexNumber.of(x1 * r - z * ra + q1 * sa, x1 * s - z * sa - q1 * ra);
-                                final double real = vr;
-                                final double imaginary = vi;
-                                final ComplexNumber tmpY = ComplexNumber.of(real, imaginary);
+                                 var tmpX = ComplexNumber.of(x1 * r - z * ra + q1 * sa, x1 * s - z * sa - q1 * ra);
+                                 double real = vr;
+                                 double imaginary = vi;
+                                 var tmpY = ComplexNumber.of(real, imaginary);
 
-                                final ComplexNumber tmpZ = tmpX.divide(tmpY);
+                                 ComplexNumber tmpZ = tmpX.divide(tmpY);
 
                                 mtrxH[i + tmpDiagDim1 * (ij - 1)] = tmpZ.doubleValue();
                                 mtrxH[i + tmpDiagDim1 * ij] = tmpZ.i;
@@ -404,13 +405,13 @@ public abstract class EvD1D {
                                             / x1;
                                     mtrxH[i + 1 + tmpDiagDim1 * ij] = (-sa - w1 * mtrxH[i + tmpDiagDim1 * ij] - q1 * mtrxH[i + tmpDiagDim1 * (ij - 1)]) / x1;
                                 } else {
-                                    final ComplexNumber tmpX1 = ComplexNumber.of(-r - y1 * mtrxH[i + tmpDiagDim1 * (ij - 1)],
+                                     var tmpX1 = ComplexNumber.of(-r - y1 * mtrxH[i + tmpDiagDim1 * (ij - 1)],
                                             -s - y1 * mtrxH[i + tmpDiagDim1 * ij]);
-                                    final double real1 = z;
-                                    final double imaginary1 = q1;
-                                    final ComplexNumber tmpY1 = ComplexNumber.of(real1, imaginary1);
+                                     double real1 = z;
+                                     double imaginary1 = q1;
+                                     var tmpY1 = ComplexNumber.of(real1, imaginary1);
 
-                                    final ComplexNumber tmpZ1 = tmpX1.divide(tmpY1);
+                                     ComplexNumber tmpZ1 = tmpX1.divide(tmpY1);
 
                                     mtrxH[i + 1 + tmpDiagDim1 * (ij - 1)] = tmpZ1.doubleValue();
                                     mtrxH[i + 1 + tmpDiagDim1 * ij] = tmpZ1.i;
@@ -449,17 +450,17 @@ public abstract class EvD1D {
      * @param mtrxH Array for internal storage of nonsymmetric Hessenberg form.
      * @param vctrWork Temporary work storage
      */
-    public static void orthes(final double[] mtrxH, final double[] trnspV, final double[] vctrWork) {
+    public static void orthes( double[] mtrxH,  double[] trnspV,  double[] vctrWork) {
 
-        final int size = vctrWork.length;
+         int size = vctrWork.length;
 
-        final int sizeM1 = size - 1;
-        final int sizeM2 = size - 2;
+         int sizeM1 = size - 1;
+         int sizeM2 = size - 2;
         for (int ij = 0; ij < sizeM2; ij++) {
-            final int m = ij + 1;
+             int m = ij + 1;
 
             // Scale column.
-            double tmpColNorm1 = ZERO;
+            @Var double tmpColNorm1 = ZERO;
 
             for (int i = m; i < size; i++) {
                 tmpColNorm1 += ABS.invoke(mtrxH[i + size * ij]);
@@ -469,12 +470,12 @@ public abstract class EvD1D {
             if (NumberContext.compare(tmpColNorm1, ZERO) != 0) {
 
                 // Compute Householder transformation.
-                double tmpInvBeta = ZERO;
+                @Var double tmpInvBeta = ZERO;
                 for (int i = sizeM1; i >= m; i--) {
                     vctrWork[i] = mtrxH[i + size * ij] / tmpColNorm1;
                     tmpInvBeta += vctrWork[i] * vctrWork[i];
                 }
-                double g = SQRT.invoke(tmpInvBeta);
+                @Var double g = SQRT.invoke(tmpInvBeta);
                 if (vctrWork[m] > 0) {
                     g = -g;
                 }
@@ -484,7 +485,7 @@ public abstract class EvD1D {
                 // Apply Householder similarity transformation
                 // H = (I-u*u'/h)*H*(I-u*u')/h)
                 for (int j = m; j < size; j++) {
-                    double f = ZERO;
+                    @Var double f = ZERO;
                     for (int i = sizeM1; i >= m; i--) {
                         f += vctrWork[i] * mtrxH[i + size * j];
                     }
@@ -495,7 +496,7 @@ public abstract class EvD1D {
                 }
 
                 for (int i = 0; i < size; i++) {
-                    double f = ZERO;
+                    @Var double f = ZERO;
                     for (int j = sizeM1; j >= m; j--) {
                         f += vctrWork[j] * mtrxH[i + size * j];
                     }
@@ -518,13 +519,13 @@ public abstract class EvD1D {
 
         // Accumulate transformations (Algol's ortran).
         for (int ij = sizeM2; ij >= 1; ij--) {
-            final int tmpIndex = ij + size * (ij - 1);
+             int tmpIndex = ij + size * (ij - 1);
             if (mtrxH[tmpIndex] != ZERO) {
                 for (int i = ij + 1; i <= sizeM1; i++) {
                     vctrWork[i] = mtrxH[i + size * (ij - 1)];
                 }
                 for (int j = ij; j <= sizeM1; j++) {
-                    double g = ZERO;
+                    @Var double g = ZERO;
                     for (int i = ij; i <= sizeM1; i++) {
                         g += vctrWork[i] * trnspV[i + size * j];
                     }

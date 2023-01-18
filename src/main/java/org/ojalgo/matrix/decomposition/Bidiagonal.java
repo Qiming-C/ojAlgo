@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.scalar.ComplexNumber;
 import org.ojalgo.scalar.Quadruple;
@@ -46,11 +47,11 @@ public interface Bidiagonal<N extends Comparable<N>> extends MatrixDecomposition
 
     interface Factory<N extends Comparable<N>> extends MatrixDecomposition.Factory<Bidiagonal<N>> {
 
-        default Bidiagonal<N> make(final boolean fullSize) {
+        default Bidiagonal<N> make( boolean fullSize) {
             return this.make(TYPICAL, fullSize);
         }
 
-        default Bidiagonal<N> make(final Structure2D typical) {
+        @Override default Bidiagonal<N> make( Structure2D typical) {
             return this.make(typical, false);
         }
 
@@ -92,22 +93,22 @@ public interface Bidiagonal<N extends Comparable<N>> extends MatrixDecomposition
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final Bidiagonal<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  Bidiagonal<N> decomposition,  NumberContext context) {
 
-        final int tmpRowDim = (int) matrix.countRows();
-        final int tmpColDim = (int) matrix.countColumns();
+         var tmpRowDim = (int) matrix.countRows();
+         var tmpColDim = (int) matrix.countColumns();
 
-        final MatrixStore<N> tmpQ1 = decomposition.getLQ();
+         MatrixStore<N> tmpQ1 = decomposition.getLQ();
         decomposition.getD();
-        final MatrixStore<N> tmpQ2 = decomposition.getRQ();
+         MatrixStore<N> tmpQ2 = decomposition.getRQ();
 
-        final MatrixStore<N> tmpConjugatedQ1 = tmpQ1.conjugate();
-        final MatrixStore<N> tmpConjugatedQ2 = tmpQ2.conjugate();
+         MatrixStore<N> tmpConjugatedQ1 = tmpQ1.conjugate();
+         MatrixStore<N> tmpConjugatedQ2 = tmpQ2.conjugate();
 
-        MatrixStore<N> tmpThis;
-        MatrixStore<N> tmpThat;
+        @Var MatrixStore<N> tmpThis;
+        @Var MatrixStore<N> tmpThat;
 
-        boolean retVal = (tmpRowDim == tmpQ1.countRows()) && (tmpQ2.countRows() == tmpColDim);
+        @Var boolean retVal = (tmpRowDim == tmpQ1.countRows()) && (tmpQ2.countRows() == tmpColDim);
 
         // Check that it's possible to reconstruct the original matrix.
         if (retVal) {
@@ -147,7 +148,7 @@ public interface Bidiagonal<N extends Comparable<N>> extends MatrixDecomposition
 
     boolean isUpper();
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxQ1 = this.getLQ();
         MatrixStore<N> mtrxD = this.getD();
         MatrixStore<N> mtrxQ2 = this.getRQ();

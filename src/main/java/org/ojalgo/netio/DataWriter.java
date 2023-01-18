@@ -40,7 +40,7 @@ public final class DataWriter<T> implements ToFileWriter<T> {
     @FunctionalInterface
     public interface Serializer<T> extends BiConsumer<T, DataOutput> {
 
-        default void accept(final T data, final DataOutput output) {
+        @Override default void accept( T data,  DataOutput output) {
             try {
                 this.serialize(data, output);
             } catch (IOException cause) {
@@ -52,26 +52,26 @@ public final class DataWriter<T> implements ToFileWriter<T> {
 
     }
 
-    public static <T> DataWriter<T> of(final File file, final DataWriter.Serializer<T> serializer) {
+    public static <T> DataWriter<T> of( File file,  DataWriter.Serializer<T> serializer) {
         return new DataWriter<>(ToFileWriter.output(file), serializer);
     }
 
-    public static <T> DataWriter<T> of(final File file, final DataWriter.Serializer<T> serializer, final OperatorWithException<OutputStream> filter) {
+    public static <T> DataWriter<T> of( File file,  DataWriter.Serializer<T> serializer,  OperatorWithException<OutputStream> filter) {
         return new DataWriter<>(filter.apply(ToFileWriter.output(file)), serializer);
     }
 
-    public static <T> DataWriter<T> of(final InMemoryFile file, final DataWriter.Serializer<T> serializer) {
+    public static <T> DataWriter<T> of( InMemoryFile file,  DataWriter.Serializer<T> serializer) {
         return new DataWriter<>(file.newOutputStream(), serializer);
     }
 
-    public static <T> DataWriter<T> of(final InMemoryFile file, final DataWriter.Serializer<T> serializer, final OperatorWithException<OutputStream> filter) {
+    public static <T> DataWriter<T> of( InMemoryFile file,  DataWriter.Serializer<T> serializer,  OperatorWithException<OutputStream> filter) {
         return new DataWriter<>(filter.apply(file.newOutputStream()), serializer);
     }
 
     private final DataOutputStream myOutput;
     private final DataWriter.Serializer<T> mySerializer;
 
-    public DataWriter(final OutputStream outputStream, final DataWriter.Serializer<T> serializer) {
+    public DataWriter( OutputStream outputStream,  DataWriter.Serializer<T> serializer) {
 
         super();
 
@@ -79,11 +79,11 @@ public final class DataWriter<T> implements ToFileWriter<T> {
         mySerializer = serializer;
     }
 
-    public void close() throws IOException {
+    @Override public void close() throws IOException {
         myOutput.close();
     }
 
-    public void write(final T itemToWrite) {
+    @Override public void write( T itemToWrite) {
         mySerializer.accept(itemToWrite, myOutput);
     }
 

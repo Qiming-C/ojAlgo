@@ -31,11 +31,11 @@ import org.ojalgo.array.Array1D;
 @Deprecated
 public final class BigPolynomial extends PolynomialR256 {
 
-    public BigPolynomial(final int degree) {
+    public BigPolynomial( int degree) {
         super(degree);
     }
 
-    public BigPolynomial(final Array1D<BigDecimal> coefficients) {
+    public BigPolynomial( Array1D<BigDecimal> coefficients) {
         super(coefficients);
     }
 

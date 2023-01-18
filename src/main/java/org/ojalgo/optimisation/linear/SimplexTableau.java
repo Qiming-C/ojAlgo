@@ -23,10 +23,10 @@ package org.ojalgo.optimisation.linear;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.DenseArray;
@@ -59,8 +59,8 @@ abstract class SimplexTableau extends Primitive2D {
         private final int myColDim;
         private final double[][] myRaw;
 
-        DenseRawTableau(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-                final int nbIdentitySlackVariables, final boolean needDual) {
+        DenseRawTableau( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+                 int nbIdentitySlackVariables,  boolean needDual) {
 
             super(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables, needDual);
 
@@ -74,7 +74,7 @@ abstract class SimplexTableau extends Primitive2D {
 
         }
 
-        DenseRawTableau(final SimplexTableau toCopy) {
+        DenseRawTableau( SimplexTableau toCopy) {
 
             super(toCopy.countConstraints(), toCopy.countProblemVariables(), 0, toCopy.countSlackVariables() - toCopy.countIdentitySlackVariables(),
                     toCopy.countIdentitySlackVariables(), toCopy.isArtificials());
@@ -85,7 +85,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public double doubleValue(final int row, final int col) {
+        public double doubleValue( int row,  int col) {
             return myRaw[row][col];
         }
 
@@ -100,11 +100,11 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public void set(final int row, final int col, final double value) {
+        public void set( int row,  int col,  double value) {
             myRaw[row][col] = value;
         }
 
-        private void doPivot(final int row, final int col, final double[] pivotRow) {
+        private void doPivot( int row,  int col,  double[] pivotRow) {
 
             for (int i = 0, limit = myRaw.length; i < limit; i++) {
                 if (i != row) {
@@ -117,7 +117,7 @@ abstract class SimplexTableau extends Primitive2D {
             }
         }
 
-        private void scale(final double[] pivotRow, final int col) {
+        private void scale( double[] pivotRow,  int col) {
             double pivotElement = pivotRow[col];
             if (pivotElement != ONE) {
                 CorePrimitiveOperation.divide(pivotRow, 0, myColDim, 1, pivotRow, pivotElement);
@@ -125,7 +125,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        boolean fixVariable(final int index, final double value) {
+        boolean fixVariable( int index,  double value) {
 
             int row = this.getBasisRowIndex(index);
 
@@ -139,7 +139,7 @@ abstract class SimplexTableau extends Primitive2D {
             ArrayR064 currentRow = ArrayR064.wrap(myRaw[row]);
             double currentRHS = currentRow.doubleValue(myColDim - 1);
 
-            final ArrayR064 auxiliaryRow = ArrayR064.make(myColDim);
+             ArrayR064 auxiliaryRow = ArrayR064.make(myColDim);
             if (currentRHS > value) {
                 currentRow.axpy(NEG, auxiliaryRow);
                 auxiliaryRow.set(index, ZERO);
@@ -210,7 +210,7 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive2D() {
 
                 @Override
-                public double doubleValue(final int row, final int col) {
+                public double doubleValue( int row,  int col) {
                     return store[row][col];
                 }
 
@@ -225,7 +225,7 @@ abstract class SimplexTableau extends Primitive2D {
                 }
 
                 @Override
-                public void set(final int row, final int col, final double value) {
+                public void set( int row,  int col,  double value) {
 
                     store[row][col] = value;
 
@@ -255,12 +255,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return store[index][nbVariablesTotally];
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
 
                     if (artificials) {
                         store[index][dualIdentityBase + index] = ONE;
@@ -291,12 +291,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return store[nbConstraints][index];
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
                     store[nbConstraints][index] = value;
                 }
 
@@ -309,7 +309,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        void pivot(final SimplexTableauSolver.IterationPoint iterationPoint) {
+        void pivot( SimplexTableauSolver.IterationPoint iterationPoint) {
 
             int row = iterationPoint.row;
             int col = iterationPoint.col;
@@ -332,8 +332,8 @@ abstract class SimplexTableau extends Primitive2D {
 
     static abstract class DenseTableau extends SimplexTableau {
 
-        DenseTableau(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-                final int nbIdentitySlackVariables, final boolean needDual) {
+        DenseTableau( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+                 int nbIdentitySlackVariables,  boolean needDual) {
             super(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables, needDual);
         }
 
@@ -344,8 +344,8 @@ abstract class SimplexTableau extends Primitive2D {
         private final int myColDim;
         private final Primitive64Store myTransposed;
 
-        DenseTransposedTableau(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-                final int nbIdentitySlackVariables, final boolean needDual) {
+        DenseTransposedTableau( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+                 int nbIdentitySlackVariables,  boolean needDual) {
 
             super(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables, needDual);
 
@@ -356,7 +356,7 @@ abstract class SimplexTableau extends Primitive2D {
             myColDim = myTransposed.getRowDim();
         }
 
-        DenseTransposedTableau(final SimplexTableau toCopy) {
+        DenseTransposedTableau( SimplexTableau toCopy) {
 
             super(toCopy.countConstraints(), toCopy.countProblemVariables(), 0, toCopy.countSlackVariables() - toCopy.countIdentitySlackVariables(),
                     toCopy.countIdentitySlackVariables(), toCopy.isArtificials());
@@ -366,7 +366,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public double doubleValue(final int row, final int col) {
+        public double doubleValue( int row,  int col) {
             return myTransposed.doubleValue(col, row);
         }
 
@@ -381,11 +381,11 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public void set(final int row, final int col, final double value) {
+        public void set( int row,  int col,  double value) {
             myTransposed.set(col, row, value);
         }
 
-        private void doPivot(final int row, final int col, final double[] pivotRowData, final int pivotRowIndexBase) {
+        private void doPivot( int row,  int col,  double[] pivotRowData,  int pivotRowIndexBase) {
 
             double[] data = myTransposed.data;
 
@@ -400,7 +400,7 @@ abstract class SimplexTableau extends Primitive2D {
             }
         }
 
-        private void scale(final double[] pivotRowData, final int pivotRowIndexBase, final int col) {
+        private void scale( double[] pivotRowData,  int pivotRowIndexBase,  int col) {
             double pivotElement = pivotRowData[pivotRowIndexBase + col];
             if (pivotElement != ONE) {
                 CorePrimitiveOperation.divide(pivotRowData, pivotRowIndexBase, pivotRowIndexBase + myColDim, 1, pivotRowData, pivotElement);
@@ -408,7 +408,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        boolean fixVariable(final int index, final double value) {
+        boolean fixVariable( int index,  double value) {
 
             int row = this.getBasisRowIndex(index);
 
@@ -421,7 +421,7 @@ abstract class SimplexTableau extends Primitive2D {
             Array1D<Double> currentRow = myTransposed.sliceColumn(row);
             double currentRHS = currentRow.doubleValue(myColDim - 1);
 
-            final ArrayR064 auxiliaryRow = ArrayR064.make(myColDim);
+             ArrayR064 auxiliaryRow = ArrayR064.make(myColDim);
             if (currentRHS > value) {
                 currentRow.axpy(NEG, auxiliaryRow);
                 auxiliaryRow.set(index, ZERO);
@@ -495,7 +495,7 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive2D() {
 
                 @Override
-                public double doubleValue(final int row, final int col) {
+                public double doubleValue( int row,  int col) {
                     return transposed.doubleValue(col, row);
                 }
 
@@ -510,7 +510,7 @@ abstract class SimplexTableau extends Primitive2D {
                 }
 
                 @Override
-                public void set(final int row, final int col, final double value) {
+                public void set( int row,  int col,  double value) {
 
                     transposed.set(col, row, value);
 
@@ -540,12 +540,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return transposed.doubleValue(nbVariablesTotally, index);
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
 
                     if (artificials) {
                         transposed.set(dualIdentityBase + index, index, ONE);
@@ -576,12 +576,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return transposed.doubleValue(index, nbConstraints);
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
                     transposed.set(index, nbConstraints, value);
                 }
 
@@ -594,7 +594,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        void pivot(final SimplexTableauSolver.IterationPoint iterationPoint) {
+        void pivot( SimplexTableauSolver.IterationPoint iterationPoint) {
 
             int row = iterationPoint.row;
             int col = iterationPoint.col;
@@ -623,26 +623,26 @@ abstract class SimplexTableau extends Primitive2D {
         final int[] positivePartVariables;
         final EntryPair<ModelEntity<?>, ConstraintType>[] slack;
 
-        MetaData(final int nbConstr, final int nbPos, final int nbNeg, final int nbSlack) {
+        MetaData( int nbConstr,  int nbPos,  int nbNeg,  int nbSlack) {
             positivePartVariables = new int[nbPos];
             negativePartVariables = new int[nbNeg];
             slack = (EntryPair<ModelEntity<?>, ConstraintType>[]) new EntryPair<?, ?>[nbSlack];
             negatedDual = new boolean[nbConstr];
         }
 
-        public int countSlackVariables() {
+        @Override public int countSlackVariables() {
             return slack.length;
         }
 
-        public int countVariables() {
+        @Override public int countVariables() {
             return positivePartVariables.length + negativePartVariables.length;
         }
 
-        public EntryPair<ModelEntity<?>, ConstraintType> getSlack(final int idx) {
+        @Override public EntryPair<ModelEntity<?>, ConstraintType> getSlack( int idx) {
             return slack[idx];
         }
 
-        public int indexOf(final int idx) {
+        @Override public int indexOf( int idx) {
 
             if (idx < 0) {
                 throw new IllegalArgumentException();
@@ -661,7 +661,7 @@ abstract class SimplexTableau extends Primitive2D {
             return -1;
         }
 
-        public boolean isNegated(final int idx) {
+        @Override public boolean isNegated( int idx) {
 
             if (idx < 0) {
                 throw new IllegalArgumentException();
@@ -690,8 +690,8 @@ abstract class SimplexTableau extends Primitive2D {
         private final SparseArray.SparseFactory<Double> mySparseFactory;
         private double myValue = ZERO;
 
-        SparseTableau(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-                final int nbIdentitySlackVariables, final boolean needDual) {
+        SparseTableau( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+                 int nbIdentitySlackVariables,  boolean needDual) {
 
             super(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables, needDual);
 
@@ -701,7 +701,7 @@ abstract class SimplexTableau extends Primitive2D {
             mySparseFactory = SparseArray.factory(ArrayR064.FACTORY).initial(initial);
 
             // Including artificial variables
-            final int totNumbVars = this.countVariablesTotally();
+             int totNumbVars = this.countVariablesTotally();
 
             myRows = new SparseArray[nbConstraints];
             for (int r = 0; r < nbConstraints; r++) {
@@ -715,7 +715,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public double doubleValue(final int row, final int col) {
+        public double doubleValue( int row,  int col) {
 
             int nbConstraints = this.countConstraints();
             int nbVariables = this.countVariablesTotally();
@@ -749,7 +749,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        public void set(final int row, final int col, final double value) {
+        public void set( int row,  int col,  double value) {
 
             int nbConstraints = this.countConstraints();
             int nbVariables = this.countVariablesTotally();
@@ -773,9 +773,9 @@ abstract class SimplexTableau extends Primitive2D {
             }
         }
 
-        private void doPivot(final int row, final int col, final SparseArray<Double> pivotRowBody, final double pivotRowRHS) {
+        private void doPivot( int row,  int col,  SparseArray<Double> pivotRowBody,  double pivotRowRHS) {
 
-            double colVal;
+            @Var double colVal;
 
             for (int i = 0; i < myRows.length; i++) {
                 if (i != row) {
@@ -801,7 +801,7 @@ abstract class SimplexTableau extends Primitive2D {
             }
         }
 
-        private double scale(final SparseArray<Double> pivotRowBody, final double pivotRowRHS, final int col) {
+        private double scale( SparseArray<Double> pivotRowBody,  double pivotRowRHS,  int col) {
 
             double pivotElement = pivotRowBody.doubleValue(col);
 
@@ -816,7 +816,7 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        boolean fixVariable(final int index, final double value) {
+        boolean fixVariable( int index,  double value) {
 
             int row = this.getBasisRowIndex(index);
 
@@ -829,10 +829,10 @@ abstract class SimplexTableau extends Primitive2D {
             SparseArray<Double> currentRow = myRows[row];
             double currentRHS = myRHS.doubleValue(row);
 
-            final int totNumbVars = this.countVariablesTotally();
+             int totNumbVars = this.countVariablesTotally();
 
             SparseArray<Double> auxiliaryRow = mySparseFactory.limit(totNumbVars).make();
-            double auxiliaryRHS = ZERO;
+            @Var double auxiliaryRHS = ZERO;
 
             if (currentRHS > value) {
                 currentRow.axpy(NEG, auxiliaryRow);
@@ -900,11 +900,11 @@ abstract class SimplexTableau extends Primitive2D {
             return myRHS;
         }
 
-        SparseArray<Double> getRow(final int row) {
+        SparseArray<Double> getRow( int row) {
             return myRows[row];
         }
 
-        SparseArray<Double> getRow(final long row) {
+        SparseArray<Double> getRow( long row) {
             return myRows[Math.toIntExact(row)];
         }
 
@@ -926,7 +926,7 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive2D() {
 
                 @Override
-                public double doubleValue(final int row, final int col) {
+                public double doubleValue( int row,  int col) {
                     return SparseTableau.this.getRow(row).doubleValue(col);
                 }
 
@@ -941,7 +941,7 @@ abstract class SimplexTableau extends Primitive2D {
                 }
 
                 @Override
-                public void set(final int row, final int col, final double value) {
+                public void set( int row,  int col,  double value) {
 
                     SparseTableau.this.getRow(row).set(col, value);
 
@@ -969,12 +969,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return rhs.doubleValue(index);
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
 
                     if (artificials) {
                         SparseTableau.this.getRow(index).set(dualIdentityBase + index, ONE);
@@ -1003,12 +1003,12 @@ abstract class SimplexTableau extends Primitive2D {
             return new Primitive1D() {
 
                 @Override
-                public double doubleValue(final int index) {
+                public double doubleValue( int index) {
                     return objectiveWeights.doubleValue(index);
                 }
 
                 @Override
-                public void set(final int index, final double value) {
+                public void set( int index,  double value) {
                     objectiveWeights.set(index, value);
                 }
 
@@ -1021,13 +1021,13 @@ abstract class SimplexTableau extends Primitive2D {
         }
 
         @Override
-        void pivot(final SimplexTableauSolver.IterationPoint iterationPoint) {
+        void pivot( SimplexTableauSolver.IterationPoint iterationPoint) {
 
             int row = iterationPoint.row;
             int col = iterationPoint.col;
 
             SparseArray<Double> pivotRowBody = myRows[row];
-            double pivotRowRHS = myRHS.doubleValue(row);
+            @Var double pivotRowRHS = myRHS.doubleValue(row);
 
             pivotRowRHS = this.scale(pivotRowBody, pivotRowRHS, col);
             myRHS.set(row, pivotRowRHS);
@@ -1037,7 +1037,7 @@ abstract class SimplexTableau extends Primitive2D {
             this.update(iterationPoint);
         }
 
-        void subtractInfeasibility(final double infeasibility) {
+        void subtractInfeasibility( double infeasibility) {
             myInfeasibility -= infeasibility;
         }
 
@@ -1051,7 +1051,7 @@ abstract class SimplexTableau extends Primitive2D {
     static final Array1D.Factory<Double> ARRAY1D_FACTORY = Array1D.factory(ArrayR064.FACTORY);
     static final DenseArray.Factory<Double> DENSE_FACTORY = ArrayR064.FACTORY;
 
-    static void copy(final OptimisationData builder, final SimplexTableau tableau) {
+    static void copy( OptimisationData builder,  SimplexTableau tableau) {
 
         Mutate2D body = tableau.constraintsBody();
         for (RowView<Double> row : builder.getRowsAE()) {
@@ -1074,12 +1074,12 @@ abstract class SimplexTableau extends Primitive2D {
         }
     }
 
-    static boolean isSparse(final Optimisation.Options options) {
+    static boolean isSparse( Optimisation.Options options) {
         return options.sparse != null && options.sparse.booleanValue();
     }
 
-    static SimplexTableau make(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-            final int nbIdentitySlackVariables, final boolean needDual, final Optimisation.Options options) {
+    static SimplexTableau make( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+             int nbIdentitySlackVariables,  boolean needDual,  Optimisation.Options options) {
 
         if (SimplexTableau.isSparse(options)) {
             return new SparseTableau(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables,
@@ -1089,7 +1089,7 @@ abstract class SimplexTableau extends Primitive2D {
         return new DenseRawTableau(nbConstraints, nbPositiveProblemVariables, nbNegativeProblemVariables, nbSlackVariables, nbIdentitySlackVariables, needDual);
     }
 
-    static SimplexTableau make(final OptimisationData builder, final Optimisation.Options options) {
+    static SimplexTableau make( OptimisationData builder,  Optimisation.Options options) {
 
         int nbConstraints = builder.countConstraints();
         int nbProblemVariables = builder.countVariables();
@@ -1102,7 +1102,7 @@ abstract class SimplexTableau extends Primitive2D {
         return tableau;
     }
 
-    static SimplexTableau newDense(final OptimisationData matrices) {
+    static SimplexTableau newDense( OptimisationData matrices) {
 
         SimplexTableau tableau = new DenseTransposedTableau(matrices.countConstraints(), matrices.countVariables(), 0, 0, 0, true);
 
@@ -1111,17 +1111,17 @@ abstract class SimplexTableau extends Primitive2D {
         return tableau;
     }
 
-    static SparseTableau newSparse(final OptimisationData matrices) {
+    static SparseTableau newSparse( OptimisationData matrices) {
 
-        SparseTableau tableau = new SparseTableau(matrices.countConstraints(), matrices.countVariables(), 0, 0, 0, true);
+        var tableau = new SparseTableau(matrices.countConstraints(), matrices.countVariables(), 0, 0, 0, true);
 
         SimplexTableau.copy(matrices, tableau);
 
         return tableau;
     }
 
-    static int size(final int nbConstraints, final int nbProblemVariables, final int nbSlackVariables, final int nbIdentitySlackVariables,
-            final boolean needDual) {
+    static int size( int nbConstraints,  int nbProblemVariables,  int nbSlackVariables,  int nbIdentitySlackVariables,
+             boolean needDual) {
 
         int numbRows = nbConstraints + 2;
         int numbCols = nbProblemVariables + nbSlackVariables + (needDual ? nbConstraints : nbIdentitySlackVariables) + 1;
@@ -1157,8 +1157,8 @@ abstract class SimplexTableau extends Primitive2D {
      *        constructing the tableau. In that case the identity slack variables and the artificial variables
      *        must form an identity matrix in the initial tableau (towards the right hand side).
      */
-    SimplexTableau(final int nbConstraints, final int nbPositiveProblemVariables, final int nbNegativeProblemVariables, final int nbSlackVariables,
-            final int nbIdentitySlackVariables, final boolean needDual) {
+    SimplexTableau( int nbConstraints,  int nbPositiveProblemVariables,  int nbNegativeProblemVariables,  int nbSlackVariables,
+             int nbIdentitySlackVariables,  boolean needDual) {
 
         super();
 
@@ -1204,7 +1204,7 @@ abstract class SimplexTableau extends Primitive2D {
      * @return The number of artificial variables in the basis.
      */
     final int countBasicArtificials() {
-        int retVal = 0;
+        @Var int retVal = 0;
         for (int i = 0, limit = myBasis.length; i < limit; i++) {
             if (myBasis[i] < 0) {
                 retVal++;
@@ -1253,17 +1253,17 @@ abstract class SimplexTableau extends Primitive2D {
         return myNumberOfProblemVariables + myNumberOfSlackVariables + myNumberOfIdentitySlackVariables + myNumberOfArtificialVariables;
     }
 
-    int findNextPivotColumn(final Access1D<Double> auxiliaryRow, final Access1D<Double> objectiveRow) {
+    int findNextPivotColumn( Access1D<Double> auxiliaryRow,  Access1D<Double> objectiveRow) {
 
-        int retVal = -1;
-        double minQuotient = MACHINE_LARGEST;
+        @Var int retVal = -1;
+        @Var double minQuotient = MACHINE_LARGEST;
 
         for (ElementView1D<Double, ?> nz : auxiliaryRow.nonzeros()) {
-            final int i = (int) nz.index();
+             var i = (int) nz.index();
             if (i >= this.countVariables()) {
                 break;
             }
-            final double denominator = nz.doubleValue();
+             double denominator = nz.doubleValue();
             if (denominator < -1E-8) {
                 double numerator = objectiveRow.doubleValue(i);
                 double quotient = Math.abs(numerator / denominator);
@@ -1277,9 +1277,9 @@ abstract class SimplexTableau extends Primitive2D {
         return retVal;
     }
 
-    abstract boolean fixVariable(final int index, final double value);
+    abstract boolean fixVariable( int index,  double value);
 
-    Collection<Equation> generateCutCandidates(final boolean[] integer, final NumberContext accuracy, final double fractionality) {
+    Collection<Equation> generateCutCandidates( boolean[] integer,  NumberContext accuracy,  double fractionality) {
 
         int nbConstraints = this.countConstraints();
         int nbProblemVariables = this.countProblemVariables();
@@ -1310,11 +1310,11 @@ abstract class SimplexTableau extends Primitive2D {
         return myBasis.clone();
     }
 
-    int getBasisColumnIndex(final int basisRowIndex) {
+    int getBasisColumnIndex( int basisRowIndex) {
         return myBasis[basisRowIndex];
     }
 
-    int getBasisRowIndex(final int basisColumnIndex) {
+    int getBasisRowIndex( int basisColumnIndex) {
         return IndexOf.indexOf(myBasis, basisColumnIndex);
     }
 
@@ -1355,11 +1355,11 @@ abstract class SimplexTableau extends Primitive2D {
         return myNumberOfConstraints > mySelector.countIncluded();
     }
 
-    final boolean isExcluded(final int index) {
+    final boolean isExcluded( int index) {
         return mySelector.isExcluded(index);
     }
 
-    final boolean isIncluded(final int index) {
+    final boolean isIncluded( int index) {
         return mySelector.isIncluded(index);
     }
 
@@ -1381,17 +1381,17 @@ abstract class SimplexTableau extends Primitive2D {
 
     abstract void pivot(SimplexTableauSolver.IterationPoint iterationPoint);
 
-    final Primitive1D sliceBodyColumn(final int col) {
+    final Primitive1D sliceBodyColumn( int col) {
 
         return new Primitive1D() {
 
             @Override
-            public double doubleValue(final int index) {
+            public double doubleValue( int index) {
                 return SimplexTableau.this.doubleValue(index, col);
             }
 
             @Override
-            public void set(final int index, final double value) {
+            public void set( int index,  double value) {
                 SimplexTableau.this.set(index, col, value);
             }
 
@@ -1403,17 +1403,17 @@ abstract class SimplexTableau extends Primitive2D {
         };
     }
 
-    final Primitive1D sliceBodyRow(final int row) {
+    final Primitive1D sliceBodyRow( int row) {
 
         return new Primitive1D() {
 
             @Override
-            public double doubleValue(final int index) {
+            public double doubleValue( int index) {
                 return SimplexTableau.this.doubleValue(row, index);
             }
 
             @Override
-            public void set(final int index, final double value) {
+            public void set( int index,  double value) {
                 SimplexTableau.this.set(row, index, value);
             }
 
@@ -1442,12 +1442,12 @@ abstract class SimplexTableau extends Primitive2D {
         return new Primitive1D() {
 
             @Override
-            public double doubleValue(final int index) {
+            public double doubleValue( int index) {
                 return -SimplexTableau.this.doubleValue(nbConstraints, dualIdentityBase + index);
             }
 
             @Override
-            public void set(final int index, final double value) {
+            public void set( int index,  double value) {
                 SimplexTableau.this.set(nbConstraints, dualIdentityBase + index, -value);
             }
 
@@ -1459,17 +1459,17 @@ abstract class SimplexTableau extends Primitive2D {
         };
     }
 
-    final Primitive1D sliceTableauColumn(final int col) {
+    final Primitive1D sliceTableauColumn( int col) {
 
         return new Primitive1D() {
 
             @Override
-            public double doubleValue(final int index) {
+            public double doubleValue( int index) {
                 return SimplexTableau.this.doubleValue(index, col);
             }
 
             @Override
-            public void set(final int index, final double value) {
+            public void set( int index,  double value) {
                 SimplexTableau.this.set(index, col, value);
             }
 
@@ -1481,17 +1481,17 @@ abstract class SimplexTableau extends Primitive2D {
         };
     }
 
-    final Primitive1D sliceTableauRow(final int row) {
+    final Primitive1D sliceTableauRow( int row) {
 
         return new Primitive1D() {
 
             @Override
-            public double doubleValue(final int index) {
+            public double doubleValue( int index) {
                 return SimplexTableau.this.doubleValue(row, index);
             }
 
             @Override
-            public void set(final int index, final double value) {
+            public void set( int index,  double value) {
                 SimplexTableau.this.set(row, index, value);
             }
 
@@ -1505,7 +1505,7 @@ abstract class SimplexTableau extends Primitive2D {
 
     abstract DenseTableau toDense();
 
-    void update(final int pivotRow, final int pivotCol) {
+    void update( int pivotRow,  int pivotCol) {
 
         int tmpOld = myBasis[pivotRow];
         if (tmpOld >= 0) {
@@ -1520,18 +1520,18 @@ abstract class SimplexTableau extends Primitive2D {
         myBasis[pivotRow] = pivotCol;
     }
 
-    void update(final long pivotRow, final long pivotCol) {
+    void update( long pivotRow,  long pivotCol) {
         this.update(Math.toIntExact(pivotRow), Math.toIntExact(pivotCol));
     }
 
-    void update(final SimplexTableauSolver.IterationPoint point) {
+    void update( SimplexTableauSolver.IterationPoint point) {
         this.update(point.row, point.col);
     }
 
     /**
      * The current, phase 1 or 2, objective function value
      */
-    final double value(final boolean phase1) {
+    final double value( boolean phase1) {
         if (phase1) {
             return this.getInfeasibility();
         }

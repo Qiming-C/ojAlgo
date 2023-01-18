@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -33,7 +34,7 @@ import org.ojalgo.function.constant.PrimitiveMath;
  */
 public class Geometric extends AbstractDiscrete {
 
-    public static Geometric of(final double probability) {
+    public static Geometric of( double probability) {
         return new Geometric(probability);
     }
 
@@ -43,18 +44,18 @@ public class Geometric extends AbstractDiscrete {
         this(HALF);
     }
 
-    public Geometric(final double probability) {
+    public Geometric( double probability) {
 
         super();
 
         myProbability = probability;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return ONE / myProbability;
     }
 
-    public double getProbability(final int value) {
+    @Override public double getProbability( int value) {
         return myProbability * PrimitiveMath.POW.invoke(ONE - myProbability, value - ONE);
     }
 
@@ -66,7 +67,7 @@ public class Geometric extends AbstractDiscrete {
     @Override
     protected double generate() {
 
-        int retVal = 1;
+        @Var int retVal = 1;
 
         while ((this.random().nextDouble() + myProbability) <= ONE) {
             retVal++;

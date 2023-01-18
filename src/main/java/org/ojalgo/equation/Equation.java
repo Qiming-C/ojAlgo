@@ -23,9 +23,9 @@ package org.ojalgo.equation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.BasicArray;
 import org.ojalgo.array.DenseArray;
@@ -37,19 +37,19 @@ import org.ojalgo.type.NumberDefinition;
 
 public final class Equation implements Comparable<Equation>, Access1D<Double>, Mutate1D.Modifiable<Double> {
 
-    public static Equation dense(final int pivot, final int cols) {
+    public static Equation dense( int pivot,  int cols) {
         return Equation.dense(pivot, cols, ArrayR064.FACTORY);
     }
 
-    public static Equation dense(final int pivot, final int cols, final DenseArray.Factory<Double> factory) {
+    public static Equation dense( int pivot,  int cols,  DenseArray.Factory<Double> factory) {
         return new Equation(factory.make(cols), pivot, ZERO);
     }
 
-    public static List<Equation> denseSystem(final int rows, final int cols) {
+    public static List<Equation> denseSystem( int rows,  int cols) {
         return Equation.denseSystem(rows, cols, ArrayR064.FACTORY);
     }
 
-    public static List<Equation> denseSystem(final int rows, final int cols, final DenseArray.Factory<Double> factory) {
+    public static List<Equation> denseSystem( int rows,  int cols,  DenseArray.Factory<Double> factory) {
 
         List<Equation> system = new ArrayList<>(rows);
 
@@ -60,31 +60,31 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
         return system;
     }
 
-    public static Equation of(final double rhs, final int pivot, final double... body) {
+    public static Equation of( double rhs,  int pivot,  double... body) {
         return new Equation(ArrayR064.wrap(body), pivot, rhs);
     }
 
-    public static Equation sparse(final int pivot, final int cols) {
+    public static Equation sparse( int pivot,  int cols) {
         return Equation.sparse(pivot, cols, ArrayR064.FACTORY);
     }
 
-    public static Equation sparse(final int pivot, final int cols, final DenseArray.Factory<Double> factory) {
+    public static Equation sparse( int pivot,  int cols,  DenseArray.Factory<Double> factory) {
         return new Equation(SparseArray.factory(factory).limit(cols).make(), pivot, ZERO);
     }
 
-    public static Equation sparse(final int pivot, final int cols, final DenseArray.Factory<Double> factory, final int numberOfNonzeros) {
+    public static Equation sparse( int pivot,  int cols,  DenseArray.Factory<Double> factory,  int numberOfNonzeros) {
         return new Equation(SparseArray.factory(factory).limit(cols).initial(numberOfNonzeros).make(), pivot, ZERO);
     }
 
-    public static Equation sparse(final int pivot, final int cols, final int numberOfNonzeros) {
+    public static Equation sparse( int pivot,  int cols,  int numberOfNonzeros) {
         return Equation.sparse(pivot, cols, ArrayR064.FACTORY, numberOfNonzeros);
     }
 
-    public static List<Equation> sparseSystem(final int rows, final int cols) {
+    public static List<Equation> sparseSystem( int rows,  int cols) {
         return Equation.sparseSystem(rows, cols, ArrayR064.FACTORY);
     }
 
-    public static List<Equation> sparseSystem(final int rows, final int cols, final DenseArray.Factory<Double> factory) {
+    public static List<Equation> sparseSystem( int rows,  int cols,  DenseArray.Factory<Double> factory) {
 
         List<Equation> system = new ArrayList<>(rows);
 
@@ -95,7 +95,7 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
         return system;
     }
 
-    public static List<Equation> sparseSystem(final int rows, final int cols, final DenseArray.Factory<Double> factory, final int numberOfNonzeros) {
+    public static List<Equation> sparseSystem( int rows,  int cols,  DenseArray.Factory<Double> factory,  int numberOfNonzeros) {
 
         List<Equation> system = new ArrayList<>(rows);
 
@@ -106,11 +106,11 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
         return system;
     }
 
-    public static List<Equation> sparseSystem(final int rows, final int cols, final int numberOfNonzeros) {
+    public static List<Equation> sparseSystem( int rows,  int cols,  int numberOfNonzeros) {
         return Equation.sparseSystem(rows, cols, ArrayR064.FACTORY, numberOfNonzeros);
     }
 
-    public static Equation wrap(final BasicArray<Double> body, final int pivot, final double rhs) {
+    public static Equation wrap( BasicArray<Double> body,  int pivot,  double rhs) {
         return new Equation(body, pivot, rhs);
     }
 
@@ -129,11 +129,11 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
      * @deprecated v49 Use one of the factory methods instead
      */
     @Deprecated
-    public Equation(final int row, final long numberOfColumns, final double rhs) {
+    public Equation( int row,  long numberOfColumns,  double rhs) {
         this(SparseArray.factory(ArrayR064.FACTORY).limit(numberOfColumns).make(), row, rhs);
     }
 
-    Equation(final BasicArray<Double> body, final int pivot, final double rhs) {
+    Equation( BasicArray<Double> body,  int pivot,  double rhs) {
 
         super();
 
@@ -144,11 +144,11 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
         myPivot = ZERO;
     }
 
-    public void add(final long ind, final Comparable<?> addend) {
+    @Override public void add( long ind,  Comparable<?> addend) {
         this.add(ind, NumberDefinition.doubleValue(addend));
     }
 
-    public void add(final long ind, final double addend) {
+    @Override public void add( long ind,  double addend) {
         myBody.add(ind, addend);
         if (ind == index) {
             myPivot = myBody.doubleValue(ind);
@@ -162,42 +162,42 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
      * @param relaxation Typically 1.0 but could be anything (Most likely should be between 0.0 and 2.0).
      * @return The error in this equation
      */
-    public <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> double adjust(final T x, final double relaxation) {
+    public <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> double adjust( T x,  double relaxation) {
         return this.calculate(x, myRHS, relaxation);
     }
 
-    public int compareTo(final Equation other) {
+    @Override public int compareTo( Equation other) {
         return Integer.compare(index, other.index);
     }
 
-    public long count() {
+    @Override public long count() {
         return myBody.count();
     }
 
-    public double dot(final Access1D<?> vector) {
+    @Override public double dot( Access1D<?> vector) {
         return myBody.dot(vector);
     }
 
-    public double doubleValue(final long ind) {
+    @Override public double doubleValue( long ind) {
         return myBody.doubleValue(ind);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || !(obj instanceof Equation)) {
             return false;
         }
-        final Equation other = (Equation) obj;
+         var other = (Equation) obj;
         if (index != other.index) {
             return false;
         }
         return true;
     }
 
-    public Double get(final long ind) {
+    @Override public Double get( long ind) {
         return myBody.get(ind);
     }
 
@@ -206,14 +206,16 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
     }
 
     /**
-     * @return The element at {@link #index}
+     *Returns the element at {@link #index}.
+ 
      */
     public double getPivot() {
         return myPivot;
     }
 
     /**
-     * @return The equation RHS
+     *Returns the equation RHS.
+ 
      */
     public double getRHS() {
         return myRHS;
@@ -221,34 +223,34 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         return prime * result + index;
     }
 
-    public <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> void initialise(final T x) {
+    public <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> void initialise( T x) {
         this.calculate(x, ZERO, ONE);
     }
 
-    public void modifyOne(final long ind, final UnaryFunction<Double> modifier) {
+    @Override public void modifyOne( long ind,  UnaryFunction<Double> modifier) {
         myBody.modifyOne(ind, modifier);
         if (ind == index) {
             myPivot = myBody.doubleValue(ind);
         }
     }
 
-    public void set(final long ind, final Comparable<?> value) {
+    public void set( long ind,  Comparable<?> value) {
         this.set(ind, NumberDefinition.doubleValue(value));
     }
 
-    public void set(final long ind, final double value) {
+    public void set( long ind,  double value) {
         myBody.set(ind, value);
         if (ind == index) {
             myPivot = value;
         }
     }
 
-    public void setRHS(final double rhs) {
+    public void setRHS( double rhs) {
         myRHS = rhs;
     }
 
@@ -257,9 +259,9 @@ public final class Equation implements Comparable<Equation>, Access1D<Double>, M
         return index + ": " + myBody.toString() + " = " + myRHS;
     }
 
-    private <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> double calculate(final T x, final double rhs, final double relaxation) {
+    private <T extends Access1D<Double> & Mutate1D.Modifiable<Double>> double calculate( T x,  double rhs,  double relaxation) {
 
-        double increment = rhs;
+        @Var double increment = rhs;
 
         double error = increment -= myBody.dot(x);
 

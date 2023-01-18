@@ -21,9 +21,9 @@
  */
 package org.ojalgo.function.polynomial;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.matrix.decomposition.QR;
@@ -43,14 +43,14 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         this(null);
     }
 
-    protected AbstractPolynomial(final Array1D<N> coefficients) {
+    protected AbstractPolynomial( Array1D<N> coefficients) {
 
         super();
 
         myCoefficients = coefficients;
     }
 
-    public PolynomialFunction<N> buildDerivative() {
+    @Override public PolynomialFunction<N> buildDerivative() {
 
         if (myDerivative == null) {
 
@@ -66,7 +66,7 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         return myDerivative;
     }
 
-    public PolynomialFunction<N> buildPrimitive() {
+    @Override public PolynomialFunction<N> buildPrimitive() {
 
         if (myPrimitive == null) {
 
@@ -82,23 +82,23 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         return myPrimitive;
     }
 
-    public long count() {
+    @Override public long count() {
         return this.size();
     }
 
-    public int degree() {
+    @Override public int degree() {
         return myCoefficients.size() - 1;
     }
 
-    public double doubleValue(final long power) {
+    @Override public double doubleValue( long power) {
         return myCoefficients.doubleValue(power);
     }
 
-    public void estimate(final List<? extends N> x, final List<? extends N> y) {
+    @Override public void estimate( List<? extends N> x,  List<? extends N> y) {
         this.estimate(Access1D.wrap(x), Access1D.wrap(y));
     }
 
-    void estimate(final Access1D<?> x, final Access1D<?> y, final PhysicalStore.Factory<N, ?> store, final QR.Factory<N> qr) {
+    void estimate( Access1D<?> x,  Access1D<?> y,  PhysicalStore.Factory<N, ?> store,  QR.Factory<N> qr) {
 
         int tmpRowDim = Math.min(x.size(), y.size());
         int tmpColDim = this.size();
@@ -108,7 +108,7 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
 
         for (int i = 0; i < tmpRowDim; i++) {
 
-            BigDecimal tmpX = BigMath.ONE;
+            @Var BigDecimal tmpX = BigMath.ONE;
             BigDecimal tmpXfactor = TypeUtils.toBigDecimal(x.get(i));
             BigDecimal tmpY = TypeUtils.toBigDecimal(y.get(i));
 
@@ -124,19 +124,19 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         this.set(tmpQR.getSolution(tmpRHS));
     }
 
-    public void estimate(final NumberSeries<?> samples) {
+    @Override public void estimate( NumberSeries<?> samples) {
         this.estimate(samples.accessKeys(), samples.accessValues());
     }
 
-    public N get(final long power) {
+    @Override public N get( long power) {
         return myCoefficients.get(power);
     }
 
-    public double invoke(final double arg) {
+    @Override public double invoke( double arg) {
 
-        int power = this.degree();
+        @Var int power = this.degree();
 
-        double retVal = this.doubleValue(power);
+        @Var double retVal = this.doubleValue(power);
 
         while (--power >= 0) {
             retVal = this.doubleValue(power) + arg * retVal;
@@ -145,11 +145,11 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         return retVal;
     }
 
-    public float invoke(final float arg) {
+    @Override public float invoke( float arg) {
 
-        int power = this.degree();
+        @Var int power = this.degree();
 
-        float retVal = this.floatValue(power);
+        @Var float retVal = this.floatValue(power);
 
         while (--power >= 0) {
             retVal = this.floatValue(power) + arg * retVal;
@@ -158,19 +158,19 @@ abstract class AbstractPolynomial<N extends Comparable<N>> implements Polynomial
         return retVal;
     }
 
-    public void set(final int power, final double coefficient) {
+    @Override public void set( int power,  double coefficient) {
         myCoefficients.set(power, coefficient);
         myDerivative = null;
         myPrimitive = null;
     }
 
-    public void set(final int power, final N coefficient) {
+    @Override public void set( int power,  N coefficient) {
         myCoefficients.set(power, coefficient);
         myDerivative = null;
         myPrimitive = null;
     }
 
-    public int size() {
+    @Override public int size() {
         return myCoefficients.size();
     }
 

@@ -29,57 +29,57 @@ public abstract class OperationParameter implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static <N extends Comparable<N>> void invoke(final BasicArray<N> data, final int first, final int limit, final int step, final Access1D<N> value,
-            final ParameterFunction<N> function, final int param) {
+    public static <N extends Comparable<N>> void invoke( BasicArray<N> data,  int first,  int limit,  int step,  Access1D<N> value,
+             ParameterFunction<N> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data.set(i, function.invoke(value.doubleValue(i), param));
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte[] values,
-            final ParameterFunction<Double> function, final int param) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte[] values,
+             ParameterFunction<Double> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double[] values,
-            final ParameterFunction<Double> function, final int param) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double[] values,
+             ParameterFunction<Double> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float[] values,
-            final ParameterFunction<Double> function, final int param) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float[] values,
+             ParameterFunction<Double> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int[] values, final ParameterFunction<Double> function,
-            final int param) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int[] values,  ParameterFunction<Double> function,
+             int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long[] values,
-            final ParameterFunction<Double> function, final int param) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long[] values,
+             ParameterFunction<Double> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final N[] data, final int first, final int limit, final int step, final N[] values,
-            final ParameterFunction<N> function, final int param) {
+    public static <N extends Comparable<N>> void invoke( N[] data,  int first,  int limit,  int step,  N[] values,
+             ParameterFunction<N> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short[] values,
-            final ParameterFunction<Double> function, final int param) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short[] values,
+             ParameterFunction<Double> function,  int param) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(values[i], param);
         }

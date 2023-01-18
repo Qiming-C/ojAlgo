@@ -34,7 +34,7 @@ abstract class ShardedConsumer<T> implements AutoConsumer<T> {
         private final ToIntFunction<T> myDistributor;
         private final int myNumberOfShards;
 
-        GeneralShardedConsumer(final ToIntFunction<T> distributor, final Consumer<T>[] consumers) {
+        GeneralShardedConsumer( ToIntFunction<T> distributor,  Consumer<T>[] consumers) {
 
             super(consumers);
 
@@ -43,7 +43,7 @@ abstract class ShardedConsumer<T> implements AutoConsumer<T> {
             myNumberOfShards = consumers.length;
         }
 
-        public void write(final T item) {
+        @Override public void write( T item) {
             myConsumers[Math.abs(myDistributor.applyAsInt(item) % myNumberOfShards)].accept(item);
         }
 
@@ -55,7 +55,7 @@ abstract class ShardedConsumer<T> implements AutoConsumer<T> {
         private final ToIntFunction<T> myDistributor;
         private final int myIndexMask;
 
-        PowerOf2ShardedConsumer(final ToIntFunction<T> distributor, final Consumer<T>[] consumers) {
+        PowerOf2ShardedConsumer( ToIntFunction<T> distributor,  Consumer<T>[] consumers) {
 
             super(consumers);
 
@@ -68,13 +68,13 @@ abstract class ShardedConsumer<T> implements AutoConsumer<T> {
             myIndexMask = consumers.length - 1;
         }
 
-        public void write(final T item) {
+        @Override public void write( T item) {
             myConsumers[myDistributor.applyAsInt(item) & myIndexMask].accept(item);
         }
 
     }
 
-    static <T> ShardedConsumer<T> of(final ToIntFunction<T> distributor, final Consumer<T>[] consumers) {
+    static <T> ShardedConsumer<T> of( ToIntFunction<T> distributor,  Consumer<T>[] consumers) {
         if (PowerOf2.isPowerOf2(consumers.length)) {
             return new PowerOf2ShardedConsumer<>(distributor, consumers);
         } else {
@@ -84,14 +84,14 @@ abstract class ShardedConsumer<T> implements AutoConsumer<T> {
 
     private final Consumer<T>[] myConsumers;
 
-    ShardedConsumer(final Consumer<T>[] consumers) {
+    ShardedConsumer( Consumer<T>[] consumers) {
 
         super();
 
         myConsumers = consumers;
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         for (Consumer<T> consumer : myConsumers) {
             if (consumer instanceof AutoCloseable) {
                 ((AutoCloseable) consumer).close();

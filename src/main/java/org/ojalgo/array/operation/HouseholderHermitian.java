@@ -23,8 +23,8 @@ package org.ojalgo.array.operation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.concurrent.DivideAndConquer;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.transformation.Householder;
@@ -39,7 +39,7 @@ import org.ojalgo.type.context.NumberContext;
  */
 public abstract class HouseholderHermitian implements ArrayOperation {
 
-    public static void invoke(final double[] data, final Householder.Primitive64 householder, final double[] worker) {
+    public static void invoke( double[] data,  Householder.Primitive64 householder,  double[] worker) {
 
         double[] tmpVector = householder.vector;
         int tmpFirst = householder.first;
@@ -49,10 +49,10 @@ public abstract class HouseholderHermitian implements ArrayOperation {
 
         if (tmpCount > MultiplyHermitianAndVector.THRESHOLD) {
 
-            DivideAndConquer tmpConqurer = new DivideAndConquer() {
+            var tmpConqurer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     MultiplyHermitianAndVector.invoke(worker, first, limit, data, tmpVector, tmpFirst);
                 }
             };
@@ -64,7 +64,7 @@ public abstract class HouseholderHermitian implements ArrayOperation {
             MultiplyHermitianAndVector.invoke(worker, tmpFirst, tmpLength, data, tmpVector, tmpFirst);
         }
 
-        double tmpVal = PrimitiveMath.ZERO;
+        @Var double tmpVal = PrimitiveMath.ZERO;
         for (int c = tmpFirst; c < tmpLength; c++) {
             tmpVal += tmpVector[c] * worker[c];
         }
@@ -75,10 +75,10 @@ public abstract class HouseholderHermitian implements ArrayOperation {
 
         if (tmpCount > HermitianRank2Update.THRESHOLD) {
 
-            DivideAndConquer tmpConqurer = new DivideAndConquer() {
+            var tmpConqurer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     HermitianRank2Update.invoke(data, first, limit, tmpVector, worker);
                 }
             };
@@ -91,8 +91,8 @@ public abstract class HouseholderHermitian implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] data, final Householder.Generic<N> householder, final N[] worker,
-            final Scalar.Factory<N> scalar) {
+    public static <N extends Scalar<N>> void invoke( N[] data,  Householder.Generic<N> householder,  N[] worker,
+             Scalar.Factory<N> scalar) {
 
         N[] tmpVector = householder.vector;
         int tmpFirst = householder.first;
@@ -102,10 +102,10 @@ public abstract class HouseholderHermitian implements ArrayOperation {
 
         if (tmpCount > MultiplyHermitianAndVector.THRESHOLD) {
 
-            DivideAndConquer tmpConqurer = new DivideAndConquer() {
+            var tmpConqurer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     MultiplyHermitianAndVector.invoke(worker, first, limit, data, tmpVector, tmpFirst, scalar);
                 }
             };
@@ -117,7 +117,7 @@ public abstract class HouseholderHermitian implements ArrayOperation {
             MultiplyHermitianAndVector.invoke(worker, tmpFirst, tmpLength, data, tmpVector, tmpFirst, scalar);
         }
 
-        Scalar<N> tmpVal = scalar.zero();
+        @Var Scalar<N> tmpVal = scalar.zero();
         for (int c = tmpFirst; c < tmpLength; c++) {
             //tmpVal += tmpVector[c] * worker[c];
             tmpVal = tmpVal.add(tmpVector[c].conjugate().multiply(worker[c]));
@@ -131,10 +131,10 @@ public abstract class HouseholderHermitian implements ArrayOperation {
 
         if (tmpCount > HermitianRank2Update.THRESHOLD) {
 
-            DivideAndConquer tmpConqurer = new DivideAndConquer() {
+            var tmpConqurer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     HermitianRank2Update.invoke(data, first, limit, tmpVector, worker);
                 }
             };
@@ -150,7 +150,7 @@ public abstract class HouseholderHermitian implements ArrayOperation {
     /**
      * Ursprung JAMA men refactored till ojAlgos egna strukturer
      */
-    public static void tred2j(final double[] data, final double[] d, final double[] e, final boolean yesvecs) {
+    public static void tred2j( double[] data,  double[] d,  double[] e,  boolean yesvecs) {
 
         /*
          * Symmetric Householder reduction to tridiagonal form. The original version of this code was taken
@@ -164,11 +164,11 @@ public abstract class HouseholderHermitian implements ArrayOperation {
         int n = d.length; // rows, columns, structure
         int tmpLast = n - 1;
 
-        double scale;
-        double h;
-        double f;
-        double g;
-        double tmpVal; // Nothing special, just some transient value
+        @Var double scale;
+        @Var double h;
+        @Var double f;
+        @Var double g;
+        @Var double tmpVal; // Nothing special, just some transient value
 
         int tmpRowDim = n;
 
@@ -293,17 +293,17 @@ public abstract class HouseholderHermitian implements ArrayOperation {
     /**
      * Ursprung Numerical Recipies. Samma som tred2j, men är inte lika snabb.
      */
-    public static void tred2nr(final double[] data, final double[] d, final double[] e, final boolean yesvecs) {
+    public static void tred2nr( double[] data,  double[] d,  double[] e,  boolean yesvecs) {
 
         int n = d.length;
-        int l;
+        @Var int l;
         int tmpRowDim = n;
 
-        double scale;
-        double h;
-        double hh;
-        double g;
-        double f;
+        @Var double scale;
+        @Var double h;
+        @Var double hh;
+        @Var double g;
+        @Var double f;
 
         for (int i = n - 1; i > 0; i--) {
 

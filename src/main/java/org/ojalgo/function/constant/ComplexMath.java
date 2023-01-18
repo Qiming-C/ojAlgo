@@ -23,6 +23,7 @@ package org.ojalgo.function.constant;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.ComplexFunction;
 import org.ojalgo.scalar.ComplexNumber;
 import org.ojalgo.scalar.PrimitiveScalar;
@@ -37,11 +38,11 @@ public abstract class ComplexMath {
     public static final ComplexFunction.Unary ABS = arg -> ComplexNumber.valueOf(arg.norm());
     public static final ComplexFunction.Unary ACOS = arg -> {
 
-        final ComplexNumber tmpSqrt = ComplexMath.SQRT.invoke(ComplexNumber.ONE.subtract(arg.multiply(arg)));
+         ComplexNumber tmpSqrt = ComplexMath.SQRT.invoke(ComplexNumber.ONE.subtract(arg.multiply(arg)));
 
-        final ComplexNumber tmpNmbr = arg.add(ComplexNumber.I.multiply(tmpSqrt));
+         ComplexNumber tmpNmbr = arg.add(ComplexNumber.I.multiply(tmpSqrt));
 
-        final ComplexNumber tmpLog = ComplexMath.LOG.invoke(tmpNmbr);
+         ComplexNumber tmpLog = ComplexMath.LOG.invoke(tmpNmbr);
 
         return tmpLog.multiply(ComplexNumber.I).negate();
     };
@@ -49,43 +50,43 @@ public abstract class ComplexMath {
     public static final ComplexFunction.Binary ADD = ComplexNumber::add;
     public static final ComplexFunction.Unary ASIN = arg -> {
 
-        ComplexNumber tmpNmbr = ComplexMath.SQRT.invoke(ComplexNumber.ONE.subtract(ComplexMath.POWER.invoke(arg, 2)));
+        @Var ComplexNumber tmpNmbr = ComplexMath.SQRT.invoke(ComplexNumber.ONE.subtract(ComplexMath.POWER.invoke(arg, 2)));
 
         tmpNmbr = ComplexNumber.I.multiply(arg).add(tmpNmbr);
-        final ComplexNumber aNumber = tmpNmbr;
+         ComplexNumber aNumber = tmpNmbr;
 
         return ComplexMath.LOG.invoke(aNumber).multiply(ComplexNumber.I).negate();
     };
     public static final ComplexFunction.Unary ASINH = arg -> {
 
-        final ComplexNumber tmpNmbr = arg.multiply(arg).add(ONE);
+         ComplexNumber tmpNmbr = arg.multiply(arg).add(ONE);
 
         return ComplexMath.LOG.invoke(arg.add(ComplexMath.SQRT.invoke(tmpNmbr)));
     };
     public static final ComplexFunction.Unary ATAN = arg -> {
 
-        final ComplexNumber tmpNmbr = ComplexNumber.I.add(arg).divide(ComplexNumber.I.subtract(arg));
+         ComplexNumber tmpNmbr = ComplexNumber.I.add(arg).divide(ComplexNumber.I.subtract(arg));
 
         return ComplexMath.LOG.invoke(tmpNmbr).multiply(ComplexNumber.I).divide(TWO);
     };
     public static final ComplexFunction.Binary ATAN2 = (arg1, arg2) -> ATAN.invoke(arg1.divide(arg2));
     public static final ComplexFunction.Unary ATANH = arg -> {
 
-        final ComplexNumber tmpNmbr = arg.add(ONE).divide(ComplexNumber.ONE.subtract(arg));
+         ComplexNumber tmpNmbr = arg.add(ONE).divide(ComplexNumber.ONE.subtract(arg));
 
         return ComplexMath.LOG.invoke(tmpNmbr).divide(TWO);
     };
     public static final ComplexFunction.Unary CARDINALITY = arg -> PrimitiveScalar.isSmall(ONE, arg.norm()) ? ComplexNumber.ZERO : ComplexNumber.ONE;
     public static final ComplexFunction.Unary CBRT = arg -> {
 
-        final double retMod = PrimitiveMath.CBRT.invoke(arg.norm());
-        final double retArg = arg.phase() * THIRD;
+         double retMod = PrimitiveMath.CBRT.invoke(arg.norm());
+         double retArg = arg.phase() * THIRD;
 
         return ComplexNumber.makePolar(retMod, retArg);
     };
     public static final ComplexFunction.Unary CEIL = arg -> {
-        final double tmpRe = PrimitiveMath.CEIL.invoke(arg.doubleValue());
-        final double tmpIm = PrimitiveMath.CEIL.invoke(arg.i);
+         double tmpRe = PrimitiveMath.CEIL.invoke(arg.doubleValue());
+         double tmpIm = PrimitiveMath.CEIL.invoke(arg.i);
         return ComplexNumber.of(tmpRe, tmpIm);
     };
     public static final ComplexFunction.Unary CONJUGATE = ComplexNumber::conjugate;
@@ -94,43 +95,43 @@ public abstract class ComplexMath {
     public static final ComplexFunction.Binary DIVIDE = ComplexNumber::divide;
     public static final ComplexFunction.Unary EXP = arg -> {
 
-        final double tmpNorm = PrimitiveMath.EXP.invoke(arg.doubleValue());
-        final double tmpPhase = arg.i;
+         double tmpNorm = PrimitiveMath.EXP.invoke(arg.doubleValue());
+         double tmpPhase = arg.i;
 
         return ComplexNumber.makePolar(tmpNorm, tmpPhase);
     };
     public static final ComplexFunction.Unary EXPM1 = arg -> {
 
-        final double retMod = PrimitiveMath.EXPM1.invoke(arg.doubleValue());
-        final double retArg = arg.i;
+         double retMod = PrimitiveMath.EXPM1.invoke(arg.doubleValue());
+         double retArg = arg.i;
 
         return ComplexNumber.makePolar(retMod, retArg);
     };
     public static final ComplexFunction.Unary FLOOR = arg -> {
-        final double tmpRe = PrimitiveMath.FLOOR.invoke(arg.doubleValue());
-        final double tmpIm = PrimitiveMath.FLOOR.invoke(arg.i);
+         double tmpRe = PrimitiveMath.FLOOR.invoke(arg.doubleValue());
+         double tmpIm = PrimitiveMath.FLOOR.invoke(arg.i);
         return ComplexNumber.of(tmpRe, tmpIm);
     };
     public static final ComplexFunction.Binary HYPOT = (arg1, arg2) -> ComplexNumber.valueOf(PrimitiveMath.HYPOT.invoke(arg1.norm(), arg2.norm()));
     public static final ComplexFunction.Unary INVERT = arg -> ComplexMath.POWER.invoke(arg, -1);
     public static final ComplexFunction.Unary LOG = arg -> {
 
-        final double tmpRe = PrimitiveMath.LOG.invoke(arg.norm());
-        final double tmpIm = arg.phase();
+         double tmpRe = PrimitiveMath.LOG.invoke(arg.norm());
+         double tmpIm = arg.phase();
 
         return ComplexNumber.of(tmpRe, tmpIm);
     };
     public static final ComplexFunction.Unary LOG10 = arg -> {
 
-        final double retRe = PrimitiveMath.LOG10.invoke(arg.norm());
-        final double retIm = arg.phase();
+         double retRe = PrimitiveMath.LOG10.invoke(arg.norm());
+         double retIm = arg.phase();
 
         return ComplexNumber.of(retRe, retIm);
     };
     public static final ComplexFunction.Unary LOG1P = arg -> {
 
-        final double retRe = PrimitiveMath.LOG1P.invoke(arg.norm());
-        final double retIm = arg.phase();
+         double retRe = PrimitiveMath.LOG1P.invoke(arg.norm());
+         double retIm = arg.phase();
 
         return ComplexNumber.of(retRe, retIm);
     };
@@ -143,24 +144,24 @@ public abstract class ComplexMath {
     public static final ComplexFunction.Binary POW = (arg1, arg2) -> EXP.invoke(LOG.invoke(arg1).multiply(arg2));
     public static final ComplexFunction.Parameter POWER = (arg, param) -> {
 
-        final double retMod = PrimitiveMath.POWER.invoke(arg.norm(), param);
-        final double retArg = arg.phase() * param;
+         double retMod = PrimitiveMath.POWER.invoke(arg.norm(), param);
+         double retArg = arg.phase() * param;
 
         return ComplexNumber.makePolar(retMod, retArg);
     };
     public static final ComplexFunction.Unary RINT = arg -> {
-        final double tmpRe = PrimitiveMath.RINT.invoke(arg.doubleValue());
-        final double tmpIm = PrimitiveMath.RINT.invoke(arg.i);
+         double tmpRe = PrimitiveMath.RINT.invoke(arg.doubleValue());
+         double tmpIm = PrimitiveMath.RINT.invoke(arg.i);
         return ComplexNumber.of(tmpRe, tmpIm);
     };
     public static final ComplexFunction.Parameter ROOT = (arg, param) -> {
 
         if (param != 0) {
 
-            final double tmpExp = ONE / param;
+             double tmpExp = ONE / param;
 
-            final double retMod = PrimitiveMath.POW.invoke(arg.norm(), tmpExp);
-            final double retArg = arg.phase() * tmpExp;
+             double retMod = PrimitiveMath.POW.invoke(arg.norm(), tmpExp);
+             double retArg = arg.phase() * tmpExp;
 
             return ComplexNumber.makePolar(retMod, retArg);
 
@@ -168,8 +169,8 @@ public abstract class ComplexMath {
         throw new IllegalArgumentException();
     };
     public static final ComplexFunction.Parameter SCALE = (arg, param) -> {
-        final double tmpRe = PrimitiveMath.SCALE.invoke(arg.doubleValue(), param);
-        final double tmpIm = PrimitiveMath.SCALE.invoke(arg.i, param);
+         double tmpRe = PrimitiveMath.SCALE.invoke(arg.doubleValue(), param);
+         double tmpIm = PrimitiveMath.SCALE.invoke(arg.i, param);
         return ComplexNumber.of(tmpRe, tmpIm);
     };
     public static final ComplexFunction.Unary SIGNUM = ComplexNumber::signum;
@@ -177,8 +178,8 @@ public abstract class ComplexMath {
     public static final ComplexFunction.Unary SINH = arg -> EXP.invoke(arg).subtract(EXP.invoke(arg.negate())).divide(TWO);
     public static final ComplexFunction.Unary SQRT = arg -> {
 
-        final double retMod = PrimitiveMath.SQRT.invoke(arg.norm());
-        final double retArg = arg.phase() * HALF;
+         double retMod = PrimitiveMath.SQRT.invoke(arg.norm());
+         double retArg = arg.phase() * HALF;
 
         return ComplexNumber.makePolar(retMod, retArg);
     };
@@ -189,11 +190,11 @@ public abstract class ComplexMath {
 
         ComplexNumber retVal;
 
-        final ComplexNumber tmpPlus = EXP.invoke(arg);
-        final ComplexNumber tmpMinus = EXP.invoke(arg.negate());
+         ComplexNumber tmpPlus = EXP.invoke(arg);
+         ComplexNumber tmpMinus = EXP.invoke(arg.negate());
 
-        final ComplexNumber tmpDividend = tmpPlus.subtract(tmpMinus);
-        final ComplexNumber tmpDivisor = tmpPlus.add(tmpMinus);
+         ComplexNumber tmpDividend = tmpPlus.subtract(tmpMinus);
+         ComplexNumber tmpDivisor = tmpPlus.add(tmpMinus);
 
         if (tmpDividend.equals(tmpDivisor)) {
             retVal = ComplexNumber.ONE;

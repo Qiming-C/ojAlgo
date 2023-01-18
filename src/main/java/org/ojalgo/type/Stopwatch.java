@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.util.concurrent.Callable;
 
 /**
@@ -35,7 +36,7 @@ public class Stopwatch {
         public final CalendarDateDuration duration;
         public final T result;
 
-        public TimedResult(final T result, final CalendarDateDuration duration) {
+        public TimedResult( T result,  CalendarDateDuration duration) {
             super();
             this.result = result;
             this.duration = duration;
@@ -43,15 +44,15 @@ public class Stopwatch {
 
     }
 
-    public static <T> TimedResult<T> meassure(final Callable<T> task) {
+    public static <T> TimedResult<T> meassure( Callable<T> task) {
         return Stopwatch.meassure(task, CalendarDateUnit.MILLIS);
     }
 
-    public static <T> TimedResult<T> meassure(final Callable<T> task, final CalendarDateUnit unit) {
+    public static <T> TimedResult<T> meassure( Callable<T> task,  CalendarDateUnit unit) {
 
-        final Stopwatch timer = new Stopwatch();
+         var timer = new Stopwatch();
 
-        T result;
+        @Var T result;
         try {
             result = task.call();
         } catch (Exception cause) {
@@ -69,13 +70,13 @@ public class Stopwatch {
      * @param task The task to meassure
      * @return The meassured duration
      */
-    public static CalendarDateDuration meassure(final Runnable task) {
+    public static CalendarDateDuration meassure( Runnable task) {
         return Stopwatch.meassure(task, CalendarDateUnit.MILLIS);
     }
 
-    public static CalendarDateDuration meassure(final Runnable task, final CalendarDateUnit unit) {
+    public static CalendarDateDuration meassure( Runnable task,  CalendarDateUnit unit) {
 
-        final Stopwatch timer = new Stopwatch();
+         var timer = new Stopwatch();
 
         task.run();
 
@@ -99,27 +100,27 @@ public class Stopwatch {
         return System.nanoTime() - myStart;
     }
 
-    public boolean isLessThan(final CalendarDateDuration duration) {
+    public boolean isLessThan( CalendarDateDuration duration) {
         return this.isLessThanNanos(duration.toDurationInNanos());
     }
 
-    public boolean isLessThanMillis(final long millis) {
+    public boolean isLessThanMillis( long millis) {
         return this.isLessThanNanos(millis * CalendarDate.NANOS_PER_MILLIS);
     }
 
-    public boolean isLessThanNanos(final long nanos) {
+    public boolean isLessThanNanos( long nanos) {
         return this.countNanos() < nanos;
     }
 
-    public boolean isMoreThan(final CalendarDateDuration duration) {
+    public boolean isMoreThan( CalendarDateDuration duration) {
         return this.isMoreThanNanos(duration.toDurationInNanos());
     }
 
-    public boolean isMoreThanMillis(final long millis) {
+    public boolean isMoreThanMillis( long millis) {
         return this.isMoreThanNanos(millis * CalendarDate.NANOS_PER_MILLIS);
     }
 
-    public boolean isMoreThanNanos(final long nanos) {
+    public boolean isMoreThanNanos( long nanos) {
         return this.countNanos() > nanos;
     }
 
@@ -133,7 +134,7 @@ public class Stopwatch {
     /**
      * Will reset the start-instant and return duration since it was last reset in the specified unit.
      */
-    public long reset(final CalendarDateUnit unit) {
+    public long reset( CalendarDateUnit unit) {
         long now = System.nanoTime();
         long nanos = now - myStart;
         myStart = now;
@@ -149,7 +150,7 @@ public class Stopwatch {
         return CalendarDateDuration.of(nanos);
     }
 
-    public CalendarDateDuration restart(final CalendarDateUnit unit) {
+    public CalendarDateDuration restart( CalendarDateUnit unit) {
         return this.restart().convertTo(unit);
     }
 
@@ -162,7 +163,7 @@ public class Stopwatch {
         return CalendarDateDuration.of(this.countNanos());
     }
 
-    public CalendarDateDuration stop(final CalendarDateUnit unit) {
+    public CalendarDateDuration stop( CalendarDateUnit unit) {
         return this.stop().convertTo(unit);
     }
 

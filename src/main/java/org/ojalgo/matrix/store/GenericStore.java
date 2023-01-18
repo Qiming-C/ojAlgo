@@ -21,9 +21,9 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.*;
 import org.ojalgo.array.operation.*;
@@ -64,27 +64,27 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
 
         private final DenseArray.Factory<N> myDenseArrayFactory;
 
-        Factory(final DenseArray.Factory<N> denseArrayFactory) {
+        Factory( DenseArray.Factory<N> denseArrayFactory) {
             super();
             myDenseArrayFactory = denseArrayFactory;
         }
 
-        public AggregatorSet<N> aggregator() {
+        @Override public AggregatorSet<N> aggregator() {
             return myDenseArrayFactory.function().aggregator();
         }
 
-        public DenseArray.Factory<N> array() {
+        @Override public DenseArray.Factory<N> array() {
             return myDenseArrayFactory;
         }
 
-        public GenericStore<N> columns(final Access1D<?>... source) {
+        @Override public GenericStore<N> columns( Access1D<?>... source) {
 
             int tmpRowDim = source[0].size();
             int tmpColDim = source.length;
 
             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            Access1D<?> tmpColumn;
+            @Var Access1D<?> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -95,14 +95,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> columns(final Comparable<?>[]... source) {
+        @Override public GenericStore<N> columns( Comparable<?>[]... source) {
 
             int tmpRowDim = source[0].length;
             int tmpColDim = source.length;
 
             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            Comparable<?>[] tmpColumn;
+            @Var Comparable<?>[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -113,14 +113,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> columns(final double[]... source) {
+        @Override public GenericStore<N> columns( double[]... source) {
 
             int tmpRowDim = source[0].length;
             int tmpColDim = source.length;
 
             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            double[] tmpColumn;
+            @Var double[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -131,14 +131,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> columns(final List<? extends Comparable<?>>... source) {
+        @Override public GenericStore<N> columns( List<? extends Comparable<?>>... source) {
 
             int tmpRowDim = source[0].size();
             int tmpColDim = source.length;
 
             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            List<? extends Comparable<?>> tmpColumn;
+            @Var List<? extends Comparable<?>> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -149,7 +149,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> conjugate(final Access2D<?> source) {
+        @Override public GenericStore<N> conjugate( Access2D<?> source) {
 
             GenericStore<N> retVal = new GenericStore<>(this, (int) source.countColumns(), (int) source.countRows());
 
@@ -158,10 +158,10 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int aFirst, final int aLimit) {
+                    public void conquer( int aFirst,  int aLimit) {
                         FillMatchingSingle.conjugate(retVal.data, tmpRowDim, aFirst, aLimit, source, Factory.this.scalar());
                     }
 
@@ -177,19 +177,19 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return retVal;
         }
 
-        public GenericStore<N> copy(final Access2D<?> source) {
+        @Override public GenericStore<N> copy( Access2D<?> source) {
 
             int tmpRowDim = source.getRowDim();
             int tmpColDim = source.getColDim();
 
-            final GenericStore<N> retVal = new GenericStore<>(this, tmpRowDim, tmpColDim);
+             GenericStore<N> retVal = new GenericStore<>(this, tmpRowDim, tmpColDim);
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int aFirst, final int aLimit) {
+                    public void conquer( int aFirst,  int aLimit) {
                         FillMatchingSingle.copy(retVal.data, tmpRowDim, aFirst, aLimit, source, Factory.this.scalar());
                     }
 
@@ -205,34 +205,34 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return retVal;
         }
 
-        public FunctionSet<N> function() {
+        @Override public FunctionSet<N> function() {
             return myDenseArrayFactory.function();
         }
 
-        public GenericStore<N> make(final long rows, final long columns) {
+        @Override public GenericStore<N> make( long rows,  long columns) {
             return new GenericStore<>(this, (int) rows, (int) columns);
         }
 
-        public Householder.Generic<N> makeHouseholder(final int length) {
+        @Override public Householder.Generic<N> makeHouseholder( int length) {
             return new Householder.Generic<>(myDenseArrayFactory.scalar(), length);
         }
 
-        public Rotation.Generic<N> makeRotation(final int low, final int high, final double cos, final double sin) {
+        @Override public Rotation.Generic<N> makeRotation( int low,  int high,  double cos,  double sin) {
             return this.makeRotation(low, high, myDenseArrayFactory.scalar().cast(cos), myDenseArrayFactory.scalar().cast(sin));
         }
 
-        public Rotation.Generic<N> makeRotation(final int low, final int high, final N cos, final N sin) {
+        @Override public Rotation.Generic<N> makeRotation( int low,  int high,  N cos,  N sin) {
             return new Rotation.Generic<>(low, high, cos, sin);
         }
 
-        public GenericStore<N> rows(final Access1D<?>... source) {
+        @Override public GenericStore<N> rows( Access1D<?>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = (int) source[0].count();
+             int tmpRowDim = source.length;
+             var tmpColDim = (int) source[0].count();
 
-            final N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
+             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            Access1D<?> tmpRow;
+            @Var Access1D<?> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -243,14 +243,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> rows(final Comparable<?>[]... source) {
+        @Override public GenericStore<N> rows( Comparable<?>[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
+             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            Comparable<?>[] tmpRow;
+            @Var Comparable<?>[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -261,14 +261,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> rows(final double[]... source) {
+        @Override public GenericStore<N> rows( double[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
+             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            double[] tmpRow;
+            @Var double[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -279,14 +279,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public GenericStore<N> rows(final List<? extends Comparable<?>>... source) {
+        @Override public GenericStore<N> rows( List<? extends Comparable<?>>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].size();
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].size();
 
-            final N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
+             N[] tmpData = myDenseArrayFactory.scalar().newArrayInstance(tmpRowDim * tmpColDim);
 
-            List<? extends Comparable<?>> tmpRow;
+            @Var List<? extends Comparable<?>> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -297,11 +297,11 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             return new GenericStore<>(this, tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Scalar.Factory<N> scalar() {
+        @Override public Scalar.Factory<N> scalar() {
             return myDenseArrayFactory.scalar();
         }
 
-        public GenericStore<N> transpose(final Access2D<?> source) {
+        @Override public GenericStore<N> transpose( Access2D<?> source) {
 
             GenericStore<N> retVal = new GenericStore<>(this, (int) source.countColumns(), (int) source.countRows());
 
@@ -310,10 +310,10 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int aFirst, final int aLimit) {
+                    public void conquer( int aFirst,  int aLimit) {
                         FillMatchingSingle.transpose(retVal.data, tmpRowDim, aFirst, aLimit, source, Factory.this.scalar());
                     }
 
@@ -357,11 +357,11 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
     @Deprecated
     public static final PhysicalStore.Factory<RationalNumber, GenericStore<RationalNumber>> RATIONAL = Q128;
 
-    public static <N extends Scalar<N>> GenericStore<N> wrap(final GenericStore.Factory<N> factory, final N... data) {
+    public static <N extends Scalar<N>> GenericStore<N> wrap( GenericStore.Factory<N> factory,  N... data) {
         return new GenericStore<>(factory, data.length, 1, data);
     }
 
-    public static <N extends Scalar<N>> GenericStore<N> wrap(final GenericStore.Factory<N> factory, final N[] data, final int structure) {
+    public static <N extends Scalar<N>> GenericStore<N> wrap( GenericStore.Factory<N> factory,  N[] data,  int structure) {
         return new GenericStore<>(factory, structure, data.length / structure, data);
     }
 
@@ -376,16 +376,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
     private transient N[] myWorkerColumn;
 
     @SuppressWarnings("unused")
-    private GenericStore(final GenericStore.Factory<N> factory, final int numbRows) {
+    private GenericStore( GenericStore.Factory<N> factory,  int numbRows) {
         this(factory, numbRows, 1);
     }
 
     @SuppressWarnings("unused")
-    private GenericStore(final GenericStore.Factory<N> factory, final N[] dataArray) {
+    private GenericStore( GenericStore.Factory<N> factory,  N[] dataArray) {
         this(factory, dataArray.length, 1, dataArray);
     }
 
-    GenericStore(final GenericStore.Factory<N> factory, final int numbRows, final int numbCols) {
+    GenericStore( GenericStore.Factory<N> factory,  int numbRows,  int numbCols) {
 
         super(factory.array(), numbRows * numbCols);
 
@@ -402,7 +402,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         multiplyNeither = MultiplyNeither.newGeneric(myRowDim, myColDim);
     }
 
-    GenericStore(final GenericStore.Factory<N> factory, final int numbRows, final int numbCols, final N[] dataArray) {
+    GenericStore( GenericStore.Factory<N> factory,  int numbRows,  int numbCols,  N[] dataArray) {
 
         super(factory.array(), dataArray);
 
@@ -419,7 +419,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         multiplyNeither = MultiplyNeither.newGeneric(myRowDim, myColDim);
     }
 
-    public void accept(final Access2D<?> supplied) {
+    @Override public void accept( Access2D<?> supplied) {
         for (long j = 0L; j < supplied.countColumns(); j++) {
             for (long i = 0L; i < supplied.countRows(); i++) {
                 this.set(i, j, supplied.get(i, j));
@@ -427,25 +427,25 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void add(final long row, final long col, final Comparable<?> addend) {
+    @Override public void add( long row,  long col,  Comparable<?> addend) {
         myUtility.add(row, col, addend);
     }
 
-    public void add(final long row, final long col, final double addend) {
+    @Override public void add( long row,  long col,  double addend) {
         myUtility.add(row, col, addend);
     }
 
-    public void applyCholesky(final int iterationPoint, final BasicArray<N> multipliers) {
+    @Override public void applyCholesky( int iterationPoint,  BasicArray<N> multipliers) {
 
-        final N[] tmpData = data;
-        final N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
+         N[] tmpData = data;
+         N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyCholesky.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int aFirst, final int aLimit) {
+                protected void conquer( int aFirst,  int aLimit) {
                     ApplyCholesky.invoke(tmpData, myRowDim, aFirst, aLimit, tmpColumn);
                 }
             };
@@ -458,17 +458,17 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void applyLDL(final int iterationPoint, final BasicArray<N> multipliers) {
+    @Override public void applyLDL( int iterationPoint,  BasicArray<N> multipliers) {
 
-        final N[] tmpData = data;
-        final N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
+         N[] tmpData = data;
+         N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyLDL.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     ApplyLDL.invoke(tmpData, myRowDim, first, limit, tmpColumn, iterationPoint);
                 }
             };
@@ -481,17 +481,17 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void applyLU(final int iterationPoint, final BasicArray<N> multipliers) {
+    @Override public void applyLU( int iterationPoint,  BasicArray<N> multipliers) {
 
-        final N[] tmpData = data;
-        final N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
+         N[] tmpData = data;
+         N[] tmpColumn = ((ScalarArray<N>) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyLU.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int aFirst, final int aLimit) {
+                protected void conquer( int aFirst,  int aLimit) {
                     ApplyLU.invoke(tmpData, myRowDim, aFirst, aLimit, tmpColumn, iterationPoint);
                 }
             };
@@ -504,36 +504,36 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public Array1D<N> asList() {
+    @Override public Array1D<N> asList() {
         return myUtility.flatten();
     }
 
-    public Array1D<ComplexNumber> computeInPlaceSchur(final PhysicalStore<N> transformationCollector, final boolean eigenvalue) {
+    @Override public Array1D<ComplexNumber> computeInPlaceSchur( PhysicalStore<N> transformationCollector,  boolean eigenvalue) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
         return null;
     }
 
-    public MatrixStore<N> conjugate() {
+    @Override public MatrixStore<N> conjugate() {
         return new ConjugatedStore<>(this);
     }
 
-    public GenericStore<N> copy() {
+    @Override public GenericStore<N> copy() {
         return new GenericStore<>(myFactory, myRowDim, myColDim, this.copyOfData());
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myColDim;
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myRowDim;
     }
 
-    public void divideAndCopyColumn(final int row, final int column, final BasicArray<N> destination) {
+    @Override public void divideAndCopyColumn( int row,  int column,  BasicArray<N> destination) {
 
         N[] destinationData = ((ScalarArray<N>) destination).data;
 
-        int index = row + column * myRowDim;
+        @Var int index = row + column * myRowDim;
         N denominator = data[index];
 
         for (int i = row + 1; i < myRowDim; i++) {
@@ -542,19 +542,19 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return this.doubleValue(row + col * myRowDim);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof GenericStore)) {
             return false;
         }
-        GenericStore other = (GenericStore) obj;
+        var other = (GenericStore) obj;
         if (myColDim != other.myColDim) {
             return false;
         }
@@ -571,16 +571,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return true;
     }
 
-    public void exchangeColumns(final long colA, final long colB) {
+    @Override public void exchangeColumns( long colA,  long colB) {
         myUtility.exchangeColumns(colA, colB);
     }
 
-    public void exchangeHermitian(final int indexA, final int indexB) {
+    @Override public void exchangeHermitian( int indexA,  int indexB) {
 
-        final int tmpMin = Math.min(indexA, indexB);
-        final int tmpMax = Math.max(indexA, indexB);
+         int tmpMin = Math.min(indexA, indexB);
+         int tmpMax = Math.max(indexA, indexB);
 
-        N tmpVal;
+        @Var N tmpVal;
         for (int j = 0; j < tmpMin; j++) {
             tmpVal = this.get(tmpMin, j);
             this.set(tmpMin, j, this.get(tmpMax, j));
@@ -604,13 +604,13 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void exchangeRows(final long rowA, final long rowB) {
+    @Override public void exchangeRows( long rowA,  long rowB) {
         myUtility.exchangeRows(rowA, rowB);
     }
 
-    public void fillByMultiplying(final Access1D<N> left, final Access1D<N> right) {
+    @Override public void fillByMultiplying( Access1D<N> left,  Access1D<N> right) {
 
-        final int complexity = Math.toIntExact(left.count() / this.countRows());
+         int complexity = Math.toIntExact(left.count() / this.countRows());
         if (complexity != Math.toIntExact(right.count() / this.countColumns())) {
             ProgrammingError.throwForMultiplicationNotPossible();
         }
@@ -628,38 +628,38 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void fillColumn(final long row, final long col, final Access1D<N> values) {
+    @Override public void fillColumn( long row,  long col,  Access1D<N> values) {
         myUtility.fillColumn(row, col, values);
     }
 
-    public void fillColumn(final long row, final long col, final N value) {
+    @Override public void fillColumn( long row,  long col,  N value) {
         myUtility.fillColumn(row, col, value);
     }
 
-    public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillColumn(row, col, supplier);
     }
 
-    public void fillDiagonal(final long row, final long col, final N value) {
+    @Override public void fillDiagonal( long row,  long col,  N value) {
         myUtility.fillDiagonal(row, col, value);
     }
 
-    public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillDiagonal(row, col, supplier);
     }
 
     @Override
-    public void fillMatching(final Access1D<?> values) {
+    public void fillMatching( Access1D<?> values) {
 
         if (values instanceof ConjugatedStore) {
-            final TransjugatedStore<?> conjugated = (ConjugatedStore<?>) values;
+             TransjugatedStore<?> conjugated = (ConjugatedStore<?>) values;
 
             if (myColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int first, final int limit) {
+                    public void conquer( int first,  int limit) {
                         FillMatchingSingle.conjugate(data, myRowDim, first, limit, conjugated.getOriginal(), myFactory.scalar());
                     }
 
@@ -673,14 +673,14 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
             }
 
         } else if (values instanceof TransposedStore) {
-            final TransjugatedStore<?> transposed = (TransposedStore<?>) values;
+             TransjugatedStore<?> transposed = (TransposedStore<?>) values;
 
             if (myColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int first, final int limit) {
+                    public void conquer( int first,  int limit) {
                         FillMatchingSingle.transpose(data, myRowDim, first, limit, transposed.getOriginal(), myFactory.scalar());
                     }
 
@@ -700,16 +700,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
     }
 
     @Override
-    public void fillMatching(final Access1D<N> left, final BinaryFunction<N> function, final Access1D<N> right) {
+    public void fillMatching( Access1D<N> left,  BinaryFunction<N> function,  Access1D<N> right) {
 
         int matchingCount = MissingMath.toMinIntExact(this.count(), left.count(), right.count());
 
         if (myColDim > FillMatchingDual.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     OperationBinary.invoke(data, first, limit, 1, left, function, right);
                 }
 
@@ -724,16 +724,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
     }
 
     @Override
-    public void fillMatching(final UnaryFunction<N> function, final Access1D<N> arguments) {
+    public void fillMatching( UnaryFunction<N> function,  Access1D<N> arguments) {
 
         int matchingCount = MissingMath.toMinIntExact(this.count(), arguments.count());
 
         if (myColDim > FillMatchingSingle.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     OperationUnary.invoke(data, first, limit, 1, arguments, function);
                 }
 
@@ -747,35 +747,35 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
         this.set(row, col, values.get(valueIndex));
     }
 
-    public void fillOne(final long row, final long col, final N value) {
+    public void fillOne( long row,  long col,  N value) {
         myUtility.fillOne(row, col, value);
     }
 
-    public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+    public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillOne(row, col, supplier);
     }
 
-    public void fillRow(final long row, final long col, final Access1D<N> values) {
+    @Override public void fillRow( long row,  long col,  Access1D<N> values) {
         myUtility.fillRow(row, col, values);
     }
 
-    public void fillRow(final long row, final long col, final N value) {
+    @Override public void fillRow( long row,  long col,  N value) {
         myUtility.fillRow(row, col, value);
     }
 
-    public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillRow(row, col, supplier);
     }
 
-    public boolean generateApplyAndCopyHouseholderColumn(final int row, final int column, final Householder<N> destination) {
+    @Override public boolean generateApplyAndCopyHouseholderColumn( int row,  int column,  Householder<N> destination) {
         return GenerateApplyAndCopyHouseholderColumn.invoke(data, myRowDim, row, column, (Householder.Generic<N>) destination, myFactory.scalar());
     }
 
-    public boolean generateApplyAndCopyHouseholderRow(final int row, final int column, final Householder<N> destination) {
+    @Override public boolean generateApplyAndCopyHouseholderRow( int row,  int column,  Householder<N> destination) {
         return GenerateApplyAndCopyHouseholderRow.invoke(data, myRowDim, row, column, (Householder.Generic<N>) destination, myFactory.scalar());
     }
 
@@ -783,47 +783,47 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return this;
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return myUtility.get(row, col);
     }
 
-    public int getColDim() {
+    @Override public int getColDim() {
         return myColDim;
     }
 
-    public int getMaxDim() {
+    @Override public int getMaxDim() {
         return Math.max(myRowDim, myColDim);
     }
 
-    public int getMinDim() {
+    @Override public int getMinDim() {
         return Math.min(myRowDim, myColDim);
     }
 
-    public int getRowDim() {
+    @Override public int getRowDim() {
         return myRowDim;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + myColDim;
         result = prime * result + (myFactory == null ? 0 : myFactory.hashCode());
         return prime * result + myRowDim;
     }
 
     @Override
-    public void modifyAll(final UnaryFunction<N> modifier) {
+    public void modifyAll( UnaryFunction<N> modifier) {
 
-        final int numberOfRows = myRowDim;
-        final int numberOfCols = myColDim;
+         int numberOfRows = myRowDim;
+         int numberOfCols = myColDim;
 
         if (numberOfCols > ModifyAll.THRESHOLD) {
 
-            final DivideAndConquer conquerer = new DivideAndConquer() {
+             var conquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int aFirst, final int aLimit) {
+                public void conquer( int aFirst,  int aLimit) {
                     GenericStore.this.modify(numberOfRows * aFirst, numberOfRows * aLimit, 1, modifier);
                 }
 
@@ -837,30 +837,30 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void modifyColumn(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyColumn( long row,  long col,  UnaryFunction<N> modifier) {
         myUtility.modifyColumn(row, col, modifier);
     }
 
-    public void modifyDiagonal(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<N> modifier) {
         myUtility.modifyDiagonal(row, col, modifier);
     }
 
-    public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
 
-        N tmpValue = this.get(row, col);
+        @Var N tmpValue = this.get(row, col);
 
         tmpValue = modifier.invoke(tmpValue);
 
         this.set(row, col, tmpValue);
     }
 
-    public void modifyRow(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyRow( long row,  long col,  UnaryFunction<N> modifier) {
         myUtility.modifyRow(row, col, modifier);
     }
 
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    @Override public MatrixStore<N> multiply( MatrixStore<N> right) {
 
-        final GenericStore<N> retVal = this.physical().make(myRowDim, right.count() / myColDim);
+         GenericStore<N> retVal = this.physical().make(myRowDim, right.count() / myColDim);
 
         if (right instanceof GenericStore) {
             retVal.multiplyNeither.invoke(retVal.data, data, myColDim, this.cast(right).data, myFactory.scalar());
@@ -871,12 +871,12 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return retVal;
     }
 
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    @Override public N multiplyBoth( Access1D<N> leftAndRight) {
 
-        final PhysicalStore<N> tmpStep1 = myFactory.make(1L, leftAndRight.count());
-        final PhysicalStore<N> tmpStep2 = myFactory.make(1L, 1L);
+         PhysicalStore<N> tmpStep1 = myFactory.make(1L, leftAndRight.count());
+         PhysicalStore<N> tmpStep2 = myFactory.make(1L, 1L);
 
-        final PhysicalStore<N> tmpLeft = myFactory.rows(leftAndRight);
+         PhysicalStore<N> tmpLeft = myFactory.rows(leftAndRight);
         tmpLeft.modifyAll(myFactory.function().conjugate());
         tmpStep1.fillByMultiplying(tmpLeft, this);
 
@@ -885,78 +885,78 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return tmpStep2.get(0L);
     }
 
-    public void negateColumn(final int column) {
+    @Override public void negateColumn( int column) {
         myUtility.modifyColumn(0, column, myFactory.function().negate());
     }
 
-    public PhysicalStore.Factory<N, GenericStore<N>> physical() {
+    @Override public PhysicalStore.Factory<N, GenericStore<N>> physical() {
         return myFactory;
     }
 
-    public TransformableRegion<N> regionByColumns(final int... columns) {
+    @Override public TransformableRegion<N> regionByColumns( int... columns) {
         return new Subregion2D.ColumnsRegion<>(this, multiplyBoth, columns);
     }
 
-    public TransformableRegion<N> regionByLimits(final int rowLimit, final int columnLimit) {
+    @Override public TransformableRegion<N> regionByLimits( int rowLimit,  int columnLimit) {
         return new Subregion2D.LimitRegion<>(this, multiplyBoth, rowLimit, columnLimit);
     }
 
-    public TransformableRegion<N> regionByOffsets(final int rowOffset, final int columnOffset) {
+    @Override public TransformableRegion<N> regionByOffsets( int rowOffset,  int columnOffset) {
         return new Subregion2D.OffsetRegion<>(this, multiplyBoth, rowOffset, columnOffset);
     }
 
-    public TransformableRegion<N> regionByRows(final int... rows) {
+    @Override public TransformableRegion<N> regionByRows( int... rows) {
         return new Subregion2D.RowsRegion<>(this, multiplyBoth, rows);
     }
 
-    public TransformableRegion<N> regionByTransposing() {
+    @Override public TransformableRegion<N> regionByTransposing() {
         return new Subregion2D.TransposedRegion<>(this, multiplyBoth);
     }
 
-    public void rotateRight(final int low, final int high, final double cos, final double sin) {
+    @Override public void rotateRight( int low,  int high,  double cos,  double sin) {
         RotateRight.invoke(data, myRowDim, low, high, myFactory.scalar().cast(cos), myFactory.scalar().cast(sin));
     }
 
-    public void set(final long row, final long col, final Comparable<?> value) {
+    @Override public void set( long row,  long col,  Comparable<?> value) {
         myUtility.set(row, col, value);
     }
 
-    public void set(final long row, final long col, final double value) {
+    @Override public void set( long row,  long col,  double value) {
         myUtility.set(row, col, value);
     }
 
-    public void setToIdentity(final int col) {
+    @Override public void setToIdentity( int col) {
         myUtility.set(col, col, myFactory.scalar().one().get());
         myUtility.fillColumn(col + 1, col, myFactory.scalar().zero().get());
     }
 
-    public Array1D<N> sliceColumn(final long row, final long col) {
+    @Override public Array1D<N> sliceColumn( long row,  long col) {
         return myUtility.sliceColumn(row, col);
     }
 
-    public Array1D<N> sliceDiagonal(final long row, final long col) {
+    @Override public Array1D<N> sliceDiagonal( long row,  long col) {
         return myUtility.sliceDiagonal(row, col);
     }
 
-    public Array1D<N> sliceRange(final long first, final long limit) {
+    @Override public Array1D<N> sliceRange( long first,  long limit) {
         return myUtility.sliceRange(first, limit);
     }
 
-    public Array1D<N> sliceRow(final long row, final long col) {
+    @Override public Array1D<N> sliceRow( long row,  long col) {
         return myUtility.sliceRow(row, col);
     }
 
-    public void substituteBackwards(final Access2D<N> body, final boolean unitDiagonal, final boolean conjugated, final boolean hermitian) {
+    @Override public void substituteBackwards( Access2D<N> body,  boolean unitDiagonal,  boolean conjugated,  boolean hermitian) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteBackwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int aFirst, final int aLimit) {
+                public void conquer( int aFirst,  int aLimit) {
                     SubstituteBackwards.invoke(GenericStore.this.data, tmpRowDim, aFirst, aLimit, body, unitDiagonal, conjugated, hermitian,
                             myFactory.scalar());
                 }
@@ -971,17 +971,17 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void substituteForwards(final Access2D<N> body, final boolean unitDiagonal, final boolean conjugated, final boolean identity) {
+    @Override public void substituteForwards( Access2D<N> body,  boolean unitDiagonal,  boolean conjugated,  boolean identity) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteForwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int aFirst, final int aLimit) {
+                public void conquer( int aFirst,  int aLimit) {
                     SubstituteForwards.invoke(GenericStore.this.data, tmpRowDim, aFirst, aLimit, body, unitDiagonal, conjugated, identity, myFactory.scalar());
                 }
 
@@ -995,7 +995,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
         return myUtility.get(row, column);
     }
 
@@ -1004,16 +1004,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return Access2D.toString(this);
     }
 
-    public void transformLeft(final Householder<N> transformation, final int firstColumn) {
+    @Override public void transformLeft( Householder<N> transformation,  int firstColumn) {
         HouseholderLeft.call(data, myRowDim, firstColumn, this.cast(transformation), myFactory.scalar());
     }
 
-    public void transformLeft(final Rotation<N> transformation) {
+    @Override public void transformLeft( Rotation<N> transformation) {
 
-        final Rotation.Generic<N> tmpTransf = this.cast(transformation);
+         Rotation.Generic<N> tmpTransf = this.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (tmpTransf.cos != null && tmpTransf.sin != null) {
@@ -1030,16 +1030,16 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void transformRight(final Householder<N> transformation, final int firstRow) {
+    @Override public void transformRight( Householder<N> transformation,  int firstRow) {
         HouseholderRight.call(data, myRowDim, firstRow, this.cast(transformation), myFactory.scalar());
     }
 
-    public void transformRight(final Rotation<N> transformation) {
+    @Override public void transformRight( Rotation<N> transformation) {
 
-        final Rotation.Generic<N> tmpTransf = this.cast(transformation);
+         Rotation.Generic<N> tmpTransf = this.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (tmpTransf.cos != null && tmpTransf.sin != null) {
@@ -1056,31 +1056,31 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         }
     }
 
-    public void transformSymmetric(final Householder<N> transformation) {
+    @Override public void transformSymmetric( Householder<N> transformation) {
         HouseholderHermitian.invoke(data, this.cast(transformation), this.getWorkerColumn(), myFactory.scalar());
     }
 
-    public MatrixStore<N> transpose() {
+    @Override public MatrixStore<N> transpose() {
         return new TransposedStore<>(this);
     }
 
-    public void tred2(final BasicArray<N> mainDiagonal, final BasicArray<N> offDiagonal, final boolean yesvecs) {
+    @Override public void tred2( BasicArray<N> mainDiagonal,  BasicArray<N> offDiagonal,  boolean yesvecs) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
     }
 
-    public void visitColumn(final long row, final long col, final VoidFunction<N> visitor) {
+    @Override public void visitColumn( long row,  long col,  VoidFunction<N> visitor) {
         myUtility.visitColumn(row, col, visitor);
     }
 
-    public void visitDiagonal(final long row, final long col, final VoidFunction<N> visitor) {
+    @Override public void visitDiagonal( long row,  long col,  VoidFunction<N> visitor) {
         myUtility.visitDiagonal(row, col, visitor);
     }
 
-    public void visitRow(final long row, final long col, final VoidFunction<N> visitor) {
+    @Override public void visitRow( long row,  long col,  VoidFunction<N> visitor) {
         myUtility.visitRow(row, col, visitor);
     }
 
-    private GenericStore<N> cast(final Access1D<N> matrix) {
+    private GenericStore<N> cast( Access1D<N> matrix) {
         if (matrix instanceof GenericStore) {
             return (GenericStore<N>) matrix;
         }
@@ -1090,7 +1090,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return myFactory.columns(matrix);
     }
 
-    private Householder.Generic<N> cast(final Householder<N> transformation) {
+    private Householder.Generic<N> cast( Householder<N> transformation) {
         if (transformation instanceof Householder.Generic) {
             return (Householder.Generic<N>) transformation;
         }
@@ -1100,7 +1100,7 @@ public final class GenericStore<N extends Scalar<N>> extends ScalarArray<N> impl
         return new Householder.Generic<>(myFactory.scalar(), transformation);
     }
 
-    private Rotation.Generic<N> cast(final Rotation<N> transformation) {
+    private Rotation.Generic<N> cast( Rotation<N> transformation) {
         if (transformation instanceof Rotation.Generic) {
             return (Rotation.Generic<N>) transformation;
         }

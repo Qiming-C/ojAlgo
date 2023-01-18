@@ -1,4 +1,6 @@
 package org.ojalgo.machine;
+import com.google.errorprone.annotations.Var;
+
 
 /**
  * How much memory, and how many threads share that memory. Used to describe either total system resources

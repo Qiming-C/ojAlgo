@@ -32,54 +32,50 @@ final class WrapperStore<N extends Comparable<N>> extends FactoryStore<N> {
 
     private final Access2D<?> myAccess;
 
-    private WrapperStore(final PhysicalStore.Factory<N, ?> factory, final int rowsCount, final int columnsCount) {
-        super(factory, rowsCount, columnsCount);
-        myAccess = null;
-        ProgrammingError.throwForIllegalInvocation();
-    }
+    
 
-    WrapperStore(final PhysicalStore.Factory<N, ?> factory, final Access2D<?> access) {
+    WrapperStore( PhysicalStore.Factory<N, ?> factory,  Access2D<?> access) {
 
         super(factory, (int) access.countRows(), (int) access.countColumns());
 
         myAccess = access;
     }
 
-    public double doubleValue(final long aRow, final long aCol) {
+    @Override public double doubleValue( long aRow,  long aCol) {
         return myAccess.doubleValue(aRow, aCol);
     }
 
-    public N get(final long aRow, final long aCol) {
+    @Override public N get( long aRow,  long aCol) {
         return this.physical().scalar().cast(myAccess.get(aRow, aCol));
     }
 
-    public void multiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    @Override public void multiply( Access1D<N> right,  TransformableRegion<N> target) {
         // TODO Auto-generated method stub
         super.multiply(right, target);
     }
 
-    public MatrixStore<N> multiply(final double scalar) {
+    @Override public MatrixStore<N> multiply( double scalar) {
         // TODO Auto-generated method stub
         return super.multiply(scalar);
     }
 
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    @Override public MatrixStore<N> multiply( MatrixStore<N> right) {
         // TODO Auto-generated method stub
         return super.multiply(right);
     }
 
-    public MatrixStore<N> multiply(final N scalar) {
+    @Override public MatrixStore<N> multiply( N scalar) {
         // TODO Auto-generated method stub
         return super.multiply(scalar);
     }
 
     @Override
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    public N multiplyBoth( Access1D<N> leftAndRight) {
         // TODO Auto-generated method stub
         return super.multiplyBoth(leftAndRight);
     }
 
-    public ElementsSupplier<N> premultiply(final Access1D<N> left) {
+    @Override public ElementsSupplier<N> premultiply( Access1D<N> left) {
         // TODO Auto-generated method stub
         return super.premultiply(left);
     }

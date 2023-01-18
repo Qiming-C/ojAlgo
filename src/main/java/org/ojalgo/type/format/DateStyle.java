@@ -29,9 +29,9 @@ public enum DateStyle {
 
     FULL(DateFormat.FULL), LONG(DateFormat.LONG), MEDIUM(DateFormat.MEDIUM), SHORT(DateFormat.SHORT), SQL(Integer.MAX_VALUE);
 
-    private int myIntValue;
+    private final int myIntValue;
 
-    DateStyle(final int aStyleValue) {
+    DateStyle( int aStyleValue) {
         myIntValue = aStyleValue;
     }
 
@@ -39,21 +39,22 @@ public enum DateStyle {
         return DatePart.DATETIME.getFormat(this, Locale.getDefault());
     }
 
-    public Format getFormat(final DatePart aPart) {
+    public Format getFormat( DatePart aPart) {
         return aPart.getFormat(this, Locale.getDefault());
     }
 
-    public Format getFormat(final DatePart aPart, final Locale aLocale) {
+    public Format getFormat( DatePart aPart,  Locale aLocale) {
         return aPart.getFormat(this, aLocale);
     }
 
-    public Format getFormat(final Locale aLocale) {
+    public Format getFormat( Locale aLocale) {
         return DatePart.DATETIME.getFormat(this, aLocale);
     }
 
     /**
-     * @return {@linkplain DateFormat#FULL}, {@linkplain DateFormat#LONG}, {@linkplain DateFormat#MEDIUM} or
-     *         {@linkplain DateFormat#SHORT}
+     *Returns {@linkplain DateFormat#FULL}, {@linkplain DateFormat#LONG}, {@linkplain DateFormat#MEDIUM} or
+         {@linkplain DateFormat#SHORT}.
+ 
      */
     public int intValue() {
         return myIntValue;

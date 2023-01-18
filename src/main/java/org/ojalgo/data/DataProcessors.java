@@ -23,8 +23,8 @@ package org.ojalgo.data;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.Function;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.UnaryFunction;
@@ -78,7 +78,7 @@ public class DataProcessors {
      * Calculate the correlation matrix from a set of variables' samples. Each {@link Access1D} instance
      * represents one variable, and contains an ordered sequence of samples.
      */
-    public static <M extends Mutate2D> M correlations(final Factory2D<M> factory, final Access1D<?>... data) {
+    public static <M extends Mutate2D> M correlations( Factory2D<M> factory,  Access1D<?>... data) {
 
         int nbVariables = data.length;
         M retVal = factory.make(nbVariables, nbVariables);
@@ -87,7 +87,7 @@ public class DataProcessors {
         SampleSet colSet = SampleSet.make();
 
         double[] stdDev = new double[nbVariables];
-        double stdDevJ = ZERO;
+        @Var double stdDevJ = ZERO;
 
         for (int j = 0; j < nbVariables; j++) {
             colSet.swap(data[j]);
@@ -97,7 +97,7 @@ public class DataProcessors {
             for (int i = 0; i < j; i++) {
                 rowSet.swap(data[i]);
 
-                double correlation = rowSet.getCovariance(colSet);
+                @Var double correlation = rowSet.getCovariance(colSet);
                 correlation /= stdDev[i];
                 correlation /= stdDevJ;
 
@@ -115,7 +115,7 @@ public class DataProcessors {
      * Calculate the covariance matrix from a set of variables' samples. Each {@link Access1D} instance
      * represents one variable, and contains an ordered sequence of samples.
      */
-    public static <M extends Mutate2D> M covariances(final Factory2D<M> factory, final Access1D<?>... data) {
+    public static <M extends Mutate2D> M covariances( Factory2D<M> factory,  Access1D<?>... data) {
 
         int nbVariables = data.length;
         M retVal = factory.make(nbVariables, nbVariables);
@@ -145,7 +145,7 @@ public class DataProcessors {
      *
      * @see #covariances(Factory2D, Access1D...)
      */
-    public static <D extends Access2D<?> & Access2D.Sliceable<?>, M extends Mutate2D> M covariances(final Factory2D<M> factory, final D data) {
+    public static <D extends Access2D<?> & Access2D.Sliceable<?>, M extends Mutate2D> M covariances( Factory2D<M> factory,  D data) {
 
         int nbVariables = data.getColDim();
         M retVal = factory.make(nbVariables, nbVariables);
@@ -171,23 +171,26 @@ public class DataProcessors {
     }
 
     /**
-     * @see #covariances(Factory2D, Access1D...)
+     *See {@link #covariances(Factory2D, Access1D...)}.
+ 
      */
-    public static <M extends Mutate2D> M covariances(final Factory2D<M> factory, final double[]... data) {
+    public static <M extends Mutate2D> M covariances( Factory2D<M> factory,  double[]... data) {
         return DataProcessors.covariances(factory, RawStore.wrap(data).transpose());
     }
 
     /**
-     * @see #covariances(Factory2D, SingularValue, int)
+     *See {@link #covariances(Factory2D, SingularValue, int)}.
+ 
      */
-    public static <M extends PhysicalStore<Double>> M covariances(final Factory2D<M> factory, final SingularValue<Double> svd) {
+    public static <M extends PhysicalStore<Double>> M covariances( Factory2D<M> factory,  SingularValue<Double> svd) {
         return DataProcessors.covariances(factory, svd, Math.toIntExact(svd.countColumns()));
     }
 
     /**
-     * @see #covariances(Factory2D, SingularValue, int)
+     *See {@link #covariances(Factory2D, SingularValue, int)}.
+ 
      */
-    public static <M extends PhysicalStore<Double>> M covariances(final Factory2D<M> factory, final SingularValue<Double> svd, final double threshold) {
+    public static <M extends PhysicalStore<Double>> M covariances( Factory2D<M> factory,  SingularValue<Double> svd,  double threshold) {
         return DataProcessors.covariances(factory, svd, svd.countSignificant(threshold));
     }
 
@@ -197,7 +200,7 @@ public class DataProcessors {
      *        columns
      * @param complexity The maximum number of singular values that should be considered
      */
-    public static <M extends PhysicalStore<Double>> M covariances(final Factory2D<M> factory, final SingularValue<Double> svd, final int complexity) {
+    public static <M extends PhysicalStore<Double>> M covariances( Factory2D<M> factory,  SingularValue<Double> svd,  int complexity) {
 
         if (!svd.isComputed()) {
             throw new ProgrammingError("The decomposition must be computed!");
@@ -219,8 +222,8 @@ public class DataProcessors {
         int limit = Math.min(complexity, svd.getRank());
         if (limit > 0) {
 
-            Array1D<Double> values = svd.getSingularValues();
-            MatrixStore<Double> vectors = svd.getV();
+            @Var Array1D<Double> values = svd.getSingularValues();
+            @Var MatrixStore<Double> vectors = svd.getV();
 
             if (limit < numberOfVariables) {
                 values = values.sliceRange(0L, limit);
@@ -231,16 +234,16 @@ public class DataProcessors {
 
             retVal.fillByMultiplying(scaledV, scaledV.transpose());
 
-            retVal.modifyAll(DIVIDE.by(numberOfSamples - 1));
+            retVal.modifyAll(DIVIDE.by((double) (numberOfSamples - 1)));
         }
 
         return retVal;
     }
 
-    public static Transformation2D<Double> newTransformation2D(final Function<SampleSet, UnaryFunction<Double>> definition) {
+    public static Transformation2D<Double> newTransformation2D( Function<SampleSet, UnaryFunction<Double>> definition) {
         return new Transformation2D<Double>() {
 
-            public <T extends Mutate2D.ModifiableReceiver<Double>> void transform(final T transformable) {
+            @Override public <T extends Mutate2D.ModifiableReceiver<Double>> void transform( T transformable) {
                 SampleSet sampleSet = SampleSet.make();
                 for (ColumnView<Double> view : transformable.columns()) {
                     sampleSet.swap(view);

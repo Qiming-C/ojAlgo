@@ -29,17 +29,17 @@ final class SupplierIterator<T> implements Iterator<T> {
     private transient T myNext;
     private final AutoSupplier<T> mySupplier;
 
-    SupplierIterator(final AutoSupplier<T> supplier) {
+    SupplierIterator( AutoSupplier<T> supplier) {
         super();
         mySupplier = supplier;
         myNext = mySupplier.get();
     }
 
-    public boolean hasNext() {
+    @Override public boolean hasNext() {
         return myNext != null;
     }
 
-    public T next() {
+    @Override public T next() {
         if (myNext == null) {
             throw new NoSuchElementException();
         }

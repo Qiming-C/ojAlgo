@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.polynomial;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.matrix.decomposition.QR;
 import org.ojalgo.matrix.store.GenericStore;
@@ -29,19 +30,19 @@ import org.ojalgo.structure.Access1D;
 
 public final class PolynomialR128 extends AbstractPolynomial<Quadruple> {
 
-    public PolynomialR128(final int degree) {
+    public PolynomialR128( int degree) {
         super(Array1D.R128.make(degree + 1));
     }
 
-    PolynomialR128(final Array1D<Quadruple> coefficients) {
+    PolynomialR128( Array1D<Quadruple> coefficients) {
         super(coefficients);
     }
 
-    public void estimate(final Access1D<?> x, final Access1D<?> y) {
+    @Override public void estimate( Access1D<?> x,  Access1D<?> y) {
         this.estimate(x, y, GenericStore.R128, QR.R128);
     }
 
-    public Quadruple integrate(final Quadruple fromPoint, final Quadruple toPoint) {
+    @Override public Quadruple integrate( Quadruple fromPoint,  Quadruple toPoint) {
 
         PolynomialFunction<Quadruple> primitive = this.buildPrimitive();
 
@@ -51,11 +52,11 @@ public final class PolynomialR128 extends AbstractPolynomial<Quadruple> {
         return toVal.subtract(fromVal);
     }
 
-    public Quadruple invoke(final Quadruple arg) {
+    @Override public Quadruple invoke( Quadruple arg) {
 
-        int power = this.degree();
+        @Var int power = this.degree();
 
-        Quadruple retVal = this.get(power);
+        @Var Quadruple retVal = this.get(power);
 
         while (--power >= 0) {
             retVal = this.get(power).add(arg.multiply(retVal));
@@ -64,7 +65,7 @@ public final class PolynomialR128 extends AbstractPolynomial<Quadruple> {
         return retVal;
     }
 
-    public void set(final Access1D<?> coefficients) {
+    @Override public void set( Access1D<?> coefficients) {
         int limit = Math.min(this.size(), coefficients.size());
         for (int p = 0; p < limit; p++) {
             this.set(p, Quadruple.valueOf(coefficients.get(p)));
@@ -72,13 +73,13 @@ public final class PolynomialR128 extends AbstractPolynomial<Quadruple> {
     }
 
     @Override
-    protected Quadruple getDerivativeFactor(final int power) {
+    protected Quadruple getDerivativeFactor( int power) {
         int nextIndex = power + 1;
         return this.get(nextIndex).multiply(nextIndex);
     }
 
     @Override
-    protected Quadruple getPrimitiveFactor(final int power) {
+    protected Quadruple getPrimitiveFactor( int power) {
         if (power <= 0) {
             return Quadruple.ZERO;
         }
@@ -86,7 +87,7 @@ public final class PolynomialR128 extends AbstractPolynomial<Quadruple> {
     }
 
     @Override
-    protected AbstractPolynomial<Quadruple> makeInstance(final int size) {
+    protected AbstractPolynomial<Quadruple> makeInstance( int size) {
         return new PolynomialR128(Array1D.R128.make(size));
     }
 

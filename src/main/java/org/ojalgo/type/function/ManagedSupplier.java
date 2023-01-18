@@ -30,19 +30,19 @@ final class ManagedSupplier<T> implements AutoSupplier<T> {
     private final Throughput myManager;
     private final Supplier<T> mySupplier;
 
-    ManagedSupplier(final Throughput manager, final Supplier<T> supplier) {
+    ManagedSupplier( Throughput manager,  Supplier<T> supplier) {
         super();
         myManager = manager;
         mySupplier = supplier;
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         if (mySupplier instanceof AutoCloseable) {
             ((AutoCloseable) mySupplier).close();
         }
     }
 
-    public T read() {
+    @Override public T read() {
         T retVal = mySupplier.get();
         if (retVal != null) {
             myManager.increment();

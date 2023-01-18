@@ -39,43 +39,43 @@ public final class CloseableList<T extends AutoCloseable> implements List<T>, Au
         return new CloseableList<>(new ArrayList<>());
     }
 
-    public static <T extends AutoCloseable> CloseableList<T> newInstance(final int capacity) {
+    public static <T extends AutoCloseable> CloseableList<T> newInstance( int capacity) {
         return new CloseableList<>(new ArrayList<>(capacity));
     }
 
-    public static <T extends AutoCloseable> CloseableList<T> wrap(final List<T> delegate) {
+    public static <T extends AutoCloseable> CloseableList<T> wrap( List<T> delegate) {
         return new CloseableList<>(delegate);
     }
 
     private final List<T> myDelegate;
 
-    CloseableList(final List<T> delegate) {
+    CloseableList( List<T> delegate) {
         super();
         myDelegate = delegate;
     }
 
-    public void add(final int index, final T element) {
+    @Override public void add( int index,  T element) {
         myDelegate.add(index, element);
     }
 
     @Override
-    public boolean add(final T element) {
+    public boolean add( T element) {
         return myDelegate.add(element);
     }
 
-    public boolean addAll(final Collection<? extends T> c) {
+    @Override public boolean addAll( Collection<? extends T> c) {
         return myDelegate.addAll(c);
     }
 
-    public boolean addAll(final int index, final Collection<? extends T> c) {
+    @Override public boolean addAll( int index,  Collection<? extends T> c) {
         return myDelegate.addAll(index, c);
     }
 
-    public void clear() {
+    @Override public void clear() {
         myDelegate.clear();
     }
 
-    public void close() {
+    @Override public void close() {
         myDelegate.forEach(e -> {
             try {
                 if (e != null) {
@@ -87,25 +87,25 @@ public final class CloseableList<T extends AutoCloseable> implements List<T>, Au
         });
     }
 
-    public boolean contains(final Object o) {
+    @Override public boolean contains( Object o) {
         return myDelegate.contains(o);
     }
 
-    public boolean containsAll(final Collection<?> c) {
+    @Override public boolean containsAll( Collection<?> c) {
         return myDelegate.containsAll(c);
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals( Object o) {
         return myDelegate.equals(o);
     }
 
-    public void forEach(final Consumer<? super T> action) {
+    @Override public void forEach( Consumer<? super T> action) {
         myDelegate.forEach(action);
     }
 
     @Override
-    public T get(final int index) {
+    public T get( int index) {
         return myDelegate.get(index);
     }
 
@@ -114,59 +114,59 @@ public final class CloseableList<T extends AutoCloseable> implements List<T>, Au
         return myDelegate.hashCode();
     }
 
-    public int indexOf(final Object o) {
+    @Override public int indexOf( Object o) {
         return myDelegate.indexOf(o);
     }
 
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return myDelegate.isEmpty();
     }
 
-    public Iterator<T> iterator() {
+    @Override public Iterator<T> iterator() {
         return myDelegate.iterator();
     }
 
-    public int lastIndexOf(final Object o) {
+    @Override public int lastIndexOf( Object o) {
         return myDelegate.lastIndexOf(o);
     }
 
-    public ListIterator<T> listIterator() {
+    @Override public ListIterator<T> listIterator() {
         return myDelegate.listIterator();
     }
 
-    public ListIterator<T> listIterator(final int index) {
+    @Override public ListIterator<T> listIterator( int index) {
         return myDelegate.listIterator(index);
     }
 
-    public Stream<T> parallelStream() {
+    @Override public Stream<T> parallelStream() {
         return myDelegate.parallelStream();
     }
 
-    public T remove(final int index) {
+    @Override public T remove( int index) {
         return myDelegate.remove(index);
     }
 
-    public boolean remove(final Object o) {
+    @Override public boolean remove( Object o) {
         return myDelegate.remove(o);
     }
 
-    public boolean removeAll(final Collection<?> c) {
+    @Override public boolean removeAll( Collection<?> c) {
         return myDelegate.removeAll(c);
     }
 
-    public boolean removeIf(final Predicate<? super T> filter) {
+    @Override public boolean removeIf( Predicate<? super T> filter) {
         return myDelegate.removeIf(filter);
     }
 
-    public void replaceAll(final UnaryOperator<T> operator) {
+    @Override public void replaceAll( UnaryOperator<T> operator) {
         myDelegate.replaceAll(operator);
     }
 
-    public boolean retainAll(final Collection<?> c) {
+    @Override public boolean retainAll( Collection<?> c) {
         return myDelegate.retainAll(c);
     }
 
-    public T set(final int index, final T element) {
+    @Override public T set( int index,  T element) {
         return myDelegate.set(index, element);
     }
 
@@ -175,27 +175,27 @@ public final class CloseableList<T extends AutoCloseable> implements List<T>, Au
         return myDelegate.size();
     }
 
-    public void sort(final Comparator<? super T> c) {
+    @Override public void sort( Comparator<? super T> c) {
         myDelegate.sort(c);
     }
 
-    public Spliterator<T> spliterator() {
+    @Override public Spliterator<T> spliterator() {
         return myDelegate.spliterator();
     }
 
-    public Stream<T> stream() {
+    @Override public Stream<T> stream() {
         return myDelegate.stream();
     }
 
-    public List<T> subList(final int fromIndex, final int toIndex) {
+    @Override public List<T> subList( int fromIndex,  int toIndex) {
         return myDelegate.subList(fromIndex, toIndex);
     }
 
-    public Object[] toArray() {
+    @Override public Object[] toArray() {
         return myDelegate.toArray();
     }
 
-    public <E> E[] toArray(final E[] a) {
+    @Override public <E> E[] toArray( E[] a) {
         return myDelegate.toArray(a);
     }
 

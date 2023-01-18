@@ -33,87 +33,87 @@ public interface AggregatorFunction<N extends Comparable<N>> extends VoidFunctio
         private final AggregatorFunction<N> myAggregator;
         private final PredicateFunction<N> myPredicate;
 
-        PredicateWrapper(final PredicateFunction<N> predicate, final AggregatorFunction<N> aggregator) {
+        PredicateWrapper( PredicateFunction<N> predicate,  AggregatorFunction<N> aggregator) {
             super();
             myPredicate = predicate;
             myAggregator = aggregator;
         }
 
-        public boolean booleanValue() {
+        @Override public boolean booleanValue() {
             return myAggregator.booleanValue();
         }
 
-        public byte byteValue() {
+        @Override public byte byteValue() {
             return myAggregator.byteValue();
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myAggregator.doubleValue();
         }
 
-        public float floatValue() {
+        @Override public float floatValue() {
             return myAggregator.floatValue();
         }
 
-        public N get() {
+        @Override public N get() {
             return myAggregator.get();
         }
 
-        public int intValue() {
+        @Override public int intValue() {
             return myAggregator.intValue();
         }
 
-        public void invoke(final byte arg) {
+        @Override public void invoke( byte arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final double arg) {
+        @Override public void invoke( double arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final float arg) {
+        @Override public void invoke( float arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final int arg) {
+        @Override public void invoke( int arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final long arg) {
+        @Override public void invoke( long arg) {
+            if (myPredicate.test((double) arg)) {
+                myAggregator.invoke(arg);
+            }
+        }
+
+        @Override public void invoke( N arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final N arg) {
+        @Override public void invoke( short arg) {
             if (myPredicate.test(arg)) {
                 myAggregator.invoke(arg);
             }
         }
 
-        public void invoke(final short arg) {
-            if (myPredicate.test(arg)) {
-                myAggregator.invoke(arg);
-            }
-        }
-
-        public long longValue() {
+        @Override public long longValue() {
             return myAggregator.longValue();
         }
 
-        public AggregatorFunction<N> reset() {
+        @Override public AggregatorFunction<N> reset() {
             return myAggregator.reset();
         }
 
-        public short shortValue() {
+        @Override public short shortValue() {
             return myAggregator.shortValue();
         }
 
@@ -126,7 +126,7 @@ public interface AggregatorFunction<N extends Comparable<N>> extends VoidFunctio
     /**
      * Only the values that pass the predicate filter will actually be part of the aggregation.
      */
-    default AggregatorFunction<N> filter(final PredicateFunction<N> predicate) {
+    default AggregatorFunction<N> filter( PredicateFunction<N> predicate) {
         return new PredicateWrapper<>(predicate, this);
     }
 

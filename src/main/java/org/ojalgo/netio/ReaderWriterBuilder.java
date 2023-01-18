@@ -52,36 +52,36 @@ abstract class ReaderWriterBuilder<B extends ReaderWriterBuilder<B>> {
     private int myQueueCapacity = 1024;
     private Throughput myStatisticsCollector = null;
 
-    ReaderWriterBuilder(final File[] files) {
+    ReaderWriterBuilder( File[] files) {
         super();
         myFiles = files;
     }
 
-    public B executor(final ExecutorService executor) {
+    public B executor( ExecutorService executor) {
         myExecutor = executor;
         return (B) this;
     }
 
-    public B manager(final String name) {
+    public B manager( String name) {
         myManagerName = name;
         return (B) this;
     }
 
-    public B parallelism(final int parallelism) {
+    public B parallelism( int parallelism) {
         return this.parallelism(() -> parallelism);
     }
 
-    public B parallelism(final IntSupplier parallelism) {
+    public B parallelism( IntSupplier parallelism) {
         myParallelism = parallelism;
         return (B) this;
     }
 
-    public B queue(final int capacity) {
+    public B queue( int capacity) {
         myQueueCapacity = capacity;
         return (B) this;
     }
 
-    public B statistics(final Throughput collector) {
+    public B statistics( Throughput collector) {
         myStatisticsCollector = collector;
         return (B) this;
     }

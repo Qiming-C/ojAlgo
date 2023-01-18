@@ -32,16 +32,16 @@ import org.ojalgo.structure.Access1D;
  */
 final class ZeroStore<N extends Comparable<N>> extends FactoryStore<N> {
 
-    ZeroStore(final PhysicalStore.Factory<N, ?> factory, final int rowsCount, final int columnsCount) {
+    ZeroStore( PhysicalStore.Factory<N, ?> factory,  int rowsCount,  int columnsCount) {
         super(factory, rowsCount, columnsCount);
     }
 
-    ZeroStore(final PhysicalStore.Factory<N, ?> factory, final long rowsCount, final long columnsCount) {
+    ZeroStore( PhysicalStore.Factory<N, ?> factory,  long rowsCount,  long columnsCount) {
         super(factory, rowsCount, columnsCount);
     }
 
     @Override
-    public MatrixStore<N> add(final MatrixStore<N> addend) {
+    public MatrixStore<N> add( MatrixStore<N> addend) {
         return addend;
     }
 
@@ -51,67 +51,67 @@ final class ZeroStore<N extends Comparable<N>> extends FactoryStore<N> {
     }
 
     @Override
-    public double doubleValue(final long anInd) {
+    public double doubleValue( long anInd) {
         return PrimitiveMath.ZERO;
     }
 
-    public double doubleValue(final long aRow, final long aCol) {
+    @Override public double doubleValue( long aRow,  long aCol) {
         return PrimitiveMath.ZERO;
     }
 
-    public int firstInColumn(final int col) {
+    @Override public int firstInColumn( int col) {
         return this.getRowDim();
     }
 
-    public int firstInRow(final int row) {
+    @Override public int firstInRow( int row) {
         return this.getColDim();
     }
 
-    public N get(final long aRow, final long aCol) {
+    @Override public N get( long aRow,  long aCol) {
         return this.zero().get();
     }
 
     @Override
-    public int limitOfColumn(final int col) {
+    public int limitOfColumn( int col) {
         return 0;
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         return 0;
     }
 
-    public void multiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    @Override public void multiply( Access1D<N> right,  TransformableRegion<N> target) {
         target.reset();
     }
 
-    public ZeroStore<N> multiply(final double scalar) {
+    @Override public ZeroStore<N> multiply( double scalar) {
         return new ZeroStore<>(this.physical(), this.getRowDim(), this.getColDim());
     }
 
     @Override
-    public ZeroStore<N> multiply(final MatrixStore<N> right) {
+    public ZeroStore<N> multiply( MatrixStore<N> right) {
         return new ZeroStore<>(this.physical(), this.getRowDim(), (int) (right.count() / this.getColDim()));
     }
 
-    public ZeroStore<N> multiply(final N scalar) {
+    @Override public ZeroStore<N> multiply( N scalar) {
         return new ZeroStore<>(this.physical(), this.getRowDim(), this.getColDim());
     }
 
     @Override
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    public N multiplyBoth( Access1D<N> leftAndRight) {
         return this.zero().get();
     }
 
-    public ZeroStore<N> premultiply(final Access1D<N> left) {
+    @Override public ZeroStore<N> premultiply( Access1D<N> left) {
         return new ZeroStore<>(this.physical(), (int) (left.count() / this.getRowDim()), this.getColDim());
     }
 
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    @Override public void supplyTo( TransformableRegion<N> receiver) {
         receiver.reset();
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
         return this.zero();
     }
 

@@ -23,6 +23,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.array.BasicArray;
 import org.ojalgo.function.BinaryFunction;
@@ -88,20 +89,20 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
     private final Pivot myPivot = new Pivot();
     private double myThreshold = Double.NaN;
 
-    protected LDLDecomposition(final PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected LDLDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         super(factory);
     }
 
-    public N calculateDeterminant(final Access2D<?> matrix) {
+    @Override public N calculateDeterminant( Access2D<?> matrix) {
         this.decompose(this.wrap(matrix));
         return this.getDeterminant();
     }
 
-    public int countSignificant(final double threshold) {
+    @Override public int countSignificant( double threshold) {
 
         DecompositionStore<N> internal = this.getInPlace();
 
-        int significant = 0;
+        @Var int significant = 0;
         for (int ij = 0, limit = this.getMinDim(); ij < limit; ij++) {
             if (Math.abs(internal.doubleValue(ij, ij)) > threshold) {
                 significant++;
@@ -111,19 +112,19 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return significant;
     }
 
-    public boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
         return this.doDecompose(matrix, true);
     }
 
-    public boolean decomposeWithoutPivoting(final Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public boolean decomposeWithoutPivoting( Collectable<N, ? super PhysicalStore<N>> matrix) {
         return this.doDecompose(matrix, false);
     }
 
-    public MatrixStore<N> getD() {
+    @Override public MatrixStore<N> getD() {
         return this.getInPlace().diagonal();
     }
 
-    public N getDeterminant() {
+    @Override public N getDeterminant() {
 
         AggregatorFunction<N> aggregator = this.aggregator().product();
 
@@ -136,7 +137,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
     }
 
     @Override
-    public MatrixStore<N> getInverse(final PhysicalStore<N> preallocated) {
+    public MatrixStore<N> getInverse( PhysicalStore<N> preallocated) {
 
         int[] order = myPivot.getOrder();
         boolean modified = myPivot.isModified();
@@ -162,21 +163,21 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return preallocated.rows(myPivot.reverseOrder());
     }
 
-    public MatrixStore<N> getL() {
+    @Override public MatrixStore<N> getL() {
         DecompositionStore<N> tmpInPlace = this.getInPlace();
         MatrixStore<N> tmpBuilder = tmpInPlace;
         return tmpBuilder.triangular(false, true);
     }
 
-    public int[] getPivotOrder() {
+    @Override public int[] getPivotOrder() {
         return myPivot.getOrder();
     }
 
-    public int[] getReversePivotOrder() {
+    @Override public int[] getReversePivotOrder() {
         return myPivot.reverseOrder();
     }
 
-    public double getRankThreshold() {
+    @Override public double getRankThreshold() {
 
         N largest = this.getInPlace().aggregateDiagonal(Aggregator.LARGEST);
         double epsilon = this.getDimensionalEpsilon();
@@ -184,12 +185,12 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return epsilon * Math.max(MACHINE_SMALLEST, NumberDefinition.doubleValue(largest));
     }
 
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs) {
+    @Override public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs) {
         return this.getSolution(rhs, this.preallocate(this.getInPlace(), rhs));
     }
 
     @Override
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs, final PhysicalStore<N> preallocated) {
+    public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs,  PhysicalStore<N> preallocated) {
 
         int[] order = myPivot.getOrder();
 
@@ -209,7 +210,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return preallocated.rows(myPivot.reverseOrder());
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original) throws RecoverableCondition {
 
         this.decompose(this.wrap(original));
 
@@ -219,7 +220,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original,  PhysicalStore<N> preallocated) throws RecoverableCondition {
 
         this.decompose(this.wrap(original));
 
@@ -229,7 +230,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public boolean isPivoted() {
+    @Override public boolean isPivoted() {
         return myPivot.isModified();
     }
 
@@ -238,16 +239,16 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return super.isSolvable();
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D template) {
+    @Override public PhysicalStore<N> preallocate( Structure2D template) {
         long tmpCountRows = template.countRows();
         return this.allocate(tmpCountRows, tmpCountRows);
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public PhysicalStore<N> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         return this.allocate(templateRHS.countRows(), templateRHS.countColumns());
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -257,7 +258,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         throw RecoverableCondition.newEquationSystemNotSolvable();
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<N> preallocated) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -267,7 +268,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         throw RecoverableCondition.newEquationSystemNotSolvable();
     }
 
-    private boolean doDecompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix, final boolean pivoting) {
+    private boolean doDecompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix,  boolean pivoting) {
 
         this.reset();
 
@@ -292,7 +293,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
                 }
             }
 
-            double storeDiagVal = store.doubleValue(ij, ij);
+            @Var double storeDiagVal = store.doubleValue(ij, ij);
 
             if (Double.isFinite(myThreshold) && myThreshold > ZERO) {
 
@@ -336,7 +337,7 @@ abstract class LDLDecomposition<N extends Comparable<N>> extends InPlaceDecompos
         return this.isSquare() && this.isFullRank();
     }
 
-    void setThreshold(final N threshold) {
+    void setThreshold( N threshold) {
         myThreshold = NumberDefinition.doubleValue(threshold);
     }
 

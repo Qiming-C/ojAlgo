@@ -29,17 +29,17 @@ public abstract class VisitAll implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void visit(final double[] target, final DoubleConsumer visitor) {
+    public static void visit( double[] target,  DoubleConsumer visitor) {
         VisitAll.visit(target, 0, target.length, visitor);
     }
 
-    public static void visit(final double[] target, final int first, final int limit, final DoubleConsumer visitor) {
+    public static void visit( double[] target,  int first,  int limit,  DoubleConsumer visitor) {
         for (int i = first, lim = Math.min(limit, target.length); i < lim; i++) {
             visitor.accept(target[i]);
         }
     }
 
-    public static void visitAll(final double[][] target, final DoubleConsumer visitor) {
+    public static void visitAll( double[][] target,  DoubleConsumer visitor) {
         int tmpLength = target.length;
         for (int i = 0; i < tmpLength; i++) {
             int tmpInnerLength = target[i].length;
@@ -49,27 +49,27 @@ public abstract class VisitAll implements ArrayOperation {
         }
     }
 
-    public static void visitColumn(final double[][] target, final int row, final int col, final DoubleConsumer visitor) {
+    public static void visitColumn( double[][] target,  int row,  int col,  DoubleConsumer visitor) {
         for (int i = row, limit = target.length; i < limit; i++) {
             visitor.accept(target[i][col]);
         }
     }
 
-    public static void visitDiagonal(final double[][] target, final int row, final int col, final DoubleConsumer visitor) {
+    public static void visitDiagonal( double[][] target,  int row,  int col,  DoubleConsumer visitor) {
         int limit = target.length;
         for (int ij = 0; row + ij < limit && col + ij < target[row + ij].length; ij++) {
             visitor.accept(target[row + ij][col + ij]);
         }
     }
 
-    public static void visitRange(final double[][] target, final int first, final int limit, final DoubleConsumer visitor) {
+    public static void visitRange( double[][] target,  int first,  int limit,  DoubleConsumer visitor) {
         int tmpStructure = target.length;
         for (int index = first; index < limit; index++) {
             visitor.accept(target[Structure2D.row(index, tmpStructure)][Structure2D.column(index, tmpStructure)]);
         }
     }
 
-    public static void visitRow(final double[][] target, final int row, final int col, final DoubleConsumer visitor) {
+    public static void visitRow( double[][] target,  int row,  int col,  DoubleConsumer visitor) {
         double[] targetRow = target[row];
         for (int j = col, limit = targetRow.length; j < limit; j++) {
             visitor.accept(targetRow[j]);

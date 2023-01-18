@@ -43,27 +43,27 @@ import org.ojalgo.structure.Transformation2D;
  */
 public interface ElementsSupplier<N extends Comparable<N>> extends Operate2D<N, ElementsSupplier<N>>, Access2D.Collectable<N, TransformableRegion<N>> {
 
-    default ElementsSupplier<N> onAll(final UnaryFunction<N> operator) {
+    @Override default ElementsSupplier<N> onAll( UnaryFunction<N> operator) {
         return new MatrixPipeline.UnaryOperator<>(this, operator);
     }
 
-    default ElementsSupplier<N> onAny(final Transformation2D<N> operator) {
+    @Override default ElementsSupplier<N> onAny( Transformation2D<N> operator) {
         return new MatrixPipeline.Transformer<>(this, operator);
     }
 
-    default ElementsSupplier<N> onColumns(final BinaryFunction<N> operator, final Access1D<N> right) {
+    @Override default ElementsSupplier<N> onColumns( BinaryFunction<N> operator,  Access1D<N> right) {
         return new MatrixPipeline.ColumnsModifier<>(this, operator, right);
     }
 
-    default ElementsSupplier<N> onMatching(final Access2D<N> left, final BinaryFunction<N> operator) {
+    @Override default ElementsSupplier<N> onMatching( Access2D<N> left,  BinaryFunction<N> operator) {
         return new MatrixPipeline.BinaryOperatorLeft<>(left, operator, this);
     }
 
-    default ElementsSupplier<N> onMatching(final BinaryFunction<N> operator, final Access2D<N> right) {
+    @Override default ElementsSupplier<N> onMatching( BinaryFunction<N> operator,  Access2D<N> right) {
         return new MatrixPipeline.BinaryOperatorRight<>(this, operator, right);
     }
 
-    default ElementsSupplier<N> onRows(final BinaryFunction<N> operator, final Access1D<N> right) {
+    @Override default ElementsSupplier<N> onRows( BinaryFunction<N> operator,  Access1D<N> right) {
         return new MatrixPipeline.RowsModifier<>(this, operator, right);
     }
 

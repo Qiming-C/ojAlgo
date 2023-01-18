@@ -23,8 +23,8 @@ package org.ojalgo.matrix.task.iterative;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.List;
-
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.equation.Equation;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -54,32 +54,32 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         super();
     }
 
-    public double resolve(final List<Equation> equations, final PhysicalStore<Double> solution) {
+    @Override public double resolve( List<Equation> equations,  PhysicalStore<Double> solution) {
 
         int nbEquations = equations.size();
 
-        int iterations = 0;
+        @Var int iterations = 0;
         int limit = this.getIterationsLimit();
         NumberContext accuracy = this.getAccuracyContext();
 
-        double normErr = POSITIVE_INFINITY;
-        double normRHS = ONE;
+        @Var double normErr = POSITIVE_INFINITY;
+        @Var double normRHS = ONE;
 
         Primitive64Store residual = this.residual(solution);
         Primitive64Store direction = this.direction(solution);
         Primitive64Store preconditioned = this.preconditioned(solution);
         Primitive64Store vector = this.vector(solution);
 
-        double stepLength; // alpha
-        double gradientCorrectionFactor; // beta
+        @Var double stepLength; // alpha
+        @Var double gradientCorrectionFactor; // beta
 
-        double zr0 = 1;
-        double zr1;
-        double pAp0 = 0;
+        @Var double zr0 = 1;
+        @Var double zr1;
+        @Var double pAp0 = 0;
 
         for (int r = 0; r < nbEquations; r++) {
             Equation row = equations.get(r);
-            double tmpVal = row.getRHS();
+            @Var double tmpVal = row.getRHS();
             normRHS = HYPOT.invoke(normRHS, tmpVal);
             tmpVal -= row.dot(solution);
             residual.set(row.index, tmpVal);
@@ -140,7 +140,7 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         return normErr / normRHS;
     }
 
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> preallocated) throws RecoverableCondition {
 
         List<Equation> equations = IterativeSolverTask.toListOfRows(body, rhs);
 
@@ -149,7 +149,7 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         return preallocated;
     }
 
-    private Primitive64Store direction(final Structure1D structure) {
+    private Primitive64Store direction( Structure1D structure) {
         if ((myDirection == null) || (myDirection.count() != structure.count())) {
             myDirection = Primitive64Store.FACTORY.make(structure.count(), 1L);
         } else {
@@ -158,7 +158,7 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         return myDirection;
     }
 
-    private Primitive64Store preconditioned(final Structure1D structure) {
+    private Primitive64Store preconditioned( Structure1D structure) {
         if ((myPreconditioned == null) || (myPreconditioned.count() != structure.count())) {
             myPreconditioned = Primitive64Store.FACTORY.make(structure.count(), 1L);
         } else {
@@ -167,7 +167,7 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         return myPreconditioned;
     }
 
-    private Primitive64Store residual(final Structure1D structure) {
+    private Primitive64Store residual( Structure1D structure) {
         if ((myResidual == null) || (myResidual.count() != structure.count())) {
             myResidual = Primitive64Store.FACTORY.make(structure.count(), 1L);
         } else {
@@ -176,7 +176,7 @@ public final class ConjugateGradientSolver extends KrylovSubspaceSolver implemen
         return myResidual;
     }
 
-    private Primitive64Store vector(final Structure1D structure) {
+    private Primitive64Store vector( Structure1D structure) {
         if ((myVector == null) || (myVector.count() != structure.count())) {
             myVector = Primitive64Store.FACTORY.make(structure.count(), 1L);
         } else {

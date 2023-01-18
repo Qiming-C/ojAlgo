@@ -36,13 +36,13 @@ final class QueuedConsumer<T> implements AutoConsumer<T> {
         private final Consumer<T> myConsumer;
         private final QueuedConsumer<T> myParent;
 
-        Worker(final QueuedConsumer<T> parent, final Consumer<T> consumer) {
+        Worker( QueuedConsumer<T> parent,  Consumer<T> consumer) {
             super();
             myParent = parent;
             myConsumer = consumer;
         }
 
-        public void run() {
+        @Override public void run() {
 
             List<T> batchContainer = myParent.newBatchContainer();
 
@@ -74,7 +74,7 @@ final class QueuedConsumer<T> implements AutoConsumer<T> {
     private final Future<?>[] myFutures;
     private final BlockingQueue<T> myQueue;
 
-    QueuedConsumer(final ExecutorService executor, final BlockingQueue<T> queue, final Consumer<T>... consumers) {
+    QueuedConsumer( ExecutorService executor,  BlockingQueue<T> queue,  Consumer<T>... consumers) {
 
         super();
 
@@ -108,7 +108,7 @@ final class QueuedConsumer<T> implements AutoConsumer<T> {
         }
     }
 
-    public void write(final T item) {
+    @Override public void write( T item) {
         try {
             myQueue.put(item);
         } catch (InterruptedException cause) {
@@ -116,7 +116,7 @@ final class QueuedConsumer<T> implements AutoConsumer<T> {
         }
     }
 
-    int drainTo(final List<T> batchContainer) {
+    int drainTo( List<T> batchContainer) {
         return myQueue.drainTo(batchContainer, myBatchSize);
     }
 

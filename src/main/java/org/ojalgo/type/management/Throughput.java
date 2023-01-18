@@ -31,11 +31,11 @@ public final class Throughput implements ThroughputMBean {
     private double myLastTotal = 0.0;
     private final LongAdder myTotal = new LongAdder();
 
-    public void add(final long x) {
+    public void add( long x) {
         myTotal.add(x);
     }
 
-    public double getRate() {
+    @Override public double getRate() {
 
         long currentTime = System.nanoTime();
         double currentTotal = myTotal.sum();
@@ -51,7 +51,7 @@ public final class Throughput implements ThroughputMBean {
         return rate;
     }
 
-    public long getTotal() {
+    @Override public long getTotal() {
         return myTotal.sum();
     }
 

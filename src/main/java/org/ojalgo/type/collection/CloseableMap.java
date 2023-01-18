@@ -35,17 +35,17 @@ public class CloseableMap<K, V extends AutoCloseable> implements Map<K, V>, Auto
         return new CloseableMap<>(new HashMap<>());
     }
 
-    public static <K, V extends AutoCloseable> CloseableMap<K, V> newInstance(final int capacity) {
+    public static <K, V extends AutoCloseable> CloseableMap<K, V> newInstance( int capacity) {
         return new CloseableMap<>(new HashMap<>(capacity));
     }
 
-    public static <K, V extends AutoCloseable> CloseableMap<K, V> wrap(final Map<K, V> delegate) {
+    public static <K, V extends AutoCloseable> CloseableMap<K, V> wrap( Map<K, V> delegate) {
         return new CloseableMap<>(delegate);
     }
 
     private final Map<K, V> myDelegate;
 
-    CloseableMap(final Map<K, V> delegate) {
+    CloseableMap( Map<K, V> delegate) {
         super();
         myDelegate = delegate;
     }
@@ -55,7 +55,7 @@ public class CloseableMap<K, V extends AutoCloseable> implements Map<K, V>, Auto
         myDelegate.clear();
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         myDelegate.values().forEach(e -> {
             try {
                 if (e != null) {
@@ -67,25 +67,25 @@ public class CloseableMap<K, V extends AutoCloseable> implements Map<K, V>, Auto
         });
     }
 
-    public V compute(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    @Override public V compute( K key,  BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         return myDelegate.compute(key, remappingFunction);
     }
 
-    public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
+    @Override public V computeIfAbsent( K key,  Function<? super K, ? extends V> mappingFunction) {
         return myDelegate.computeIfAbsent(key, mappingFunction);
     }
 
-    public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    @Override public V computeIfPresent( K key,  BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         return myDelegate.computeIfPresent(key, remappingFunction);
     }
 
     @Override
-    public boolean containsKey(final Object key) {
+    public boolean containsKey( Object key) {
         return myDelegate.containsKey(key);
     }
 
     @Override
-    public boolean containsValue(final Object value) {
+    public boolean containsValue( Object value) {
         return myDelegate.containsValue(value);
     }
 
@@ -95,20 +95,20 @@ public class CloseableMap<K, V extends AutoCloseable> implements Map<K, V>, Auto
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals( Object o) {
         return myDelegate.equals(o);
     }
 
-    public void forEach(final BiConsumer<? super K, ? super V> action) {
+    @Override public void forEach( BiConsumer<? super K, ? super V> action) {
         myDelegate.forEach(action);
     }
 
     @Override
-    public V get(final Object key) {
+    public V get( Object key) {
         return myDelegate.get(key);
     }
 
-    public V getOrDefault(final Object key, final V defaultValue) {
+    @Override public V getOrDefault( Object key,  V defaultValue) {
         return myDelegate.getOrDefault(key, defaultValue);
     }
 
@@ -127,42 +127,42 @@ public class CloseableMap<K, V extends AutoCloseable> implements Map<K, V>, Auto
         return myDelegate.keySet();
     }
 
-    public V merge(final K key, final V value, final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    @Override public V merge( K key,  V value,  BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         return myDelegate.merge(key, value, remappingFunction);
     }
 
     @Override
-    public V put(final K key, final V value) {
+    public V put( K key,  V value) {
         return myDelegate.put(key, value);
     }
 
     @Override
-    public void putAll(final Map<? extends K, ? extends V> m) {
+    public void putAll( Map<? extends K, ? extends V> m) {
         myDelegate.putAll(m);
     }
 
-    public V putIfAbsent(final K key, final V value) {
+    @Override public V putIfAbsent( K key,  V value) {
         return myDelegate.putIfAbsent(key, value);
     }
 
     @Override
-    public V remove(final Object key) {
+    public V remove( Object key) {
         return myDelegate.remove(key);
     }
 
-    public boolean remove(final Object key, final Object value) {
+    @Override public boolean remove( Object key,  Object value) {
         return myDelegate.remove(key, value);
     }
 
-    public V replace(final K key, final V value) {
+    @Override public V replace( K key,  V value) {
         return myDelegate.replace(key, value);
     }
 
-    public boolean replace(final K key, final V oldValue, final V newValue) {
+    @Override public boolean replace( K key,  V oldValue,  V newValue) {
         return myDelegate.replace(key, oldValue, newValue);
     }
 
-    public void replaceAll(final BiFunction<? super K, ? super V, ? extends V> function) {
+    @Override public void replaceAll( BiFunction<? super K, ? super V, ? extends V> function) {
         myDelegate.replaceAll(function);
     }
 

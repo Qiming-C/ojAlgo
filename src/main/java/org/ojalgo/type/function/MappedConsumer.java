@@ -29,19 +29,19 @@ final class MappedConsumer<IN, OUT> implements AutoConsumer<IN> {
     private final Consumer<OUT> myConsumer;
     private final Function<IN, OUT> myMapper;
 
-    MappedConsumer(final Function<IN, OUT> mapper, final Consumer<OUT> consumer) {
+    MappedConsumer( Function<IN, OUT> mapper,  Consumer<OUT> consumer) {
         super();
         myMapper = mapper;
         myConsumer = consumer;
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         if (myConsumer instanceof AutoCloseable) {
             ((AutoCloseable) myConsumer).close();
         }
     }
 
-    public void write(final IN item) {
+    @Override public void write( IN item) {
         myConsumer.accept(myMapper.apply(item));
     }
 

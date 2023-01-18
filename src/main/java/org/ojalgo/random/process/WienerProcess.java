@@ -38,44 +38,44 @@ public final class WienerProcess extends SingleValueBasedProcess<Normal> impleme
     }
 
     @SuppressWarnings("unused")
-    private WienerProcess(final double initialValue) {
+    private WienerProcess( double initialValue) {
 
         super();
 
         this.setCurrentValue(initialValue);
     }
 
-    public Normal getDistribution(final double evaluationPoint) {
+    @Override public Normal getDistribution( double evaluationPoint) {
         return new Normal(this.getCurrentValue(), SQRT.invoke(evaluationPoint));
     }
 
-    public double getValue() {
+    @Override public double getValue() {
         return this.getCurrentValue();
     }
 
-    public void setValue(final double newValue) {
+    @Override public void setValue( double newValue) {
         this.setCurrentValue(newValue);
     }
 
     @Override
-    public double step(final double stepSize, final double standardGaussianInnovation) {
+    public double step( double stepSize,  double standardGaussianInnovation) {
         return this.doStep(stepSize, standardGaussianInnovation);
     }
 
     @Override
-    double doStep(final double stepSize, final double normalisedRandomIncrement) {
+    double doStep( double stepSize,  double normalisedRandomIncrement) {
         double retVal = this.getCurrentValue() + (SQRT.invoke(stepSize) * normalisedRandomIncrement);
         this.setCurrentValue(retVal);
         return retVal;
     }
 
     @Override
-    double getExpected(final double stepSize) {
+    double getExpected( double stepSize) {
         return this.getCurrentValue();
     }
 
     @Override
-    double getLowerConfidenceQuantile(final double stepSize, final double confidence) {
+    double getLowerConfidenceQuantile( double stepSize,  double confidence) {
         return this.getCurrentValue() - (SQRT.invoke(stepSize) * SQRT_TWO * ErrorFunction.erfi(confidence));
     }
 
@@ -85,17 +85,17 @@ public final class WienerProcess extends SingleValueBasedProcess<Normal> impleme
     }
 
     @Override
-    double getStandardDeviation(final double stepSize) {
+    double getStandardDeviation( double stepSize) {
         return SQRT.invoke(stepSize);
     }
 
     @Override
-    double getUpperConfidenceQuantile(final double stepSize, final double confidence) {
+    double getUpperConfidenceQuantile( double stepSize,  double confidence) {
         return this.getCurrentValue() + (SQRT.invoke(stepSize) * SQRT_TWO * ErrorFunction.erfi(confidence));
     }
 
     @Override
-    double getVariance(final double stepSize) {
+    double getVariance( double stepSize) {
         return stepSize;
     }
 

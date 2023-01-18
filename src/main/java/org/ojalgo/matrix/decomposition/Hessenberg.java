@@ -80,13 +80,13 @@ public interface Hessenberg<N extends Comparable<N>> extends MatrixDecomposition
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final Hessenberg<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  Hessenberg<N> decomposition,  NumberContext context) {
 
-        final MatrixStore<N> tmpH = decomposition.getH();
-        final MatrixStore<N> tmpQ = decomposition.getQ();
+         MatrixStore<N> tmpH = decomposition.getH();
+         MatrixStore<N> tmpQ = decomposition.getQ();
 
-        final MatrixStore<N> tmpStore1 = matrix.multiply(tmpQ);
-        final MatrixStore<N> tmpStore2 = tmpQ.multiply(tmpH);
+         MatrixStore<N> tmpStore1 = matrix.multiply(tmpQ);
+         MatrixStore<N> tmpStore2 = tmpQ.multiply(tmpH);
 
         return Access2D.equals(tmpStore1, tmpStore2, context);
     }
@@ -99,7 +99,7 @@ public interface Hessenberg<N extends Comparable<N>> extends MatrixDecomposition
 
     boolean isUpper();
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxQ = this.getQ();
         MatrixStore<N> mtrxH = this.getH();
         return mtrxQ.multiply(mtrxH).multiply(mtrxQ.transpose());

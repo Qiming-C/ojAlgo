@@ -168,7 +168,7 @@ public abstract class PrimitiveMath {
     public static final PrimitiveFunction.Unary TANH = Math::tanh;
     public static final PrimitiveFunction.Unary VALUE = arg -> arg;
 
-    public static final int getPrimeNumber(final int index) {
+    public static final int getPrimeNumber( int index) {
         return PRIME[index];
     }
 

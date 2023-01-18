@@ -41,7 +41,7 @@ public abstract class FormatContext<T> implements TypeContext<T> {
     private boolean myConfigured = false;
     private final Format myFormat;
 
-    FormatContext(final Format format) {
+    FormatContext( Format format) {
 
         super();
 
@@ -54,7 +54,7 @@ public abstract class FormatContext<T> implements TypeContext<T> {
      * @see org.ojalgo.type.context.TypeContext#format(java.lang.Object)
      */
     @Override
-    public final String format(final Object object) {
+    public final String format( Object object) {
 
         if (object != null) {
 
@@ -71,7 +71,7 @@ public abstract class FormatContext<T> implements TypeContext<T> {
                     return myFormat.format(object);
                 }
 
-            } catch (final IllegalArgumentException exception) {
+            } catch ( IllegalArgumentException exception) {
 
                 return this.handleFormatException(myFormat, object);
             }
@@ -91,13 +91,13 @@ public abstract class FormatContext<T> implements TypeContext<T> {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public final T parse(final CharSequence string) {
+    public final T parse( CharSequence string) {
 
         if (string != null) {
 
             try {
                 return (T) myFormat.parseObject(NBSP ? string.toString().replace(ASCII.NBSP, ASCII.SP) : string.toString());
-            } catch (final ParseException anException) {
+            } catch ( ParseException anException) {
                 return this.handleParseException(myFormat, string.toString());
             }
 
@@ -107,7 +107,7 @@ public abstract class FormatContext<T> implements TypeContext<T> {
         }
     }
 
-    public final <G> TypeContext<G> withFormat(final Format format) {
+    public final <G> TypeContext<G> withFormat( Format format) {
         return new GenericContext<>(this, format);
     }
 

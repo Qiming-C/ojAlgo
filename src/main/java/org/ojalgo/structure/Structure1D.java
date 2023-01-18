@@ -21,6 +21,7 @@
  */
 package org.ojalgo.structure;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,20 +40,20 @@ public interface Structure1D {
             super();
         }
 
-        public synchronized long toIndex(final T key) {
-            long retVal = myKeys.indexOf(key);
+        @Override public synchronized long toIndex( T key) {
+            @Var long retVal = myKeys.indexOf(key);
             if (retVal < 0L) {
                 retVal = this.indexForNewKey(key);
             }
             return retVal;
         }
 
-        public final T toKey(final long index) {
+        @Override public final T toKey( long index) {
             return myKeys.get(Math.toIntExact(index));
         }
 
-        final long indexForNewKey(final T newKey) {
-            final long retVal = myKeys.size();
+        final long indexForNewKey( T newKey) {
+             long retVal = myKeys.size();
             myKeys.add(newKey);
             return retVal;
         }
@@ -65,7 +66,7 @@ public interface Structure1D {
         /**
          * @param index Index
          */
-        void call(final long index);
+        void call( long index);
 
     }
 
@@ -78,7 +79,7 @@ public interface Structure1D {
          * @param key The value to increment
          * @return The next (incremented) value
          */
-        default T next(final T key) {
+        default T next( T key) {
             return this.toKey(this.toIndex(key) + 1L);
         }
 
@@ -89,7 +90,7 @@ public interface Structure1D {
          * @param key The value to decrement
          * @return The previous (decremented) value
          */
-        default T previous(final T key) {
+        default T previous( T key) {
             return this.toKey(this.toIndex(key) - 1L);
         }
 
@@ -109,13 +110,13 @@ public interface Structure1D {
 
     public final class IntIndex implements Comparable<IntIndex> {
 
-        public static IntIndex of(final int index) {
+        public static IntIndex of( int index) {
             return new IntIndex(index);
         }
 
         public final int index;
 
-        public IntIndex(final int anIndex) {
+        public IntIndex( int anIndex) {
 
             super();
 
@@ -127,19 +128,19 @@ public interface Structure1D {
             this(-1);
         }
 
-        public int compareTo(final IntIndex ref) {
+        @Override public int compareTo( IntIndex ref) {
             return Integer.compare(index, ref.index);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if ((obj == null) || !(obj instanceof IntIndex)) {
                 return false;
             }
-            final IntIndex other = (IntIndex) obj;
+             var other = (IntIndex) obj;
             if (index != other.index) {
                 return false;
             }
@@ -168,13 +169,13 @@ public interface Structure1D {
 
     public final class LongIndex implements Comparable<LongIndex> {
 
-        public static LongIndex of(final long index) {
+        public static LongIndex of( long index) {
             return new LongIndex(index);
         }
 
         public final long index;
 
-        public LongIndex(final long anIndex) {
+        public LongIndex( long anIndex) {
 
             super();
 
@@ -186,19 +187,19 @@ public interface Structure1D {
             this(-1L);
         }
 
-        public int compareTo(final LongIndex ref) {
+        @Override public int compareTo( LongIndex ref) {
             return Long.compare(index, ref.index);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if ((obj == null) || !(obj instanceof LongIndex)) {
                 return false;
             }
-            final LongIndex other = (LongIndex) obj;
+             var other = (LongIndex) obj;
             if (index != other.index) {
                 return false;
             }
@@ -231,61 +232,62 @@ public interface Structure1D {
 
     }
 
-    static int index(final long index) {
+    static int index( long index) {
         return Math.toIntExact(index);
     }
 
-    static void loopMatching(final Structure1D structureA, final Structure1D structureB, final IndexCallback callback) {
-        final long limit = Math.min(structureA.count(), structureB.count());
+    static void loopMatching( Structure1D structureA,  Structure1D structureB,  IndexCallback callback) {
+         long limit = Math.min(structureA.count(), structureB.count());
         Structure1D.loopRange(0L, limit, callback);
     }
 
-    static void loopRange(final long first, final long limit, final IndexCallback callback) {
+    static void loopRange( long first,  long limit,  IndexCallback callback) {
         for (long i = first; i < limit; i++) {
             callback.call(i);
         }
     }
 
     /**
-     * @return A very simple implementation - you better come up with something else.
+     *Returns a very simple implementation - you better come up with something else.
+ 
      */
     static <T> IndexMapper<T> mapper() {
         return new BasicMapper<>();
     }
 
-    static int[] newDecreasingRange(final int first, final int count) {
-        final int[] retVal = new int[count];
+    static int[] newDecreasingRange( int first,  int count) {
+         int[] retVal = new int[count];
         for (int i = 0; i < count; i++) {
             retVal[i] = first - i;
         }
         return retVal;
     }
 
-    static long[] newDecreasingRange(final long first, final int count) {
-        final long[] retVal = new long[count];
+    static long[] newDecreasingRange( long first,  int count) {
+         long[] retVal = new long[count];
         for (int i = 0; i < count; i++) {
             retVal[i] = first - i;
         }
         return retVal;
     }
 
-    static int[] newIncreasingRange(final int first, final int count) {
-        final int[] retVal = new int[count];
+    static int[] newIncreasingRange( int first,  int count) {
+         int[] retVal = new int[count];
         for (int i = 0; i < count; i++) {
             retVal[i] = first + i;
         }
         return retVal;
     }
 
-    static long[] newIncreasingRange(final long first, final int count) {
-        final long[] retVal = new long[count];
+    static long[] newIncreasingRange( long first,  int count) {
+         long[] retVal = new long[count];
         for (int i = 0; i < count; i++) {
             retVal[i] = first + i;
         }
         return retVal;
     }
 
-    static long[] replaceNullOrEmptyWithFull(final long[] suggested, final int fullSize) {
+    static long[] replaceNullOrEmptyWithFull( long[] suggested,  int fullSize) {
         if (suggested != null && suggested.length > 0) {
             return suggested;
         } else {
@@ -293,7 +295,7 @@ public interface Structure1D {
         }
     }
 
-    static int[] toIntIndexes(final long[] indexes) {
+    static int[] toIntIndexes( long[] indexes) {
         int[] retVal = new int[indexes.length];
         for (int i = 0; i < indexes.length; i++) {
             retVal[i] = Math.toIntExact(indexes[i]);
@@ -301,7 +303,7 @@ public interface Structure1D {
         return retVal;
     }
 
-    static long[] toLongIndexes(final int[] indexes) {
+    static long[] toLongIndexes( int[] indexes) {
         long[] retVal = new long[indexes.length];
         for (int i = 0; i < indexes.length; i++) {
             retVal[i] = indexes[i];
@@ -310,11 +312,12 @@ public interface Structure1D {
     }
 
     /**
-     * @return The total number of elements in this structure.
+     *Returns the total number of elements in this structure.
+ 
      */
     long count();
 
-    default void loopAll(final IndexCallback callback) {
+    default void loopAll( IndexCallback callback) {
         Structure1D.loopRange(0L, this.count(), callback);
     }
 

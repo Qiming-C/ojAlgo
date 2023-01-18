@@ -25,7 +25,7 @@ public abstract class IndexOf implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static int indexOf(final int[] array, final int value) {
+    public static int indexOf( int[] array,  int value) {
         for (int i = 0, limit = array.length; i < limit; i++) {
             if (array[i] == value) {
                 return i;
@@ -34,7 +34,7 @@ public abstract class IndexOf implements ArrayOperation {
         return -1;
     }
 
-    public static int indexOf(final long[] array, final long value) {
+    public static int indexOf( long[] array,  long value) {
         for (int i = 0, limit = array.length; i < limit; i++) {
             if (array[i] == value) {
                 return i;

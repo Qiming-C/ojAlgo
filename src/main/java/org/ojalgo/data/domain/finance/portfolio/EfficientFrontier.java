@@ -41,21 +41,21 @@ public final class EfficientFrontier extends OptimisedPortfolio {
 
     private final ExpressionsBasedModel myOptimisationModel;
 
-    public EfficientFrontier(final FinancePortfolio.Context portfolioContext) {
+    public EfficientFrontier( FinancePortfolio.Context portfolioContext) {
 
         super(portfolioContext);
 
         myOptimisationModel = this.makeModel(CONSTRAINTS);
     }
 
-    public EfficientFrontier(final MarketEquilibrium marketEquilibrium, final MatrixR064 expectedExcessReturns) {
+    public EfficientFrontier( MarketEquilibrium marketEquilibrium,  MatrixR064 expectedExcessReturns) {
 
         super(marketEquilibrium, expectedExcessReturns);
 
         myOptimisationModel = this.makeModel(CONSTRAINTS);
     }
 
-    public EfficientFrontier(final MatrixR064 covarianceMatrix, final MatrixR064 expectedExcessReturns) {
+    public EfficientFrontier( MatrixR064 covarianceMatrix,  MatrixR064 expectedExcessReturns) {
 
         super(covarianceMatrix, expectedExcessReturns);
 
@@ -67,7 +67,7 @@ public final class EfficientFrontier extends OptimisedPortfolio {
 
         myOptimisationModel.getExpression(VARIANCE).weight(this.getRiskAversion().doubleValue() / 2.0);
 
-        final Result tmpResult = myOptimisationModel.minimise();
+         Result tmpResult = myOptimisationModel.minimise();
 
         return this.handle(tmpResult);
     }
@@ -77,7 +77,7 @@ public final class EfficientFrontier extends OptimisedPortfolio {
 
         super.reset();
 
-        final boolean tmpAllowed = this.isShortingAllowed();
+         boolean tmpAllowed = this.isShortingAllowed();
         myOptimisationModel.getVariables().forEach(v -> v.lower(tmpAllowed ? null : BigMath.ZERO));
 
     }

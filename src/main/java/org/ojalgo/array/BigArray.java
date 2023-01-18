@@ -30,19 +30,19 @@ import java.math.BigDecimal;
 @Deprecated
 public class BigArray extends ArrayR256 {
 
-    public static BigArray make(final int size) {
+    public static BigArray make( int size) {
         return new BigArray(size);
     }
 
-    public static BigArray wrap(final BigDecimal... data) {
+    public static BigArray wrap( BigDecimal... data) {
         return new BigArray(data);
     }
 
-    BigArray(final BigDecimal[] data) {
+    BigArray( BigDecimal[] data) {
         super(data);
     }
 
-    BigArray(final int size) {
+    BigArray( int size) {
         super(size);
     }
 

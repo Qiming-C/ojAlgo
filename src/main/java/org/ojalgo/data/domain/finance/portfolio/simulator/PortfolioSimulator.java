@@ -40,7 +40,7 @@ public class PortfolioSimulator {
 
     private Process1D<GeometricBrownianMotion> myProcess;
 
-    public PortfolioSimulator(final Access2D<?> correlations, final List<GeometricBrownianMotion> assetProcesses) {
+    public PortfolioSimulator( Access2D<?> correlations,  List<GeometricBrownianMotion> assetProcesses) {
 
         super();
 
@@ -60,17 +60,17 @@ public class PortfolioSimulator {
         super();
     }
 
-    public RandomProcess.SimulationResults simulate(final int aNumberOfRealisations, final int aNumberOfSteps, final double aStepSize) {
+    public RandomProcess.SimulationResults simulate( int aNumberOfRealisations,  int aNumberOfSteps,  double aStepSize) {
         return this.simulate(aNumberOfRealisations, aNumberOfSteps, aStepSize, null);
     }
 
-    public RandomProcess.SimulationResults simulate(final int aNumberOfRealisations, final int aNumberOfSteps, final double aStepSize,
-            final int rebalancingInterval) {
+    public RandomProcess.SimulationResults simulate( int aNumberOfRealisations,  int aNumberOfSteps,  double aStepSize,
+             int rebalancingInterval) {
         return this.simulate(aNumberOfRealisations, aNumberOfSteps, aStepSize, Integer.valueOf(rebalancingInterval));
     }
 
-    RandomProcess.SimulationResults simulate(final int aNumberOfRealisations, final int aNumberOfSteps, final double aStepSize,
-            final Integer rebalancingInterval) {
+    RandomProcess.SimulationResults simulate( int aNumberOfRealisations,  int aNumberOfSteps,  double aStepSize,
+             Integer rebalancingInterval) {
 
         int tmpProcDim = myProcess.size();
 

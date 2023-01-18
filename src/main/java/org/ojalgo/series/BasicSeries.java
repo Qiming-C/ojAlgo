@@ -21,6 +21,7 @@
  */
 package org.ojalgo.series;
 
+import com.google.errorprone.annotations.Var;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,7 +36,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.DenseArray;
 import org.ojalgo.function.BinaryFunction;
@@ -79,7 +79,8 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         void complete();
 
         /**
-         * @return The next, after the {@link #lastKey()}, key.
+         *Returns the next, after the {@link #lastKey()}, key.
+ 
          */
         default K nextKey() {
             return this.step(this.lastKey());
@@ -88,7 +89,7 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         /**
          * Will step (increment) the key given to the next in the natural sequence.
          */
-        K step(final K key);
+        K step( K key);
 
     }
 
@@ -98,32 +99,32 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         private CalendarDate.Resolution myResolution = null;
         private final TimeIndex<K> myTimeIndex;
 
-        TimeSeriesBuilder(final TimeIndex<K> timeIndex) {
+        TimeSeriesBuilder( TimeIndex<K> timeIndex) {
             super();
             myTimeIndex = timeIndex;
         }
 
-        public <N extends Comparable<N>> BasicSeries<K, N> build(final DenseArray.Factory<N> denseArrayFactory) {
+        public <N extends Comparable<N>> BasicSeries<K, N> build( DenseArray.Factory<N> denseArrayFactory) {
             ProgrammingError.throwIfNull(denseArrayFactory);
             return this.doBuild(denseArrayFactory, null);
         }
 
-        public <N extends Comparable<N>> BasicSeries<K, N> build(final DenseArray.Factory<N> denseArrayFactory, final BinaryFunction<N> accumularor) {
+        public <N extends Comparable<N>> BasicSeries<K, N> build( DenseArray.Factory<N> denseArrayFactory,  BinaryFunction<N> accumularor) {
             ProgrammingError.throwIfNull(denseArrayFactory, accumularor);
             return this.doBuild(denseArrayFactory, accumularor);
         }
 
-        public TimeSeriesBuilder<K> reference(final K reference) {
+        public TimeSeriesBuilder<K> reference( K reference) {
             myReference = reference;
             return this;
         }
 
-        public TimeSeriesBuilder<K> resolution(final CalendarDate.Resolution resolution) {
+        public TimeSeriesBuilder<K> resolution( CalendarDate.Resolution resolution) {
             myResolution = resolution;
             return this;
         }
 
-        private <N extends Comparable<N>> BasicSeries<K, N> doBuild(final DenseArray.Factory<N> arrayFactory, final BinaryFunction<N> accumularor) {
+        private <N extends Comparable<N>> BasicSeries<K, N> doBuild( DenseArray.Factory<N> arrayFactory,  BinaryFunction<N> accumularor) {
             if (myReference != null) {
                 if (myResolution != null) {
                     return new MappedIndexSeries<>(arrayFactory, myTimeIndex.from(myReference, myResolution), accumularor);
@@ -149,13 +150,13 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
     BasicSeries.TimeSeriesBuilder<OffsetDateTime> OFFSET_DATE_TIME = new BasicSeries.TimeSeriesBuilder<>(TimeIndex.OFFSET_DATE_TIME);
     BasicSeries.TimeSeriesBuilder<ZonedDateTime> ZONED_DATE_TIME = new BasicSeries.TimeSeriesBuilder<>(TimeIndex.ZONED_DATE_TIME);
 
-    static <K extends Comparable<? super K>> CoordinatedSet<K> coordinate(final List<? extends BasicSeries<K, ?>> uncoordinated) {
+    static <K extends Comparable<? super K>> CoordinatedSet<K> coordinate( List<? extends BasicSeries<K, ?>> uncoordinated) {
         return CoordinatedSet.from(uncoordinated);
     }
 
-    static <K extends Comparable<? super K>> K findEarliestFirstKey(final Collection<? extends BasicSeries<K, ?>> collection) {
+    static <K extends Comparable<? super K>> K findEarliestFirstKey( Collection<? extends BasicSeries<K, ?>> collection) {
 
-        K retVal = null, tmpVal = null;
+        @Var K retVal = null, tmpVal = null;
 
         for (BasicSeries<K, ?> individual : collection) {
 
@@ -169,9 +170,9 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return retVal;
     }
 
-    static <K extends Comparable<? super K>> K findEarliestLastKey(final Collection<? extends BasicSeries<K, ?>> collection) {
+    static <K extends Comparable<? super K>> K findEarliestLastKey( Collection<? extends BasicSeries<K, ?>> collection) {
 
-        K retVal = null, tmpVal = null;
+        @Var K retVal = null, tmpVal = null;
 
         for (BasicSeries<K, ?> individual : collection) {
 
@@ -185,9 +186,9 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return retVal;
     }
 
-    static <K extends Comparable<? super K>> K findLatestFirstKey(final Collection<? extends BasicSeries<K, ?>> collection) {
+    static <K extends Comparable<? super K>> K findLatestFirstKey( Collection<? extends BasicSeries<K, ?>> collection) {
 
-        K retVal = null, tmpVal = null;
+        @Var K retVal = null, tmpVal = null;
 
         for (BasicSeries<K, ?> individual : collection) {
 
@@ -201,9 +202,9 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return retVal;
     }
 
-    static <K extends Comparable<? super K>> K findLatestLastKey(final Collection<? extends BasicSeries<K, ?>> collection) {
+    static <K extends Comparable<? super K>> K findLatestLastKey( Collection<? extends BasicSeries<K, ?>> collection) {
 
-        K retVal = null, tmpVal = null;
+        @Var K retVal = null, tmpVal = null;
 
         for (BasicSeries<K, ?> individual : collection) {
 
@@ -217,20 +218,20 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return retVal;
     }
 
-    static BasicSeries<Double, Double> make(final DenseArray.Factory<Double> arrayFactory) {
+    static BasicSeries<Double, Double> make( DenseArray.Factory<Double> arrayFactory) {
         return new MappedIndexSeries<>(arrayFactory, MappedIndexSeries.MAPPER, null);
     }
 
-    static BasicSeries<Double, Double> make(final DenseArray.Factory<Double> arrayFactory, final BinaryFunction<Double> accumulator) {
+    static BasicSeries<Double, Double> make( DenseArray.Factory<Double> arrayFactory,  BinaryFunction<Double> accumulator) {
         return new MappedIndexSeries<>(arrayFactory, MappedIndexSeries.MAPPER, accumulator);
     }
 
-    static <N extends Comparable<N>> BasicSeries<N, N> make(final DenseArray.Factory<N> arrayFactory, final Structure1D.IndexMapper<N> indexMapper) {
+    static <N extends Comparable<N>> BasicSeries<N, N> make( DenseArray.Factory<N> arrayFactory,  Structure1D.IndexMapper<N> indexMapper) {
         return new MappedIndexSeries<>(arrayFactory, indexMapper, null);
     }
 
-    static <N extends Comparable<N>> BasicSeries<N, N> make(final DenseArray.Factory<N> arrayFactory, final Structure1D.IndexMapper<N> indexMapper,
-            final BinaryFunction<N> accumulator) {
+    static <N extends Comparable<N>> BasicSeries<N, N> make( DenseArray.Factory<N> arrayFactory,  Structure1D.IndexMapper<N> indexMapper,
+             BinaryFunction<N> accumulator) {
         return new MappedIndexSeries<>(arrayFactory, indexMapper, accumulator);
     }
 
@@ -238,7 +239,7 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
 
         double[] retVal = new double[this.size()];
 
-        int i = 0;
+        @Var int i = 0;
         for (V tmpValue : this.values()) {
             retVal[i] = NumberDefinition.doubleValue(tmpValue);
             i++;
@@ -247,7 +248,7 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return DataSeries.wrap(retVal);
     }
 
-    default BasicSeries<K, V> colour(final ColourData colour) {
+    default BasicSeries<K, V> colour( ColourData colour) {
         this.setColour(colour);
         return this;
     }
@@ -255,12 +256,12 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
     /**
      * Will fill in missing values, inbetween the first and last keys.
      */
-    default void complete(final UnaryOperator<K> keyIncrementor) {
+    default void complete( UnaryOperator<K> keyIncrementor) {
 
-        K tmpKey = this.firstKey();
-        V tmpVal = null;
+        @Var K tmpKey = this.firstKey();
+        @Var V tmpVal = null;
 
-        V patchVal = this.firstValue();
+        @Var V patchVal = this.firstValue();
 
         K lastKey = this.lastKey();
         while (tmpKey.compareTo(lastKey) <= 0) {
@@ -277,7 +278,7 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         }
     }
 
-    default double doubleValue(final K key) {
+    default double doubleValue( K key) {
 
         if (key == null) {
             return Double.NaN;
@@ -298,7 +299,7 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
 
     V get(K key);
 
-    default V get(final Object key) {
+    @Override default V get( Object key) {
         return this.get((K) key);
     }
 
@@ -310,12 +311,12 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         return this.get(this.lastKey());
     }
 
-    default BasicSeries<K, V> name(final String name) {
+    default BasicSeries<K, V> name( String name) {
         this.setName(name);
         return this;
     }
 
-    default double put(final EntryPair.KeyedPrimitive<K> entry) {
+    default double put( EntryPair.KeyedPrimitive<K> entry) {
         return this.put(entry.getKey(), entry.doubleValue());
     }
 
@@ -324,9 +325,9 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
      *
      * @see #put(Comparable, Number)
      */
-    default double put(final K key, final double value) {
+    default double put( K key,  double value) {
         Double tmpValue = Double.valueOf(value);
-        V newValue = (V) tmpValue;
+        var newValue = (V) tmpValue;
         V oldValue = this.put(key, newValue);
         if (oldValue != null) {
             return NumberDefinition.doubleValue(oldValue);
@@ -335,13 +336,13 @@ public interface BasicSeries<K extends Comparable<? super K>, V extends Comparab
         }
     }
 
-    default void putAll(final Collection<? extends EntryPair<? extends K, ? extends V>> data) {
+    default void putAll( Collection<? extends EntryPair<? extends K, ? extends V>> data) {
         for (EntryPair<? extends K, ? extends V> entry : data) {
             this.put(entry.getKey(), entry.getValue());
         }
     }
 
-    default <K2 extends Comparable<? super K2>> void resample(final Function<K, K2> keyTranslator, final BasicSeries<K2, V> destination) {
+    default <K2 extends Comparable<? super K2>> void resample( Function<K, K2> keyTranslator,  BasicSeries<K2, V> destination) {
 
         destination.setColour(this.getColour());
         destination.setName(this.getName());

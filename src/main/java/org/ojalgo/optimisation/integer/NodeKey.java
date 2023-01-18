@@ -23,12 +23,12 @@ package org.ojalgo.optimisation.integer;
 
 import static org.ojalgo.function.constant.PrimitiveMath.NaN;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.ojalgo.array.operation.COPY;
 import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.optimisation.ExpressionsBasedModel;
@@ -42,7 +42,7 @@ public final class NodeKey implements Comparable<NodeKey> {
 
         private final int myArrayLength;
 
-        IntArrayPool(final int arrayLength) {
+        IntArrayPool( int arrayLength) {
             super();
             myArrayLength = arrayLength;
         }
@@ -53,18 +53,18 @@ public final class NodeKey implements Comparable<NodeKey> {
         }
 
         @Override
-        protected void reset(final int[] object) {
+        protected void reset( int[] object) {
             // No need to do anything. All values explicitly set when reused.
         }
 
     }
 
-    public static final Comparator<NodeKey> EARLIEST_SEQUENCE = Comparator.comparingLong((final NodeKey nk) -> nk.sequence).reversed();
-    public static final Comparator<NodeKey> LARGEST_DISPLACEMENT = Comparator.comparingDouble((final NodeKey nk) -> nk.displacement);
-    public static final Comparator<NodeKey> LATEST_SEQUENCE = Comparator.comparingLong((final NodeKey nk) -> nk.sequence);
-    public static final Comparator<NodeKey> MAX_OBJECTIVE = Comparator.comparingDouble((final NodeKey nk) -> nk.objective);
-    public static final Comparator<NodeKey> MIN_OBJECTIVE = Comparator.comparingDouble((final NodeKey nk) -> nk.objective).reversed();
-    public static final Comparator<NodeKey> SMALLEST_DISPLACEMENT = Comparator.comparingDouble((final NodeKey nk) -> nk.displacement).reversed();
+    public static final Comparator<NodeKey> EARLIEST_SEQUENCE = Comparator.comparingLong(( NodeKey nk) -> nk.sequence).reversed();
+    public static final Comparator<NodeKey> LARGEST_DISPLACEMENT = Comparator.comparingDouble(( NodeKey nk) -> nk.displacement);
+    public static final Comparator<NodeKey> LATEST_SEQUENCE = Comparator.comparingLong(( NodeKey nk) -> nk.sequence);
+    public static final Comparator<NodeKey> MAX_OBJECTIVE = Comparator.comparingDouble(( NodeKey nk) -> nk.objective);
+    public static final Comparator<NodeKey> MIN_OBJECTIVE = Comparator.comparingDouble(( NodeKey nk) -> nk.objective).reversed();
+    public static final Comparator<NodeKey> SMALLEST_DISPLACEMENT = Comparator.comparingDouble(( NodeKey nk) -> nk.displacement).reversed();
 
     /**
      * Used for one thing only - to validate (log problems with) node solver results. Does not effect the
@@ -100,8 +100,8 @@ public final class NodeKey implements Comparable<NodeKey> {
     private final boolean mySignChanged;
     private final int[] myUpperBounds;
 
-    private NodeKey(final int[] lowerBounds, final int[] upperBounds, final long parentSequenceNumber, final int integerIndexBranchedOn,
-            final double branchVariableDisplacement, final double parentObjectiveFunctionValue, final boolean signChanged, final IntArrayPool pool) {
+    private NodeKey( int[] lowerBounds,  int[] upperBounds,  long parentSequenceNumber,  int integerIndexBranchedOn,
+             double branchVariableDisplacement,  double parentObjectiveFunctionValue,  boolean signChanged,  IntArrayPool pool) {
 
         super();
 
@@ -120,7 +120,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         myIntArrayPool = pool;
     }
 
-    NodeKey(final ExpressionsBasedModel integerModel) {
+    NodeKey( ExpressionsBasedModel integerModel) {
 
         super();
 
@@ -160,19 +160,19 @@ public final class NodeKey implements Comparable<NodeKey> {
         mySignChanged = false;
     }
 
-    public int compareTo(final NodeKey ref) {
+    @Override public int compareTo( NodeKey ref) {
         return Long.compare(sequence, ref.sequence);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof NodeKey)) {
             return false;
         }
-        NodeKey other = (NodeKey) obj;
+        var other = (NodeKey) obj;
         if (sequence != other.sequence) {
             return false;
         }
@@ -181,8 +181,8 @@ public final class NodeKey implements Comparable<NodeKey> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + (int) (sequence ^ sequence >>> 32);
         return result;
     }
@@ -190,7 +190,7 @@ public final class NodeKey implements Comparable<NodeKey> {
     @Override
     public String toString() {
 
-        StringBuilder retVal = new StringBuilder();
+        var retVal = new StringBuilder();
 
         retVal.append(sequence);
         retVal.append(' ');
@@ -219,7 +219,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         return retVal.append(']').toString();
     }
 
-    private void append(final StringBuilder builder, final int idx) {
+    private void append( StringBuilder builder,  int idx) {
         builder.append(idx);
         builder.append('=');
         builder.append(myLowerBounds[idx]);
@@ -227,7 +227,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         builder.append(myUpperBounds[idx]);
     }
 
-    private double feasible(final int idx, final double value, final boolean validate) {
+    private double feasible( int idx,  double value,  boolean validate) {
 
         double feasibilityAdjusted = Math.min(Math.max(myLowerBounds[idx], value), myUpperBounds[idx]);
 
@@ -240,7 +240,7 @@ public final class NodeKey implements Comparable<NodeKey> {
 
     long calculateTreeSize() {
 
-        long retVal = 1L;
+        @Var long retVal = 1L;
 
         for (int i = 0, limit = myLowerBounds.length; i < limit; i++) {
             retVal *= 1L + (myUpperBounds[i] - myLowerBounds[i]);
@@ -257,12 +257,12 @@ public final class NodeKey implements Comparable<NodeKey> {
         return COPY.invoke(myUpperBounds, myIntArrayPool.borrow());
     }
 
-    NodeKey createLowerBranch(final int branchIntegerIndex, final double value, final double objVal) {
+    NodeKey createLowerBranch( int branchIntegerIndex,  double value,  double objVal) {
 
         int[] tmpLBs = this.copyLowerBounds();
         int[] tmpUBs = this.copyUpperBounds();
 
-        int floorValue = (int) Math.floor(this.feasible(branchIntegerIndex, value, false));
+        var floorValue = (int) Math.floor(this.feasible(branchIntegerIndex, value, false));
 
         int oldVal = tmpUBs[branchIntegerIndex];
 
@@ -279,12 +279,12 @@ public final class NodeKey implements Comparable<NodeKey> {
         return new NodeKey(tmpLBs, tmpUBs, sequence, branchIntegerIndex, value - floorValue, objVal, changed, myIntArrayPool);
     }
 
-    NodeKey createUpperBranch(final int branchIntegerIndex, final double value, final double objVal) {
+    NodeKey createUpperBranch( int branchIntegerIndex,  double value,  double objVal) {
 
         int[] tmpLBs = this.copyLowerBounds();
         int[] tmpUBs = this.copyUpperBounds();
 
-        int ceilValue = (int) Math.ceil(this.feasible(branchIntegerIndex, value, false));
+        var ceilValue = (int) Math.ceil(this.feasible(branchIntegerIndex, value, false));
 
         int oldVal = tmpLBs[branchIntegerIndex];
 
@@ -306,7 +306,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         myIntArrayPool.giveBack(myUpperBounds);
     }
 
-    void enforceBounds(final ExpressionsBasedModel model, final int idx, final ModelStrategy strategy) {
+    void enforceBounds( ExpressionsBasedModel model,  int idx,  ModelStrategy strategy) {
 
         BigDecimal lowerBound = this.getLowerBound(idx);
         BigDecimal upperBound = this.getUpperBound(idx);
@@ -322,7 +322,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         }
     }
 
-    void enforceBounds(final NodeSolver nodeSolver, final ModelStrategy strategy) {
+    void enforceBounds( NodeSolver nodeSolver,  ModelStrategy strategy) {
 
         BigDecimal lowerBound = this.getLowerBound(index);
         BigDecimal upperBound = this.getUpperBound(index);
@@ -344,14 +344,14 @@ public final class NodeKey implements Comparable<NodeKey> {
         }
     }
 
-    boolean equals(final int[] lowerBounds, final int[] upperBounds) {
+    boolean equals( int[] lowerBounds,  int[] upperBounds) {
         if (!Arrays.equals(myLowerBounds, lowerBounds) || !Arrays.equals(myUpperBounds, upperBounds)) {
             return false;
         }
         return true;
     }
 
-    BigDecimal getLowerBound(final int idx) {
+    BigDecimal getLowerBound( int idx) {
         int tmpLower = myLowerBounds[idx];
         if (tmpLower != Integer.MIN_VALUE) {
             return new BigDecimal(tmpLower);
@@ -359,14 +359,14 @@ public final class NodeKey implements Comparable<NodeKey> {
         return null;
     }
 
-    double getMinimumDisplacement(final int idx, final double value) {
+    double getMinimumDisplacement( int idx,  double value) {
 
         double feasibleValue = this.feasible(idx, value, true);
 
         return Math.abs(feasibleValue - Math.rint(feasibleValue));
     }
 
-    BigDecimal getUpperBound(final int idx) {
+    BigDecimal getUpperBound( int idx) {
         int tmpUpper = myUpperBounds[idx];
         if (tmpUpper != Integer.MAX_VALUE) {
             return new BigDecimal(tmpUpper);
@@ -378,7 +378,7 @@ public final class NodeKey implements Comparable<NodeKey> {
         return mySignChanged;
     }
 
-    void setNodeState(final ExpressionsBasedModel model, final ModelStrategy strategy) {
+    void setNodeState( ExpressionsBasedModel model,  ModelStrategy strategy) {
         for (int i = 0; i < strategy.countIntegerVariables(); i++) {
             this.enforceBounds(model, i, strategy);
         }

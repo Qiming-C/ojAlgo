@@ -1,10 +1,10 @@
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.netio.ResourceLocator.KeyedValues;
 
@@ -26,7 +26,7 @@ final class ResourceSpecification {
         super();
     }
 
-    ResourceSpecification(final URI uri) {
+    ResourceSpecification( URI uri) {
 
         super();
 
@@ -37,7 +37,7 @@ final class ResourceSpecification {
         myQuery.parse(uri.getQuery());
     }
 
-    ResourceSpecification(final URL uri) {
+    ResourceSpecification( URL uri) {
 
         super();
 
@@ -49,14 +49,14 @@ final class ResourceSpecification {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ResourceSpecification)) {
             return false;
         }
-        ResourceSpecification other = (ResourceSpecification) obj;
+        var other = (ResourceSpecification) obj;
         if (myFragment == null) {
             if (other.myFragment != null) {
                 return false;
@@ -93,8 +93,8 @@ final class ResourceSpecification {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + ((myFragment == null) ? 0 : myFragment.hashCode());
         result = prime * result + ((myHost == null) ? 0 : myHost.hashCode());
         result = prime * result + ((myPath == null) ? 0 : myPath.hashCode());
@@ -116,11 +116,11 @@ final class ResourceSpecification {
         }
     }
 
-    String getQueryValue(final String key) {
+    String getQueryValue( String key) {
         return myQuery.get(key);
     }
 
-    String putQueryEntry(final String key, final String value) {
+    String putQueryEntry( String key,  String value) {
         ProgrammingError.throwIfNull(key);
         if (value != null) {
             return myQuery.put(key, value);
@@ -129,21 +129,21 @@ final class ResourceSpecification {
         }
     }
 
-    String removeQueryEntry(final String key) {
+    String removeQueryEntry( String key) {
         return myQuery.remove(key);
     }
 
-    ResourceSpecification setFragment(final String fragment) {
+    ResourceSpecification setFragment( String fragment) {
         myFragment = fragment;
         return this;
     }
 
-    ResourceSpecification setHost(final String host) {
+    ResourceSpecification setHost( String host) {
         myHost = host;
         return this;
     }
 
-    ResourceSpecification setPath(final String path) {
+    ResourceSpecification setPath( String path) {
         ProgrammingError.throwIfNull(path);
         myPath = path;
         return this;
@@ -152,12 +152,12 @@ final class ResourceSpecification {
     /**
      * The default (null) value is -1.
      */
-    ResourceSpecification setPort(final int port) {
+    ResourceSpecification setPort( int port) {
         myPort = port;
         return this;
     }
 
-    ResourceSpecification setQuery(final String query) {
+    ResourceSpecification setQuery( String query) {
         myQuery.parse(query);
         return this;
     }
@@ -165,7 +165,7 @@ final class ResourceSpecification {
     /**
      * Protocol, the default value is "https"
      */
-    ResourceSpecification setScheme(final String scheme) {
+    ResourceSpecification setScheme( String scheme) {
         myScheme = scheme;
         return this;
     }

@@ -29,10 +29,11 @@ import org.ojalgo.scalar.PrimitiveScalar;
 public interface NormedVectorSpace<T, N extends Comparable<N>> extends VectorSpace<T, N> {
 
     /**
-     * @param comparedTo What to compare with
-     * @return true if this is small compared to the magnitude of the input reference value.
+     *Returns true if this is small compared to the magnitude of the input reference value.
+ @param comparedTo What to compare with
+     * 
      */
-    default boolean isSmall(final double comparedTo) {
+    default boolean isSmall( double comparedTo) {
         return PrimitiveScalar.isSmall(comparedTo, this.norm());
     }
 

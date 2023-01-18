@@ -21,8 +21,8 @@
  */
 package org.ojalgo.type.context;
 
+import com.google.errorprone.annotations.Var;
 import java.text.Format;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.type.format.StringFormat;
 
@@ -44,34 +44,27 @@ public final class StringContext extends FormatContext<String> {
         myLength = 0;
     }
 
-    public StringContext(final Format format, final int length) {
+    public StringContext( Format format,  int length) {
 
         super(format);
 
         myLength = length;
     }
 
-    public StringContext(final int length) {
+    public StringContext( int length) {
 
         super(DEFAULT_FORMAT);
 
         myLength = length;
     }
 
-    private StringContext(final Format format) {
-
-        super(format);
-
-        myLength = 0;
-
-        ProgrammingError.throwForIllegalInvocation();
-    }
+    
 
     @Override
-    public String enforce(final String object) {
+    public String enforce( String object) {
 
-        String retVal = object.trim();
-        final int tmpLength = retVal.length();
+        @Var String retVal = object.trim();
+         int tmpLength = retVal.length();
 
         if ((myLength > 1) && (tmpLength > myLength)) {
             retVal = retVal.substring(0, myLength - 1).trim() + "…";
@@ -81,17 +74,17 @@ public final class StringContext extends FormatContext<String> {
     }
 
     @Override
-    protected void configureFormat(final Format format, final Object object) {
+    protected void configureFormat( Format format,  Object object) {
 
     }
 
     @Override
-    protected String handleFormatException(final Format format, final Object object) {
+    protected String handleFormatException( Format format,  Object object) {
         return "";
     }
 
     @Override
-    protected String handleParseException(final Format format, final String string) {
+    protected String handleParseException( Format format,  String string) {
         return "";
     }
 

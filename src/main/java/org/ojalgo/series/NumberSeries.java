@@ -36,11 +36,11 @@ public class NumberSeries<N extends Comparable<N>> extends TreeSeries<N, N, Numb
         super(new TreeMap<>());
     }
 
-    public NumberSeries(final Map<? extends N, ? extends N> map) {
+    public NumberSeries( Map<? extends N, ? extends N> map) {
         super(new TreeMap<>(map));
     }
 
-    public NumberSeries(final SortedMap<N, ? extends N> sortedMap) {
+    public NumberSeries( SortedMap<N, ? extends N> sortedMap) {
         super(new TreeMap<>(sortedMap));
     }
 
@@ -52,16 +52,16 @@ public class NumberSeries<N extends Comparable<N>> extends TreeSeries<N, N, Numb
         return Access1D.wrap(new ArrayList<>(this.values()));
     }
 
-    public double doubleValue(final N key) {
+    @Override public double doubleValue( N key) {
         return NumberDefinition.doubleValue(this.get(key));
     }
 
     @Override
-    public N get(final N key) {
+    public N get( N key) {
         return this.get((Object) key);
     }
 
-    public BasicSeries<N, N> resample(final UnaryOperator<N> keyTranslator) {
+    @Override public BasicSeries<N, N> resample( UnaryOperator<N> keyTranslator) {
         NumberSeries<N> retVal = new NumberSeries<>();
         this.resample(keyTranslator, retVal);
         return retVal;

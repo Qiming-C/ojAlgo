@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type.format;
 
+import com.google.errorprone.annotations.Var;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.function.LongFunction;
@@ -33,14 +34,14 @@ public enum NumberStyle {
 
         private static final String PADDING = "00000000000000000000";
 
-        static int numberOfDigits(final long number) {
+        static int numberOfDigits( long number) {
 
             if (number == 0) {
                 return 1;
             }
 
-            long nmbr = number;
-            int count = 0;
+            @Var long nmbr = number;
+            @Var int count = 0;
             while (nmbr != 0) {
                 nmbr /= 10;
                 count++;
@@ -48,20 +49,20 @@ public enum NumberStyle {
             return count;
         }
 
-        static String toStringWithFixedNumberOfDigits(final long value, final int numberOfDigits) {
-            String retVal = Long.toString(value);
+        static String toStringWithFixedNumberOfDigits( long value,  int numberOfDigits) {
+            @Var String retVal = Long.toString(value);
             retVal = PADDING + retVal;
             return retVal.substring(retVal.length() - numberOfDigits);
         }
 
         private final int myMaxNumberOfDigits;
 
-        IntegerToUniformString(final long rangeSize) {
+        IntegerToUniformString( long rangeSize) {
             super();
             myMaxNumberOfDigits = IntegerToUniformString.numberOfDigits(rangeSize - 1);
         }
 
-        public String toString(final long value) {
+        public String toString( long value) {
             return IntegerToUniformString.toStringWithFixedNumberOfDigits(value, myMaxNumberOfDigits);
         }
 
@@ -74,8 +75,8 @@ public enum NumberStyle {
      * @param rangeSize The max number of integers
      * @return An integer-to-string function
      */
-    public static LongFunction<String> newUniformFormatter(final long rangeSize) {
-        IntegerToUniformString formatter = new IntegerToUniformString(rangeSize);
+    public static LongFunction<String> newUniformFormatter( long rangeSize) {
+        var formatter = new IntegerToUniformString(rangeSize);
         return formatter::toString;
     }
 
@@ -83,7 +84,7 @@ public enum NumberStyle {
      * Creates String:s like "0067" and "0004" rather than "67" and "4" given an integer range (max number of
      * integers).
      */
-    public static String toUniformString(final long value, final long rangeSize) {
+    public static String toUniformString( long value,  long rangeSize) {
 
         int maxNumberOfDigits = IntegerToUniformString.numberOfDigits(rangeSize - 1);
 
@@ -94,7 +95,7 @@ public enum NumberStyle {
         return this.getFormat(Locale.getDefault());
     }
 
-    public NumberFormat getFormat(final Locale locale) {
+    public NumberFormat getFormat( Locale locale) {
 
         switch (this) {
 

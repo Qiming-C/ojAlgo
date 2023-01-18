@@ -45,7 +45,7 @@ public interface RandomProcess<D extends Distribution> {
          * @param initialValue Initial value
          * @param results (Random values) scenarios/realisations/series in rows, and sample sets in columns.
          */
-        public SimulationResults(final double initialValue, final Array2D<Double> results) {
+        public SimulationResults( double initialValue,  Array2D<Double> results) {
 
             super();
 
@@ -65,7 +65,7 @@ public interface RandomProcess<D extends Distribution> {
             return myInitialValue;
         }
 
-        public SampleSet getSampleSet(final int sampleSetIndex) {
+        public SampleSet getSampleSet( int sampleSetIndex) {
             return SampleSet.wrap(myResults.sliceColumn(sampleSetIndex));
         }
 
@@ -73,7 +73,7 @@ public interface RandomProcess<D extends Distribution> {
          * A series representing one scenario. Each series has length "number of simulation steps" + 1 as the
          * series includes the initial value.
          */
-        public PrimitiveSeries getScenario(final int scenarioIndex) {
+        public PrimitiveSeries getScenario( int scenarioIndex) {
 
             Array1D<Double> slicedRow = myResults.sliceRow(scenarioIndex);
 
@@ -85,7 +85,7 @@ public interface RandomProcess<D extends Distribution> {
                 }
 
                 @Override
-                public double value(final int index) {
+                public double value( int index) {
                     if (index == 0) {
                         return myInitialValue;
                     } else {
@@ -99,8 +99,9 @@ public interface RandomProcess<D extends Distribution> {
     }
 
     /**
-     * @param evaluationPoint How far into the future?
-     * @return The distribution for the process value at that future time.
+     *Returns the distribution for the process value at that future time.
+ @param evaluationPoint How far into the future?
+     * 
      */
     D getDistribution(double evaluationPoint);
 

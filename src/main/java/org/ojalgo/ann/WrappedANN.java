@@ -21,9 +21,9 @@
  */
 package org.ojalgo.ann;
 
+import com.google.errorprone.annotations.Var;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.ojalgo.ann.ArtificialNeuralNetwork.Activator;
 import org.ojalgo.data.DataBatch;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -38,7 +38,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
     private final ArtificialNeuralNetwork myNetwork;
     private final PhysicalStore<Double>[] myOutputs;
 
-    WrappedANN(final ArtificialNeuralNetwork network, final int batchSize) {
+    WrappedANN( ArtificialNeuralNetwork network,  int batchSize) {
 
         super();
 
@@ -52,14 +52,14 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof WrappedANN)) {
             return false;
         }
-        WrappedANN other = (WrappedANN) obj;
+        var other = (WrappedANN) obj;
         if (myNetwork == null) {
             if (other.myNetwork != null) {
                 return false;
@@ -70,14 +70,14 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return true;
     }
 
-    public ArtificialNeuralNetwork get() {
+    @Override public ArtificialNeuralNetwork get() {
         return myNetwork;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + (myNetwork == null ? 0 : myNetwork.hashCode());
         return result;
     }
@@ -90,7 +90,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myNetwork.newBatch(myBatchSize, myNetwork.countInputNodes());
     }
 
-    private void setInput(final Access1D<Double> input) {
+    private void setInput( Access1D<Double> input) {
         if (input instanceof PhysicalStore && ((PhysicalStore<Double>) input).getRowDim() == myBatchSize) {
             myInput = (PhysicalStore<Double>) input;
         } else {
@@ -101,8 +101,8 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         }
     }
 
-    void adjust(final int layer, final PhysicalStore<Double> input, final PhysicalStore<Double> output, final PhysicalStore<Double> upstreamGradient,
-            final PhysicalStore<Double> downstreamGradient) {
+    void adjust( int layer,  PhysicalStore<Double> input,  PhysicalStore<Double> output,  PhysicalStore<Double> upstreamGradient,
+             PhysicalStore<Double> downstreamGradient) {
         myNetwork.adjust(layer, input, output, upstreamGradient, downstreamGradient);
     }
 
@@ -110,7 +110,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myNetwork.depth();
     }
 
-    Activator getActivator(final int layer) {
+    Activator getActivator( int layer) {
         return myNetwork.getActivator(layer);
     }
 
@@ -118,7 +118,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myBatchSize;
     }
 
-    double getBias(final int layer, final int output) {
+    double getBias( int layer,  int output) {
         return myNetwork.getBias(layer, output);
     }
 
@@ -126,7 +126,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myInput;
     }
 
-    PhysicalStore<Double> getInput(final int layer) {
+    PhysicalStore<Double> getInput( int layer) {
         return layer <= 0 ? myInput : myOutputs[layer - 1];
     }
 
@@ -134,7 +134,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myOutputs[myOutputs.length - 1];
     }
 
-    PhysicalStore<Double> getOutput(final int layer) {
+    PhysicalStore<Double> getOutput( int layer) {
         return myOutputs[layer];
     }
 
@@ -142,7 +142,7 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myNetwork.getOutputActivator();
     }
 
-    double getWeight(final int layer, final int input, final int output) {
+    double getWeight( int layer,  int input,  int output) {
         return myNetwork.getWeight(layer, input, output);
     }
 
@@ -150,13 +150,13 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         return myNetwork.getWeights();
     }
 
-    MatrixStore<Double> invoke(final Access1D<Double> input, final TrainingConfiguration configuration) {
+    MatrixStore<Double> invoke( Access1D<Double> input,  TrainingConfiguration configuration) {
 
         this.setInput(input);
 
         myNetwork.setConfiguration(configuration);
 
-        PhysicalStore<Double> retVal = myInput;
+        @Var PhysicalStore<Double> retVal = myInput;
         for (int l = 0, limit = this.depth(); l < limit; l++) {
             retVal = myNetwork.invoke(l, retVal, myOutputs[l]);
         }
@@ -171,15 +171,15 @@ abstract class WrappedANN implements Supplier<ArtificialNeuralNetwork> {
         myNetwork.randomise();
     }
 
-    void setActivator(final int layer, final Activator activator) {
+    void setActivator( int layer,  Activator activator) {
         myNetwork.setActivator(layer, activator);
     }
 
-    void setBias(final int layer, final int output, final double bias) {
+    void setBias( int layer,  int output,  double bias) {
         myNetwork.setBias(layer, output, bias);
     }
 
-    void setWeight(final int layer, final int input, final int output, final double weight) {
+    void setWeight( int layer,  int input,  int output,  double weight) {
         myNetwork.setWeight(layer, input, output, weight);
     }
 

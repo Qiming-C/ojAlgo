@@ -27,31 +27,31 @@ import org.ojalgo.type.NumberDefinition;
 
 abstract class Primitive2D implements Access2D<Double>, Mutate2D {
 
-    public final long countColumns() {
+    @Override public final long countColumns() {
         return this.getColDim();
     }
 
-    public final long countRows() {
+    @Override public final long countRows() {
         return this.getRowDim();
     }
 
-    public final double doubleValue(final long row, final long col) {
+    @Override public final double doubleValue( long row,  long col) {
         return this.doubleValue(Math.toIntExact(row), Math.toIntExact(col));
     }
 
-    public final Double get(final long row, final long col) {
+    @Override public final Double get( long row,  long col) {
         return Double.valueOf(this.doubleValue(Math.toIntExact(row), Math.toIntExact(col)));
     }
 
-    public abstract int getColDim();
+    @Override public abstract int getColDim();
 
-    public abstract int getRowDim();
+    @Override public abstract int getRowDim();
 
-    public final void set(final long row, final long col, final Comparable<?> value) {
+    @Override public final void set( long row,  long col,  Comparable<?> value) {
         this.set(Math.toIntExact(row), Math.toIntExact(col), NumberDefinition.doubleValue(value));
     }
 
-    public final void set(final long row, final long col, final double value) {
+    @Override public final void set( long row,  long col,  double value) {
         this.set(Math.toIntExact(row), Math.toIntExact(col), value);
     }
 
@@ -60,7 +60,7 @@ abstract class Primitive2D implements Access2D<Double>, Mutate2D {
         return Access2D.toString(this);
     }
 
-    abstract double doubleValue(final int row, final int col);
+    abstract double doubleValue( int row,  int col);
 
-    abstract void set(final int row, final int col, final double value);
+    abstract void set( int row,  int col,  double value);
 }

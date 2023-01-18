@@ -23,6 +23,7 @@ package org.ojalgo.random.process;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ONE;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array2D;
 import org.ojalgo.random.Distribution;
 
@@ -38,14 +39,14 @@ abstract class SingleValueBasedProcess<D extends Distribution> extends AbstractP
      * @return An array of sample sets. The array has aNumberOfSteps elements, and each sample set has
      *         aNumberOfRealisations samples.
      */
-    public RandomProcess.SimulationResults simulate(final int numberOfRealisations, final int numberOfSteps, final double stepSize) {
+    @Override public RandomProcess.SimulationResults simulate( int numberOfRealisations,  int numberOfSteps,  double stepSize) {
 
         double tmpInitialValue = myCurrentValue;
 
         Array2D<Double> tmpRealisationValues = Array2D.R064.make(numberOfRealisations, numberOfSteps);
 
         for (int r = 0; r < numberOfRealisations; r++) {
-            double tmpCurrentValue = tmpInitialValue;
+            @Var double tmpCurrentValue = tmpInitialValue;
             for (int s = 0; s < numberOfSteps; s++) {
                 tmpCurrentValue = this.doStep(stepSize, this.getNormalisedRandomIncrement());
                 tmpRealisationValues.set(r, s, tmpCurrentValue);
@@ -62,7 +63,7 @@ abstract class SingleValueBasedProcess<D extends Distribution> extends AbstractP
     }
 
     @Override
-    void setCurrentValue(final double currentValue) {
+    void setCurrentValue( double currentValue) {
         myCurrentValue = currentValue;
     }
 

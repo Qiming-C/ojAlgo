@@ -23,6 +23,7 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.matrix.store.Primitive64Store;
@@ -42,7 +43,7 @@ final class QPESolver extends ConstrainedSolver {
     private boolean myFeasible = false;
     private final Primitive64Store myIterationX;
 
-    QPESolver(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    QPESolver( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
 
         super(convexSolverBuilder, optimisationOptions);
 
@@ -50,7 +51,7 @@ final class QPESolver extends ConstrainedSolver {
     }
 
     @Override
-    protected boolean initialise(final Result kickStarter) {
+    protected boolean initialise( Result kickStarter) {
 
         boolean ok = super.initialise(kickStarter);
 
@@ -82,7 +83,7 @@ final class QPESolver extends ConstrainedSolver {
         MatrixStore<Double> iterB = this.getIterationB();
         MatrixStore<Double> iterC = this.getIterationC();
 
-        boolean solved = false;
+        @Var boolean solved = false;
 
         Primitive64Store iterX = myIterationX;
         Primitive64Store iterL = this.getSolutionL();
@@ -96,7 +97,7 @@ final class QPESolver extends ConstrainedSolver {
             // Negated Schur complement
             MatrixStore<Double> negS = iterA.multiply(invQAt);
             // TODO Symmetric, only need to calculate halv the Schur complement
-            if (solved = this.computeGeneral(negS)) {
+            if ((solved = this.computeGeneral(negS))) {
 
                 // iterX temporarely used to store tmpInvQC
                 MatrixStore<Double> invQC = this.getSolutionQ(iterC, iterX);
@@ -111,7 +112,7 @@ final class QPESolver extends ConstrainedSolver {
 
             Primitive64Store tmpXL = MATRIX_FACTORY.make(this.countVariables() + this.countIterationConstraints(), 1L);
 
-            if (solved = this.solveFullKKT(tmpXL)) {
+            if ((solved = this.solveFullKKT(tmpXL))) {
                 iterX.fillMatching(tmpXL.limits(this.countVariables(), 1));
                 iterL.fillMatching(tmpXL.offsets(this.countVariables(), 0));
             }

@@ -50,9 +50,9 @@ public abstract class DenseArray<N extends Comparable<N>> extends BasicArray<N> 
         abstract DenseArray<N> makeDenseArray(long size);
 
         @Override
-        final DenseArray<N> makeStructuredZero(final long... structure) {
+        final DenseArray<N> makeStructuredZero( long... structure) {
 
-            final long total = StructureAnyD.count(structure);
+             long total = StructureAnyD.count(structure);
 
             if (total > this.getCapacityLimit()) {
 
@@ -65,9 +65,9 @@ public abstract class DenseArray<N extends Comparable<N>> extends BasicArray<N> 
         }
 
         @Override
-        final DenseArray<N> makeToBeFilled(final long... structure) {
+        final DenseArray<N> makeToBeFilled( long... structure) {
 
-            final long total = StructureAnyD.count(structure);
+             long total = StructureAnyD.count(structure);
 
             if (total > this.getCapacityLimit()) {
 
@@ -90,7 +90,7 @@ public abstract class DenseArray<N extends Comparable<N>> extends BasicArray<N> 
     @Deprecated
     public static final int MAX_ARRAY_SIZE = PlainArray.MAX_SIZE;
 
-    protected DenseArray(final DenseArray.Factory<N> factory) {
+    protected DenseArray( DenseArray.Factory<N> factory) {
         super(factory);
     }
 

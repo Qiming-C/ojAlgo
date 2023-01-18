@@ -36,14 +36,14 @@ import org.ojalgo.type.math.MathType;
 
 abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> implements Factory1D.Dense<I> {
 
-    public I copy(final Access1D<?> source) {
+    @Override public I copy( Access1D<?> source) {
         long count = source.count();
         I retVal = this.makeToBeFilled(count);
         retVal.fillMatching(source);
         return retVal;
     }
 
-    public I copy(final Comparable<?>[] source) {
+    @Override public I copy( Comparable<?>[] source) {
         int length = source.length;
         I retVal = this.makeToBeFilled(length);
         for (int i = 0; i < length; i++) {
@@ -52,7 +52,7 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
         return retVal;
     }
 
-    public I copy(final double... source) {
+    @Override public I copy( double... source) {
         int length = source.length;
         I retVal = this.makeToBeFilled(length);
         for (int i = 0; i < length; i++) {
@@ -61,7 +61,7 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
         return retVal;
     }
 
-    public I copy(final List<? extends Comparable<?>> source) {
+    @Override public I copy( List<? extends Comparable<?>> source) {
         int size = source.size();
         I retVal = this.makeToBeFilled(size);
         for (int i = 0; i < size; i++) {
@@ -70,13 +70,13 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
         return retVal;
     }
 
-    public abstract FunctionSet<N> function();
+    @Override public abstract FunctionSet<N> function();
 
-    public I make(final long count) {
+    @Override public I make( long count) {
         return this.makeStructuredZero(count);
     }
 
-    public I makeFilled(final long count, final NullaryFunction<?> supplier) {
+    @Override public I makeFilled( long count,  NullaryFunction<?> supplier) {
         I retVal = this.makeToBeFilled(count);
         if (retVal.isPrimitive()) {
             for (long i = 0L; i < count; i++) {
@@ -90,7 +90,7 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
         return retVal;
     }
 
-    public abstract Scalar.Factory<N> scalar();
+    @Override public abstract Scalar.Factory<N> scalar();
 
     abstract AggregatorSet<N> aggregator();
 
@@ -98,7 +98,7 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
 
     abstract MathType getMathType();
 
-    SegmentedArray<N> makeSegmented(final long... structure) {
+    SegmentedArray<N> makeSegmented( long... structure) {
 
         long totalCount = StructureAnyD.count(structure);
 
@@ -135,7 +135,7 @@ abstract class ArrayFactory<N extends Comparable<N>, I extends BasicArray<N>> im
      * @throws IllegalArgumentException if either of the 3 requirements are broken.
      */
     @SafeVarargs
-    final SegmentedArray<N> wrapAsSegments(final BasicArray<N>... segments) {
+    final SegmentedArray<N> wrapAsSegments( BasicArray<N>... segments) {
         return new SegmentedArray<>(segments, this);
     }
 

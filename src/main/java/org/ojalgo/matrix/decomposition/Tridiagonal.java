@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.scalar.ComplexNumber;
 import org.ojalgo.scalar.Quadruple;
@@ -78,16 +79,16 @@ public interface Tridiagonal<N extends Comparable<N>> extends MatrixDecompositio
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final Tridiagonal<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  Tridiagonal<N> decomposition,  NumberContext context) {
 
-        boolean retVal = true;
+        @Var boolean retVal = true;
 
         // Check that [A] == [Q][D][Q]<sup>T</sup>
         retVal &= Access2D.equals(matrix, decomposition.reconstruct(), context);
 
         // Check that Q is orthogonal/unitary...
 
-        final MatrixStore<N> mtrxQ = decomposition.getQ();
+         MatrixStore<N> mtrxQ = decomposition.getQ();
         MatrixStore<N> identity = mtrxQ.physical().makeEye(mtrxQ.countRows(), mtrxQ.countColumns());
 
         MatrixStore<N> qqh = mtrxQ.multiply(mtrxQ.conjugate());
@@ -103,7 +104,7 @@ public interface Tridiagonal<N extends Comparable<N>> extends MatrixDecompositio
 
     MatrixStore<N> getQ();
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxQ = this.getQ();
         MatrixStore<N> mtrxD = this.getD();
         return mtrxQ.multiply(mtrxD).multiply(mtrxQ.conjugate());

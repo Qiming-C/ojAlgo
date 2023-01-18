@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.UnaryFunction;
 import org.ojalgo.function.aggregator.Aggregator;
@@ -35,14 +36,14 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final Access2D<N> myLeft;
         private final BinaryFunction<N> myOperator;
 
-        BinaryOperatorLeft(final Access2D<N> left, final BinaryFunction<N> operator, final ElementsSupplier<N> right) {
+        BinaryOperatorLeft( Access2D<N> left,  BinaryFunction<N> operator,  ElementsSupplier<N> right) {
             super(right);
             myLeft = left;
             myOperator = operator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             this.getContext().supplyTo(receiver);
             receiver.modifyMatching(myLeft, myOperator);
         }
@@ -53,14 +54,14 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final BinaryFunction<N> myOperator;
         private final Access2D<N> myRight;
 
-        BinaryOperatorRight(final ElementsSupplier<N> left, final BinaryFunction<N> operator, final Access2D<N> right) {
+        BinaryOperatorRight( ElementsSupplier<N> left,  BinaryFunction<N> operator,  Access2D<N> right) {
             super(left);
             myRight = right;
             myOperator = operator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             this.getContext().supplyTo(receiver);
             receiver.modifyMatching(myOperator, myRight);
         }
@@ -71,20 +72,20 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final BinaryFunction<N> myFunction;
         private final Access1D<N> myRightArgumnts;
 
-        ColumnsModifier(final ElementsSupplier<N> base, final BinaryFunction<N> modifier, final Access1D<N> right) {
+        ColumnsModifier( ElementsSupplier<N> base,  BinaryFunction<N> modifier,  Access1D<N> right) {
             super(base);
             myFunction = modifier;
             myRightArgumnts = right;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
 
             this.getContext().supplyTo(receiver);
 
-            UnaryFunction<N> modifier;
+            @Var UnaryFunction<N> modifier;
 
-            final long limit = Math.min(receiver.countColumns(), myRightArgumnts.count());
+             long limit = Math.min(receiver.countColumns(), myRightArgumnts.count());
             for (long j = 0; j < limit; j++) {
                 modifier = myFunction.second(myRightArgumnts.get(j));
                 receiver.modifyColumn(j, modifier);
@@ -99,14 +100,14 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final Aggregator myAggregator;
         private final MatrixStore<N> myBase;
 
-        ColumnsReducer(final MatrixStore<N> base, final Aggregator aggregator) {
+        ColumnsReducer( MatrixStore<N> base,  Aggregator aggregator) {
             super(base, 1L, base.countColumns());
             myBase = base;
             myAggregator = aggregator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             myBase.reduceColumns(myAggregator, receiver);
         }
 
@@ -117,7 +118,7 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final Access1D<N> myLeft;
         private final MatrixStore<N> myRight;
 
-        Multiplication(final Access1D<N> left, final MatrixStore<N> right) {
+        Multiplication( Access1D<N> left,  MatrixStore<N> right) {
 
             super(right, left.count() / right.countRows(), right.countColumns());
 
@@ -126,7 +127,7 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             receiver.fillByMultiplying(myLeft, myRight);
         }
 
@@ -137,20 +138,20 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final BinaryFunction<N> myFunction;
         private final Access1D<N> myRightArgumnts;
 
-        RowsModifier(final ElementsSupplier<N> base, final BinaryFunction<N> modifier, final Access1D<N> right) {
+        RowsModifier( ElementsSupplier<N> base,  BinaryFunction<N> modifier,  Access1D<N> right) {
             super(base);
             myFunction = modifier;
             myRightArgumnts = right;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
 
             this.getContext().supplyTo(receiver);
 
-            UnaryFunction<N> modifier;
+            @Var UnaryFunction<N> modifier;
 
-            final long limit = Math.min(receiver.countRows(), myRightArgumnts.count());
+             long limit = Math.min(receiver.countRows(), myRightArgumnts.count());
             for (long i = 0; i < limit; i++) {
                 modifier = myFunction.second(myRightArgumnts.get(i));
                 receiver.modifyRow(i, modifier);
@@ -165,14 +166,14 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
         private final Aggregator myAggregator;
         private final MatrixStore<N> myBase;
 
-        RowsReducer(final MatrixStore<N> base, final Aggregator aggregator) {
+        RowsReducer( MatrixStore<N> base,  Aggregator aggregator) {
             super(base, base.countRows(), 1L);
             myBase = base;
             myAggregator = aggregator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             myBase.reduceRows(myAggregator, receiver);
         }
 
@@ -182,13 +183,13 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
 
         private final Transformation2D<N> myTransformer;
 
-        Transformer(final ElementsSupplier<N> context, final Transformation2D<N> operator) {
+        Transformer( ElementsSupplier<N> context,  Transformation2D<N> operator) {
             super(context);
             myTransformer = operator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             this.getContext().supplyTo(receiver);
             myTransformer.transform(receiver);
         }
@@ -196,16 +197,16 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
 
     static final class Transpose<N extends Comparable<N>> extends MatrixPipeline<N> {
 
-        Transpose(final ElementsSupplier<N> context) {
+        Transpose( ElementsSupplier<N> context) {
             super(context, context.countColumns(), context.countRows());
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             this.getContext().supplyTo(receiver.regionByTransposing());
         }
 
-        public ElementsSupplier<N> transpose() {
+        @Override public ElementsSupplier<N> transpose() {
             return this.getContext();
         }
     }
@@ -214,13 +215,13 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
 
         private final UnaryFunction<N> myOperator;
 
-        UnaryOperator(final ElementsSupplier<N> context, final UnaryFunction<N> operator) {
+        UnaryOperator( ElementsSupplier<N> context,  UnaryFunction<N> operator) {
             super(context);
             myOperator = operator;
         }
 
         @Override
-        public void supplyTo(final TransformableRegion<N> receiver) {
+        public void supplyTo( TransformableRegion<N> receiver) {
             this.getContext().supplyTo(receiver);
             receiver.modifyAll(myOperator);
         }
@@ -230,22 +231,22 @@ abstract class MatrixPipeline<N extends Comparable<N>> implements ElementsSuppli
     private final ElementsSupplier<N> myContext;
     private final long myRowsCount;
 
-    MatrixPipeline(final ElementsSupplier<N> context) {
+    MatrixPipeline( ElementsSupplier<N> context) {
         this(context, context.countRows(), context.countColumns());
     }
 
-    MatrixPipeline(final ElementsSupplier<N> context, final long rowsCount, final long columnsCount) {
+    MatrixPipeline( ElementsSupplier<N> context,  long rowsCount,  long columnsCount) {
         super();
         myContext = context;
         myRowsCount = rowsCount;
         myColumnsCount = columnsCount;
     }
 
-    public final long countColumns() {
+    @Override public final long countColumns() {
         return myColumnsCount;
     }
 
-    public final long countRows() {
+    @Override public final long countRows() {
         return myRowsCount;
     }
 

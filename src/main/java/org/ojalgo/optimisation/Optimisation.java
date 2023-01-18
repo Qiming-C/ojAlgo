@@ -21,11 +21,13 @@
  */
 package org.ojalgo.optimisation;
 
+import com.google.common.base.Splitter;
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.ArrayR256;
@@ -128,7 +130,8 @@ public interface Optimisation {
         Optimisation.Result extractSolverState(M model);
 
         /**
-         * @return true if this solver (integration) can handle the input model
+         *Returns true if this solver (integration) can handle the input model.
+ 
          */
         boolean isCapable(M model);
 
@@ -162,8 +165,9 @@ public interface Optimisation {
         Optimisation.Result minimise();
 
         /**
-         * @return true If eveything is ok. false The model is structurally ok, but the "value" breaks
-         *         constraints - the solution is infeasible.
+         *Returns true If eveything is ok. false The model is structurally ok, but the "value" breaks
+         constraints - the solution is infeasible.
+ 
          */
         boolean validate();
 
@@ -183,8 +187,9 @@ public interface Optimisation {
         BigDecimal getContributionWeight();
 
         /**
-         * @return true if this Objective has a non zero contribution weight - it actually is contributing to
-         *         the objective function.
+         *Returns true if this Objective has a non zero contribution weight - it actually is contributing to
+         the objective function.
+ 
          */
         boolean isObjective();
 
@@ -291,7 +296,7 @@ public interface Optimisation {
             super();
         }
 
-        public Options abort(final CalendarDateDuration duration) {
+        public Options abort( CalendarDateDuration duration) {
             ProgrammingError.throwIfNull(duration);
             time_abort = duration.toDurationInMillis();
             return this;
@@ -304,7 +309,7 @@ public interface Optimisation {
             return myConvexConfiguration;
         }
 
-        public Options convex(final ConvexSolver.Configuration configuration) {
+        public Options convex( ConvexSolver.Configuration configuration) {
             Objects.requireNonNull(configuration);
             myConvexConfiguration = configuration;
             return this;
@@ -313,7 +318,7 @@ public interface Optimisation {
         /**
          * Will configure detailed debug logging and validation
          */
-        public Options debug(final Class<? extends Optimisation.Solver> solver) {
+        public Options debug( Class<? extends Optimisation.Solver> solver) {
             logger_solver = solver;
             logger_appender = solver != null ? BasicLogger.DEBUG : null;
             logger_detailed = (solver != null);
@@ -321,7 +326,7 @@ public interface Optimisation {
             return this;
         }
 
-        public <T> Optional<T> getConfigurator(final Class<T> type) {
+        public <T> Optional<T> getConfigurator( Class<T> type) {
             ProgrammingError.throwIfNull(type);
             if (myConfigurator != null && type.isInstance(myConfigurator)) {
                 return Optional.of((T) myConfigurator);
@@ -337,7 +342,7 @@ public interface Optimisation {
          * Set the strategy/configuration for the {@link IntegerSolver}. You can either reconfigure the
          * {@link IntegerStrategy#DEFAULT} instance or create an entirely new implementation of the interface.
          */
-        public Options integer(final IntegerStrategy strategy) {
+        public Options integer( IntegerStrategy strategy) {
             Objects.requireNonNull(strategy);
             myIntegerStrategy = strategy;
             return this;
@@ -350,7 +355,7 @@ public interface Optimisation {
         /**
          * Configurations specific to ojAlgo's built-in {@link LinearSolver}.
          */
-        public Options linear(final LinearSolver.Configuration configuration) {
+        public Options linear( LinearSolver.Configuration configuration) {
             Objects.requireNonNull(configuration);
             myLinearConfiguration = configuration;
             return this;
@@ -359,7 +364,7 @@ public interface Optimisation {
         /**
          * Will configure high level (low volume) progress logging
          */
-        public Options progress(final Class<? extends Optimisation.Solver> solver) {
+        public Options progress( Class<? extends Optimisation.Solver> solver) {
             logger_solver = solver;
             logger_appender = solver != null ? BasicLogger.DEBUG : null;
             logger_detailed = false;
@@ -370,12 +375,12 @@ public interface Optimisation {
         /**
          * A configurator for 3:d party solvers. Each such solver may define its own configurator type.
          */
-        public void setConfigurator(final Object configurator) {
+        public void setConfigurator( Object configurator) {
             ProgrammingError.throwIfNull(configurator);
             myConfigurator = configurator;
         }
 
-        public Options suffice(final CalendarDateDuration duration) {
+        public Options suffice( CalendarDateDuration duration) {
             ProgrammingError.throwIfNull(duration);
             time_suffice = duration.toDurationInMillis();
             return this;
@@ -385,31 +390,31 @@ public interface Optimisation {
 
     public static final class Result implements Optimisation, Access1D<BigDecimal>, Comparable<Optimisation.Result> {
 
-        public static Result of(final double value, final Optimisation.State state, final double... solution) {
+        public static Result of( double value,  Optimisation.State state,  double... solution) {
             return new Result(state, value, ArrayR064.wrap(solution));
         }
 
-        public static Result of(final Optimisation.State state, final double... solution) {
+        public static Result of( Optimisation.State state,  double... solution) {
             return new Result(state, Double.NaN, Access1D.wrap(solution));
         }
 
         /**
          * Parse a {@link String}, as produced by the {@link #toString()} method, into a new instance.
          */
-        public static Result parse(final String result) {
+        public static Result parse( String result) {
 
             int indexOfFirstSpace = result.indexOf(" ");
             int indexOfAtMark = result.indexOf(" @ ");
 
             String strState = result.substring(0, indexOfFirstSpace);
             String strValue = result.substring(indexOfFirstSpace + 1, indexOfAtMark);
-            String[] strSolution = result.substring(indexOfAtMark + 5, result.length() - 2).split(", ");
+            List<String> strSolution = Splitter.on(", ").splitToList(result.substring(indexOfAtMark + 5, result.length() - 2));
 
             State state = Optimisation.State.valueOf(strState);
             double value = Double.parseDouble(strValue);
-            ArrayR256 solution = ArrayR256.make(strSolution.length);
-            for (int i = 0; i < strSolution.length; i++) {
-                solution.set(i, new BigDecimal(strSolution[i]));
+            ArrayR256 solution = ArrayR256.make(strSolution.size());
+            for (int i = 0; i < strSolution.size(); i++) {
+                solution.set(i, new BigDecimal(strSolution.get(i)));
             }
 
             return new Result(state, value, solution);
@@ -420,11 +425,11 @@ public interface Optimisation {
         private final Optimisation.State myState;
         private final double myValue; // Objective Function Value
 
-        public Result(final Optimisation.State state, final Access1D<?> solution) {
+        public Result( Optimisation.State state,  Access1D<?> solution) {
             this(state, Double.NaN, solution);
         }
 
-        public Result(final Optimisation.State state, final double value, final Access1D<?> solution) {
+        public Result( Optimisation.State state,  double value,  Access1D<?> solution) {
 
             super();
 
@@ -435,38 +440,38 @@ public interface Optimisation {
             mySolution = solution;
         }
 
-        public Result(final Optimisation.State state, final Optimisation.Result result) {
+        public Result( Optimisation.State state,  Optimisation.Result result) {
             this(state, result.getValue(), result);
         }
 
-        public int compareTo(final Result reference) {
+        @Override public int compareTo( Result reference) {
             return NumberContext.compare(myValue, reference.getValue());
         }
 
-        public long count() {
+        @Override public long count() {
             return mySolution.count();
         }
 
-        public double doubleValue(final long index) {
+        @Override public double doubleValue( long index) {
             return mySolution.doubleValue(index);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (obj == null || this.getClass() != obj.getClass()) {
                 return false;
             }
-            final Result other = (Result) obj;
+             var other = (Result) obj;
             if (myState != other.myState || Double.doubleToLongBits(myValue) != Double.doubleToLongBits(other.myValue)) {
                 return false;
             }
             return true;
         }
 
-        public BigDecimal get(final long index) {
+        @Override public BigDecimal get( long index) {
             return TypeUtils.toBigDecimal(mySolution.get(index));
         }
 
@@ -480,7 +485,7 @@ public interface Optimisation {
         /**
          * Will round the solution to the given precision
          */
-        public Optimisation.Result getSolution(final NumberContext precision) {
+        public Optimisation.Result getSolution( NumberContext precision) {
             Optimisation.State state = this.getState();
             double value = this.getValue();
             ArrayR256 solution = ArrayR256.make(this.size());
@@ -503,20 +508,20 @@ public interface Optimisation {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myState == null ? 0 : myState.hashCode());
             long temp;
             temp = Double.doubleToLongBits(myValue);
             return prime * result + (int) (temp ^ temp >>> 32);
         }
 
-        public Result multipliers(final Access1D<?> multipliers) {
+        public Result multipliers( Access1D<?> multipliers) {
             myMultipliers = multipliers;
             return this;
         }
 
-        public int size() {
+        @Override public int size() {
             return (int) this.count();
         }
 
@@ -529,7 +534,7 @@ public interface Optimisation {
             return myState + " " + myValue + " @ " + Access1D.toString(mySolution);
         }
 
-        public Result withState(final State state) {
+        public Result withState( State state) {
             return new Result(state, myValue, mySolution);
         }
 
@@ -637,7 +642,7 @@ public interface Optimisation {
 
         private final int myValue;
 
-        State(final int aValue) {
+        State( int aValue) {
             myValue = aValue;
         }
 

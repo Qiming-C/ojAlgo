@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.temporal.ChronoField;
@@ -32,7 +33,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -112,7 +112,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
     private final String myLabel;
     private final TimeUnit myTimeUnit;
 
-    CalendarDateUnit(final ChronoUnit chronoUnit, final long millis, final String label) {
+    CalendarDateUnit( ChronoUnit chronoUnit,  long millis,  String label) {
         myChronoUnit = chronoUnit;
         myTimeUnit = null;
         myDurationInMillis = millis;
@@ -121,7 +121,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         myLabel = label;
     }
 
-    CalendarDateUnit(final ChronoUnit chronoUnit, final TimeUnit timeUnit, final String label) {
+    CalendarDateUnit( ChronoUnit chronoUnit,  TimeUnit timeUnit,  String label) {
         myChronoUnit = chronoUnit;
         myTimeUnit = timeUnit;
         myDurationInMillis = timeUnit.toMillis(1L);
@@ -130,8 +130,8 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         myLabel = label;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <R extends Temporal> R addTo(final R temporal, final long amount) {
+    @Override @SuppressWarnings({ "unchecked" })
+    public <R extends Temporal> R addTo( R temporal,  long amount) {
         if (temporal instanceof CalendarDate) {
             return (R) new CalendarDate(((CalendarDate) temporal).millis + this.toDurationInMillis());
         } else if (myChronoUnit != null) {
@@ -141,15 +141,15 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public CalendarDate adjustInto(final CalendarDate temporal) {
+    @Override public CalendarDate adjustInto( CalendarDate temporal) {
         return new CalendarDate(this.adjustInto(temporal.millis));
     }
 
-    public long adjustInto(final long epochMilli) {
+    @Override public long adjustInto( long epochMilli) {
         return ((epochMilli / myDurationInMillis) * myDurationInMillis) + myHalf;
     }
 
-    public Temporal adjustInto(final Temporal temporal) {
+    @Override public Temporal adjustInto( Temporal temporal) {
 
         if (temporal instanceof CalendarDate) {
 
@@ -157,7 +157,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
 
         } else {
 
-            Temporal retVal = temporal;
+            @Var Temporal retVal = temporal;
 
             if (CalendarDateUnit.MILLIS.toDurationInMillis() < myDurationInMillis) {
 
@@ -219,7 +219,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public long between(final Temporal temporal1Inclusive, final Temporal temporal2Exclusive) {
+    @Override public long between( Temporal temporal1Inclusive,  Temporal temporal2Exclusive) {
         if (myChronoUnit != null) {
             return myChronoUnit.between(temporal1Inclusive, temporal2Exclusive);
         } else { // QUARTER
@@ -227,15 +227,15 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public CalendarDateDuration convert(final CalendarDateDuration sourceDuration) {
+    public CalendarDateDuration convert( CalendarDateDuration sourceDuration) {
         return sourceDuration.convertTo(this);
     }
 
-    public double convert(final CalendarDateUnit aSourceDurationUnit) {
+    public double convert( CalendarDateUnit aSourceDurationUnit) {
         return this.convert(PrimitiveMath.ONE, aSourceDurationUnit);
     }
 
-    public double convert(final double sourceDurationMeasure, final CalendarDateUnit sourceDurationUnit) {
+    public double convert( double sourceDurationMeasure,  CalendarDateUnit sourceDurationUnit) {
 
         double sourceDurationInNanos = sourceDurationUnit.toDurationInNanos();
         double destinationDurationInNanos = myDurationInNanos;
@@ -258,20 +258,20 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public long convert(final long sourceMeassure, final CalendarDateUnit sourceUnit) {
+    public long convert( long sourceMeassure,  CalendarDateUnit sourceUnit) {
         Optional<TimeUnit> tmpTimeUnit = sourceUnit.getTimeUnit();
-        if ((myTimeUnit != null) && (tmpTimeUnit.isPresent())) {
+        if ((myTimeUnit != null) &&  tmpTimeUnit.isPresent()) {
             return myTimeUnit.convert(sourceMeassure, tmpTimeUnit.get());
         } else {
             return Math.round(this.convert((double) sourceMeassure, sourceUnit));
         }
     }
 
-    public long count(final long aFromValue, final long aToValue) {
+    public long count( long aFromValue,  long aToValue) {
         return ((myHalf + this.adjustInto(aToValue)) - this.adjustInto(aFromValue)) / myDurationInMillis;
     }
 
-    public long get(final TemporalUnit unit) {
+    public long get( TemporalUnit unit) {
         if (unit == this) {
             return myDurationInMillis;
         } else {
@@ -283,7 +283,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         return Optional.ofNullable(myChronoUnit);
     }
 
-    public Duration getDuration() {
+    @Override public Duration getDuration() {
         if (myChronoUnit != null) {
             return myChronoUnit.getDuration();
         } else { // QUARTER
@@ -307,7 +307,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         return DAY.toDurationInMillis() <= this.toDurationInMillis();
     }
 
-    public boolean isDateBased() {
+    @Override public boolean isDateBased() {
         if (myChronoUnit != null) {
             return myChronoUnit.isDateBased();
         } else { // QUARTER
@@ -315,7 +315,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public boolean isDurationEstimated() {
+    @Override public boolean isDurationEstimated() {
         if (myChronoUnit != null) {
             return myChronoUnit.isDurationEstimated();
         } else { // QUARTER
@@ -323,7 +323,7 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public boolean isTimeBased() {
+    @Override public boolean isTimeBased() {
         if (myChronoUnit != null) {
             return myChronoUnit.isTimeBased();
         } else { // QUARTER
@@ -331,15 +331,15 @@ public enum CalendarDateUnit implements TemporalUnit, CalendarDate.Resolution {
         }
     }
 
-    public CalendarDateDuration newDuration(final double meassure) {
+    public CalendarDateDuration newDuration( double meassure) {
         return new CalendarDateDuration(meassure, this);
     }
 
-    public long toDurationInMillis() {
+    @Override public long toDurationInMillis() {
         return myDurationInMillis;
     }
 
-    public long toDurationInNanos() {
+    @Override public long toDurationInNanos() {
         return myDurationInNanos;
     }
 

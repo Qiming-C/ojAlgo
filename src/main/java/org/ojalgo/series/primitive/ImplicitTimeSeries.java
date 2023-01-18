@@ -21,9 +21,9 @@
  */
 package org.ojalgo.series.primitive;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Calendar;
 import java.util.Date;
-
 import org.ojalgo.type.CalendarDate;
 import org.ojalgo.type.CalendarDateUnit;
 
@@ -32,7 +32,7 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     private final CalendarDateUnit myResolution;
     private final CalendarDate myFirst;
 
-    public ImplicitTimeSeries(final Calendar first, final CalendarDateUnit resolution, final PrimitiveSeries valueSeries) {
+    public ImplicitTimeSeries( Calendar first,  CalendarDateUnit resolution,  PrimitiveSeries valueSeries) {
 
         super(valueSeries);
 
@@ -40,7 +40,7 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
         myResolution = resolution;
     }
 
-    public ImplicitTimeSeries(final CalendarDate first, final CalendarDateUnit resolution, final PrimitiveSeries valueSeries) {
+    public ImplicitTimeSeries( CalendarDate first,  CalendarDateUnit resolution,  PrimitiveSeries valueSeries) {
 
         super(valueSeries);
 
@@ -48,7 +48,7 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
         myResolution = resolution;
     }
 
-    public ImplicitTimeSeries(final Date first, final CalendarDateUnit resolution, final PrimitiveSeries valueSeries) {
+    public ImplicitTimeSeries( Date first,  CalendarDateUnit resolution,  PrimitiveSeries valueSeries) {
 
         super(valueSeries);
 
@@ -57,12 +57,12 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ImplicitTimeSeries add(final double addend) {
+    public ImplicitTimeSeries add( double addend) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.add(addend));
     }
 
     @Override
-    public ImplicitTimeSeries add(final PrimitiveSeries addend) {
+    public ImplicitTimeSeries add( PrimitiveSeries addend) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.add(addend));
     }
 
@@ -77,17 +77,17 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ImplicitTimeSeries differences(final int period) {
+    public ImplicitTimeSeries differences( int period) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.differences(period));
     }
 
     @Override
-    public ImplicitTimeSeries divide(final double divisor) {
+    public ImplicitTimeSeries divide( double divisor) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.divide(divisor));
     }
 
     @Override
-    public ImplicitTimeSeries divide(final PrimitiveSeries divisor) {
+    public ImplicitTimeSeries divide( PrimitiveSeries divisor) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.divide(divisor));
     }
 
@@ -109,9 +109,9 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     @Override
     public long[] keys() {
 
-        final long[] retVal = new long[this.size()];
+         long[] retVal = new long[this.size()];
 
-        CalendarDate tmpKey = myFirst;
+        @Var CalendarDate tmpKey = myFirst;
         retVal[0] = tmpKey.millis;
         for (int t = 1; t < retVal.length; t++) {
             tmpKey = tmpKey.step(myResolution);
@@ -132,12 +132,12 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ImplicitTimeSeries multiply(final double aFactor) {
+    public ImplicitTimeSeries multiply( double aFactor) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.multiply(aFactor));
     }
 
     @Override
-    public ImplicitTimeSeries multiply(final PrimitiveSeries multiplicand) {
+    public ImplicitTimeSeries multiply( PrimitiveSeries multiplicand) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.multiply(multiplicand));
     }
 
@@ -147,7 +147,7 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ImplicitTimeSeries quotients(final int period) {
+    public ImplicitTimeSeries quotients( int period) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.quotients(period));
     }
 
@@ -156,22 +156,22 @@ public final class ImplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ImplicitTimeSeries runningProduct(final double initialValue) {
+    public ImplicitTimeSeries runningProduct( double initialValue) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.runningProduct(initialValue));
     }
 
     @Override
-    public ImplicitTimeSeries runningSum(final double initialValue) {
+    public ImplicitTimeSeries runningSum( double initialValue) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.runningSum(initialValue));
     }
 
     @Override
-    public ImplicitTimeSeries subtract(final double subtrahend) {
+    public ImplicitTimeSeries subtract( double subtrahend) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.subtract(subtrahend));
     }
 
     @Override
-    public ImplicitTimeSeries subtract(final PrimitiveSeries subtrahend) {
+    public ImplicitTimeSeries subtract( PrimitiveSeries subtrahend) {
         return new ImplicitTimeSeries(this.first(), this.resolution(), super.subtract(subtrahend));
     }
 

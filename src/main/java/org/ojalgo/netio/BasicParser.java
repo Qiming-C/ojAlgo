@@ -21,6 +21,7 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -43,7 +44,7 @@ public interface BasicParser<T> extends TextLineReader.Parser<T> {
      * @param skipHeader Should skip (1) header row/line
      * @param consumer The results consumer
      */
-    default void parse(final File file, final boolean skipHeader, final Consumer<T> consumer) {
+    default void parse( File file,  boolean skipHeader,  Consumer<T> consumer) {
 
         try (TextLineReader supplier = TextLineReader.of(file)) {
             this.parse(supplier, skipHeader, consumer);
@@ -58,7 +59,7 @@ public interface BasicParser<T> extends TextLineReader.Parser<T> {
      * @param file The CSV file to parse
      * @param consumer The results consumer
      */
-    default void parse(final File file, final Consumer<T> consumer) {
+    default void parse( File file,  Consumer<T> consumer) {
         this.parse(file, false, consumer);
     }
 
@@ -67,7 +68,7 @@ public interface BasicParser<T> extends TextLineReader.Parser<T> {
      * @param skipHeader Should skip (1) header row/line
      * @param consumer The results consumer
      */
-    default void parse(final Reader reader, final boolean skipHeader, final Consumer<T> consumer) {
+    default void parse( Reader reader,  boolean skipHeader,  Consumer<T> consumer) {
 
         try (TextLineReader supplier = new TextLineReader(reader)) {
             this.parse(supplier, skipHeader, consumer);
@@ -80,22 +81,22 @@ public interface BasicParser<T> extends TextLineReader.Parser<T> {
      * @param reader The CSV data reader
      * @param consumer The results consumer
      */
-    default void parse(final Reader reader, final Consumer<T> consumer) {
+    default void parse( Reader reader,  Consumer<T> consumer) {
         this.parse(reader, false, consumer);
     }
 
-    default void parse(final String filePath, final boolean skipHeader, final Consumer<T> consumer) {
+    default void parse( String filePath,  boolean skipHeader,  Consumer<T> consumer) {
         this.parse(new File(filePath), skipHeader, consumer);
     }
 
-    default void parse(final String filePath, final Consumer<T> consumer) {
+    default void parse( String filePath,  Consumer<T> consumer) {
         this.parse(filePath, false, consumer);
     }
 
-    default void parse(final Supplier<String> lineSupplier, final boolean skipHeader, final Consumer<T> consumer) {
+    default void parse( Supplier<String> lineSupplier,  boolean skipHeader,  Consumer<T> consumer) {
 
-        String line = null;
-        T item = null;
+        @Var String line = null;
+        @Var T item = null;
 
         if (skipHeader) {
             line = lineSupplier.get();
@@ -109,7 +110,7 @@ public interface BasicParser<T> extends TextLineReader.Parser<T> {
         }
     }
 
-    default void parse(final Supplier<String> lineSupplier, final Consumer<T> consumer) {
+    default void parse( Supplier<String> lineSupplier,  Consumer<T> consumer) {
         this.parse(lineSupplier, false, consumer);
     }
 

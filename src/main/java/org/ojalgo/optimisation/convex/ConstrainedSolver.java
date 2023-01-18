@@ -32,7 +32,7 @@ abstract class ConstrainedSolver extends ConvexSolver {
     private final Primitive64Store mySlackE;
     private final Primitive64Store mySolutionL;
 
-    protected ConstrainedSolver(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    protected ConstrainedSolver( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
 
         super(convexSolverBuilder, optimisationOptions);
 
@@ -68,7 +68,7 @@ abstract class ConstrainedSolver extends ConvexSolver {
     }
 
     @Override
-    protected boolean initialise(final Result kickStarter) {
+    protected boolean initialise( Result kickStarter) {
 
         boolean spdQ = super.initialise(kickStarter);
 
@@ -105,7 +105,7 @@ abstract class ConstrainedSolver extends ConvexSolver {
 
     abstract MatrixStore<Double> getIterationC();
 
-    MatrixStore<Double> getIterationL(final int[] included) {
+    MatrixStore<Double> getIterationL( int[] included) {
 
         int tmpCountE = this.countEqualityConstraints();
 

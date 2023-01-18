@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type.function;
 
+import com.google.errorprone.annotations.Var;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,7 +32,7 @@ final class SequencedSupplier<S, T> implements AutoSupplier<T> {
     private final Function<S, ? extends Supplier<T>> myFactory;
     private final BlockingQueue<S> mySources;
 
-    SequencedSupplier(final BlockingQueue<S> sources, final Function<S, ? extends Supplier<T>> factory) {
+    SequencedSupplier( BlockingQueue<S> sources,  Function<S, ? extends Supplier<T>> factory) {
 
         super();
 
@@ -47,13 +48,13 @@ final class SequencedSupplier<S, T> implements AutoSupplier<T> {
         }
     }
 
-    public T read() {
+    @Override public T read() {
 
         if (myCurrent == null) {
             return null;
         }
 
-        T retVal = myCurrent.get();
+        @Var T retVal = myCurrent.get();
 
         if (retVal == null) {
 

@@ -23,8 +23,8 @@ package org.ojalgo.random.scedasticity;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.random.SampleSet;
 import org.ojalgo.structure.Access1D;
 
@@ -37,17 +37,17 @@ public final class ARCH extends AbstractScedasticity {
      * @param q Number of lagged squared error terms
      * @return Ready to use ARCH model
      */
-    public static ARCH estimate(final Access1D<?> series, final int q) {
+    public static ARCH estimate( Access1D<?> series,  int q) {
 
         SampleSet ss = SampleSet.wrap(series);
         double mean = ss.getMean();
         double variance = ss.getVariance();
 
-        ARCH model = ARCH.newInstance(q);
+        var model = ARCH.newInstance(q);
 
         Access1D<?> parameters = AbstractScedasticity.parameters(series, mean, q);
 
-        double base = variance / TWELVE;
+        @Var double base = variance / TWELVE;
 
         double[] errorWeights = new double[q];
         for (int i = 0; i < q; i++) {
@@ -68,9 +68,10 @@ public final class ARCH extends AbstractScedasticity {
     }
 
     /**
-     * @see #newInstance(int, double, double)
+     *See {@link #newInstance(int, double, double)}.
+ 
      */
-    public static ARCH newInstance(final int q) {
+    public static ARCH newInstance( int q) {
         return ARCH.newInstance(q, ZERO, DEFAULT_VARIANCE);
     }
 
@@ -79,9 +80,9 @@ public final class ARCH extends AbstractScedasticity {
      * You're better of estimating suitable paramaters for your use case and then set {@link #base(double)}
      * and {@link #errorWeights(double...)}.
      */
-    public static ARCH newInstance(final int q, final double mean, final double variance) {
+    public static ARCH newInstance( int q,  double mean,  double variance) {
 
-        ARCH retVal = new ARCH(q);
+        var retVal = new ARCH(q);
 
         retVal.base(variance / TWELVE);
 
@@ -99,7 +100,7 @@ public final class ARCH extends AbstractScedasticity {
     private final double[] mySquaredErrors;
     private final double[] myWeights;
 
-    public ARCH(final int q) {
+    public ARCH( int q) {
 
         super();
 
@@ -107,7 +108,7 @@ public final class ARCH extends AbstractScedasticity {
         myWeights = new double[q];
     }
 
-    public ARCH base(final double base) {
+    public ARCH base( double base) {
 
         if (base <= ZERO) {
             throw new IllegalArgumentException();
@@ -118,7 +119,7 @@ public final class ARCH extends AbstractScedasticity {
         return this;
     }
 
-    public ARCH errorWeights(final double... lagged) {
+    public ARCH errorWeights( double... lagged) {
         Arrays.fill(myWeights, ZERO);
         for (int i = 0, limit = Math.min(myWeights.length, lagged.length); i < limit; i++) {
             double tmpVal = lagged[i];
@@ -130,13 +131,13 @@ public final class ARCH extends AbstractScedasticity {
         return this;
     }
 
-    public double getMean() {
+    @Override public double getMean() {
         return myMean;
     }
 
-    public double getVariance() {
+    @Override public double getVariance() {
 
-        double retVal = myBase;
+        @Var double retVal = myBase;
 
         for (int i = 0, limit = Math.min(myWeights.length, mySquaredErrors.length); i < limit; i++) {
             retVal += myWeights[i] * mySquaredErrors[i];
@@ -145,12 +146,12 @@ public final class ARCH extends AbstractScedasticity {
         return retVal;
     }
 
-    public void initialise(final double mean, final double variance) {
+    @Override public void initialise( double mean,  double variance) {
         myMean = mean;
         Arrays.fill(mySquaredErrors, variance);
     }
 
-    public void update(final double value) {
+    @Override public void update( double value) {
         double error = value - myMean;
         double squared = error * error;
         for (int i = mySquaredErrors.length - 1; i > 0; i--) {

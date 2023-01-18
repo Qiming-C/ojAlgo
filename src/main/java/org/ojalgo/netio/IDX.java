@@ -21,9 +21,9 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.io.IOException;
-
 import org.ojalgo.array.ArrayAnyD;
 import org.ojalgo.array.ArrayR032;
 import org.ojalgo.array.DenseArray;
@@ -36,11 +36,11 @@ import org.ojalgo.structure.Access2D;
  */
 public abstract class IDX {
 
-    public static ArrayAnyD<Double> parse(final File filePath) {
+    public static ArrayAnyD<Double> parse( File filePath) {
         return IDX.parse(filePath, ArrayR032.FACTORY);
     }
 
-    public static ArrayAnyD<Double> parse(final File file, final DenseArray.Factory<Double> factory) {
+    public static ArrayAnyD<Double> parse( File file,  DenseArray.Factory<Double> factory) {
 
         try (DataReader<ArrayAnyD<Double>> reader = DataReader.of(file, DataInterpreter.newIDX(factory))) {
             return reader.read();
@@ -49,21 +49,21 @@ public abstract class IDX {
         }
     }
 
-    public static ArrayAnyD<Double> parse(final String filePath) {
+    public static ArrayAnyD<Double> parse( String filePath) {
         return IDX.parse(new File(filePath));
     }
 
-    public static ArrayAnyD<Double> parse(final String filePath, final DenseArray.Factory<Double> arrayFactory) {
+    public static ArrayAnyD<Double> parse( String filePath,  DenseArray.Factory<Double> arrayFactory) {
         return IDX.parse(new File(filePath), arrayFactory);
     }
 
-    public static void print(final Access2D<?> image, final BasicLogger printer) {
+    public static void print( Access2D<?> image,  BasicLogger printer) {
         IDX.print(image, printer, true);
     }
 
-    public static void print(final Access2D<?> image, final BasicLogger printer, final boolean transpose) {
+    public static void print( Access2D<?> image,  BasicLogger printer,  boolean transpose) {
 
-        double maxValue = 0D;
+        @Var double maxValue = 0D;
         for (int i = 0; i < image.count(); i++) {
             maxValue = Math.max(maxValue, image.doubleValue(i));
         }
@@ -71,7 +71,7 @@ public abstract class IDX {
         IDX.print(image, printer, transpose, maxValue);
     }
 
-    public static void print(final Access2D<?> image, final BasicLogger printer, final boolean transpose, final double maxExpectedValue) {
+    public static void print( Access2D<?> image,  BasicLogger printer,  boolean transpose,  double maxExpectedValue) {
 
         double oneThird = maxExpectedValue / 3D;
         double twoThirds = 2D * maxExpectedValue / 3D;
@@ -96,7 +96,7 @@ public abstract class IDX {
         }
     }
 
-    private static void printPixel(final double gray, final BasicLogger printer, final double oneThird, final double twoThirds) {
+    private static void printPixel( double gray,  BasicLogger printer,  double oneThird,  double twoThirds) {
         if (gray < oneThird) {
             printer.print(" ");
         } else if (gray < twoThirds) {

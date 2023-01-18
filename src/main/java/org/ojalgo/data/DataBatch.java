@@ -43,30 +43,30 @@ public final class DataBatch implements Access2D<Double>, Access2D.Collectable<D
      * With the batch size/capacity specified. The returned instance will throw an exception if too many rows
      * are added to it.
      */
-    public static DataBatch from(final Factory2D<? extends Mutate2D.ModifiableReceiver<Double>> factory, final int batchSize, final int dataNodes) {
+    public static DataBatch from( Factory2D<? extends Mutate2D.ModifiableReceiver<Double>> factory,  int batchSize,  int dataNodes) {
         return new DataBatch(factory.make(batchSize, dataNodes));
     }
 
     private int myCursor = 0;
     private final Mutate2D.ModifiableReceiver<Double> myData;
 
-    DataBatch(final Mutate2D.ModifiableReceiver<Double> data) {
+    DataBatch( Mutate2D.ModifiableReceiver<Double> data) {
 
         super();
 
         myData = data;
     }
 
-    public void addRow(final Access1D<Double> row) {
+    public void addRow( Access1D<Double> row) {
         myData.fillRow(myCursor, row);
         myCursor++;
     }
 
-    public void addRows(final Collection<? extends Access1D<Double>> rows) {
+    public void addRows( Collection<? extends Access1D<Double>> rows) {
         rows.forEach(this::addRow);
     }
 
-    public void addRowWithSingleUnit(final int unitIndex) {
+    public void addRowWithSingleUnit( int unitIndex) {
         myData.fillRow(myCursor, ZERO);
         myData.set(myCursor, unitIndex, ONE);
         myCursor++;
@@ -77,19 +77,19 @@ public final class DataBatch implements Access2D<Double>, Access2D.Collectable<D
      *
      * @see org.ojalgo.structure.Structure2D#countColumns()
      */
-    public long countColumns() {
+    @Override public long countColumns() {
         return myData.countColumns();
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myData.countRows();
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return myData.doubleValue(row, col);
     }
 
-    public Double get(final long row, final long col) {
+    @Override public Double get( long row,  long col) {
         return Double.valueOf(this.doubleValue(row, col));
     }
 
@@ -108,7 +108,7 @@ public final class DataBatch implements Access2D<Double>, Access2D.Collectable<D
         myCursor = 0;
     }
 
-    public void supplyTo(final Receiver<Double> receiver) {
+    @Override public void supplyTo( Receiver<Double> receiver) {
         receiver.fillMatching(myData);
     }
 

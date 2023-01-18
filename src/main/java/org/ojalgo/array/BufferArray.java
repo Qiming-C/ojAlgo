@@ -21,6 +21,8 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.InlineMe;
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -29,7 +31,6 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.operation.AMAX;
 import org.ojalgo.array.operation.FillAll;
@@ -68,7 +69,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         private final BufferConstructor myConstructor;
         private final MathType myMathType;
 
-        Factory(final MathType mathType, final BufferConstructor constructor) {
+        Factory( MathType mathType,  BufferConstructor constructor) {
             super();
             myMathType = mathType;
             myConstructor = constructor;
@@ -79,7 +80,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
             return PrimitiveFunction.getSet();
         }
 
-        public MappedFileFactory newMapped(final File file) {
+        public MappedFileFactory newMapped( File file) {
             return new MappedFileFactory(this, file);
         }
 
@@ -99,7 +100,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         }
 
         @Override
-        BufferArray makeDenseArray(final long size) {
+        BufferArray makeDenseArray( long size) {
             int capacity = Math.toIntExact(size * this.getElementSize());
             ByteBuffer buffer = ByteBuffer.allocateDirect(capacity);
             return myConstructor.newInstance(this, buffer, null);
@@ -108,7 +109,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         /**
          * Signature matching {@link BufferConstructor}.
          */
-        BufferArray newInstance(final Factory factory, final ByteBuffer buffer, final AutoCloseable closeable) {
+        BufferArray newInstance( Factory factory,  ByteBuffer buffer,  AutoCloseable closeable) {
             return myConstructor.newInstance(factory, buffer, closeable);
         }
 
@@ -124,7 +125,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         private final File myFile;
         private final Factory myTypeFactory;
 
-        MappedFileFactory(final Factory typeFactory, final File file) {
+        MappedFileFactory( Factory typeFactory,  File file) {
             super();
             myTypeFactory = typeFactory;
             myFile = file;
@@ -135,50 +136,50 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
             return myTypeFactory.function();
         }
 
-        public BufferArray makeFilled(final Structure1D shape, final NullaryFunction<?> supplier) {
+        @Override public BufferArray makeFilled( Structure1D shape,  NullaryFunction<?> supplier) {
             return (BufferArray) super.makeFilled(shape, supplier);
         }
 
         @Override
-        public BufferArray copy(final Access1D<?> source) {
+        public BufferArray copy( Access1D<?> source) {
             return (BufferArray) super.copy(source);
         }
 
         @Override
-        public BufferArray copy(final Comparable<?>... source) {
+        public BufferArray copy( Comparable<?>[] source) {
             return (BufferArray) super.copy(source);
         }
 
         @Override
-        public BufferArray copy(final double... source) {
+        public BufferArray copy( double... source) {
             return (BufferArray) super.copy(source);
         }
 
         @Override
-        public BufferArray copy(final List<? extends Comparable<?>> source) {
+        public BufferArray copy( List<? extends Comparable<?>> source) {
             return (BufferArray) super.copy(source);
         }
 
         @Override
-        public BufferArray make(final long count) {
+        public BufferArray make( long count) {
             return (BufferArray) super.make(count);
         }
 
         @Override
-        SegmentedArray<Double> makeSegmented(final long... structure) {
+        SegmentedArray<Double> makeSegmented( long... structure) {
             return super.makeSegmented(structure);
         }
 
-        public BufferArray make(final int count) {
+        @Override public BufferArray make( int count) {
             return (BufferArray) super.make(count);
         }
 
-        public BufferArray make(final Structure1D shape) {
+        @Override public BufferArray make( Structure1D shape) {
             return (BufferArray) super.make(shape);
         }
 
         @Override
-        public BufferArray makeFilled(final long count, final NullaryFunction<?> supplier) {
+        public BufferArray makeFilled( long count,  NullaryFunction<?> supplier) {
             return (BufferArray) super.makeFilled(count, supplier);
         }
 
@@ -193,7 +194,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         }
 
         @Override
-        BufferArray makeDenseArray(final long size) {
+        BufferArray makeDenseArray( long size) {
 
             long count = myTypeFactory.getElementSize() * size;
 
@@ -245,7 +246,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
      * @deprecated v52 Use {@link #R064} and {@link MappedFileFactory#make(long)} instead.
      */
     @Deprecated
-    public static Array1D<Double> make(final File file, final long count) {
+    public static Array1D<Double> make( File file,  long count) {
         return R064.newMapped(file).make(count).wrapInArray1D();
     }
 
@@ -253,7 +254,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
      * @deprecated v52 Use {@link #R064} and {@link MappedFileFactory#make(long)} instead.
      */
     @Deprecated
-    public static ArrayAnyD<Double> make(final File file, final long... structure) {
+    public static ArrayAnyD<Double> make( File file,  long... structure) {
         return R064.newMapped(file).make(StructureAnyD.count(structure)).wrapInArrayAnyD(structure);
     }
 
@@ -261,15 +262,16 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
      * @deprecated v52 Use {@link #R064} and {@link MappedFileFactory#make(long)} instead.
      */
     @Deprecated
-    public static Array2D<Double> make(final File file, final long rows, final long columns) {
+    public static Array2D<Double> make( File file,  long rows,  long columns) {
         return R064.newMapped(file).make(rows * columns).wrapInArray2D(rows);
     }
 
     /**
      * @deprecated v52 Use {@link #R064} and {@link MappedFileFactory#make(long)} instead.
      */
-    @Deprecated
-    public static DenseArray<Double> make(final int capacity) {
+    @InlineMe(replacement = "R064.make(capacity)")
+@Deprecated
+    public static DenseArray<Double> make( int capacity) {
         return R064.make(capacity);
     }
 
@@ -277,14 +279,14 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
      * @deprecated v52 Use {@link #R064} and {@link MappedFileFactory#make(long)} instead.
      */
     @Deprecated
-    public static BufferArray wrap(final ByteBuffer data) {
+    public static BufferArray wrap( ByteBuffer data) {
         return new BufferR064(BufferArray.R064, data, null);
     }
 
     private final Buffer myBuffer;
     private final AutoCloseable myFile;
 
-    BufferArray(final Factory factory, final Buffer buffer, final AutoCloseable file) {
+    BufferArray( Factory factory,  Buffer buffer,  AutoCloseable file) {
 
         super(factory, buffer.capacity());
 
@@ -292,7 +294,7 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
         myFile = file;
     }
 
-    public void close() {
+    @Override public void close() {
         if (myFile != null) {
             try {
                 myFile.close();
@@ -309,42 +311,42 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
     }
 
     @Override
-    protected final void add(final int index, final double addend) {
+    protected final void add( int index,  double addend) {
         this.set(index, this.doubleValue(index) + addend);
     }
 
     @Override
-    protected final void add(final int index, final float addend) {
+    protected final void add( int index,  float addend) {
         this.set(index, this.floatValue(index) + addend);
     }
 
     @Override
-    protected final void add(final int index, final long addend) {
+    protected final void add( int index,  long addend) {
         this.set(index, this.longValue(index) + addend);
     }
 
     @Override
-    protected final void add(final int index, final int addend) {
+    protected final void add( int index,  int addend) {
         this.set(index, this.intValue(index) + addend);
     }
 
     @Override
-    protected final void add(final int index, final short addend) {
+    protected final void add( int index,  short addend) {
         this.set(index, this.shortValue(index) + addend);
     }
 
     @Override
-    protected final void add(final int index, final byte addend) {
+    protected final void add( int index,  byte addend) {
         this.set(index, this.byteValue(index) + addend);
     }
 
     @Override
-    protected void exchange(final int firstA, final int firstB, final int step, final int count) {
+    protected void exchange( int firstA,  int firstB,  int step,  int count) {
 
-        int tmpIndexA = firstA;
-        int tmpIndexB = firstB;
+        @Var int tmpIndexA = firstA;
+        @Var int tmpIndexB = firstB;
 
-        double tmpVal;
+        @Var double tmpVal;
 
         for (int i = 0; i < count; i++) {
 
@@ -358,73 +360,73 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
     }
 
     @Override
-    protected void fill(final int first, final int limit, final int step, final Double value) {
+    protected void fill( int first,  int limit,  int step,  Double value) {
         FillAll.fill(this, first, limit, step, value);
     }
 
     @Override
-    protected void fill(final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    protected void fill( int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         FillAll.fill(this, first, limit, step, supplier);
     }
 
     @Override
-    protected void fillOne(final int index, final Access1D<?> values, final long valueIndex) {
+    protected void fillOne( int index,  Access1D<?> values,  long valueIndex) {
         this.set(index, values.doubleValue(valueIndex));
     }
 
     @Override
-    protected void fillOne(final int index, final Double value) {
+    protected void fillOne( int index,  Double value) {
         this.set(index, value);
     }
 
     @Override
-    protected Double get(final int index) {
+    protected Double get( int index) {
         return Double.valueOf(this.doubleValue(index));
     }
 
     @Override
-    protected int indexOfLargest(final int first, final int limit, final int step) {
+    protected int indexOfLargest( int first,  int limit,  int step) {
         return AMAX.invoke(this, first, limit, step);
     }
 
     @Override
-    protected boolean isAbsolute(final int index) {
+    protected boolean isAbsolute( int index) {
         return PrimitiveScalar.isAbsolute(this.doubleValue(index));
     }
 
     @Override
-    protected boolean isSmall(final int index, final double comparedTo) {
+    protected boolean isSmall( int index,  double comparedTo) {
         return PrimitiveScalar.isSmall(comparedTo, this.doubleValue(index));
     }
 
     @Override
-    protected void modify(final int first, final int limit, final int step, final Access1D<Double> left, final BinaryFunction<Double> function) {
+    protected void modify( int first,  int limit,  int step,  Access1D<Double> left,  BinaryFunction<Double> function) {
         OperationBinary.invoke(this, first, limit, step, left, function, this);
     }
 
     @Override
-    protected void modify(final int first, final int limit, final int step, final BinaryFunction<Double> function, final Access1D<Double> right) {
+    protected void modify( int first,  int limit,  int step,  BinaryFunction<Double> function,  Access1D<Double> right) {
         OperationBinary.invoke(this, first, limit, step, this, function, right);
     }
 
     @Override
-    protected void modify(final int first, final int limit, final int step, final UnaryFunction<Double> function) {
+    protected void modify( int first,  int limit,  int step,  UnaryFunction<Double> function) {
         OperationUnary.invoke(this, first, limit, step, this, function);
     }
 
     @Override
-    protected void modifyOne(final int index, final UnaryFunction<Double> modifier) {
+    protected void modifyOne( int index,  UnaryFunction<Double> modifier) {
         this.set(index, modifier.invoke(this.doubleValue(index)));
     }
 
     @Override
-    protected int searchAscending(final Double number) {
+    protected int searchAscending( Double number) {
         // TODO Auto-generated method stub
         return -1;
     }
 
     @Override
-    protected void set(final int index, final Comparable<?> value) {
+    protected void set( int index,  Comparable<?> value) {
         this.set(index, NumberDefinition.doubleValue(value));
     }
 
@@ -439,27 +441,27 @@ public abstract class BufferArray extends PlainArray<Double> implements AutoClos
     }
 
     @Override
-    protected void visit(final int first, final int limit, final int step, final VoidFunction<Double> visitor) {
+    protected void visit( int first,  int limit,  int step,  VoidFunction<Double> visitor) {
         OperationVoid.invoke(this, first, limit, step, visitor);
     }
 
     @Override
-    protected void visitOne(final int index, final VoidFunction<Double> visitor) {
+    protected void visitOne( int index,  VoidFunction<Double> visitor) {
         visitor.invoke(this.doubleValue(index));
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final Access1D<Double> left, final BinaryFunction<Double> function) {
+    void modify( long extIndex,  int intIndex,  Access1D<Double> left,  BinaryFunction<Double> function) {
         this.set(intIndex, function.invoke(left.doubleValue(extIndex), this.doubleValue(intIndex)));
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final BinaryFunction<Double> function, final Access1D<Double> right) {
+    void modify( long extIndex,  int intIndex,  BinaryFunction<Double> function,  Access1D<Double> right) {
         this.set(intIndex, function.invoke(this.doubleValue(intIndex), right.doubleValue(extIndex)));
     }
 
     @Override
-    void modify(final long extIndex, final int intIndex, final UnaryFunction<Double> function) {
+    void modify( long extIndex,  int intIndex,  UnaryFunction<Double> function) {
         this.set(intIndex, function.invoke(this.doubleValue(intIndex)));
     }
 

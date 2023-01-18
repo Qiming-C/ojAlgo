@@ -48,29 +48,29 @@ public interface TwoStepMapper<T, R> {
         private final Function<T, G> myExtractor;
         private final FrequencyMap.FrequencyPredicate<G> myPredicate;
 
-        public KeyCounter(final Function<T, G> extractor) {
+        public KeyCounter( Function<T, G> extractor) {
             this(extractor, (element, statistics, frequency) -> true);
         }
 
-        public KeyCounter(final Function<T, G> extractor, final FrequencyPredicate<G> predicate) {
+        public KeyCounter( Function<T, G> extractor,  FrequencyPredicate<G> predicate) {
             super();
             myExtractor = extractor;
             myPredicate = predicate;
         }
 
-        public void consume(final T item) {
+        @Override public void consume( T item) {
             myCounter.increment(myExtractor.apply(item));
         }
 
-        public FrequencyMap<G> getResults() {
+        @Override public FrequencyMap<G> getResults() {
             return myCounter;
         }
 
-        public void merge(final FrequencyMap<G> aggregate) {
+        @Override public void merge( FrequencyMap<G> aggregate) {
             myCounter.merge(aggregate, myPredicate);
         }
 
-        public void reset() {
+        @Override public void reset() {
             myCounter.reset();
         }
 
@@ -84,24 +84,24 @@ public interface TwoStepMapper<T, R> {
         private final Function<K, V> myFunction;
         private final Map<K, V> myCache = new ConcurrentHashMap<>();
 
-        public SimpleCache(final Function<K, V> function) {
+        public SimpleCache( Function<K, V> function) {
             super();
             myFunction = function;
         }
 
-        public void consume(final K item) {
+        @Override public void consume( K item) {
             myCache.computeIfAbsent(item, k -> myFunction.apply(k));
         }
 
-        public Map<K, V> getResults() {
+        @Override public Map<K, V> getResults() {
             return myCache;
         }
 
-        public void merge(final Map<K, V> aggregate) {
+        @Override public void merge( Map<K, V> aggregate) {
             myCache.putAll(aggregate);
         }
 
-        public void reset() {
+        @Override public void reset() {
             myCache.clear();
         }
 
@@ -121,7 +121,7 @@ public interface TwoStepMapper<T, R> {
      * Merge partial result (from another {@link TwoStepMapper}). Only some use cases of this interface makes
      * use of this merge functionality (not always possible to do simple merge).
      */
-    default void merge(final R aggregate) {
+    default void merge( R aggregate) {
         throw new ProgrammingError("Override to implement! " + aggregate);
     }
 

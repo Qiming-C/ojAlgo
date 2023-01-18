@@ -21,9 +21,9 @@
  */
 package org.ojalgo.matrix.operation;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
 import java.util.function.IntSupplier;
-
 import org.ojalgo.array.operation.AXPY;
 import org.ojalgo.array.operation.DOT;
 import org.ojalgo.concurrent.DivideAndConquer;
@@ -32,7 +32,6 @@ import org.ojalgo.concurrent.Parallelism;
 import org.ojalgo.concurrent.ProcessingService;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.scalar.Scalar;
-import org.ojalgo.scalar.Scalar.Factory;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Structure2D;
 
@@ -64,7 +63,7 @@ public class MultiplyRight implements MatrixOperation {
 
     private static final DivideAndConquer.Divider DIVIDER = ProcessingService.INSTANCE.divider();
 
-    public static <N extends Scalar<N>> MultiplyRight.Generic<N> newGeneric(final long rows, final long columns) {
+    public static <N extends Scalar<N>> MultiplyRight.Generic<N> newGeneric( long rows,  long columns) {
         if (rows > THRESHOLD && columns > THRESHOLD) {
             return MultiplyRight::fillMxN_MT;
         }
@@ -77,7 +76,7 @@ public class MultiplyRight implements MatrixOperation {
         return MultiplyRight::fillMxN;
     }
 
-    public static MultiplyRight.Primitive32 newPrimitive32(final long rows, final long columns) {
+    public static MultiplyRight.Primitive32 newPrimitive32( long rows,  long columns) {
         if (rows > THRESHOLD && columns > THRESHOLD) {
             return MultiplyRight::fillMxN_MT;
         }
@@ -90,7 +89,7 @@ public class MultiplyRight implements MatrixOperation {
         return MultiplyRight::fillMxN;
     }
 
-    public static MultiplyRight.Primitive64 newPrimitive64(final long rows, final long columns) {
+    public static MultiplyRight.Primitive64 newPrimitive64( long rows,  long columns) {
         if (rows > THRESHOLD && columns > THRESHOLD) {
             return MultiplyRight::fillMxN_MT;
         }
@@ -133,24 +132,9 @@ public class MultiplyRight implements MatrixOperation {
         return MultiplyRight::fillMxN;
     }
 
-    /**
-     * Not running code. Copies used as a starting point when coding various variants
-     */
-    private static void base(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    
 
-        int nbRows = left.length / complexity;
-        int nbCols = Math.toIntExact(right.count() / complexity);
-
-        for (int i = 0; i < nbRows; i++) {
-            for (int c = 0; c < complexity; c++) {
-                for (int j = 0; j < nbCols; j++) {
-                    product[i + j * nbRows] += left[i + c * nbRows] * right.doubleValue(Structure2D.index(complexity, c, j));
-                }
-            }
-        }
-    }
-
-    static void add1xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void add1xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         for (int j = 0, nbCols = product.length; j < nbCols; j++) {
             int firstInCol = Structure2D.firstInColumn(right, j, 0);
@@ -159,7 +143,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void add1xN(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void add1xN( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
 
         for (int j = 0, nbCols = product.length; j < nbCols; j++) {
             int firstInCol = Structure2D.firstInColumn(right, j, 0);
@@ -168,7 +152,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void addMx1(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void addMx1( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int nbRows = product.length;
         for (int c = 0; c < complexity; c++) {
@@ -176,7 +160,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void addMx1(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void addMx1( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
 
         int nbRows = product.length;
         for (int c = 0; c < complexity; c++) {
@@ -184,7 +168,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static <N extends Scalar<N>> void addMx1(final N[] product, final N[] left, final int complexity, final Access1D<N> right) {
+    static <N extends Scalar<N>> void addMx1( N[] product,  N[] left,  int complexity,  Access1D<N> right) {
 
         int nbRows = product.length;
         for (int c = 0; c < complexity; c++) {
@@ -192,8 +176,8 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void addMxC(final double[] product, final int firstColumn, final int columnLimit, final double[] left, final int complexity,
-            final Access1D<?> right) {
+    static void addMxC( double[] product,  int firstColumn,  int columnLimit,  double[] left,  int complexity,
+             Access1D<?> right) {
 
         int nbRows = left.length / complexity;
 
@@ -207,7 +191,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void addMxC(final float[] product, final int firstColumn, final int columnLimit, final float[] left, final int complexity, final Access1D<?> right) {
+    static void addMxC( float[] product,  int firstColumn,  int columnLimit,  float[] left,  int complexity,  Access1D<?> right) {
 
         int nbRows = left.length / complexity;
 
@@ -221,8 +205,8 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static <N extends Scalar<N>> void addMxC(final N[] product, final int firstColumn, final int columnLimit, final N[] left, final int complexity,
-            final Access1D<N> right) {
+    static <N extends Scalar<N>> void addMxC( N[] product,  int firstColumn,  int columnLimit,  N[] left,  int complexity,
+             Access1D<N> right) {
 
         int nbRows = left.length / complexity;
 
@@ -236,41 +220,41 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void addMxN_MT(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void addMxN_MT( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
         MultiplyRight.divide(0, Math.toIntExact(right.count() / complexity), (f, l) -> MultiplyRight.addMxC(product, f, l, left, complexity, right));
     }
 
-    static void addMxN_MT(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void addMxN_MT( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
         MultiplyRight.divide(0, Math.toIntExact(right.count() / complexity), (f, l) -> MultiplyRight.addMxC(product, f, l, left, complexity, right));
     }
 
-    static <N extends Scalar<N>> void addMxN_MT(final N[] product, final N[] left, final int complexity, final Access1D<N> right) {
+    static <N extends Scalar<N>> void addMxN_MT( N[] product,  N[] left,  int complexity,  Access1D<N> right) {
         MultiplyRight.divide(0, Math.toIntExact(right.count() / complexity), (f, l) -> MultiplyRight.addMxC(product, f, l, left, complexity, right));
     }
 
-    static void divide(final int first, final int limit, final Conquerer conquerer) {
+    static void divide( int first,  int limit,  Conquerer conquerer) {
         DIVIDER.parallelism(PARALLELISM).threshold(THRESHOLD).divide(first, limit, conquerer);
     }
 
-    static void fill0xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill0xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int tmpRowDim = 10;
         int tmpColDim = product.length / tmpRowDim;
 
         for (int j = 0; j < tmpColDim; j++) {
 
-            double tmp0J = PrimitiveMath.ZERO;
-            double tmp1J = PrimitiveMath.ZERO;
-            double tmp2J = PrimitiveMath.ZERO;
-            double tmp3J = PrimitiveMath.ZERO;
-            double tmp4J = PrimitiveMath.ZERO;
-            double tmp5J = PrimitiveMath.ZERO;
-            double tmp6J = PrimitiveMath.ZERO;
-            double tmp7J = PrimitiveMath.ZERO;
-            double tmp8J = PrimitiveMath.ZERO;
-            double tmp9J = PrimitiveMath.ZERO;
+            @Var double tmp0J = PrimitiveMath.ZERO;
+            @Var double tmp1J = PrimitiveMath.ZERO;
+            @Var double tmp2J = PrimitiveMath.ZERO;
+            @Var double tmp3J = PrimitiveMath.ZERO;
+            @Var double tmp4J = PrimitiveMath.ZERO;
+            @Var double tmp5J = PrimitiveMath.ZERO;
+            @Var double tmp6J = PrimitiveMath.ZERO;
+            @Var double tmp7J = PrimitiveMath.ZERO;
+            @Var double tmp8J = PrimitiveMath.ZERO;
+            @Var double tmp9J = PrimitiveMath.ZERO;
 
-            int tmpIndex = 0;
+            @Var int tmpIndex = 0;
             for (int c = 0; c < complexity; c++) {
                 double tmpRightCJ = right.doubleValue(Structure2D.index(complexity, c, j));
                 tmp0J += left[tmpIndex++] * tmpRightCJ;
@@ -298,9 +282,9 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill1x1(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill1x1( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
-        double tmp00 = PrimitiveMath.ZERO;
+        @Var double tmp00 = PrimitiveMath.ZERO;
 
         int tmpLeftStruct = left.length / complexity; // The number of rows in the product- and left-matrix.
 
@@ -311,7 +295,7 @@ public class MultiplyRight implements MatrixOperation {
         product[0] = tmp00;
     }
 
-    static void fill1xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill1xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         for (int j = 0, nbCols = product.length; j < nbCols; j++) {
             int firstInCol = Structure2D.firstInColumn(right, j, 0);
@@ -320,7 +304,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill1xN(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void fill1xN( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
 
         for (int j = 0, nbCols = product.length; j < nbCols; j++) {
             int firstInCol = Structure2D.firstInColumn(right, j, 0);
@@ -329,7 +313,7 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static <N extends Scalar<N>> void fill1xN(final N[] product, final N[] left, final int complexity, final Access1D<N> right, final Factory<N> scalar) {
+    static <N extends Scalar<N>> void fill1xN( N[] product,  N[] left,  int complexity,  Access1D<N> right,  Scalar.Factory<N> scalar) {
 
         for (int j = 0, nbCols = product.length; j < nbCols; j++) {
             int firstInCol = Structure2D.firstInColumn(right, j, 0);
@@ -338,14 +322,14 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill2x2(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill2x2( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
-        double tmp00 = PrimitiveMath.ZERO;
-        double tmp10 = PrimitiveMath.ZERO;
-        double tmp01 = PrimitiveMath.ZERO;
-        double tmp11 = PrimitiveMath.ZERO;
+        @Var double tmp00 = PrimitiveMath.ZERO;
+        @Var double tmp10 = PrimitiveMath.ZERO;
+        @Var double tmp01 = PrimitiveMath.ZERO;
+        @Var double tmp11 = PrimitiveMath.ZERO;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int c = 0; c < complexity; c++) {
 
             tmpIndex = c * 2;
@@ -369,19 +353,19 @@ public class MultiplyRight implements MatrixOperation {
         product[3] = tmp11;
     }
 
-    static void fill3x3(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill3x3( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
-        double tmp00 = PrimitiveMath.ZERO;
-        double tmp10 = PrimitiveMath.ZERO;
-        double tmp20 = PrimitiveMath.ZERO;
-        double tmp01 = PrimitiveMath.ZERO;
-        double tmp11 = PrimitiveMath.ZERO;
-        double tmp21 = PrimitiveMath.ZERO;
-        double tmp02 = PrimitiveMath.ZERO;
-        double tmp12 = PrimitiveMath.ZERO;
-        double tmp22 = PrimitiveMath.ZERO;
+        @Var double tmp00 = PrimitiveMath.ZERO;
+        @Var double tmp10 = PrimitiveMath.ZERO;
+        @Var double tmp20 = PrimitiveMath.ZERO;
+        @Var double tmp01 = PrimitiveMath.ZERO;
+        @Var double tmp11 = PrimitiveMath.ZERO;
+        @Var double tmp21 = PrimitiveMath.ZERO;
+        @Var double tmp02 = PrimitiveMath.ZERO;
+        @Var double tmp12 = PrimitiveMath.ZERO;
+        @Var double tmp22 = PrimitiveMath.ZERO;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int c = 0; c < complexity; c++) {
 
             tmpIndex = c * 3;
@@ -419,26 +403,26 @@ public class MultiplyRight implements MatrixOperation {
         product[8] = tmp22;
     }
 
-    static void fill4x4(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill4x4( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
-        double tmp00 = PrimitiveMath.ZERO;
-        double tmp10 = PrimitiveMath.ZERO;
-        double tmp20 = PrimitiveMath.ZERO;
-        double tmp30 = PrimitiveMath.ZERO;
-        double tmp01 = PrimitiveMath.ZERO;
-        double tmp11 = PrimitiveMath.ZERO;
-        double tmp21 = PrimitiveMath.ZERO;
-        double tmp31 = PrimitiveMath.ZERO;
-        double tmp02 = PrimitiveMath.ZERO;
-        double tmp12 = PrimitiveMath.ZERO;
-        double tmp22 = PrimitiveMath.ZERO;
-        double tmp32 = PrimitiveMath.ZERO;
-        double tmp03 = PrimitiveMath.ZERO;
-        double tmp13 = PrimitiveMath.ZERO;
-        double tmp23 = PrimitiveMath.ZERO;
-        double tmp33 = PrimitiveMath.ZERO;
+        @Var double tmp00 = PrimitiveMath.ZERO;
+        @Var double tmp10 = PrimitiveMath.ZERO;
+        @Var double tmp20 = PrimitiveMath.ZERO;
+        @Var double tmp30 = PrimitiveMath.ZERO;
+        @Var double tmp01 = PrimitiveMath.ZERO;
+        @Var double tmp11 = PrimitiveMath.ZERO;
+        @Var double tmp21 = PrimitiveMath.ZERO;
+        @Var double tmp31 = PrimitiveMath.ZERO;
+        @Var double tmp02 = PrimitiveMath.ZERO;
+        @Var double tmp12 = PrimitiveMath.ZERO;
+        @Var double tmp22 = PrimitiveMath.ZERO;
+        @Var double tmp32 = PrimitiveMath.ZERO;
+        @Var double tmp03 = PrimitiveMath.ZERO;
+        @Var double tmp13 = PrimitiveMath.ZERO;
+        @Var double tmp23 = PrimitiveMath.ZERO;
+        @Var double tmp33 = PrimitiveMath.ZERO;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int c = 0; c < complexity; c++) {
 
             tmpIndex = c * 4;
@@ -494,35 +478,35 @@ public class MultiplyRight implements MatrixOperation {
         product[15] = tmp33;
     }
 
-    static void fill5x5(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill5x5( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
-        double tmp00 = PrimitiveMath.ZERO;
-        double tmp10 = PrimitiveMath.ZERO;
-        double tmp20 = PrimitiveMath.ZERO;
-        double tmp30 = PrimitiveMath.ZERO;
-        double tmp40 = PrimitiveMath.ZERO;
-        double tmp01 = PrimitiveMath.ZERO;
-        double tmp11 = PrimitiveMath.ZERO;
-        double tmp21 = PrimitiveMath.ZERO;
-        double tmp31 = PrimitiveMath.ZERO;
-        double tmp41 = PrimitiveMath.ZERO;
-        double tmp02 = PrimitiveMath.ZERO;
-        double tmp12 = PrimitiveMath.ZERO;
-        double tmp22 = PrimitiveMath.ZERO;
-        double tmp32 = PrimitiveMath.ZERO;
-        double tmp42 = PrimitiveMath.ZERO;
-        double tmp03 = PrimitiveMath.ZERO;
-        double tmp13 = PrimitiveMath.ZERO;
-        double tmp23 = PrimitiveMath.ZERO;
-        double tmp33 = PrimitiveMath.ZERO;
-        double tmp43 = PrimitiveMath.ZERO;
-        double tmp04 = PrimitiveMath.ZERO;
-        double tmp14 = PrimitiveMath.ZERO;
-        double tmp24 = PrimitiveMath.ZERO;
-        double tmp34 = PrimitiveMath.ZERO;
-        double tmp44 = PrimitiveMath.ZERO;
+        @Var double tmp00 = PrimitiveMath.ZERO;
+        @Var double tmp10 = PrimitiveMath.ZERO;
+        @Var double tmp20 = PrimitiveMath.ZERO;
+        @Var double tmp30 = PrimitiveMath.ZERO;
+        @Var double tmp40 = PrimitiveMath.ZERO;
+        @Var double tmp01 = PrimitiveMath.ZERO;
+        @Var double tmp11 = PrimitiveMath.ZERO;
+        @Var double tmp21 = PrimitiveMath.ZERO;
+        @Var double tmp31 = PrimitiveMath.ZERO;
+        @Var double tmp41 = PrimitiveMath.ZERO;
+        @Var double tmp02 = PrimitiveMath.ZERO;
+        @Var double tmp12 = PrimitiveMath.ZERO;
+        @Var double tmp22 = PrimitiveMath.ZERO;
+        @Var double tmp32 = PrimitiveMath.ZERO;
+        @Var double tmp42 = PrimitiveMath.ZERO;
+        @Var double tmp03 = PrimitiveMath.ZERO;
+        @Var double tmp13 = PrimitiveMath.ZERO;
+        @Var double tmp23 = PrimitiveMath.ZERO;
+        @Var double tmp33 = PrimitiveMath.ZERO;
+        @Var double tmp43 = PrimitiveMath.ZERO;
+        @Var double tmp04 = PrimitiveMath.ZERO;
+        @Var double tmp14 = PrimitiveMath.ZERO;
+        @Var double tmp24 = PrimitiveMath.ZERO;
+        @Var double tmp34 = PrimitiveMath.ZERO;
+        @Var double tmp44 = PrimitiveMath.ZERO;
 
-        int tmpIndex;
+        @Var int tmpIndex;
         for (int c = 0; c < complexity; c++) {
 
             tmpIndex = c * 5;
@@ -600,21 +584,21 @@ public class MultiplyRight implements MatrixOperation {
         product[24] = tmp44;
     }
 
-    static void fill6xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill6xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int tmpRowDim = 6;
         int tmpColDim = product.length / tmpRowDim;
 
         for (int j = 0; j < tmpColDim; j++) {
 
-            double tmp0J = PrimitiveMath.ZERO;
-            double tmp1J = PrimitiveMath.ZERO;
-            double tmp2J = PrimitiveMath.ZERO;
-            double tmp3J = PrimitiveMath.ZERO;
-            double tmp4J = PrimitiveMath.ZERO;
-            double tmp5J = PrimitiveMath.ZERO;
+            @Var double tmp0J = PrimitiveMath.ZERO;
+            @Var double tmp1J = PrimitiveMath.ZERO;
+            @Var double tmp2J = PrimitiveMath.ZERO;
+            @Var double tmp3J = PrimitiveMath.ZERO;
+            @Var double tmp4J = PrimitiveMath.ZERO;
+            @Var double tmp5J = PrimitiveMath.ZERO;
 
-            int tmpIndex = 0;
+            @Var int tmpIndex = 0;
             for (int c = 0; c < complexity; c++) {
                 double tmpRightCJ = right.doubleValue(Structure2D.index(complexity, c, j));
                 tmp0J += left[tmpIndex++] * tmpRightCJ;
@@ -634,22 +618,22 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill7xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill7xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int tmpRowDim = 7;
         int tmpColDim = product.length / tmpRowDim;
 
         for (int j = 0; j < tmpColDim; j++) {
 
-            double tmp0J = PrimitiveMath.ZERO;
-            double tmp1J = PrimitiveMath.ZERO;
-            double tmp2J = PrimitiveMath.ZERO;
-            double tmp3J = PrimitiveMath.ZERO;
-            double tmp4J = PrimitiveMath.ZERO;
-            double tmp5J = PrimitiveMath.ZERO;
-            double tmp6J = PrimitiveMath.ZERO;
+            @Var double tmp0J = PrimitiveMath.ZERO;
+            @Var double tmp1J = PrimitiveMath.ZERO;
+            @Var double tmp2J = PrimitiveMath.ZERO;
+            @Var double tmp3J = PrimitiveMath.ZERO;
+            @Var double tmp4J = PrimitiveMath.ZERO;
+            @Var double tmp5J = PrimitiveMath.ZERO;
+            @Var double tmp6J = PrimitiveMath.ZERO;
 
-            int tmpIndex = 0;
+            @Var int tmpIndex = 0;
             for (int c = 0; c < complexity; c++) {
                 double tmpRightCJ = right.doubleValue(Structure2D.index(complexity, c, j));
                 tmp0J += left[tmpIndex++] * tmpRightCJ;
@@ -671,23 +655,23 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill8xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill8xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int tmpRowDim = 8;
         int tmpColDim = product.length / tmpRowDim;
 
         for (int j = 0; j < tmpColDim; j++) {
 
-            double tmp0J = PrimitiveMath.ZERO;
-            double tmp1J = PrimitiveMath.ZERO;
-            double tmp2J = PrimitiveMath.ZERO;
-            double tmp3J = PrimitiveMath.ZERO;
-            double tmp4J = PrimitiveMath.ZERO;
-            double tmp5J = PrimitiveMath.ZERO;
-            double tmp6J = PrimitiveMath.ZERO;
-            double tmp7J = PrimitiveMath.ZERO;
+            @Var double tmp0J = PrimitiveMath.ZERO;
+            @Var double tmp1J = PrimitiveMath.ZERO;
+            @Var double tmp2J = PrimitiveMath.ZERO;
+            @Var double tmp3J = PrimitiveMath.ZERO;
+            @Var double tmp4J = PrimitiveMath.ZERO;
+            @Var double tmp5J = PrimitiveMath.ZERO;
+            @Var double tmp6J = PrimitiveMath.ZERO;
+            @Var double tmp7J = PrimitiveMath.ZERO;
 
-            int tmpIndex = 0;
+            @Var int tmpIndex = 0;
             for (int c = 0; c < complexity; c++) {
                 double tmpRightCJ = right.doubleValue(Structure2D.index(complexity, c, j));
                 tmp0J += left[tmpIndex++] * tmpRightCJ;
@@ -711,24 +695,24 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fill9xN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fill9xN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         int tmpRowDim = 9;
         int tmpColDim = product.length / tmpRowDim;
 
         for (int j = 0; j < tmpColDim; j++) {
 
-            double tmp0J = PrimitiveMath.ZERO;
-            double tmp1J = PrimitiveMath.ZERO;
-            double tmp2J = PrimitiveMath.ZERO;
-            double tmp3J = PrimitiveMath.ZERO;
-            double tmp4J = PrimitiveMath.ZERO;
-            double tmp5J = PrimitiveMath.ZERO;
-            double tmp6J = PrimitiveMath.ZERO;
-            double tmp7J = PrimitiveMath.ZERO;
-            double tmp8J = PrimitiveMath.ZERO;
+            @Var double tmp0J = PrimitiveMath.ZERO;
+            @Var double tmp1J = PrimitiveMath.ZERO;
+            @Var double tmp2J = PrimitiveMath.ZERO;
+            @Var double tmp3J = PrimitiveMath.ZERO;
+            @Var double tmp4J = PrimitiveMath.ZERO;
+            @Var double tmp5J = PrimitiveMath.ZERO;
+            @Var double tmp6J = PrimitiveMath.ZERO;
+            @Var double tmp7J = PrimitiveMath.ZERO;
+            @Var double tmp8J = PrimitiveMath.ZERO;
 
-            int tmpIndex = 0;
+            @Var int tmpIndex = 0;
             for (int c = 0; c < complexity; c++) {
                 double tmpRightCJ = right.doubleValue(Structure2D.index(complexity, c, j));
                 tmp0J += left[tmpIndex++] * tmpRightCJ;
@@ -754,57 +738,57 @@ public class MultiplyRight implements MatrixOperation {
         }
     }
 
-    static void fillMx1(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fillMx1( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
         Arrays.fill(product, 0D);
         MultiplyRight.addMx1(product, left, complexity, right);
     }
 
-    static void fillMx1(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void fillMx1( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
         Arrays.fill(product, 0F);
         MultiplyRight.addMx1(product, left, complexity, right);
     }
 
-    static <N extends Scalar<N>> void fillMx1(final N[] product, final N[] left, final int complexity, final Access1D<N> right, final Factory<N> scalar) {
+    static <N extends Scalar<N>> void fillMx1( N[] product,  N[] left,  int complexity,  Access1D<N> right,  Scalar.Factory<N> scalar) {
         Arrays.fill(product, scalar.zero().get());
         MultiplyRight.addMx1(product, left, complexity, right);
     }
 
-    static void fillMxN(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fillMxN( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         Arrays.fill(product, 0D);
 
         MultiplyRight.addMxC(product, 0, Math.toIntExact(right.count() / complexity), left, complexity, right);
     }
 
-    static void fillMxN(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void fillMxN( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
 
         Arrays.fill(product, 0F);
 
         MultiplyRight.addMxC(product, 0, Math.toIntExact(right.count() / complexity), left, complexity, right);
     }
 
-    static <N extends Scalar<N>> void fillMxN(final N[] product, final N[] left, final int complexity, final Access1D<N> right, final Factory<N> scalar) {
+    static <N extends Scalar<N>> void fillMxN( N[] product,  N[] left,  int complexity,  Access1D<N> right,  Scalar.Factory<N> scalar) {
 
         Arrays.fill(product, scalar.zero().get());
 
         MultiplyRight.addMxC(product, 0, Math.toIntExact(right.count() / complexity), left, complexity, right);
     }
 
-    static void fillMxN_MT(final double[] product, final double[] left, final int complexity, final Access1D<?> right) {
+    static void fillMxN_MT( double[] product,  double[] left,  int complexity,  Access1D<?> right) {
 
         Arrays.fill(product, 0D);
 
         MultiplyRight.addMxN_MT(product, left, complexity, right);
     }
 
-    static void fillMxN_MT(final float[] product, final float[] left, final int complexity, final Access1D<?> right) {
+    static void fillMxN_MT( float[] product,  float[] left,  int complexity,  Access1D<?> right) {
 
         Arrays.fill(product, 0F);
 
         MultiplyRight.addMxN_MT(product, left, complexity, right);
     }
 
-    static <N extends Scalar<N>> void fillMxN_MT(final N[] product, final N[] left, final int complexity, final Access1D<N> right, final Factory<N> scalar) {
+    static <N extends Scalar<N>> void fillMxN_MT( N[] product,  N[] left,  int complexity,  Access1D<N> right,  Scalar.Factory<N> scalar) {
 
         Arrays.fill(product, scalar.zero().get());
 

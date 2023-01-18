@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.constant;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.QuaternionFunction;
 import org.ojalgo.scalar.PrimitiveScalar;
 import org.ojalgo.scalar.Quaternion;
@@ -39,39 +40,39 @@ public abstract class QuaternionMath {
     public static final QuaternionFunction.Binary ADD = Quaternion::add;
     public static final QuaternionFunction.Unary ASIN = arg -> {
 
-        Quaternion tmpNmbr = QuaternionMath.SQRT.invoke(Quaternion.ONE.subtract(QuaternionMath.POWER.invoke(arg, 2)));
+        @Var Quaternion tmpNmbr = QuaternionMath.SQRT.invoke(Quaternion.ONE.subtract(QuaternionMath.POWER.invoke(arg, 2)));
 
         tmpNmbr = Quaternion.I.multiply(arg).add(tmpNmbr);
-        final Quaternion aNumber = tmpNmbr;
+         Quaternion aNumber = tmpNmbr;
 
         return QuaternionMath.LOG.invoke(aNumber).multiply(Quaternion.I).negate();
     };
     public static final QuaternionFunction.Unary ASINH = arg -> {
 
-        final Quaternion tmpNmbr = arg.multiply(arg).add(PrimitiveMath.ONE);
+         Quaternion tmpNmbr = arg.multiply(arg).add(PrimitiveMath.ONE);
 
         return QuaternionMath.LOG.invoke(arg.add(QuaternionMath.SQRT.invoke(tmpNmbr)));
     };
     public static final QuaternionFunction.Unary ATAN = arg -> {
 
-        final Quaternion tmpNmbr = Quaternion.I.add(arg).divide(Quaternion.I.subtract(arg));
+         Quaternion tmpNmbr = Quaternion.I.add(arg).divide(Quaternion.I.subtract(arg));
 
         return QuaternionMath.LOG.invoke(tmpNmbr).multiply(Quaternion.I).divide(PrimitiveMath.TWO);
     };
     public static final QuaternionFunction.Binary ATAN2 = (arg1, arg2) -> ATAN.invoke(arg1.divide(arg2));
     public static final QuaternionFunction.Unary ATANH = arg -> {
 
-        final Quaternion tmpNmbr = arg.add(PrimitiveMath.ONE).divide(Quaternion.ONE.subtract(arg));
+         Quaternion tmpNmbr = arg.add(PrimitiveMath.ONE).divide(Quaternion.ONE.subtract(arg));
 
         return QuaternionMath.LOG.invoke(tmpNmbr).divide(PrimitiveMath.TWO);
     };
     public static final QuaternionFunction.Unary CARDINALITY = arg -> PrimitiveScalar.isSmall(PrimitiveMath.ONE, arg.norm()) ? Quaternion.ZERO : Quaternion.ONE;
     public static final QuaternionFunction.Unary CBRT = arg -> QuaternionMath.ROOT.invoke(arg, 3);
     public static final QuaternionFunction.Unary CEIL = arg -> {
-        final double tmpScalar = PrimitiveMath.CEIL.invoke(arg.scalar());
-        final double tmpI = PrimitiveMath.CEIL.invoke(arg.i);
-        final double tmpJ = PrimitiveMath.CEIL.invoke(arg.j);
-        final double tmpK = PrimitiveMath.CEIL.invoke(arg.k);
+         double tmpScalar = PrimitiveMath.CEIL.invoke(arg.scalar());
+         double tmpI = PrimitiveMath.CEIL.invoke(arg.i);
+         double tmpJ = PrimitiveMath.CEIL.invoke(arg.j);
+         double tmpK = PrimitiveMath.CEIL.invoke(arg.k);
         return Quaternion.of(tmpScalar, tmpI, tmpJ, tmpK);
     };
     public static final QuaternionFunction.Unary CONJUGATE = Quaternion::conjugate;
@@ -83,14 +84,14 @@ public abstract class QuaternionMath {
 
         if (arg.isReal()) {
 
-            final double tmpScalar = PrimitiveMath.EXP.invoke(arg.scalar());
+             double tmpScalar = PrimitiveMath.EXP.invoke(arg.scalar());
 
             return Quaternion.valueOf(tmpScalar);
 
         }
-        final double tmpNorm = PrimitiveMath.EXP.invoke(arg.scalar());
-        final double[] tmpUnit = arg.unit();
-        final double tmpPhase = arg.getVectorLength();
+         double tmpNorm = PrimitiveMath.EXP.invoke(arg.scalar());
+         double[] tmpUnit = arg.unit();
+         double tmpPhase = arg.getVectorLength();
 
         return Quaternion.makePolar(tmpNorm, tmpUnit, tmpPhase);
 
@@ -101,24 +102,24 @@ public abstract class QuaternionMath {
     };
     public static final QuaternionFunction.Unary EXPM1 = arg -> EXP.invoke(arg).subtract(1.0);
     public static final QuaternionFunction.Unary FLOOR = arg -> {
-        final double tmpScalar = PrimitiveMath.FLOOR.invoke(arg.scalar());
-        final double tmpI = PrimitiveMath.FLOOR.invoke(arg.i);
-        final double tmpJ = PrimitiveMath.FLOOR.invoke(arg.j);
-        final double tmpK = PrimitiveMath.FLOOR.invoke(arg.k);
+         double tmpScalar = PrimitiveMath.FLOOR.invoke(arg.scalar());
+         double tmpI = PrimitiveMath.FLOOR.invoke(arg.i);
+         double tmpJ = PrimitiveMath.FLOOR.invoke(arg.j);
+         double tmpK = PrimitiveMath.FLOOR.invoke(arg.k);
         return Quaternion.of(tmpScalar, tmpI, tmpJ, tmpK);
     };
     public static final QuaternionFunction.Binary HYPOT = (arg1, arg2) -> Quaternion.valueOf(PrimitiveMath.HYPOT.invoke(arg1.norm(), arg2.norm()));
     public static final QuaternionFunction.Unary INVERT = arg -> QuaternionMath.POWER.invoke(arg, -1);
     public static final QuaternionFunction.Unary LOG = arg -> {
 
-        final double tmpNorm = arg.norm();
-        final double[] tmpUnitVector = arg.unit();
-        final double tmpPhase = PrimitiveMath.ACOS.invoke(arg.scalar() / tmpNorm);
+         double tmpNorm = arg.norm();
+         double[] tmpUnitVector = arg.unit();
+         double tmpPhase = PrimitiveMath.ACOS.invoke(arg.scalar() / tmpNorm);
 
-        final double tmpScalar = PrimitiveMath.LOG.invoke(tmpNorm);
-        final double tmpI = tmpUnitVector[0] * tmpPhase;
-        final double tmpJ = tmpUnitVector[1] * tmpPhase;
-        final double tmpK = tmpUnitVector[2] * tmpPhase;
+         double tmpScalar = PrimitiveMath.LOG.invoke(tmpNorm);
+         double tmpI = tmpUnitVector[0] * tmpPhase;
+         double tmpJ = tmpUnitVector[1] * tmpPhase;
+         double tmpK = tmpUnitVector[2] * tmpPhase;
 
         return Quaternion.of(tmpScalar, tmpI, tmpJ, tmpK);
     };
@@ -133,15 +134,15 @@ public abstract class QuaternionMath {
     public static final QuaternionFunction.Binary POW = (arg1, arg2) -> EXP.invoke(LOG.invoke(arg1).multiply(arg2));
     public static final QuaternionFunction.Parameter POWER = (arg, param) -> {
 
-        final Quaternion tmpInvoke = LOG.invoke(arg);
-        final Quaternion tmpMultiply = tmpInvoke.multiply(param);
+         Quaternion tmpInvoke = LOG.invoke(arg);
+         Quaternion tmpMultiply = tmpInvoke.multiply(param);
         return EXP.invoke(tmpMultiply);
     };
     public static final QuaternionFunction.Unary RINT = arg -> {
-        final double tmpScalar = PrimitiveMath.RINT.invoke(arg.scalar());
-        final double tmpI = PrimitiveMath.RINT.invoke(arg.i);
-        final double tmpJ = PrimitiveMath.RINT.invoke(arg.j);
-        final double tmpK = PrimitiveMath.RINT.invoke(arg.k);
+         double tmpScalar = PrimitiveMath.RINT.invoke(arg.scalar());
+         double tmpI = PrimitiveMath.RINT.invoke(arg.i);
+         double tmpJ = PrimitiveMath.RINT.invoke(arg.j);
+         double tmpK = PrimitiveMath.RINT.invoke(arg.k);
         return Quaternion.of(tmpScalar, tmpI, tmpJ, tmpK);
     };
     public static final QuaternionFunction.Parameter ROOT = (arg, param) -> {
@@ -154,10 +155,10 @@ public abstract class QuaternionMath {
         throw new IllegalArgumentException();
     };
     public static final QuaternionFunction.Parameter SCALE = (arg, param) -> {
-        final double tmpScalar = PrimitiveMath.SCALE.invoke(arg.scalar(), param);
-        final double tmpI = PrimitiveMath.SCALE.invoke(arg.i, param);
-        final double tmpJ = PrimitiveMath.SCALE.invoke(arg.j, param);
-        final double tmpK = PrimitiveMath.SCALE.invoke(arg.k, param);
+         double tmpScalar = PrimitiveMath.SCALE.invoke(arg.scalar(), param);
+         double tmpI = PrimitiveMath.SCALE.invoke(arg.i, param);
+         double tmpJ = PrimitiveMath.SCALE.invoke(arg.j, param);
+         double tmpK = PrimitiveMath.SCALE.invoke(arg.k, param);
         return Quaternion.of(tmpScalar, tmpI, tmpJ, tmpK);
     };
     public static final QuaternionFunction.Unary SIGNUM = Quaternion::signum;
@@ -171,11 +172,11 @@ public abstract class QuaternionMath {
 
         Quaternion retVal;
 
-        final Quaternion tmpPlus = EXP.invoke(arg);
-        final Quaternion tmpMinus = EXP.invoke(arg.negate());
+         Quaternion tmpPlus = EXP.invoke(arg);
+         Quaternion tmpMinus = EXP.invoke(arg.negate());
 
-        final Quaternion tmpDividend = tmpPlus.subtract(tmpMinus);
-        final Quaternion tmpDivisor = tmpPlus.add(tmpMinus);
+         Quaternion tmpDividend = tmpPlus.subtract(tmpMinus);
+         Quaternion tmpDivisor = tmpPlus.add(tmpMinus);
 
         if (tmpDividend.equals(tmpDivisor)) {
             retVal = Quaternion.ONE;

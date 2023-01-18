@@ -27,7 +27,7 @@ import org.ojalgo.type.NumberDefinition;
 
 abstract class Primitive1D implements Access1D<Double>, Mutate1D {
 
-    static Primitive1D of(final double... values) {
+    static Primitive1D of( double... values) {
         return new Primitive1D() {
 
             @Override
@@ -36,47 +36,47 @@ abstract class Primitive1D implements Access1D<Double>, Mutate1D {
             }
 
             @Override
-            double doubleValue(final int index) {
+            double doubleValue( int index) {
                 return values[index];
             }
 
             @Override
-            void set(final int index, final double value) {
+            void set( int index,  double value) {
                 values[index] = value;
             }
 
         };
     }
 
-    public final long count() {
+    @Override public final long count() {
         return this.size();
     }
 
-    public final double doubleValue(final long index) {
+    @Override public final double doubleValue( long index) {
         return this.doubleValue(Math.toIntExact(index));
     }
 
-    public final Double get(final long index) {
+    @Override public final Double get( long index) {
         return Double.valueOf(this.doubleValue(Math.toIntExact(index)));
     }
 
-    public final void set(final long index, final Comparable<?> value) {
+    @Override public final void set( long index,  Comparable<?> value) {
         this.set(Math.toIntExact(index), NumberDefinition.doubleValue(value));
     }
 
-    public final void set(final long index, final double value) {
+    @Override public final void set( long index,  double value) {
         this.set(Math.toIntExact(index), value);
     }
 
-    public abstract int size();
+    @Override public abstract int size();
 
     @Override
     public final String toString() {
         return Access1D.toString(this);
     }
 
-    abstract double doubleValue(final int index);
+    abstract double doubleValue( int index);
 
-    abstract void set(final int index, final double value);
+    abstract void set( int index,  double value);
 
 }

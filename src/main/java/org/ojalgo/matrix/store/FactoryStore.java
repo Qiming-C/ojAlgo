@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 
 abstract class FactoryStore<N extends Comparable<N>> extends AbstractStore<N> {
@@ -29,7 +30,7 @@ abstract class FactoryStore<N extends Comparable<N>> extends AbstractStore<N> {
     private final Scalar<N> myOne;
     private final Scalar<N> myZero;
 
-    protected FactoryStore(final PhysicalStore.Factory<N, ?> factory, final int rowsCount, final int columnsCount) {
+    protected FactoryStore( PhysicalStore.Factory<N, ?> factory,  int rowsCount,  int columnsCount) {
 
         super(rowsCount, columnsCount);
 
@@ -39,12 +40,12 @@ abstract class FactoryStore<N extends Comparable<N>> extends AbstractStore<N> {
         myOne = factory.scalar().one();
     }
 
-    protected FactoryStore(final PhysicalStore.Factory<N, ?> factory, final long rowsCount, final long columnsCount) {
+    protected FactoryStore( PhysicalStore.Factory<N, ?> factory,  long rowsCount,  long columnsCount) {
         this(factory, Math.toIntExact(rowsCount), Math.toIntExact(columnsCount));
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
@@ -54,7 +55,7 @@ abstract class FactoryStore<N extends Comparable<N>> extends AbstractStore<N> {
         if (!(obj instanceof FactoryStore)) {
             return false;
         }
-        FactoryStore other = (FactoryStore) obj;
+        var other = (FactoryStore) obj;
         if (myFactory == null) {
             if (other.myFactory != null) {
                 return false;
@@ -81,15 +82,15 @@ abstract class FactoryStore<N extends Comparable<N>> extends AbstractStore<N> {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = (prime * result) + ((myFactory == null) ? 0 : myFactory.hashCode());
         result = (prime * result) + ((myOne == null) ? 0 : myOne.hashCode());
         result = (prime * result) + ((myZero == null) ? 0 : myZero.hashCode());
         return result;
     }
 
-    public final PhysicalStore.Factory<N, ?> physical() {
+    @Override public final PhysicalStore.Factory<N, ?> physical() {
         return myFactory;
     }
 

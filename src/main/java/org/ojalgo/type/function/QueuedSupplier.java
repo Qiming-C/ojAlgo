@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type.function;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
@@ -35,15 +36,15 @@ final class QueuedSupplier<T> implements AutoSupplier<T> {
         private final BlockingQueue<T> myQueue;
         private final Supplier<T> mySupplier;
 
-        Worker(final BlockingQueue<T> queue, final Supplier<T> reader) {
+        Worker( BlockingQueue<T> queue,  Supplier<T> reader) {
             super();
             myQueue = queue;
             mySupplier = reader;
         }
 
-        public void run() {
+        @Override public void run() {
             try {
-                T item = null;
+                @Var T item = null;
                 while ((item = mySupplier.get()) != null) {
                     myQueue.put(item);
                 }
@@ -58,7 +59,7 @@ final class QueuedSupplier<T> implements AutoSupplier<T> {
     private final BlockingQueue<T> myQueue;
     private final Supplier<T>[] mySuppliers;
 
-    QueuedSupplier(final ExecutorService executor, final BlockingQueue<T> queue, final Supplier<T>... suppliers) {
+    QueuedSupplier( ExecutorService executor,  BlockingQueue<T> queue,  Supplier<T>... suppliers) {
 
         super();
 
@@ -85,13 +86,13 @@ final class QueuedSupplier<T> implements AutoSupplier<T> {
         }
     }
 
-    public int drainTo(final Collection<? super T> container, final int maxElements) {
+    @Override public int drainTo( Collection<? super T> container,  int maxElements) {
         return myQueue.drainTo(container, maxElements);
     }
 
-    public T read() {
+    @Override public T read() {
 
-        T retVal = myQueue.poll();
+        @Var T retVal = myQueue.poll();
 
         if (retVal != null) {
             return retVal;

@@ -33,7 +33,7 @@ public class PortfolioContext implements FinancePortfolio.Context {
     private MatrixR064 myCorrelations = null;
     private MatrixR064 myCovariances = null;
 
-    public PortfolioContext(final Access1D<?> assetReturns, final Access1D<?> assetVolatilities, final Access2D<?> correlations) {
+    public PortfolioContext( Access1D<?> assetReturns,  Access1D<?> assetVolatilities,  Access2D<?> correlations) {
 
         super();
 
@@ -43,7 +43,7 @@ public class PortfolioContext implements FinancePortfolio.Context {
         myCorrelations = FinancePortfolio.MATRIX_FACTORY.copy(correlations);
     }
 
-    public PortfolioContext(final Access1D<?> assetReturns, final Access2D<?> covariances) {
+    public PortfolioContext( Access1D<?> assetReturns,  Access2D<?> covariances) {
 
         super();
 
@@ -60,43 +60,43 @@ public class PortfolioContext implements FinancePortfolio.Context {
         myAssetReturns = null;
     }
 
-    @SuppressWarnings("unchecked")
-    public double calculatePortfolioReturn(final FinancePortfolio weightsPortfolio) {
+    @Override @SuppressWarnings("unchecked")
+    public double calculatePortfolioReturn( FinancePortfolio weightsPortfolio) {
         return FinancePortfolio.MATRIX_FACTORY.rows(weightsPortfolio.getWeights()).multiply(this.getAssetReturns()).doubleValue(0);
     }
 
-    @SuppressWarnings("unchecked")
-    public double calculatePortfolioVariance(final FinancePortfolio weightsPortfolio) {
-        final MatrixR064 tmpWeights = FinancePortfolio.MATRIX_FACTORY.columns(weightsPortfolio.getWeights());
+    @Override @SuppressWarnings("unchecked")
+    public double calculatePortfolioVariance( FinancePortfolio weightsPortfolio) {
+         MatrixR064 tmpWeights = FinancePortfolio.MATRIX_FACTORY.columns(weightsPortfolio.getWeights());
         return tmpWeights.transpose().multiply(this.getCovariances().multiply(tmpWeights)).doubleValue(0);
     }
 
-    public MatrixR064 getAssetReturns() {
+    @Override public MatrixR064 getAssetReturns() {
         return myAssetReturns;
     }
 
-    public MatrixR064 getAssetVolatilities() {
+    @Override public MatrixR064 getAssetVolatilities() {
         if (myAssetVolatilities == null) {
             myAssetVolatilities = FinanceUtils.toVolatilities(myCovariances);
         }
         return myAssetVolatilities;
     }
 
-    public MatrixR064 getCorrelations() {
+    @Override public MatrixR064 getCorrelations() {
         if (myCorrelations == null) {
             myCorrelations = FinanceUtils.toCorrelations(myCovariances, false);
         }
         return myCorrelations;
     }
 
-    public MatrixR064 getCovariances() {
+    @Override public MatrixR064 getCovariances() {
         if (myCovariances == null) {
             myCovariances = FinanceUtils.toCovariances(myAssetVolatilities, myCorrelations);
         }
         return myCovariances;
     }
 
-    public int size() {
+    @Override public int size() {
         return (int) myAssetReturns.count();
     }
 

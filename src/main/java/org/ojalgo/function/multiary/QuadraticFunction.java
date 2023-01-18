@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.multiary;
 
+import com.google.errorprone.annotations.InlineMe;
 import org.ojalgo.matrix.store.GenericStore;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -43,29 +44,29 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
         private final LinearFunction.Factory<N> myLinear;
         private final PureQuadraticFunction.Factory<N> myPureQuadratic;
 
-        Factory(final PhysicalStore.Factory<N, ?> factory) {
+        Factory( PhysicalStore.Factory<N, ?> factory) {
             super();
             myPureQuadratic = new PureQuadraticFunction.Factory<>(factory);
             myLinear = new LinearFunction.Factory<>(factory);
         }
 
-        public QuadraticFunction.Factory<N> linear(final Access1D<?> coefficients) {
+        public QuadraticFunction.Factory<N> linear( Access1D<?> coefficients) {
             myLinear.coefficients(coefficients);
             return this;
         }
 
-        public QuadraticFunction<N> make(final int arity) {
+        public QuadraticFunction<N> make( int arity) {
             return new QuadraticFunction<>(myPureQuadratic.make(arity), myLinear.make(arity));
         }
 
-        public QuadraticFunction.Factory<N> quadratic(final Access2D<?> coefficients) {
+        public QuadraticFunction.Factory<N> quadratic( Access2D<?> coefficients) {
             myPureQuadratic.coefficients(coefficients);
             return this;
         }
 
     }
 
-    public static <N extends Comparable<N>> Factory<N> factory(final PhysicalStore.Factory<N, ?> factory) {
+    public static <N extends Comparable<N>> Factory<N> factory( PhysicalStore.Factory<N, ?> factory) {
         return new Factory<>(factory);
     }
 
@@ -73,7 +74,7 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static QuadraticFunction<ComplexNumber> makeComplex(final Access2D<?> quadratic, final Access1D<?> linear) {
+    public static QuadraticFunction<ComplexNumber> makeComplex( Access2D<?> quadratic,  Access1D<?> linear) {
         // return new QuadraticFunction<>(GenericStore.C128.copy(quadratic), GenericStore.C128.columns(linear));
         return QuadraticFunction.factory(GenericStore.C128).quadratic(quadratic).linear(linear).make(linear.size());
     }
@@ -81,8 +82,9 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static QuadraticFunction<ComplexNumber> makeComplex(final int arity) {
+    @InlineMe(replacement = "QuadraticFunction.factory(GenericStore.C128).make(arity)", imports = {"org.ojalgo.function.multiary.QuadraticFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static QuadraticFunction<ComplexNumber> makeComplex( int arity) {
         // return new QuadraticFunction<>(GenericStore.C128.make(arity, arity), GenericStore.C128.make(arity, 1));
         return QuadraticFunction.factory(GenericStore.C128).make(arity);
     }
@@ -91,7 +93,7 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static QuadraticFunction<Double> makePrimitive(final Access2D<?> quadratic, final Access1D<?> linear) {
+    public static QuadraticFunction<Double> makePrimitive( Access2D<?> quadratic,  Access1D<?> linear) {
         // return new QuadraticFunction<>(Primitive64Store.FACTORY.copy(quadratic), Primitive64Store.FACTORY.columns(linear));
         return QuadraticFunction.factory(Primitive64Store.FACTORY).quadratic(quadratic).linear(linear).make(linear.size());
     }
@@ -99,8 +101,9 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static QuadraticFunction<Double> makePrimitive(final int arity) {
+    @InlineMe(replacement = "QuadraticFunction.factory(Primitive64Store.FACTORY).make(arity)", imports = {"org.ojalgo.function.multiary.QuadraticFunction", "org.ojalgo.matrix.store.Primitive64Store"})
+@Deprecated
+    public static QuadraticFunction<Double> makePrimitive( int arity) {
         // return new QuadraticFunction<>(Primitive64Store.FACTORY.make(arity, arity), Primitive64Store.FACTORY.make(arity, 1));
         return QuadraticFunction.factory(Primitive64Store.FACTORY).make(arity);
     }
@@ -109,7 +112,7 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static QuadraticFunction<RationalNumber> makeRational(final Access2D<?> quadratic, final Access1D<?> linear) {
+    public static QuadraticFunction<RationalNumber> makeRational( Access2D<?> quadratic,  Access1D<?> linear) {
         // return new QuadraticFunction<>(GenericStore.Q128.copy(quadratic), GenericStore.Q128.columns(linear));
         return QuadraticFunction.factory(GenericStore.Q128).quadratic(quadratic).linear(linear).make(linear.size());
     }
@@ -117,24 +120,25 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static QuadraticFunction<RationalNumber> makeRational(final int arity) {
+    @InlineMe(replacement = "QuadraticFunction.factory(GenericStore.Q128).make(arity)", imports = {"org.ojalgo.function.multiary.QuadraticFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static QuadraticFunction<RationalNumber> makeRational( int arity) {
         // return new QuadraticFunction<>(GenericStore.Q128.make(arity, arity), GenericStore.Q128.make(arity, 1));
         return QuadraticFunction.factory(GenericStore.Q128).make(arity);
     }
 
-    public static <N extends Comparable<N>> QuadraticFunction<N> wrap(final PhysicalStore<N> quadratic, final PhysicalStore<N> linear) {
+    public static <N extends Comparable<N>> QuadraticFunction<N> wrap( PhysicalStore<N> quadratic,  PhysicalStore<N> linear) {
         return new QuadraticFunction<>(quadratic, linear);
     }
 
     private final LinearFunction<N> myLinear;
     private final PureQuadraticFunction<N> myPureQuadratic;
 
-    QuadraticFunction(final MatrixStore<N> quadratic, final MatrixStore<N> linear) {
+    QuadraticFunction( MatrixStore<N> quadratic,  MatrixStore<N> linear) {
         this(new PureQuadraticFunction<>(quadratic), new LinearFunction<>(linear));
     }
 
-    QuadraticFunction(final PureQuadraticFunction<N> pureQuadratic, final LinearFunction<N> linear) {
+    QuadraticFunction( PureQuadraticFunction<N> pureQuadratic,  LinearFunction<N> linear) {
         super();
         myPureQuadratic = pureQuadratic;
         myLinear = linear;
@@ -143,44 +147,44 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
         }
     }
 
-    public int arity() {
+    @Override public int arity() {
         return myLinear.arity();
     }
 
-    public N getConstant() {
+    @Override public N getConstant() {
         return myPureQuadratic.getConstant();
     }
 
     @Override
-    public MatrixStore<N> getGradient(final Access1D<N> point) {
+    public MatrixStore<N> getGradient( Access1D<N> point) {
         MatrixStore<N> pureQuadraticPart = myPureQuadratic.getGradient(point);
         MatrixStore<N> linearPart = myLinear.getGradient(point);
         return pureQuadraticPart.add(linearPart);
     }
 
     @Override
-    public MatrixStore<N> getHessian(final Access1D<N> point) {
+    public MatrixStore<N> getHessian( Access1D<N> point) {
         return myPureQuadratic.getHessian(point);
     }
 
-    public MatrixStore<N> getLinearFactors(final boolean negated) {
+    @Override public MatrixStore<N> getLinearFactors( boolean negated) {
         return myLinear.getLinearFactors(negated);
     }
 
     @Override
-    public N invoke(final Access1D<N> arg) {
+    public N invoke( Access1D<N> arg) {
         return this.getScalarValue(arg).get();
     }
 
-    public PhysicalStore<N> linear() {
+    @Override public PhysicalStore<N> linear() {
         return myLinear.linear();
     }
 
-    public PhysicalStore<N> quadratic() {
+    @Override public PhysicalStore<N> quadratic() {
         return myPureQuadratic.quadratic();
     }
 
-    public void setConstant(final Comparable<?> constant) {
+    @Override public void setConstant( Comparable<?> constant) {
         myPureQuadratic.setConstant(constant);
     }
 
@@ -188,7 +192,7 @@ public final class QuadraticFunction<N extends Comparable<N>> implements Multiar
         return myLinear.factory();
     }
 
-    Scalar<N> getScalarValue(final Access1D<N> arg) {
+    Scalar<N> getScalarValue( Access1D<N> arg) {
 
         Scalar<N> retVal = myPureQuadratic.getScalarValue(arg);
 

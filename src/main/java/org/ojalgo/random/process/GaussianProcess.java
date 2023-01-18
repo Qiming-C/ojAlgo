@@ -40,14 +40,14 @@ public final class GaussianProcess extends MultipleValuesBasedProcess<Normal> im
 
     private final GaussianField<Double> myDelegate;
 
-    public GaussianProcess(final GaussianField.Covariance<Double> covarFunc) {
+    public GaussianProcess( GaussianField.Covariance<Double> covarFunc) {
 
         super();
 
         myDelegate = new GaussianField<>(covarFunc, this.getObservations());
     }
 
-    public GaussianProcess(final GaussianField.Mean<Double> meanFunc, final GaussianField.Covariance<Double> covarFunc) {
+    public GaussianProcess( GaussianField.Mean<Double> meanFunc,  GaussianField.Covariance<Double> covarFunc) {
 
         super();
 
@@ -63,7 +63,7 @@ public final class GaussianProcess extends MultipleValuesBasedProcess<Normal> im
         myDelegate.calibrate();
     }
 
-    public Normal getDistribution(final double evaluationPoint) {
+    @Override public Normal getDistribution( double evaluationPoint) {
 
         Normal1D tmpVal = this.getDistribution(new Double[] { evaluationPoint });
 
@@ -73,25 +73,25 @@ public final class GaussianProcess extends MultipleValuesBasedProcess<Normal> im
         return new Normal(tmpLocation, tmpScale);
     }
 
-    public Normal1D getDistribution(final Double... evaluationPoint) {
+    public Normal1D getDistribution( Double... evaluationPoint) {
         return myDelegate.getDistribution(false, evaluationPoint);
     }
 
-    public double getValue() {
+    @Override public double getValue() {
         return this.getCurrentValue();
     }
 
-    public void setValue(final double newValue) {
+    @Override public void setValue( double newValue) {
         this.setCurrentValue(newValue);
     }
 
     @Override
-    public double step(final double stepSize, final double standardGaussianInnovation) {
+    public double step( double stepSize,  double standardGaussianInnovation) {
         return this.doStep(stepSize, standardGaussianInnovation);
     }
 
     @Override
-    double doStep(final double stepSize, final double normalisedRandomIncrement) {
+    double doStep( double stepSize,  double normalisedRandomIncrement) {
 
         Normal distr = this.getDistribution(stepSize);
 
@@ -105,12 +105,12 @@ public final class GaussianProcess extends MultipleValuesBasedProcess<Normal> im
     }
 
     @Override
-    double getExpected(final double stepSize) {
+    double getExpected( double stepSize) {
         return this.getDistribution(stepSize).getExpected();
     }
 
     @Override
-    double getLowerConfidenceQuantile(final double stepSize, final double confidence) {
+    double getLowerConfidenceQuantile( double stepSize,  double confidence) {
         return this.getDistribution(stepSize).getLowerConfidenceQuantile(confidence);
     }
 
@@ -120,17 +120,17 @@ public final class GaussianProcess extends MultipleValuesBasedProcess<Normal> im
     }
 
     @Override
-    double getStandardDeviation(final double stepSize) {
+    double getStandardDeviation( double stepSize) {
         return this.getDistribution(stepSize).getStandardDeviation();
     }
 
     @Override
-    double getUpperConfidenceQuantile(final double stepSize, final double confidence) {
+    double getUpperConfidenceQuantile( double stepSize,  double confidence) {
         return this.getDistribution(stepSize).getUpperConfidenceQuantile(confidence);
     }
 
     @Override
-    double getVariance(final double stepSize) {
+    double getVariance( double stepSize) {
         return this.getDistribution(stepSize).getVariance();
     }
 

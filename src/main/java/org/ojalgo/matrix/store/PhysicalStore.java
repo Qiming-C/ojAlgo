@@ -22,7 +22,6 @@
 package org.ojalgo.matrix.store;
 
 import java.util.List;
-
 import org.ojalgo.array.DenseArray;
 import org.ojalgo.array.operation.AMAX;
 import org.ojalgo.array.operation.SubstituteBackwards;
@@ -30,7 +29,6 @@ import org.ojalgo.array.operation.SubstituteForwards;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.NullaryFunction;
 import org.ojalgo.function.aggregator.AggregatorSet;
-import org.ojalgo.matrix.store.DiagonalStore.Builder;
 import org.ojalgo.matrix.transformation.Householder;
 import org.ojalgo.matrix.transformation.Rotation;
 import org.ojalgo.scalar.Scalar;
@@ -72,21 +70,21 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
 
         I conjugate(Access2D<?> source);
 
-        FunctionSet<N> function();
+        @Override FunctionSet<N> function();
 
-        default ColumnsSupplier<N> makeColumnsSupplier(final int numberOfRows) {
+        default ColumnsSupplier<N> makeColumnsSupplier( int numberOfRows) {
             return new ColumnsSupplier<>(this, numberOfRows);
         }
 
-        default PhysicalStore<N> makeDense(final long rows, final long columns) {
+        @Override default PhysicalStore<N> makeDense( long rows,  long columns) {
             return this.make(rows, columns);
         }
 
-        default <D extends Access1D<?>> Builder<N, D> makeDiagonal(final D mainDiagonal) {
+        default <D extends Access1D<?>> DiagonalStore.Builder<N, D> makeDiagonal( D mainDiagonal) {
             return DiagonalStore.builder(this, mainDiagonal);
         }
 
-        default I makeEye(final long rows, final long columns) {
+        default I makeEye( long rows,  long columns) {
 
             I retVal = this.make(rows, columns);
 
@@ -97,11 +95,11 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
             return retVal;
         }
 
-        default I makeEye(final Structure2D shape) {
+        default I makeEye( Structure2D shape) {
             return this.makeEye(shape.countRows(), shape.countColumns());
         }
 
-        default I makeFilled(final long rows, final long columns, final NullaryFunction<?> supplier) {
+        @Override default I makeFilled( long rows,  long columns,  NullaryFunction<?> supplier) {
 
             I retVal = this.make(rows, columns);
 
@@ -112,7 +110,7 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
 
         Householder<N> makeHouseholder(int length);
 
-        default MatrixStore<N> makeIdentity(final long dimension) {
+        default MatrixStore<N> makeIdentity( long dimension) {
             return new IdentityStore<>(this, dimension);
         }
 
@@ -120,25 +118,25 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
 
         Rotation<N> makeRotation(int low, int high, N cos, N sin);
 
-        default RowsSupplier<N> makeRowsSupplier(final int numberOfColumns) {
+        default RowsSupplier<N> makeRowsSupplier( int numberOfColumns) {
             return new RowsSupplier<>(this, numberOfColumns);
         }
 
-        default MatrixStore<N> makeSingle(final N element) {
+        default MatrixStore<N> makeSingle( N element) {
             return new SingleStore<>(this, element);
         }
 
-        default SparseStore<N> makeSparse(final long rowsCount, final long columnsCount) {
+        @Override default SparseStore<N> makeSparse( long rowsCount,  long columnsCount) {
             return SparseStore.makeSparse(this, rowsCount, columnsCount);
         }
 
         /**
          * Make a random Symmetric Positive Definite matrix
          */
-        default I makeSPD(final int dim) {
+        default I makeSPD( int dim) {
 
-            final double[] random = new double[dim];
-            final I retVal = this.make(dim, dim);
+             double[] random = new double[dim];
+             I retVal = this.make(dim, dim);
 
             for (int i = 0; i < dim; i++) {
                 random[i] = Math.random();
@@ -152,19 +150,19 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
             return retVal;
         }
 
-        default MatrixStore<N> makeWrapper(final Access2D<?> access) {
+        default MatrixStore<N> makeWrapper( Access2D<?> access) {
             return new WrapperStore<>(this, access);
         }
 
-        default MatrixStore<N> makeZero(final long rowsCount, final long columnsCount) {
+        default MatrixStore<N> makeZero( long rowsCount,  long columnsCount) {
             return new ZeroStore<>(this, rowsCount, columnsCount);
         }
 
-        default MatrixStore<N> makeZero(final Structure2D shape) {
+        default MatrixStore<N> makeZero( Structure2D shape) {
             return this.makeZero(shape.countRows(), shape.countColumns());
         }
 
-        Scalar.Factory<N> scalar();
+        @Override Scalar.Factory<N> scalar();
 
         default TensorFactory1D<N, I> tensor1D() {
             return TensorFactory1D.of(this.asFactory1D());
@@ -179,12 +177,13 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
     }
 
     /**
-     * @return The elements of the physical store as a fixed size (1 dimensional) list. The elements may be
-     *         accessed either row or colomn major.
+     *Returns the elements of the physical store as a fixed size (1 dimensional) list. The elements may be
+         accessed either row or colomn major.
+ 
      */
     List<N> asList();
 
-    default void modifyAny(final Transformation2D<N> modifier) {
+    @Override default void modifyAny( Transformation2D<N> modifier) {
         modifier.transform(this);
     }
 
@@ -212,7 +211,7 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
      */
     void substituteForwards(Access2D<N> body, boolean unitDiagonal, boolean conjugated, boolean identity);
 
-    default void supplyTo(final TransformableRegion<N> receiver) {
+    @Override default void supplyTo( TransformableRegion<N> receiver) {
         if (this != receiver) {
             receiver.fillMatching(this);
         }
@@ -256,7 +255,7 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
      */
     void transformRight(Rotation<N> transformation);
 
-    default int indexOfLargestInColumn(final int row, final int col) {
+    default int indexOfLargestInColumn( int row,  int col) {
         long structure = this.countRows();
         long first = Structure2D.index(structure, row, col);
         long limit = Structure2D.index(structure, 0L, col + 1L);
@@ -265,7 +264,7 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
         return Math.toIntExact(largest % structure);
     }
 
-    default int indexOfLargestInRow(final int row, final int col) {
+    default int indexOfLargestInRow( int row,  int col) {
         long structure = this.countRows();
         long first = Structure2D.index(structure, row, col);
         long limit = Structure2D.index(structure, 0L, this.countColumns());
@@ -274,7 +273,7 @@ public interface PhysicalStore<N extends Comparable<N>> extends MatrixStore<N>, 
         return Math.toIntExact(largest / structure);
     }
 
-    default int indexOfLargestOnDiagonal(final int row, final int col) {
+    default int indexOfLargestOnDiagonal( int row,  int col) {
         long structure = this.countRows();
         long first = Structure2D.index(structure, row, col);
         long limit = Structure2D.index(structure, 0L, this.countColumns());

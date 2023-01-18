@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.multiary;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.structure.Access1D;
@@ -29,7 +30,7 @@ abstract class ApproximateFunction<N extends Comparable<N>> implements MultiaryF
 
     private final Access1D<N> myPoint;
 
-    protected ApproximateFunction(final MultiaryFunction.TwiceDifferentiable<N> function, final Access1D<N> point) {
+    protected ApproximateFunction( MultiaryFunction.TwiceDifferentiable<N> function,  Access1D<N> point) {
 
         super();
 
@@ -37,14 +38,14 @@ abstract class ApproximateFunction<N extends Comparable<N>> implements MultiaryF
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || !(obj instanceof ApproximateFunction)) {
             return false;
         }
-        final ApproximateFunction<?> other = (ApproximateFunction<?>) obj;
+         var other = (ApproximateFunction<?>) obj;
         if (myPoint == null) {
             if (other.myPoint != null) {
                 return false;
@@ -55,9 +56,9 @@ abstract class ApproximateFunction<N extends Comparable<N>> implements MultiaryF
         return true;
     }
 
-    public MatrixStore<N> getLinearFactors(final boolean negated) {
+    @Override public MatrixStore<N> getLinearFactors( boolean negated) {
 
-        MatrixStore<N> retVal = this.getGradient(this.factory().makeZero(this.arity(), 1));
+        @Var MatrixStore<N> retVal = this.getGradient(this.factory().makeZero(this.arity(), 1));
 
         if (negated) {
             retVal = retVal.negate();
@@ -68,21 +69,21 @@ abstract class ApproximateFunction<N extends Comparable<N>> implements MultiaryF
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         return prime * result + (myPoint == null ? 0 : myPoint.hashCode());
     }
 
-    public final FirstOrderApproximation<N> toFirstOrderApproximation(final Access1D<N> arg) {
+    @Override public final FirstOrderApproximation<N> toFirstOrderApproximation( Access1D<N> arg) {
         return new FirstOrderApproximation<>(this, arg);
     }
 
-    public final SecondOrderApproximation<N> toSecondOrderApproximation(final Access1D<N> arg) {
+    @Override public final SecondOrderApproximation<N> toSecondOrderApproximation( Access1D<N> arg) {
         return new SecondOrderApproximation<>(this, arg);
     }
 
-    protected PhysicalStore<N> shift(final Access1D<?> arg) {
-        final PhysicalStore<N> retVal = this.factory().columns(arg);
+    protected PhysicalStore<N> shift( Access1D<?> arg) {
+         PhysicalStore<N> retVal = this.factory().columns(arg);
         retVal.modifyMatching(this.factory().function().subtract(), myPoint);
         return retVal;
     }

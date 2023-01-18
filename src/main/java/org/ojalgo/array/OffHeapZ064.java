@@ -28,26 +28,26 @@ final class OffHeapZ064 extends OffHeapArray {
 
     private final long myPointer;
 
-    OffHeapZ064(final long count) {
+    OffHeapZ064( long count) {
 
         super(OffHeapArray.Z064, count);
 
         myPointer = NativeMemory.allocateLongArray(this, count);
     }
 
-    public void add(final long index, final Comparable<?> addend) {
+    @Override public void add( long index,  Comparable<?> addend) {
         this.add(index, Scalar.longValue(addend));
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return NativeMemory.getLong(myPointer, index);
     }
 
-    public float floatValue(final long index) {
+    @Override public float floatValue( long index) {
         return NativeMemory.getLong(myPointer, index);
     }
 
-    public long longValue(final long index) {
+    @Override public long longValue( long index) {
         return NativeMemory.getLong(myPointer, index);
     }
 
@@ -56,19 +56,19 @@ final class OffHeapZ064 extends OffHeapArray {
         NativeMemory.initialiseLongArray(myPointer, this.count());
     }
 
-    public void set(final long index, final Comparable<?> value) {
+    @Override public void set( long index,  Comparable<?> value) {
         this.set(index, Scalar.longValue(value));
     }
 
-    public void set(final long index, final double value) {
+    @Override public void set( long index,  double value) {
         NativeMemory.setLong(myPointer, index, Math.round(value));
     }
 
-    public void set(final long index, final float value) {
+    @Override public void set( long index,  float value) {
         NativeMemory.setLong(myPointer, index, Math.round(value));
     }
 
-    public void set(final long index, final long value) {
+    @Override public void set( long index,  long value) {
         NativeMemory.setLong(myPointer, index, value);
     }
 

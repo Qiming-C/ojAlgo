@@ -21,8 +21,8 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.random.Uniform;
 
 /**
@@ -42,7 +42,7 @@ public final class IndexSelector {
     private int myLastIncluded;
     private final boolean[] mySelector;
 
-    public IndexSelector(final int count) {
+    public IndexSelector( int count) {
 
         super();
 
@@ -55,7 +55,7 @@ public final class IndexSelector {
         myLastIncluded = -1;
     }
 
-    public IndexSelector(final int count, final int[] initiallyIncludedIndeces) {
+    public IndexSelector( int count,  int[] initiallyIncludedIndeces) {
 
         this(count);
 
@@ -75,7 +75,7 @@ public final class IndexSelector {
         return myIncludedLength;
     }
 
-    public void exclude(final int indexToExclude) {
+    public void exclude( int indexToExclude) {
         if (mySelector[indexToExclude]) {
             mySelector[indexToExclude] = false;
             myLastExcluded = indexToExclude;
@@ -84,8 +84,8 @@ public final class IndexSelector {
         }
     }
 
-    public void exclude(final int... indecesToExclude) {
-        int tmpIndex;
+    public void exclude( int... indecesToExclude) {
+        @Var int tmpIndex;
         for (int i = 0; i < indecesToExclude.length; i++) {
             tmpIndex = indecesToExclude[i];
             if (0 <= tmpIndex && tmpIndex < mySelector.length) {
@@ -106,7 +106,7 @@ public final class IndexSelector {
             myExcluded = new int[myExcludedLength];
         }
 
-        int j = 0;
+        @Var int j = 0;
         for (int i = 0; i < mySelector.length; i++) {
             if (!mySelector[i]) {
                 myExcluded[j] = i;
@@ -123,7 +123,7 @@ public final class IndexSelector {
             myIncluded = new int[myIncludedLength];
         }
 
-        int j = 0;
+        @Var int j = 0;
         for (int i = 0; i < mySelector.length; i++) {
             if (mySelector[i]) {
                 myIncluded[j] = i;
@@ -150,7 +150,7 @@ public final class IndexSelector {
         if (myExcludedLength > 0) {
 
             int tmpInclRef = Uniform.randomInteger(myExcludedLength);
-            int tmpExclCount = -1;
+            @Var int tmpExclCount = -1;
 
             for (int i = 0; i < mySelector.length && tmpExclCount < tmpInclRef; i++) {
                 if (!mySelector[i]) {
@@ -163,7 +163,7 @@ public final class IndexSelector {
         }
     }
 
-    public void include(final int indexToInclude) {
+    public void include( int indexToInclude) {
         if (!mySelector[indexToInclude]) {
             mySelector[indexToInclude] = true;
             myLastIncluded = indexToInclude;
@@ -172,8 +172,8 @@ public final class IndexSelector {
         }
     }
 
-    public void include(final int... indecesToInclude) {
-        int tmpIndex;
+    public void include( int... indecesToInclude) {
+        @Var int tmpIndex;
         for (int i = 0; i < indecesToInclude.length; i++) {
             tmpIndex = indecesToInclude[i];
             if (0 <= tmpIndex && tmpIndex < mySelector.length) {
@@ -188,11 +188,11 @@ public final class IndexSelector {
         myExcludedLength = 0;
     }
 
-    public boolean isExcluded(final int index) {
+    public boolean isExcluded( int index) {
         return !mySelector[index];
     }
 
-    public boolean isIncluded(final int index) {
+    public boolean isIncluded( int index) {
         return mySelector[index];
     }
 
@@ -210,7 +210,7 @@ public final class IndexSelector {
         return mySelector[myLastIncluded];
     }
 
-    public void pivot(final int indexToExclude, final int indexToInclude) {
+    public void pivot( int indexToExclude,  int indexToInclude) {
         this.exclude(indexToExclude);
         this.include(indexToInclude);
     }
@@ -231,7 +231,7 @@ public final class IndexSelector {
         if (myIncludedLength > 0) {
 
             int tmpExclRef = Uniform.randomInteger(myIncludedLength);
-            int tmpInclCount = -1;
+            @Var int tmpInclCount = -1;
 
             for (int i = 0; i < mySelector.length && tmpInclCount < tmpExclRef; i++) {
                 if (mySelector[i]) {
@@ -252,10 +252,10 @@ public final class IndexSelector {
         if (myIncludedLength > 0 && myExcludedLength > 0) {
 
             int tmpExclRef = Uniform.randomInteger(myIncludedLength);
-            int tmpInclCount = -1;
+            @Var int tmpInclCount = -1;
 
             int tmpInclRef = Uniform.randomInteger(myExcludedLength);
-            int tmpExclCount = -1;
+            @Var int tmpExclCount = -1;
 
             for (int i = 0; i < mySelector.length && (tmpInclCount < tmpExclRef || tmpExclCount < tmpInclRef); i++) {
                 if (mySelector[i]) {

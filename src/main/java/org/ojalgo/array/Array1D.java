@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.AbstractList;
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.RandomAccess;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.FunctionSet;
@@ -61,24 +61,24 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
 
         private final BasicArray.Factory<N> myDelegate;
 
-        Factory(final DenseArray.Factory<N> denseArray) {
+        Factory( DenseArray.Factory<N> denseArray) {
             super();
             myDelegate = new BasicArray.Factory<>(denseArray);
         }
 
-        public Array1D<N> copy(final Access1D<?> source) {
+        @Override public Array1D<N> copy( Access1D<?> source) {
             return myDelegate.copy(source).wrapInArray1D();
         }
 
-        public Array1D<N> copy(final Comparable<?>[] source) {
+        @Override public Array1D<N> copy( Comparable<?>[] source) {
             return myDelegate.copy(source).wrapInArray1D();
         }
 
-        public Array1D<N> copy(final double... source) {
+        @Override public Array1D<N> copy( double... source) {
             return myDelegate.copy(source).wrapInArray1D();
         }
 
-        public Array1D<N> copy(final List<? extends Comparable<?>> source) {
+        @Override public Array1D<N> copy( List<? extends Comparable<?>> source) {
             return myDelegate.copy(source).wrapInArray1D();
         }
 
@@ -88,19 +88,19 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
         }
 
         @Override
-        public Array1D<N> make(final long count) {
+        public Array1D<N> make( long count) {
             return this.makeDense(count);
         }
 
-        public Array1D<N> makeDense(final long count) {
+        @Override public Array1D<N> makeDense( long count) {
             return myDelegate.makeToBeFilled(count).wrapInArray1D();
         }
 
-        public Array1D<N> makeFilled(final long count, final NullaryFunction<?> supplier) {
+        @Override public Array1D<N> makeFilled( long count,  NullaryFunction<?> supplier) {
             return myDelegate.makeFilled(count, supplier).wrapInArray1D();
         }
 
-        public Array1D<N> makeSparse(final long count) {
+        @Override public Array1D<N> makeSparse( long count) {
             return myDelegate.makeStructuredZero(count).wrapInArray1D();
         }
 
@@ -113,7 +113,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
             return TensorFactory1D.of(this);
         }
 
-        public Array1D<N> wrap(final BasicArray<N> array) {
+        public Array1D<N> wrap( BasicArray<N> array) {
             return array.wrapInArray1D();
         }
 
@@ -127,21 +127,21 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
         private final long low;
         private final Array1D<?> myArray;
 
-        private QuickAscendingSorter(final Array1D<?> array, final long low, final long high) {
+        private QuickAscendingSorter( Array1D<?> array,  long low,  long high) {
             super();
             myArray = array;
             this.low = low;
             this.high = high;
         }
 
-        QuickAscendingSorter(final Array1D<?> array) {
+        QuickAscendingSorter( Array1D<?> array) {
             this(array, 0L, array.count() - 1L);
         }
 
         @Override
         protected void compute() {
 
-            long i = low, j = high;
+            @Var long i = low, j = high;
 
             double pivot = myArray.doubleValue(low + (high - low) / 2);
 
@@ -161,8 +161,8 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
                 }
             }
 
-            QuickAscendingSorter tmpPartL = null;
-            QuickAscendingSorter tmpPartH = null;
+            @Var QuickAscendingSorter tmpPartL = null;
+            @Var QuickAscendingSorter tmpPartH = null;
 
             if (low < j) {
                 tmpPartL = new QuickAscendingSorter(myArray, low, j);
@@ -190,21 +190,21 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
         private final long low;
         private final Array1D<?> myArray;
 
-        private QuickDescendingSorter(final Array1D<?> array, final long low, final long high) {
+        private QuickDescendingSorter( Array1D<?> array,  long low,  long high) {
             super();
             myArray = array;
             this.low = low;
             this.high = high;
         }
 
-        QuickDescendingSorter(final Array1D<?> array) {
+        QuickDescendingSorter( Array1D<?> array) {
             this(array, 0L, array.count() - 1L);
         }
 
         @Override
         protected void compute() {
 
-            long i = low, j = high;
+            @Var long i = low, j = high;
 
             double pivot = myArray.doubleValue(low + (high - low) / 2);
 
@@ -224,8 +224,8 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
                 }
             }
 
-            QuickDescendingSorter tmpPartL = null;
-            QuickDescendingSorter tmpPartH = null;
+            @Var QuickDescendingSorter tmpPartL = null;
+            @Var QuickDescendingSorter tmpPartH = null;
 
             if (low < j) {
                 tmpPartL = new QuickDescendingSorter(myArray, low, j);
@@ -298,7 +298,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     @Deprecated
     public static final Factory<Quaternion> QUATERNION = H256;
 
-    public static <N extends Comparable<N>> Array1D.Factory<N> factory(final DenseArray.Factory<N> denseFactory) {
+    public static <N extends Comparable<N>> Array1D.Factory<N> factory( DenseArray.Factory<N> denseFactory) {
         return new Array1D.Factory<>(denseFactory);
     }
 
@@ -309,11 +309,11 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     private final long myLimit;
     private final long myStep;
 
-    Array1D(final BasicArray<N> delegate) {
+    Array1D( BasicArray<N> delegate) {
         this(delegate, 0L, delegate.count(), 1L);
     }
 
-    Array1D(final BasicArray<N> delegate, final long first, final long limit, final long step) {
+    Array1D( BasicArray<N> delegate,  long first,  long limit,  long step) {
 
         super();
 
@@ -327,49 +327,49 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void add(final long index, final byte addend) {
+    public void add( long index,  byte addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final Comparable<?> addend) {
+    public void add( long index,  Comparable<?> addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final double addend) {
+    public void add( long index,  double addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final float addend) {
+    public void add( long index,  float addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final int addend) {
+    public void add( long index,  int addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final long addend) {
+    public void add( long index,  long addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public void add(final long index, final short addend) {
+    public void add( long index,  short addend) {
         myDelegate.add(this.convert(index), addend);
     }
 
     @Override
-    public N aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    public N aggregateRange( long first,  long limit,  Aggregator aggregator) {
         AggregatorFunction<N> visitor = aggregator.getFunction(myDelegate.factory().aggregator());
         this.visitRange(first, limit, visitor);
         return visitor.get();
     }
 
     @Override
-    public byte byteValue(final long index) {
+    public byte byteValue( long index) {
         return myDelegate.byteValue(this.convert(index));
     }
 
@@ -379,7 +379,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public boolean contains(final Object obj) {
+    public boolean contains( Object obj) {
         return this.indexOf(obj) != -1;
     }
 
@@ -389,19 +389,19 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         return myDelegate.doubleValue(this.convert(index));
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof Array1D)) {
             return false;
         }
-        Array1D<?> other = (Array1D<?>) obj;
+        var other = (Array1D<?>) obj;
         if (length != other.length || myFirst != other.myFirst || myLimit != other.myLimit || myStep != other.myStep) {
             return false;
         }
@@ -416,59 +416,59 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void fillAll(final N value) {
+    public void fillAll( N value) {
         myDelegate.fill(myFirst, myLimit, myStep, value);
     }
 
     @Override
-    public void fillAll(final NullaryFunction<?> supplier) {
+    public void fillAll( NullaryFunction<?> supplier) {
         myDelegate.fill(myFirst, myLimit, myStep, supplier);
     }
 
     @Override
-    public void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long index,  Access1D<?> values,  long valueIndex) {
         myDelegate.fillOne(this.convert(index), values, valueIndex);
     }
 
     @Override
-    public void fillOne(final long index, final N value) {
+    public void fillOne( long index,  N value) {
         myDelegate.fillOne(this.convert(index), value);
     }
 
     @Override
-    public void fillOne(final long index, final NullaryFunction<?> supplier) {
+    public void fillOne( long index,  NullaryFunction<?> supplier) {
         myDelegate.fillOne(this.convert(index), supplier);
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final N value) {
+    public void fillRange( long first,  long limit,  N value) {
         myDelegate.fill(this.convert(first), this.convert(limit), myStep, value);
     }
 
     @Override
-    public void fillRange(final long first, final long limit, final NullaryFunction<?> supplier) {
+    public void fillRange( long first,  long limit,  NullaryFunction<?> supplier) {
         myDelegate.fill(this.convert(first), this.convert(limit), myStep, supplier);
     }
 
     @Override
-    public float floatValue(final long index) {
+    public float floatValue( long index) {
         return myDelegate.floatValue(this.convert(index));
     }
 
     @Override
-    public N get(final int index) {
+    public N get( int index) {
         return myDelegate.get(this.convert(index));
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         return myDelegate.get(this.convert(index));
     }
 
     @Override
     public int hashCode() {
         int prime = 31;
-        int result = super.hashCode();
+        @Var int result = super.hashCode();
         result = prime * result + (int) (length ^ length >>> 32);
         result = prime * result + (myDelegate == null ? 0 : myDelegate.hashCode());
         result = prime * result + (int) (myFirst ^ myFirst >>> 32);
@@ -477,7 +477,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public int indexOf(final Object obj) {
+    public int indexOf( Object obj) {
         int tmpLength = this.size();
         if (obj == null) {
             for (int i = 0; i < tmpLength; i++) {
@@ -504,7 +504,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public int intValue(final long index) {
+    public int intValue( long index) {
         return myDelegate.intValue(this.convert(index));
     }
 
@@ -514,12 +514,12 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public long longValue(final long index) {
+    public long longValue( long index) {
         return myDelegate.longValue(this.convert(index));
     }
 
     @Override
-    public double mix(final long index, final BinaryFunction<N> mixer, final double addend) {
+    public double mix( long index,  BinaryFunction<N> mixer,  double addend) {
         ProgrammingError.throwIfNull(mixer);
         synchronized (myDelegate) {
             double oldValue = this.doubleValue(index);
@@ -530,7 +530,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public N mix(final long index, final BinaryFunction<N> mixer, final N addend) {
+    public N mix( long index,  BinaryFunction<N> mixer,  N addend) {
         ProgrammingError.throwIfNull(mixer);
         synchronized (myDelegate) {
             N oldValue = this.get(index);
@@ -541,17 +541,17 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void modifyAll(final UnaryFunction<N> modifier) {
+    public void modifyAll( UnaryFunction<N> modifier) {
         myDelegate.modify(myFirst, myLimit, myStep, modifier);
     }
 
     @Override
-    public void modifyAny(final Transformation1D<N> modifier) {
+    public void modifyAny( Transformation1D<N> modifier) {
         modifier.transform(this);
     }
 
     @Override
-    public void modifyMatching(final Access1D<N> left, final BinaryFunction<N> function) {
+    public void modifyMatching( Access1D<N> left,  BinaryFunction<N> function) {
         long limit = Math.min(length, left.count());
         if (myDelegate.isPrimitive()) {
             for (long i = 0L; i < limit; i++) {
@@ -565,7 +565,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void modifyMatching(final BinaryFunction<N> function, final Access1D<N> right) {
+    public void modifyMatching( BinaryFunction<N> function,  Access1D<N> right) {
         long limit = Math.min(length, right.count());
         if (myDelegate.isPrimitive()) {
             for (long i = 0L; i < limit; i++) {
@@ -579,21 +579,21 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void modifyOne(final long index, final UnaryFunction<N> modifier) {
+    public void modifyOne( long index,  UnaryFunction<N> modifier) {
         myDelegate.modifyOne(this.convert(index), modifier);
     }
 
     @Override
-    public void modifyRange(final long first, final long limit, final UnaryFunction<N> modifier) {
+    public void modifyRange( long first,  long limit,  UnaryFunction<N> modifier) {
         myDelegate.modify(this.convert(first), this.convert(limit), myStep, modifier);
     }
 
-    public void reset() {
+    @Override public void reset() {
         myDelegate.reset();
     }
 
     @Override
-    public N set(final int index, final N value) {
+    public N set( int index,  N value) {
         long tmpIndex = this.convert(index);
         N retVal = myDelegate.get(tmpIndex);
         myDelegate.set(tmpIndex, value);
@@ -601,42 +601,42 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void set(final long index, final byte value) {
+    public void set( long index,  byte value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final Comparable<?> value) {
+    public void set( long index,  Comparable<?> value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final double value) {
+    public void set( long index,  double value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final float value) {
+    public void set( long index,  float value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final int value) {
+    public void set( long index,  int value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final long value) {
+    public void set( long index,  long value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public void set(final long index, final short value) {
+    public void set( long index,  short value) {
         myDelegate.set(this.convert(index), value);
     }
 
     @Override
-    public short shortValue(final long index) {
+    public short shortValue( long index) {
         return myDelegate.shortValue(this.convert(index));
     }
 
@@ -646,7 +646,7 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public Array1D<N> sliceRange(final long first, final long limit) {
+    public Array1D<N> sliceRange( long first,  long limit) {
         return new Array1D<>(myDelegate, this.convert(first), this.convert(limit), myStep);
     }
 
@@ -689,11 +689,11 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public Array1D<N> subList(final int first, final int limit) {
+    public Array1D<N> subList( int first,  int limit) {
         return this.sliceRange(first, limit);
     }
 
-    public void supplyTo(final Mutate1D receiver) {
+    @Override public void supplyTo( Mutate1D receiver) {
         long limit = Math.min(length, receiver.count());
         if (myDelegate.isPrimitive()) {
             for (long i = 0L; i < limit; i++) {
@@ -712,28 +712,28 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
     }
 
     @Override
-    public void visitAll(final VoidFunction<N> visitor) {
+    public void visitAll( VoidFunction<N> visitor) {
         myDelegate.visit(myFirst, myLimit, myStep, visitor);
     }
 
     @Override
-    public void visitOne(final long index, final VoidFunction<N> visitor) {
+    public void visitOne( long index,  VoidFunction<N> visitor) {
         myDelegate.visitOne(this.convert(index), visitor);
     }
 
     @Override
-    public void visitRange(final long first, final long limit, final VoidFunction<N> visitor) {
+    public void visitRange( long first,  long limit,  VoidFunction<N> visitor) {
         myDelegate.visit(this.convert(first), this.convert(limit), myStep, visitor);
     }
 
     /**
      * Convert an external (public API) index to the corresponding internal
      */
-    private long convert(final long index) {
+    private long convert( long index) {
         return myFirst + myStep * index;
     }
 
-    void exchange(final long indexA, final long indexB) {
+    void exchange( long indexA,  long indexB) {
 
         if (myDelegate.isPrimitive()) {
 
@@ -753,9 +753,9 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
         return myDelegate;
     }
 
-    void sortAscending(final long low, final long high) {
+    void sortAscending( long low,  long high) {
 
-        long i = low, j = high;
+        @Var long i = low, j = high;
 
         double pivot = this.doubleValue(low + (high - low) / 2);
 
@@ -783,9 +783,9 @@ public final class Array1D<N extends Comparable<N>> extends AbstractList<N> impl
         }
     }
 
-    void sortDescending(final long low, final long high) {
+    void sortDescending( long low,  long high) {
 
-        long i = low, j = high;
+        @Var long i = low, j = high;
 
         double pivot = this.doubleValue(low + (high - low) / 2);
 

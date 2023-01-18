@@ -111,29 +111,30 @@ public interface MultiaryFunction<N extends Comparable<N>> extends BasicFunction
         }
 
         /**
-         * @return The gradient at origin (0-vector), negated or not
+         *Returns the gradient at origin (0-vector), negated or not.
+ 
          */
         MatrixStore<N> getLinearFactors(boolean negated);
 
-        default MultiaryFunction.TwiceDifferentiable<N> toFirstOrderApproximation(final Access1D<N> arg) {
+        default MultiaryFunction.TwiceDifferentiable<N> toFirstOrderApproximation( Access1D<N> arg) {
             return new FirstOrderApproximation<>(this, arg);
         }
 
-        default MultiaryFunction.TwiceDifferentiable<N> toSecondOrderApproximation(final Access1D<N> arg) {
+        default MultiaryFunction.TwiceDifferentiable<N> toSecondOrderApproximation( Access1D<N> arg) {
             return new SecondOrderApproximation<>(this, arg);
         }
 
     }
 
-    default MultiaryFunction<N> andThen(final UnaryFunction<N> after) {
+    default MultiaryFunction<N> andThen( UnaryFunction<N> after) {
         ProgrammingError.throwIfNull(after);
         return new MultiaryFunction<>() {
 
-            public int arity() {
+            @Override public int arity() {
                 return MultiaryFunction.this.arity();
             }
 
-            public N invoke(final Access1D<N> arg) {
+            @Override public N invoke( Access1D<N> arg) {
                 return after.invoke(MultiaryFunction.this.invoke(arg));
             }
 
@@ -142,6 +143,6 @@ public interface MultiaryFunction<N extends Comparable<N>> extends BasicFunction
 
     int arity();
 
-    N invoke(Access1D<N> arg);
+    @Override N invoke(Access1D<N> arg);
 
 }

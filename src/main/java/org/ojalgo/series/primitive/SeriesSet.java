@@ -30,7 +30,7 @@ public class SeriesSet {
 
     private final PrimitiveSeries[] mySet;
 
-    SeriesSet(final PrimitiveSeries[] set) {
+    SeriesSet( PrimitiveSeries[] set) {
         super();
         mySet = set;
     }
@@ -46,18 +46,18 @@ public class SeriesSet {
         return new SeriesSet(retSet);
     }
 
-    public <M extends Mutate2D> M getCorrelations(final Factory2D<M> factory) {
+    public <M extends Mutate2D> M getCorrelations( Factory2D<M> factory) {
         return DataProcessors.correlations(factory, mySet);
     }
 
-    public <M extends Mutate2D> M getCovariances(final Factory2D<M> factory) {
+    public <M extends Mutate2D> M getCovariances( Factory2D<M> factory) {
         return DataProcessors.covariances(factory, mySet);
     }
 
     /**
      * Return a {@link Structure2D} with variables in columns and matching samples in rows.
      */
-    public <M extends Structure2D> M getData(final Factory2D.Dense<M> factory) {
+    public <M extends Structure2D> M getData( Factory2D.Dense<M> factory) {
         return factory.columns(mySet);
     }
 

@@ -30,26 +30,26 @@ public abstract class FillAll implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static <N extends Comparable<N>> void fill(final BasicArray<N> data, final int first, final int limit, final int step, final double value) {
+    public static <N extends Comparable<N>> void fill( BasicArray<N> data,  int first,  int limit,  int step,  double value) {
         for (int i = first; i < limit; i += step) {
             data.set(i, value);
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final BasicArray<N> data, final int first, final int limit, final int step,
-            final NullaryFunction<N> supplier) {
+    public static <N extends Comparable<N>> void fill( BasicArray<N> data,  int first,  int limit,  int step,
+             NullaryFunction<N> supplier) {
         for (int i = first; i < limit; i += step) {
             data.set(i, supplier.doubleValue());
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final BasicArray<N> data, final long first, final long limit, final long step, final double value) {
+    public static <N extends Comparable<N>> void fill( BasicArray<N> data,  long first,  long limit,  long step,  double value) {
         for (long i = first; i < limit; i += step) {
             data.set(i, value);
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final BasicArray<N> data, final long first, final long limit, final long step, final N value) {
+    public static <N extends Comparable<N>> void fill( BasicArray<N> data,  long first,  long limit,  long step,  N value) {
 
         switch (data.getMathType()) {
         case R064:
@@ -86,8 +86,8 @@ public abstract class FillAll implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final BasicArray<N> data, final long first, final long limit, final long step,
-            final NullaryFunction<?> supplier) {
+    public static <N extends Comparable<N>> void fill( BasicArray<N> data,  long first,  long limit,  long step,
+             NullaryFunction<?> supplier) {
 
         switch (data.getMathType()) {
         case R064:
@@ -120,93 +120,93 @@ public abstract class FillAll implements ArrayOperation {
         }
     }
 
-    public static void fill(final byte[] data, final int first, final int limit, final int step, final byte value) {
+    public static void fill( byte[] data,  int first,  int limit,  int step,  byte value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static void fill(final byte[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( byte[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.byteValue();
         }
     }
 
-    public static void fill(final double[] data, final int first, final int limit, final int step, final double value) {
+    public static void fill( double[] data,  int first,  int limit,  int step,  double value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static void fill(final double[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( double[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.doubleValue();
         }
     }
 
-    public static void fill(final float[] data, final int first, final int limit, final int step, final float value) {
+    public static void fill( float[] data,  int first,  int limit,  int step,  float value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static void fill(final float[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( float[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.floatValue();
         }
     }
 
-    public static void fill(final int[] data, final int first, final int limit, final int step, final int value) {
+    public static void fill( int[] data,  int first,  int limit,  int step,  int value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static void fill(final int[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( int[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.intValue();
         }
     }
 
-    public static void fill(final long[] data, final int first, final int limit, final int step, final long value) {
+    public static void fill( long[] data,  int first,  int limit,  int step,  long value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static void fill(final long[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( long[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.longValue();
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final N[] data, final int first, final int limit, final int step, final N value) {
+    public static <N extends Comparable<N>> void fill( N[] data,  int first,  int limit,  int step,  N value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    public static <N extends Comparable<N>> void fill(final N[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier,
-            final Scalar.Factory<N> scalar) {
+    public static <N extends Comparable<N>> void fill( N[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier,
+             Scalar.Factory<N> scalar) {
         for (int i = first; i < limit; i += step) {
             data[i] = scalar.cast(supplier.invoke());
         }
     }
 
-    public static void fill(final short[] data, final int first, final int limit, final int step, final NullaryFunction<?> supplier) {
+    public static void fill( short[] data,  int first,  int limit,  int step,  NullaryFunction<?> supplier) {
         for (int i = first; i < limit; i += step) {
             data[i] = supplier.shortValue();
         }
     }
 
-    public static void fill(final short[] data, final int first, final int limit, final int step, final short value) {
+    public static void fill( short[] data,  int first,  int limit,  int step,  short value) {
         for (int i = first; i < limit; i += step) {
             data[i] = value;
         }
     }
 
-    protected static void fill(final BasicArray<?> data, final Access1D<?> value) {
-        int tmpLimit = (int) Math.min(data.count(), value.count());
+    protected static void fill( BasicArray<?> data,  Access1D<?> value) {
+        var tmpLimit = (int) Math.min(data.count(), value.count());
         for (int i = 0; i < tmpLimit; i++) {
             data.set(i, value.doubleValue(i));
         }

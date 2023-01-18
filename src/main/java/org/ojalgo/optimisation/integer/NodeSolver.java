@@ -21,13 +21,13 @@
  */
 package org.ojalgo.optimisation.integer;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.ojalgo.equation.Equation;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.function.special.MissingMath;
@@ -51,11 +51,11 @@ public final class NodeSolver extends IntermediateSolver {
     private static final NumberContext LIMIT = PRECISION.withMode(RoundingMode.FLOOR);
     private static final NumberContext SCALE = NumberContext.of(14);
 
-    NodeSolver(final ExpressionsBasedModel model) {
+    NodeSolver( ExpressionsBasedModel model) {
         super(model);
     }
 
-    boolean generateCuts(final ModelStrategy strategy) {
+    boolean generateCuts( ModelStrategy strategy) {
         boolean retVal = this.generateCuts(strategy, this.getModel());
         if (retVal) {
             this.reset();
@@ -63,7 +63,7 @@ public final class NodeSolver extends IntermediateSolver {
         return retVal;
     }
 
-    boolean generateCuts(final ModelStrategy strategy, final ExpressionsBasedModel target) {
+    boolean generateCuts( ModelStrategy strategy,  ExpressionsBasedModel target) {
 
         if (!this.isSolved()) {
             return false;
@@ -75,7 +75,7 @@ public final class NodeSolver extends IntermediateSolver {
         long nbConstr = model.constraints().count();
 
         if (this.getSolver() instanceof UpdatableSolver) {
-            UpdatableSolver solver = (UpdatableSolver) this.getSolver();
+            var solver = (UpdatableSolver) this.getSolver();
 
             UpdatableSolver.EntityMap entityMap = solver.getEntityMap();
 
@@ -162,7 +162,7 @@ public final class NodeSolver extends IntermediateSolver {
                         }
                     }
 
-                    BigDecimal cRHS = cut.getLowerLimit();
+                    @Var BigDecimal cRHS = cut.getLowerLimit();
 
                     // The cut violation is always 1.0
                     // The relative violation is 1.0 relative to the RHS
@@ -177,12 +177,12 @@ public final class NodeSolver extends IntermediateSolver {
                         continue;
                     }
 
-                    BigDecimal cLargest = BigMath.ONE;
+                    @Var BigDecimal cLargest = BigMath.ONE;
                     for (Entry<IntIndex, BigDecimal> entry : cut.getLinearEntrySet()) {
                         cLargest = cLargest.max(entry.getValue().abs());
                     }
 
-                    BigDecimal cSmallest = BigMath.VERY_POSITIVE;
+                    @Var BigDecimal cSmallest = BigMath.VERY_POSITIVE;
                     for (Iterator<Entry<IntIndex, BigDecimal>> iterator = cut.getLinearEntrySet().iterator(); iterator.hasNext();) {
                         Entry<IntIndex, BigDecimal> entry = iterator.next();
 

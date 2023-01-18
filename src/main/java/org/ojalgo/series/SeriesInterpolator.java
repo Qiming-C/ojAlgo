@@ -21,9 +21,9 @@
  */
 package org.ojalgo.series;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.TreeMap;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.type.CalendarDate;
 import org.ojalgo.type.TypeUtils;
@@ -40,45 +40,45 @@ public class SeriesInterpolator {
         this(NumberContext.ofScale(15));
     }
 
-    public SeriesInterpolator(final NumberContext context) {
+    public SeriesInterpolator( NumberContext context) {
 
         super();
 
         myContext = context;
     }
 
-    public void addSeries(final Comparable<?> key, final CalendarDateSeries<Double> series) {
+    public void addSeries( Comparable<?> key,  CalendarDateSeries<Double> series) {
 
-        final BigDecimal tmpKey = TypeUtils.toBigDecimal(key, myContext);
+         BigDecimal tmpKey = TypeUtils.toBigDecimal(key, myContext);
 
         myKeys.put(tmpKey, series.getName());
         myOriginalSet.put(series);
         myCoordinatedSet = null;
     }
 
-    public CalendarDateSeries<Double> getCombination(final Comparable<?> inputKey) {
+    public CalendarDateSeries<Double> getCombination( Comparable<?> inputKey) {
 
-        final BigDecimal tmpInputKey = TypeUtils.toBigDecimal(inputKey, myContext);
+         BigDecimal tmpInputKey = TypeUtils.toBigDecimal(inputKey, myContext);
 
         if (myCoordinatedSet == null) {
             myCoordinatedSet = myOriginalSet.prune();
             myCoordinatedSet.complete();
         }
 
-        final CalendarDateSeries<Double> retVal = new CalendarDateSeries<>(myCoordinatedSet.getResolution());
+         CalendarDateSeries<Double> retVal = new CalendarDateSeries<>(myCoordinatedSet.getResolution());
 
-        BigDecimal tmpLowerKey = null;
-        BigDecimal tmpUpperKey = null;
-        for (final BigDecimal tmpIterKey : myKeys.keySet()) {
+        @Var BigDecimal tmpLowerKey = null;
+        @Var BigDecimal tmpUpperKey = null;
+        for ( BigDecimal tmpIterKey : myKeys.keySet()) {
 
-            if (tmpIterKey.compareTo(tmpInputKey) != 1) {
-                if ((tmpLowerKey == null) || (tmpIterKey.compareTo(tmpLowerKey) == 1)) {
+            if (tmpIterKey.compareTo(tmpInputKey) <= 0) {
+                if ((tmpLowerKey == null) || (tmpIterKey.compareTo(tmpLowerKey) > 0)) {
                     tmpLowerKey = tmpIterKey;
                 }
             }
 
-            if (tmpIterKey.compareTo(tmpInputKey) != -1) {
-                if ((tmpUpperKey == null) || (tmpIterKey.compareTo(tmpInputKey) != -1)) {
+            if (tmpIterKey.compareTo(tmpInputKey) >= 0) {
+                if ((tmpUpperKey == null) || (tmpIterKey.compareTo(tmpInputKey) >= 0)) {
                     tmpUpperKey = tmpIterKey;
                 }
 
@@ -86,7 +86,7 @@ public class SeriesInterpolator {
         }
 
         @SuppressWarnings("unchecked")
-        final long[] tmpSeriesKeys = ((CalendarDateSeries<Double>) myCoordinatedSet.values().toArray()[0]).getPrimitiveKeys();
+         long[] tmpSeriesKeys = ((CalendarDateSeries<Double>) myCoordinatedSet.values().toArray()[0]).getPrimitiveKeys();
         double tmpFactor;
         double[] tmpSeriesValues;
 
@@ -116,8 +116,8 @@ public class SeriesInterpolator {
 
             } else {
 
-                final double[] tmpLowerValues = myCoordinatedSet.get(myKeys.get(tmpLowerKey)).asPrimitive().toRawCopy1D();
-                final double[] tmpUpperValues = myCoordinatedSet.get(myKeys.get(tmpUpperKey)).asPrimitive().toRawCopy1D();
+                 double[] tmpLowerValues = myCoordinatedSet.get(myKeys.get(tmpLowerKey)).asPrimitive().toRawCopy1D();
+                 double[] tmpUpperValues = myCoordinatedSet.get(myKeys.get(tmpUpperKey)).asPrimitive().toRawCopy1D();
 
                 tmpFactor = (tmpInputKey.doubleValue() - tmpLowerKey.doubleValue()) / (tmpUpperKey.doubleValue() - tmpLowerKey.doubleValue());
 

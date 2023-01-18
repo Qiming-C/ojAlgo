@@ -45,14 +45,14 @@ public final class YahooSession {
         private final ServiceClient.Session mySession;
         private final String mySymbol;
 
-        Fetcher(final ServiceClient.Session session, final String symbol, final CalendarDateUnit resolution) {
+        Fetcher( ServiceClient.Session session,  String symbol,  CalendarDateUnit resolution) {
             super();
             mySession = session;
             mySymbol = symbol;
             myResolution = resolution;
         }
 
-        public InputStream getInputStream() {
+        @Override public InputStream getInputStream() {
 
             // https://query1.finance.yahoo.com/v7/finance/download/AAPL?period1=345427200&period2=1663718400&interval=1d&events=history&includeAdjustedClose=true
 
@@ -88,11 +88,11 @@ public final class YahooSession {
             }
         }
 
-        public CalendarDateUnit getResolution() {
+        @Override public CalendarDateUnit getResolution() {
             return myResolution;
         }
 
-        public String getSymbol() {
+        @Override public String getSymbol() {
             return mySymbol;
         }
 
@@ -106,7 +106,7 @@ public final class YahooSession {
         super();
     }
 
-    public Fetcher newFetcher(final String symbol, final CalendarDateUnit resolution) {
+    public Fetcher newFetcher( String symbol,  CalendarDateUnit resolution) {
         return new Fetcher(mySession, symbol, resolution);
     }
 

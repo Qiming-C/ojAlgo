@@ -42,11 +42,11 @@ class SimultaneousTridiagonal extends TridiagonalDecomposition<Double> {
         super(Primitive64Store.FACTORY);
     }
 
-    public boolean decompose(final Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    @Override public boolean decompose( Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
 
         this.setInPlace(matrix);
 
-        final int size = this.getMinDim();
+         int size = this.getMinDim();
 
         if ((myDiagD == null) || (myDiagD.count() == size)) {
             myDiagD = ArrayR064.make(size);
@@ -59,7 +59,7 @@ class SimultaneousTridiagonal extends TridiagonalDecomposition<Double> {
     }
 
     @Override
-    protected void supplyDiagonalTo(final double[] d, final double[] e) {
+    protected void supplyDiagonalTo( double[] d,  double[] e) {
         myDiagD.supplyTo(d);
         myDiagE.supplyTo(e);
     }

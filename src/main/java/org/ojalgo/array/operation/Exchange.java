@@ -21,18 +21,19 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.BasicArray;
 
 public abstract class Exchange implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static <N extends Comparable<N>> void exchange(final BasicArray<N> data, final long firstA, final long firstB, final long step, final long count) {
+    public static <N extends Comparable<N>> void exchange( BasicArray<N> data,  long firstA,  long firstB,  long step,  long count) {
 
-        long indexA = firstA;
-        long indexB = firstB;
+        @Var long indexA = firstA;
+        @Var long indexB = firstB;
 
-        N tmpVal;
+        @Var N tmpVal;
 
         for (long i = 0L; i < count; i++) {
 
@@ -45,30 +46,12 @@ public abstract class Exchange implements ArrayOperation {
         }
     }
 
-    public static void exchange(final byte[] data, final int firstA, final int firstB, final int step, final int count) {
+    public static void exchange( byte[] data,  int firstA,  int firstB,  int step,  int count) {
 
-        int indexA = firstA;
-        int indexB = firstB;
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
 
-        byte tmpVal;
-
-        for (int i = 0; i < count; i++) {
-
-            tmpVal = data[indexA];
-            data[indexA] = data[indexB];
-            data[indexB] = tmpVal;
-
-            indexA += step;
-            indexB += step;
-        }
-    }
-
-    public static void exchange(final double[] data, final int firstA, final int firstB, final int step, final int count) {
-
-        int indexA = firstA;
-        int indexB = firstB;
-
-        double tmpVal;
+        @Var byte tmpVal;
 
         for (int i = 0; i < count; i++) {
 
@@ -81,30 +64,12 @@ public abstract class Exchange implements ArrayOperation {
         }
     }
 
-    public static void exchange(final float[] data, final int firstA, final int firstB, final int step, final int count) {
+    public static void exchange( double[] data,  int firstA,  int firstB,  int step,  int count) {
 
-        int indexA = firstA;
-        int indexB = firstB;
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
 
-        float tmpVal;
-
-        for (int i = 0; i < count; i++) {
-
-            tmpVal = data[indexA];
-            data[indexA] = data[indexB];
-            data[indexB] = tmpVal;
-
-            indexA += step;
-            indexB += step;
-        }
-    }
-
-    public static void exchange(final int[] data, final int firstA, final int firstB, final int step, final int count) {
-
-        int indexA = firstA;
-        int indexB = firstB;
-
-        int tmpVal;
+        @Var double tmpVal;
 
         for (int i = 0; i < count; i++) {
 
@@ -117,30 +82,12 @@ public abstract class Exchange implements ArrayOperation {
         }
     }
 
-    public static void exchange(final long[] data, final int firstA, final int firstB, final int step, final int count) {
+    public static void exchange( float[] data,  int firstA,  int firstB,  int step,  int count) {
 
-        int indexA = firstA;
-        int indexB = firstB;
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
 
-        long tmpVal;
-
-        for (int i = 0; i < count; i++) {
-
-            tmpVal = data[indexA];
-            data[indexA] = data[indexB];
-            data[indexB] = tmpVal;
-
-            indexA += step;
-            indexB += step;
-        }
-    }
-
-    public static <N extends Comparable<N>> void exchange(final N[] data, final int firstA, final int firstB, final int step, final int count) {
-
-        int indexA = firstA;
-        int indexB = firstB;
-
-        N tmpVal;
+        @Var float tmpVal;
 
         for (int i = 0; i < count; i++) {
 
@@ -153,12 +100,66 @@ public abstract class Exchange implements ArrayOperation {
         }
     }
 
-    public static void exchange(final short[] data, final int firstA, final int firstB, final int step, final int count) {
+    public static void exchange( int[] data,  int firstA,  int firstB,  int step,  int count) {
 
-        int indexA = firstA;
-        int indexB = firstB;
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
 
-        short tmpVal;
+        @Var int tmpVal;
+
+        for (int i = 0; i < count; i++) {
+
+            tmpVal = data[indexA];
+            data[indexA] = data[indexB];
+            data[indexB] = tmpVal;
+
+            indexA += step;
+            indexB += step;
+        }
+    }
+
+    public static void exchange( long[] data,  int firstA,  int firstB,  int step,  int count) {
+
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
+
+        @Var long tmpVal;
+
+        for (int i = 0; i < count; i++) {
+
+            tmpVal = data[indexA];
+            data[indexA] = data[indexB];
+            data[indexB] = tmpVal;
+
+            indexA += step;
+            indexB += step;
+        }
+    }
+
+    public static <N extends Comparable<N>> void exchange( N[] data,  int firstA,  int firstB,  int step,  int count) {
+
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
+
+        @Var N tmpVal;
+
+        for (int i = 0; i < count; i++) {
+
+            tmpVal = data[indexA];
+            data[indexA] = data[indexB];
+            data[indexB] = tmpVal;
+
+            indexA += step;
+            indexB += step;
+        }
+    }
+
+    public static void exchange( short[] data,  int firstA,  int firstB,  int step,  int count) {
+
+        @Var int indexA = firstA;
+        @Var int indexB = firstB;
+
+        @Var short tmpVal;
 
         for (int i = 0; i < count; i++) {
 

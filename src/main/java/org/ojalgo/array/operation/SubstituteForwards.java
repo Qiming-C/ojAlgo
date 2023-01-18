@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.MissingMath;
 import org.ojalgo.scalar.Scalar;
@@ -41,13 +42,13 @@ public abstract class SubstituteForwards implements ArrayOperation {
      *        stored in the upper/right part.
      * @param identity Assume the RHS is an identity matrix (disregard the actual elements)
      */
-    public static void invoke(final double[] data, final int structure, final int first, final int limit, final Access2D<?> body, final boolean unitDiagonal,
-            final boolean conjugated, final boolean identity) {
+    public static void invoke( double[] data,  int structure,  int first,  int limit,  Access2D<?> body,  boolean unitDiagonal,
+             boolean conjugated,  boolean identity) {
 
         int diagDim = MissingMath.toMinIntExact(body.countRows(), body.countColumns());
         double[] bodyRow = new double[diagDim];
-        double tmpVal;
-        int colBaseIndex;
+        @Var double tmpVal;
+        @Var int colBaseIndex;
 
         for (int i = 0; i < diagDim; i++) {
 
@@ -78,15 +79,16 @@ public abstract class SubstituteForwards implements ArrayOperation {
     }
 
     /**
-     * @see #invoke(double[], int, int, int, Access2D, boolean, boolean, boolean)
+     *See {@link #invoke(double[], int, int, int, Access2D, boolean, boolean, boolean)}.
+ 
      */
-    public static void invoke(final double[][] data, final Access2D<?> body, final boolean unitDiagonal, final boolean conjugated, final boolean identity) {
+    public static void invoke( double[][] data,  Access2D<?> body,  boolean unitDiagonal,  boolean conjugated,  boolean identity) {
 
         int limit = data[0].length;
 
         int diagDim = MissingMath.toMinIntExact(body.countRows(), body.countColumns());
         double[] bodyRow = new double[diagDim];
-        double tmpVal;
+        @Var double tmpVal;
 
         for (int i = 0; i < diagDim; i++) {
 
@@ -115,13 +117,13 @@ public abstract class SubstituteForwards implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int structure, final int first, final int limit, final Access2D<?> body, final boolean unitDiagonal,
-            final boolean conjugated, final boolean identity) {
+    public static void invoke( float[] data,  int structure,  int first,  int limit,  Access2D<?> body,  boolean unitDiagonal,
+             boolean conjugated,  boolean identity) {
 
         int diagDim = MissingMath.toMinIntExact(body.countRows(), body.countColumns());
         float[] bodyRow = new float[diagDim];
-        float tmpVal;
-        int colBaseIndex;
+        @Var float tmpVal;
+        @Var int colBaseIndex;
 
         for (int i = 0; i < diagDim; i++) {
 
@@ -152,15 +154,16 @@ public abstract class SubstituteForwards implements ArrayOperation {
     }
 
     /**
-     * @see #invoke(double[], int, int, int, Access2D, boolean, boolean, boolean)
+     *See {@link #invoke(double[], int, int, int, Access2D, boolean, boolean, boolean)}.
+ 
      */
-    public static <N extends Scalar<N>> void invoke(final N[] data, final int structure, final int first, final int limit, final Access2D<N> body,
-            final boolean unitDiagonal, final boolean conjugated, final boolean identity, final Scalar.Factory<N> scalar) {
+    public static <N extends Scalar<N>> void invoke( N[] data,  int structure,  int first,  int limit,  Access2D<N> body,
+             boolean unitDiagonal,  boolean conjugated,  boolean identity,  Scalar.Factory<N> scalar) {
 
         int diagDim = MissingMath.toMinIntExact(body.countRows(), body.countColumns());
         N[] bodyRow = scalar.newArrayInstance(diagDim);
-        Scalar<N> tmpVal;
-        int colBaseIndex;
+        @Var Scalar<N> tmpVal;
+        @Var int colBaseIndex;
 
         for (int i = 0; i < diagDim; i++) {
 

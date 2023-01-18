@@ -23,10 +23,10 @@ package org.ojalgo.matrix.task.iterative;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
-
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.concurrent.DivideAndConquer;
 import org.ojalgo.concurrent.DivideAndConquer.Conquerer;
@@ -49,7 +49,7 @@ public final class ParallelGaussSeidelSolver extends StationaryIterativeSolver i
     private static final IntSupplier PARALLELISM = Parallelism.CORES;
     private static final int THRESHOLD = 128;
 
-    private static void divide(final int nbEquations, final Conquerer conquerer) {
+    private static void divide( int nbEquations,  Conquerer conquerer) {
         DIVIDER.parallelism(PARALLELISM).threshold(THRESHOLD).divide(0, nbEquations, conquerer);
     }
 
@@ -57,24 +57,24 @@ public final class ParallelGaussSeidelSolver extends StationaryIterativeSolver i
         super();
     }
 
-    public double resolve(final List<Equation> equations, final PhysicalStore<Double> solution) {
+    @Override public double resolve( List<Equation> equations,  PhysicalStore<Double> solution) {
 
         int nbEquations = equations.size();
 
-        double tmpNorm = ZERO;
+        @Var double tmpNorm = ZERO;
         for (int r = 0; r < nbEquations; r++) {
             tmpNorm = HYPOT.invoke(tmpNorm, equations.get(r).getRHS());
         }
         double normRHS = tmpNorm;
 
-        AtomicInteger iterationsCounter = new AtomicInteger();
+        var iterationsCounter = new AtomicInteger();
 
         ParallelGaussSeidelSolver.divide(nbEquations, (first, last) -> this.resolve(equations, solution, normRHS, iterationsCounter, first, last));
 
         return this.resolve(equations, solution, normRHS, iterationsCounter, 0, nbEquations);
     }
 
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> current) throws RecoverableCondition {
+    @Override public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> current) throws RecoverableCondition {
 
         List<Equation> equations = IterativeSolverTask.toListOfRows(body, rhs);
 
@@ -83,14 +83,14 @@ public final class ParallelGaussSeidelSolver extends StationaryIterativeSolver i
         return current;
     }
 
-    private double resolve(final List<Equation> equations, final PhysicalStore<Double> solution, final double normRHS, final AtomicInteger iterationsCounter,
-            final int first, final int last) {
+    private double resolve( List<Equation> equations,  PhysicalStore<Double> solution,  double normRHS,  AtomicInteger iterationsCounter,
+             int first,  int last) {
 
         int iterationsLimit = this.getIterationsLimit();
         NumberContext accuracy = this.getAccuracyContext();
         double relaxationFactor = this.getRelaxationFactor();
 
-        double normErr = POSITIVE_INFINITY;
+        @Var double normErr = POSITIVE_INFINITY;
 
         do {
 

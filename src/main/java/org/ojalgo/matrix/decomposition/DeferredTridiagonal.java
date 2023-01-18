@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.BasicArray;
 import org.ojalgo.function.constant.PrimitiveMath;
@@ -49,14 +50,14 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
         }
 
         @Override
-        Array1D<ComplexNumber> makeReal(final BasicArray<ComplexNumber> offDiagonal) {
+        Array1D<ComplexNumber> makeReal( BasicArray<ComplexNumber> offDiagonal) {
 
             Array1D<ComplexNumber> retVal = Array1D.C128.make(offDiagonal.count());
             retVal.fillAll(ComplexNumber.ONE);
 
             BasicArray<ComplexNumber> tmpSubdiagonal = offDiagonal; // superDiagonal should be the conjugate of this but it is set to the same value
 
-            ComplexNumber tmpVal = null;
+            @Var ComplexNumber tmpVal = null;
             for (int i = 0; i < tmpSubdiagonal.count(); i++) {
 
                 tmpVal = tmpSubdiagonal.get(i).signum();
@@ -85,14 +86,14 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
         }
 
         @Override
-        Array1D<Quaternion> makeReal(final BasicArray<Quaternion> offDiagonal) {
+        Array1D<Quaternion> makeReal( BasicArray<Quaternion> offDiagonal) {
 
             Array1D<Quaternion> retVal = Array1D.H256.make(offDiagonal.count());
             retVal.fillAll(Quaternion.ONE);
 
             BasicArray<Quaternion> tmpSubdiagonal = offDiagonal; // superDiagonal should be the conjugate of this but it is set to the same value
 
-            Quaternion tmpVal = null;
+            @Var Quaternion tmpVal = null;
             for (int i = 0; i < tmpSubdiagonal.count(); i++) {
 
                 tmpVal = tmpSubdiagonal.get(i).signum();
@@ -121,7 +122,7 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
         }
 
         @Override
-        Array1D<RationalNumber> makeReal(final BasicArray<RationalNumber> offDiagonal) {
+        Array1D<RationalNumber> makeReal( BasicArray<RationalNumber> offDiagonal) {
             return null;
         }
     }
@@ -133,7 +134,7 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
         }
 
         @Override
-        Array1D<Double> makeReal(final BasicArray<Double> offDiagonal) {
+        Array1D<Double> makeReal( BasicArray<Double> offDiagonal) {
             return null;
         }
 
@@ -146,7 +147,7 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
         }
 
         @Override
-        Array1D<Quadruple> makeReal(final BasicArray<Quadruple> offDiagonal) {
+        Array1D<Quadruple> makeReal( BasicArray<Quadruple> offDiagonal) {
             return null;
         }
     }
@@ -155,15 +156,15 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
     private transient BasicArray<N> myDiagE = null;
     private Array1D<N> myInitDiagQ = null;
 
-    protected DeferredTridiagonal(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected DeferredTridiagonal( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         super(factory);
     }
 
-    public boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+    @Override public boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
 
         this.reset();
 
-        boolean retVal = false;
+        @Var boolean retVal = false;
 
         try {
 
@@ -215,7 +216,7 @@ abstract class DeferredTridiagonal<N extends Comparable<N>> extends TridiagonalD
     }
 
     @Override
-    protected void supplyDiagonalTo(final double[] d, final double[] e) {
+    protected void supplyDiagonalTo( double[] d,  double[] e) {
         myDiagD.supplyTo(d);
         myDiagE.supplyTo(e);
     }

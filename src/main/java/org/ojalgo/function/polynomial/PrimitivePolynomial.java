@@ -29,11 +29,11 @@ import org.ojalgo.array.Array1D;
 @Deprecated
 public final class PrimitivePolynomial extends PolynomialR064 {
 
-    public PrimitivePolynomial(final int degree) {
+    public PrimitivePolynomial( int degree) {
         super(degree);
     }
 
-    public PrimitivePolynomial(final Array1D<Double> coefficients) {
+    public PrimitivePolynomial( Array1D<Double> coefficients) {
         super(coefficients);
     }
 

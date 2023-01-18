@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.polynomial;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.matrix.decomposition.QR;
 import org.ojalgo.matrix.store.GenericStore;
@@ -29,19 +30,19 @@ import org.ojalgo.structure.Access1D;
 
 public class PolynomialQ128 extends AbstractPolynomial<RationalNumber> {
 
-    public PolynomialQ128(final int degree) {
+    public PolynomialQ128( int degree) {
         super(Array1D.Q128.make(degree + 1));
     }
 
-    PolynomialQ128(final Array1D<RationalNumber> coefficients) {
+    PolynomialQ128( Array1D<RationalNumber> coefficients) {
         super(coefficients);
     }
 
-    public void estimate(final Access1D<?> x, final Access1D<?> y) {
+    @Override public void estimate( Access1D<?> x,  Access1D<?> y) {
         this.estimate(x, y, GenericStore.Q128, QR.Q128);
     }
 
-    public RationalNumber integrate(final RationalNumber fromPoint, final RationalNumber toPoint) {
+    @Override public RationalNumber integrate( RationalNumber fromPoint,  RationalNumber toPoint) {
 
         PolynomialFunction<RationalNumber> primitive = this.buildPrimitive();
 
@@ -51,11 +52,11 @@ public class PolynomialQ128 extends AbstractPolynomial<RationalNumber> {
         return toVal.subtract(fromVal);
     }
 
-    public RationalNumber invoke(final RationalNumber arg) {
+    @Override public RationalNumber invoke( RationalNumber arg) {
 
-        int power = this.degree();
+        @Var int power = this.degree();
 
-        RationalNumber retVal = this.get(power);
+        @Var RationalNumber retVal = this.get(power);
 
         while (--power >= 0) {
             retVal = this.get(power).add(arg.multiply(retVal));
@@ -64,7 +65,7 @@ public class PolynomialQ128 extends AbstractPolynomial<RationalNumber> {
         return retVal;
     }
 
-    public void set(final Access1D<?> coefficients) {
+    @Override public void set( Access1D<?> coefficients) {
         int limit = Math.min(this.size(), coefficients.size());
         for (int p = 0; p < limit; p++) {
             this.set(p, RationalNumber.valueOf(coefficients.get(p)));
@@ -72,13 +73,13 @@ public class PolynomialQ128 extends AbstractPolynomial<RationalNumber> {
     }
 
     @Override
-    protected RationalNumber getDerivativeFactor(final int power) {
+    protected RationalNumber getDerivativeFactor( int power) {
         int nextIndex = power + 1;
         return this.get(nextIndex).multiply(nextIndex);
     }
 
     @Override
-    protected RationalNumber getPrimitiveFactor(final int power) {
+    protected RationalNumber getPrimitiveFactor( int power) {
         if (power <= 0) {
             return RationalNumber.ZERO;
         }
@@ -86,7 +87,7 @@ public class PolynomialQ128 extends AbstractPolynomial<RationalNumber> {
     }
 
     @Override
-    protected AbstractPolynomial<RationalNumber> makeInstance(final int size) {
+    protected AbstractPolynomial<RationalNumber> makeInstance( int size) {
         return new PolynomialQ128(Array1D.Q128.make(size));
     }
 

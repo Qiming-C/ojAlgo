@@ -35,35 +35,35 @@ import org.ojalgo.structure.Access2D;
 
 abstract class PrimitiveFactory<I extends PhysicalStore<Double>> implements PhysicalStore.Factory<Double, I> {
 
-    public final AggregatorSet<Double> aggregator() {
+    @Override public final AggregatorSet<Double> aggregator() {
         return PrimitiveAggregator.getSet();
     }
 
-    public DenseArray.Factory<Double> array() {
+    @Override public DenseArray.Factory<Double> array() {
         return ArrayR064.FACTORY;
     }
 
-    public final I conjugate(final Access2D<?> source) {
+    @Override public final I conjugate( Access2D<?> source) {
         return this.transpose(source);
     }
 
-    public final FunctionSet<Double> function() {
+    @Override public final FunctionSet<Double> function() {
         return PrimitiveFunction.getSet();
     }
 
-    public Householder<Double> makeHouseholder(final int length) {
+    @Override public Householder<Double> makeHouseholder( int length) {
         return new Householder.Primitive64(length);
     }
 
-    public final Rotation.Primitive makeRotation(final int low, final int high, final double cos, final double sin) {
+    @Override public final Rotation.Primitive makeRotation( int low,  int high,  double cos,  double sin) {
         return new Rotation.Primitive(low, high, cos, sin);
     }
 
-    public final Rotation.Primitive makeRotation(final int low, final int high, final Double cos, final Double sin) {
+    @Override public final Rotation.Primitive makeRotation( int low,  int high,  Double cos,  Double sin) {
         return this.makeRotation(low, high, cos != null ? cos.doubleValue() : Double.NaN, sin != null ? sin.doubleValue() : Double.NaN);
     }
 
-    public final Scalar.Factory<Double> scalar() {
+    @Override public final Scalar.Factory<Double> scalar() {
         return PrimitiveScalar.FACTORY;
     }
 

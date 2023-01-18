@@ -21,8 +21,8 @@
  */
 package org.ojalgo.scalar;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.MissingMath;
 import org.ojalgo.type.context.NumberContext;
@@ -39,7 +39,7 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
         private final NumberContext myContext;
         private final long myDenominator;
 
-        public Descriptor(final int scale) {
+        public Descriptor( int scale) {
 
             super();
 
@@ -47,10 +47,10 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
             myDenominator = Math.round(Math.pow(10.0, scale));
         }
 
-        public long add(final ExactDecimal<?> arg1, final ExactDecimal<?> arg2) {
-            final BigDecimal deci1 = arg1.toBigDecimal();
-            final BigDecimal deci2 = arg2.toBigDecimal();
-            final BigDecimal resul = deci1.add(deci2);
+        public long add( ExactDecimal<?> arg1,  ExactDecimal<?> arg2) {
+             BigDecimal deci1 = arg1.toBigDecimal();
+             BigDecimal deci2 = arg2.toBigDecimal();
+             BigDecimal resul = deci1.add(deci2);
             return ExactDecimal.extractUnscaledValue(resul, myContext);
         }
 
@@ -62,24 +62,24 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
             return myDenominator;
         }
 
-        public long divide(final ExactDecimal<?> arg1, final ExactDecimal<?> arg2) {
-            final BigDecimal deci1 = arg1.toBigDecimal();
-            final BigDecimal deci2 = arg2.toBigDecimal();
-            final BigDecimal resul = deci1.divide(deci2, myContext.getMathContext());
+        public long divide( ExactDecimal<?> arg1,  ExactDecimal<?> arg2) {
+             BigDecimal deci1 = arg1.toBigDecimal();
+             BigDecimal deci2 = arg2.toBigDecimal();
+             BigDecimal resul = deci1.divide(deci2, myContext.getMathContext());
             return ExactDecimal.extractUnscaledValue(resul, myContext);
         }
 
-        public long multiply(final ExactDecimal<?> arg1, final ExactDecimal<?> arg2) {
-            final BigDecimal deci1 = arg1.toBigDecimal();
-            final BigDecimal deci2 = arg2.toBigDecimal();
-            final BigDecimal resul = deci1.multiply(deci2);
+        public long multiply( ExactDecimal<?> arg1,  ExactDecimal<?> arg2) {
+             BigDecimal deci1 = arg1.toBigDecimal();
+             BigDecimal deci2 = arg2.toBigDecimal();
+             BigDecimal resul = deci1.multiply(deci2);
             return ExactDecimal.extractUnscaledValue(resul, myContext);
         }
 
-        public long subtract(final ExactDecimal<?> arg1, final ExactDecimal<?> arg2) {
-            final BigDecimal deci1 = arg1.toBigDecimal();
-            final BigDecimal deci2 = arg2.toBigDecimal();
-            final BigDecimal resul = deci1.subtract(deci2);
+        public long subtract( ExactDecimal<?> arg1,  ExactDecimal<?> arg2) {
+             BigDecimal deci1 = arg1.toBigDecimal();
+             BigDecimal deci2 = arg2.toBigDecimal();
+             BigDecimal resul = deci1.subtract(deci2);
             return ExactDecimal.extractUnscaledValue(resul, myContext);
         }
 
@@ -91,14 +91,14 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
 
     }
 
-    protected static long extractUnscaledValue(final BigDecimal decimal, final NumberContext cntxt) {
+    protected static long extractUnscaledValue( BigDecimal decimal,  NumberContext cntxt) {
         return decimal.setScale(cntxt.getScale(), cntxt.getRoundingMode()).unscaledValue().longValueExact();
     }
 
     private transient BigDecimal myDecimal = null;
     private final long myNumerator;
 
-    protected ExactDecimal(final long numerator) {
+    protected ExactDecimal( long numerator) {
 
         super();
 
@@ -106,17 +106,17 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final S add(final double scalarAddend) {
+    public final S add( double scalarAddend) {
         return this.wrap(myNumerator + Math.round(scalarAddend * this.descriptor().denominator()));
     }
 
     @Override
-    public final S add(final S scalarAddend) {
+    public final S add( S scalarAddend) {
         return this.wrap(myNumerator + scalarAddend.numerator());
     }
 
     @Override
-    public final int compareTo(final S reference) {
+    public final int compareTo( S reference) {
         return Long.compare(myNumerator, reference.numerator());
     }
 
@@ -126,24 +126,24 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final S divide(final double scalarDivisor) {
+    public final S divide( double scalarDivisor) {
         return this.wrap(Math.round(myNumerator / scalarDivisor));
     }
 
     @Override
-    public final S divide(final S scalarDivisor) {
+    public final S divide( S scalarDivisor) {
         return this.wrap(myNumerator * this.descriptor().denominator() / scalarDivisor.numerator());
     }
 
     @Override
     public final double doubleValue() {
-        return myNumerator / this.descriptor().denominator();
+        return myNumerator / ((double) this.descriptor().denominator());
     }
 
     @Override
-    public final S enforce(final NumberContext context) {
-        BigDecimal decimal = this.toBigDecimal(context);
-        final NumberContext type = this.descriptor().context();
+    public final S enforce( NumberContext context) {
+        @Var BigDecimal decimal = this.toBigDecimal(context);
+         NumberContext type = this.descriptor().context();
         decimal = decimal.setScale(type.getScale(), type.getRoundingMode());
         return this.wrap(decimal.unscaledValue().longValueExact());
     }
@@ -175,7 +175,7 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final boolean isSmall(final double comparedTo) {
+    public final boolean isSmall( double comparedTo) {
         return this.descriptor().context().isSmall(comparedTo, this.doubleValue());
     }
 
@@ -185,12 +185,12 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final S multiply(final double scalarMultiplicand) {
+    public final S multiply( double scalarMultiplicand) {
         return this.wrap(Math.round(myNumerator * scalarMultiplicand));
     }
 
     @Override
-    public final S multiply(final S scalarMultiplicand) {
+    public final S multiply( S scalarMultiplicand) {
         return this.wrap(myNumerator * scalarMultiplicand.numerator() / this.descriptor().denominator());
     }
 
@@ -206,7 +206,7 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
 
     @Override
     @SuppressWarnings("unchecked")
-    public S power(final int power) {
+    public S power( int power) {
 
         if (power == 0) {
 
@@ -239,12 +239,12 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final S subtract(final double scalarSubtrahend) {
+    public final S subtract( double scalarSubtrahend) {
         return this.wrap(myNumerator - Math.round(scalarSubtrahend * this.descriptor().denominator()));
     }
 
     @Override
-    public final S subtract(final S scalarSubtrahend) {
+    public final S subtract( S scalarSubtrahend) {
         return this.wrap(myNumerator - scalarSubtrahend.numerator());
     }
 
@@ -262,11 +262,11 @@ public abstract class ExactDecimal<S extends ExactDecimal<S>> implements SelfDec
     }
 
     @Override
-    public final String toString(final NumberContext context) {
+    public final String toString( NumberContext context) {
         return this.toBigDecimal(context).toPlainString();
     }
 
-    private final BigDecimal toBigDecimal(final NumberContext context) {
+    private final BigDecimal toBigDecimal( NumberContext context) {
         return new BigDecimal(myNumerator).divide(new BigDecimal(this.descriptor().denominator()), context.getMathContext());
     }
 

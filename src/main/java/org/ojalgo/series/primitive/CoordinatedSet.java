@@ -21,6 +21,7 @@
  */
 package org.ojalgo.series.primitive;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.series.BasicSeries;
@@ -39,7 +39,7 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
 
         private final List<Supplier<BasicSeries<K, ?>>> mySuppliers = new ArrayList<>();
 
-        public CoordinatedSet.Builder<K> add(final Supplier<BasicSeries<K, ?>> supplier) {
+        public CoordinatedSet.Builder<K> add( Supplier<BasicSeries<K, ?>> supplier) {
             mySuppliers.add(supplier);
             return this;
         }
@@ -55,7 +55,7 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
             return CoordinatedSet.from(uncoordinated);
         }
 
-        public CoordinatedSet<K> build(final UnaryOperator<K> keyMapper) {
+        public CoordinatedSet<K> build( UnaryOperator<K> keyMapper) {
 
             List<BasicSeries<K, ?>> uncoordinated = new ArrayList<>();
 
@@ -71,11 +71,11 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
         return new CoordinatedSet.Builder<>();
     }
 
-    public static <K extends Comparable<? super K>> CoordinatedSet<K> from(final BasicSeries<K, ?>... uncoordinated) {
+    public static <K extends Comparable<? super K>> CoordinatedSet<K> from( BasicSeries<K, ?>... uncoordinated) {
         return CoordinatedSet.from(Arrays.asList(uncoordinated));
     }
 
-    public static <K extends Comparable<? super K>> CoordinatedSet<K> from(final List<? extends BasicSeries<K, ?>> uncoordinated) {
+    public static <K extends Comparable<? super K>> CoordinatedSet<K> from( List<? extends BasicSeries<K, ?>> uncoordinated) {
 
         K first = BasicSeries.findLatestFirstKey(uncoordinated);
         K last = BasicSeries.findEarliestLastKey(uncoordinated);
@@ -95,10 +95,10 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
             BasicSeries<K, ?> inputSeries = uncoordinated.get(s);
             double[] outputSeries = new double[numberOfKeys];
 
-            double tmpVal = Double.NaN;
-            double curVal = Double.NaN;
+            @Var double tmpVal = Double.NaN;
+            @Var double curVal = Double.NaN;
 
-            int k = 0;
+            @Var int k = 0;
             for (K key : relevantKeys) {
                 tmpVal = inputSeries.doubleValue(key);
                 if (Double.isNaN(tmpVal)) {
@@ -118,7 +118,7 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
     private final K myFirstKey;
     private final K myLastKey;
 
-    private CoordinatedSet(final PrimitiveSeries[] coordinated, final K first, final K last) {
+    private CoordinatedSet( PrimitiveSeries[] coordinated,  K first,  K last) {
 
         super(coordinated);
 
@@ -139,7 +139,7 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
         return this.getData(Primitive64Store.FACTORY);
     }
 
-    public MatrixStore<Double> getSamples(final UnaryOperator<PrimitiveSeries> operator) {
+    public MatrixStore<Double> getSamples( UnaryOperator<PrimitiveSeries> operator) {
         PrimitiveSeries[] operated = new PrimitiveSeries[myCoordinated.length];
         for (int i = 0; i < operated.length; i++) {
             operated[i] = operator.apply(myCoordinated[i]);
@@ -147,7 +147,7 @@ public class CoordinatedSet<K extends Comparable<? super K>> extends SeriesSet {
         return Primitive64Store.FACTORY.columns(operated);
     }
 
-    public PrimitiveSeries getSeries(final int index) {
+    public PrimitiveSeries getSeries( int index) {
         return myCoordinated[index];
     }
 

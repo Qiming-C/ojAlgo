@@ -34,34 +34,34 @@ public abstract class COPY implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void column(final Access2D<?> source, final long col, final double[] destination, final int first, final int limit) {
+    public static void column( Access2D<?> source,  long col,  double[] destination,  int first,  int limit) {
         for (int i = first; i < limit; i++) {
             destination[i] = source.doubleValue(i, col);
         }
     }
 
-    public static double[] copyOf(final double[] original) {
+    public static double[] copyOf( double[] original) {
         int tmpLength = original.length;
         double[] retVal = new double[tmpLength];
         System.arraycopy(original, 0, retVal, 0, tmpLength);
         return retVal;
     }
 
-    public static float[] copyOf(final float[] original) {
+    public static float[] copyOf( float[] original) {
         int tmpLength = original.length;
         float[] retVal = new float[tmpLength];
         System.arraycopy(original, 0, retVal, 0, tmpLength);
         return retVal;
     }
 
-    public static int[] copyOf(final int[] original) {
+    public static int[] copyOf( int[] original) {
         int tmpLength = original.length;
         int[] retVal = new int[tmpLength];
         System.arraycopy(original, 0, retVal, 0, tmpLength);
         return retVal;
     }
 
-    public static long[] copyOf(final long[] original) {
+    public static long[] copyOf( long[] original) {
         int tmpLength = original.length;
         long[] retVal = new long[tmpLength];
         System.arraycopy(original, 0, retVal, 0, tmpLength);
@@ -69,20 +69,20 @@ public abstract class COPY implements ArrayOperation {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T[] copyOf(final T[] original) {
+    public static <T> T[] copyOf( T[] original) {
         int tmpLength = original.length;
-        T[] retVal = (T[]) Array.newInstance(original.getClass().getComponentType(), tmpLength);
+        var retVal = (T[]) Array.newInstance(original.getClass().getComponentType(), tmpLength);
         System.arraycopy(original, 0, retVal, 0, tmpLength);
         return retVal;
     }
 
-    public static int[] invoke(final int[] source, final int[] destination) {
+    public static int[] invoke( int[] source,  int[] destination) {
         int limit = Math.min(source.length, destination.length);
         System.arraycopy(source, 0, destination, 0, limit);
         return destination;
     }
 
-    public static void row(final Access2D<?> source, final long row, final double[] destination, final int first, final int limit) {
+    public static void row( Access2D<?> source,  long row,  double[] destination,  int first,  int limit) {
         for (int j = first; j < limit; j++) {
             destination[j] = source.doubleValue(row, j);
         }

@@ -59,25 +59,25 @@ public class ArrayR128 extends ScalarArray<Quadruple> {
         }
 
         @Override
-        PlainArray<Quadruple> makeDenseArray(final long size) {
+        PlainArray<Quadruple> makeDenseArray( long size) {
             return ArrayR128.make((int) size);
         }
 
     };
 
-    public static ArrayR128 make(final int size) {
+    public static ArrayR128 make( int size) {
         return new ArrayR128(size);
     }
 
-    public static ArrayR128 wrap(final Quadruple... data) {
+    public static ArrayR128 wrap( Quadruple... data) {
         return new ArrayR128(data);
     }
 
-    protected ArrayR128(final int size) {
+    protected ArrayR128( int size) {
         super(FACTORY, size);
     }
 
-    protected ArrayR128(final Quadruple[] data) {
+    protected ArrayR128( Quadruple[] data) {
         super(FACTORY, data);
     }
 

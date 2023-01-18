@@ -22,10 +22,9 @@
 package org.ojalgo.structure;
 
 import java.util.List;
-
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.NullaryFunction;
-import org.ojalgo.scalar.Scalar.Factory;
+import org.ojalgo.scalar.Scalar;
 
 public interface Factory2D<I extends Structure2D> extends FactorySupplement {
 
@@ -36,7 +35,7 @@ public interface Factory2D<I extends Structure2D> extends FactorySupplement {
      */
     interface Dense<I extends Structure2D> extends Factory2D<I> {
 
-        default I column(final double... elements) {
+        default I column( double... elements) {
             return this.columns(elements);
         }
 
@@ -53,11 +52,11 @@ public interface Factory2D<I extends Structure2D> extends FactorySupplement {
 
         I makeFilled(long rows, long columns, NullaryFunction<?> supplier);
 
-        default I makeFilled(final Structure2D shape, final NullaryFunction<?> supplier) {
+        default I makeFilled( Structure2D shape,  NullaryFunction<?> supplier) {
             return this.makeFilled(shape.countRows(), shape.countColumns(), supplier);
         }
 
-        default I row(final double... elements) {
+        default I row( double... elements) {
             return this.rows(elements);
         }
 
@@ -81,13 +80,13 @@ public interface Factory2D<I extends Structure2D> extends FactorySupplement {
 
         DR makeDense(long rows, long columns);
 
-        default DR makeDense(final Structure2D shape) {
+        default DR makeDense( Structure2D shape) {
             return this.makeDense(shape.countRows(), shape.countColumns());
         }
 
         SR makeSparse(long rows, long columns);
 
-        default SR makeSparse(final Structure2D shape) {
+        default SR makeSparse( Structure2D shape) {
             return this.makeSparse(shape.countRows(), shape.countColumns());
         }
 
@@ -96,28 +95,28 @@ public interface Factory2D<I extends Structure2D> extends FactorySupplement {
     default Factory1D<I> asFactory1D() {
         return new Factory1D<>() {
 
-            public FunctionSet<?> function() {
+            @Override public FunctionSet<?> function() {
                 return Factory2D.this.function();
             }
 
-            public I make(final long count) {
+            @Override public I make( long count) {
                 return Factory2D.this.make(count, 1L);
             }
 
-            public Factory<?> scalar() {
+            @Override public Scalar.Factory<?> scalar() {
                 return Factory2D.this.scalar();
             }
 
         };
     }
 
-    default I make(final int rows, final int columns) {
+    default I make( int rows,  int columns) {
         return this.make((long) rows, (long) columns);
     }
 
     I make(long rows, long columns);
 
-    default I make(final Structure2D shape) {
+    default I make( Structure2D shape) {
         return this.make(shape.countRows(), shape.countColumns());
     }
 

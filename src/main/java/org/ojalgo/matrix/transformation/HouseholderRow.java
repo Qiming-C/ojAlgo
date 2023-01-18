@@ -14,7 +14,7 @@ final class HouseholderRow<N extends Comparable<N>> extends RowView<N> implement
     private final MatrixStore<N> myStore;
     private transient Householder<N> myWorker = null;
 
-    public HouseholderRow(final MatrixStore<N> store) {
+    public HouseholderRow( MatrixStore<N> store) {
 
         super(store);
 
@@ -27,7 +27,7 @@ final class HouseholderRow<N extends Comparable<N>> extends RowView<N> implement
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         if (index > myFirst) {
             return myStore.doubleValue(this.row(), index);
         }
@@ -38,12 +38,12 @@ final class HouseholderRow<N extends Comparable<N>> extends RowView<N> implement
         }
     }
 
-    public int first() {
+    @Override public int first() {
         return myFirst;
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         if (index > myFirst) {
             return myStore.get(this.row(), index);
         }
@@ -54,20 +54,20 @@ final class HouseholderRow<N extends Comparable<N>> extends RowView<N> implement
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <P extends Householder<N>> P getWorker(final PhysicalStore.Factory<N, ?> factory) {
+    @Override @SuppressWarnings("unchecked")
+    public <P extends Householder<N>> P getWorker( PhysicalStore.Factory<N, ?> factory) {
         if (myWorker == null) {
             myWorker = factory.makeHouseholder((int) this.count());
         }
         return (P) myWorker;
     }
 
-    public boolean isZero() {
+    @Override public boolean isZero() {
         double largest = NumberDefinition.doubleValue(myStore.aggregateRow(this.row(), myFirst + 1L, Aggregator.LARGEST));
         return PrimitiveScalar.isSmall(PrimitiveMath.ONE, largest);
     }
 
-    public void point(final long row, final long col) {
+    @Override public void point( long row,  long col) {
         this.goToRow(row);
         myFirst = (int) col;
     }

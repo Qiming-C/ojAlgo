@@ -39,8 +39,8 @@ public abstract class OperationUnary implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static <N extends Comparable<N>> void invoke(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> values,
-            final UnaryFunction<N> function) {
+    public static <N extends Comparable<N>> void invoke( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> values,
+             UnaryFunction<N> function) {
 
         if (data.isPrimitive()) {
             if (function == PrimitiveMath.NEGATE) {
@@ -57,8 +57,8 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayZ008) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayZ008) values).data, function);
         } else {
@@ -68,17 +68,17 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte[] values, final UnaryFunction<Double> function) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte[] values,  UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.byteValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.byteValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {
@@ -87,8 +87,8 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayR064) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayR064) values).data, function);
         } else {
@@ -98,18 +98,18 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double[] values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double[] values,
+             UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.doubleValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.doubleValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {
@@ -118,8 +118,8 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayR032) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayR032) values).data, function);
         } else {
@@ -129,18 +129,18 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float[] values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float[] values,
+             UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.floatValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.floatValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {
@@ -149,8 +149,8 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayZ032) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayZ032) values).data, function);
         } else {
@@ -160,17 +160,17 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int[] values, final UnaryFunction<Double> function) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int[] values,  UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.intValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.intValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {
@@ -179,8 +179,8 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayZ064) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayZ064) values).data, function);
         } else {
@@ -190,17 +190,17 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long[] values, final UnaryFunction<Double> function) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long[] values,  UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.longValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.longValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {
@@ -209,15 +209,15 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final N[] data, final int first, final int limit, final int step, final Access1D<N> value,
-            final UnaryFunction<N> function) {
+    public static <N extends Comparable<N>> void invoke( N[] data,  int first,  int limit,  int step,  Access1D<N> value,
+             UnaryFunction<N> function) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(value.get(i));
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final Access1D<Double> values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  Access1D<Double> values,
+             UnaryFunction<Double> function) {
         if (values instanceof ArrayZ016) {
             OperationUnary.invoke(data, first, limit, step, ((ArrayZ016) values).data, function);
         } else {
@@ -227,18 +227,18 @@ public abstract class OperationUnary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short[] values,
-            final UnaryFunction<Double> function) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short[] values,
+             UnaryFunction<Double> function) {
         if (function == PrimitiveMath.NEGATE) {
             CorePrimitiveOperation.negate(data, first, limit, step, values);
         } else if (function instanceof FixedFirst<?>) {
-            FixedFirst<Double> tmpFunc = (FixedFirst<Double>) function;
+            var tmpFunc = (FixedFirst<Double>) function;
             OperationBinary.invoke(data, first, limit, step, tmpFunc.shortValue(), tmpFunc.getFunction(), values);
         } else if (function instanceof FixedSecond<?>) {
-            FixedSecond<Double> tmpFunc = (FixedSecond<Double>) function;
+            var tmpFunc = (FixedSecond<Double>) function;
             OperationBinary.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.shortValue());
         } else if (function instanceof FixedParameter<?>) {
-            FixedParameter<Double> tmpFunc = (FixedParameter<Double>) function;
+            var tmpFunc = (FixedParameter<Double>) function;
             OperationParameter.invoke(data, first, limit, step, values, tmpFunc.getFunction(), tmpFunc.getParameter());
         } else {
             for (int i = first; i < limit; i += step) {

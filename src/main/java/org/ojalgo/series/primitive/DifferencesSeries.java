@@ -26,7 +26,7 @@ final class DifferencesSeries extends PrimitiveSeries {
     private final int myPeriod;
     private final PrimitiveSeries mySeries;
 
-    DifferencesSeries(final PrimitiveSeries series) {
+    DifferencesSeries( PrimitiveSeries series) {
 
         super();
 
@@ -34,7 +34,7 @@ final class DifferencesSeries extends PrimitiveSeries {
         myPeriod = 1;
     }
 
-    DifferencesSeries(final PrimitiveSeries series, final int period) {
+    DifferencesSeries( PrimitiveSeries series,  int period) {
 
         super();
 
@@ -48,7 +48,7 @@ final class DifferencesSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return mySeries.value(index + myPeriod) - mySeries.value(index);
     }
 

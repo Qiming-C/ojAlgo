@@ -27,7 +27,7 @@ public enum LineTerminator {
 
     private final char[] myCharArray;
 
-    LineTerminator(final char[] aCharArray) {
+    LineTerminator( char[] aCharArray) {
         myCharArray = aCharArray;
     }
 

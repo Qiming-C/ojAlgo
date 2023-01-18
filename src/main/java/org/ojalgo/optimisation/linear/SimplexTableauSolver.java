@@ -23,10 +23,10 @@ package org.ojalgo.optimisation.linear;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.LongToNumberMap;
@@ -92,7 +92,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
     private final SimplexTableauSolver.IterationPoint myPoint;
     private final SimplexTableau myTableau;
 
-    SimplexTableauSolver(final SimplexTableau tableau, final Optimisation.Options solverOptions) {
+    SimplexTableauSolver( SimplexTableau tableau,  Optimisation.Options solverOptions) {
 
         super(solverOptions);
 
@@ -117,7 +117,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         }
     }
 
-    public boolean fixVariable(final int index, final double value) {
+    @Override public boolean fixVariable( int index,  double value) {
 
         if (value < ZERO) {
             return false;
@@ -136,15 +136,15 @@ abstract class SimplexTableauSolver extends LinearSolver {
         return retVal;
     }
 
-    public Collection<Equation> generateCutCandidates(final double fractionality, final boolean... integer) {
+    @Override public Collection<Equation> generateCutCandidates( double fractionality,  boolean... integer) {
         return myTableau.generateCutCandidates(integer, options.integer().getIntegralityTolerance(), fractionality);
     }
 
-    public SimplexTableau.MetaData getEntityMap() {
+    @Override public SimplexTableau.MetaData getEntityMap() {
         return myTableau.meta;
     }
 
-    public Result solve(final Result kickStarter) {
+    @Override public Result solve( Result kickStarter) {
 
         if (this.isLogDebug() && this.isTableauPrintable()) {
             this.logDebugTableau("Initial Tableau");
@@ -192,8 +192,8 @@ abstract class SimplexTableauSolver extends LinearSolver {
                     this.log("Non-zero RHS artificial variable: {} = {}", i, rhs);
                 }
 
-                int enter = -1;
-                double maxPivot = ZERO;
+                @Var int enter = -1;
+                @Var double maxPivot = ZERO;
                 for (int j = 0; j < excluded.length; j++) {
                     int posEnt = excluded[j];
                     double pivot = myTableau.doubleValue(i, posEnt);
@@ -224,7 +224,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         return myTableau.count() <= 512L;
     }
 
-    private void logDebugTableau(final String message) {
+    private void logDebugTableau( String message) {
         this.log(message + "; Basics: " + Arrays.toString(myTableau.getBasis()), myTableau);
         // this.debug("New/alt " + message + "; Basics: " + Arrays.toString(myBasis), myTableau);
     }
@@ -243,7 +243,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         double value = this.evaluateFunction(solution);
         Optimisation.State state = this.getState();
 
-        Result result = new Optimisation.Result(state, value, solution);
+        var result = new Optimisation.Result(state, value, solution);
 
         if (myTableau.isAbleToExtractDual()) {
             return result.multipliers(this.extractMultipliers());
@@ -253,7 +253,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
 
     }
 
-    protected double evaluateFunction(final Access1D<?> solution) {
+    protected double evaluateFunction( Access1D<?> solution) {
         return -myTableau.value(false);
     }
 
@@ -264,16 +264,16 @@ abstract class SimplexTableauSolver extends LinearSolver {
 
         return new Access1D<Double>() {
 
-            public long count() {
+            @Override public long count() {
                 return negative.length;
             }
 
-            public double doubleValue(final long index) {
+            @Override public double doubleValue( long index) {
                 int i = Math.toIntExact(index);
                 return negative[i] ? -duals.doubleValue(index) : duals.doubleValue(index);
             }
 
-            public Double get(final long index) {
+            @Override public Double get( long index) {
                 return this.doubleValue(index);
             }
 
@@ -311,7 +311,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         return solution;
     }
 
-    protected boolean initialise(final Result kickStarter) {
+    protected boolean initialise( Result kickStarter) {
         return false;
     }
 
@@ -323,7 +323,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
                     this.infeasibility(), this.value());
         }
 
-        boolean retVal = false;
+        @Var boolean retVal = false;
         myPoint.reset();
 
         if (myPoint.isPhase1() && (PHASE1.isZero(this.infeasibility()) || !myTableau.isBasicArtificials())) {
@@ -416,10 +416,10 @@ abstract class SimplexTableauSolver extends LinearSolver {
             }
         }
 
-        int retVal = -1;
+        @Var int retVal = -1;
 
-        double tmpVal;
-        double minVal = phase2 ? -ACC.epsilon() : ZERO;
+        @Var double tmpVal;
+        @Var double minVal = phase2 ? -ACC.epsilon() : ZERO;
 
         // for (int e = 0; e < excluded.length; e++) {
         for (int j = 0; j < nbVariables; j++) {
@@ -443,7 +443,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         int numerCol = myTableau.countVariablesTotally();
         int denomCol = myPoint.col;
 
-        boolean phase1 = myPoint.isPhase1();
+        
         boolean phase2 = myPoint.isPhase2();
 
         if (this.isLogDebug()) {
@@ -459,8 +459,8 @@ abstract class SimplexTableauSolver extends LinearSolver {
             }
         }
 
-        int retVal = -1;
-        double numer = NaN, denom = NaN, ratio = NaN, minRatio = MACHINE_LARGEST, curDenom = MACHINE_SMALLEST;
+        @Var int retVal = -1;
+        @Var double numer = NaN, denom = NaN, ratio = NaN, minRatio = MACHINE_LARGEST, curDenom = MACHINE_SMALLEST;
 
         int constraintsCount = myTableau.countConstraints();
         for (int i = 0; i < constraintsCount; i++) {
@@ -485,7 +485,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
 
             if ((denom > ZERO || specialCase) && !PIVOT.isZero(denom)) {
 
-                if (ratio >= ZERO && (ratio < minRatio || !RATIO.isDifferent(minRatio, ratio) && denom > curDenom)) {
+                if (ratio >= ZERO && (ratio < minRatio || (!RATIO.isDifferent(minRatio, ratio) && denom > curDenom))) {
 
                     retVal = i;
                     minRatio = ratio;
@@ -502,7 +502,7 @@ abstract class SimplexTableauSolver extends LinearSolver {
         return retVal;
     }
 
-    void performIteration(final SimplexTableauSolver.IterationPoint pivot) {
+    void performIteration( SimplexTableauSolver.IterationPoint pivot) {
 
         double tmpPivotElement = myTableau.doubleValue(pivot.row, pivot.col);
         int tmpColRHS = myTableau.countVariablesTotally();
@@ -520,8 +520,8 @@ abstract class SimplexTableauSolver extends LinearSolver {
             // Right-most column of the tableau
             Access1D<Double> colRHS = myTableau.sliceConstraintsRHS();
 
-            double tmpRHS;
-            double minRHS = Double.MAX_VALUE;
+            @Var double tmpRHS;
+            @Var double minRHS = Double.MAX_VALUE;
             for (int i = 0; i < colRHS.size(); i++) {
                 tmpRHS = colRHS.doubleValue(i);
                 if (tmpRHS < minRHS) {

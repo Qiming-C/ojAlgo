@@ -59,7 +59,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
             this(null);
         }
 
-        Configurator(final IterativeSolverTask solver) {
+        Configurator( IterativeSolverTask solver) {
             super();
             mySolver = solver;
         }
@@ -67,7 +67,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         /**
          * Accuracy/termination context
          */
-        public Configurator accuracy(final NumberContext accuray) {
+        public Configurator accuracy( NumberContext accuray) {
             if (accuray != null) {
                 mySolver.setAccuracyContext(accuray);
             } else {
@@ -79,7 +79,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         /**
          * To get debug print per iteration
          */
-        public Configurator debug(final BasicLogger printer) {
+        public Configurator debug( BasicLogger printer) {
             mySolver.setDebugPrinter(printer);
             return this;
         }
@@ -87,7 +87,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         /**
          * Max number of iterations
          */
-        public Configurator iterations(final int iterations) {
+        public Configurator iterations( int iterations) {
             mySolver.setIterationsLimit(iterations);
             return this;
         }
@@ -98,7 +98,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
 
         double resolve(List<Equation> equations, PhysicalStore<Double> solution);
 
-        default double resolve(final List<Equation> equations, final PhysicalStore<Double> solution, final Access1D<?> rhs) {
+        default double resolve( List<Equation> equations,  PhysicalStore<Double> solution,  Access1D<?> rhs) {
 
             int nbEquations = equations.size();
 
@@ -117,10 +117,10 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
 
     static final NumberContext DEFAULT = NumberContext.ofMath(MathContext.DECIMAL128);
 
-    static List<Equation> toListOfRows(final Access2D<?> body, final Access2D<?> rhs) {
+    static List<Equation> toListOfRows( Access2D<?> body,  Access2D<?> rhs) {
 
-        int numbEquations = (int) body.countRows();
-        int numbVariables = (int) body.countColumns();
+        var numbEquations = (int) body.countRows();
+        var numbVariables = (int) body.countColumns();
 
         List<Equation> retVal = new ArrayList<>(numbEquations);
         for (int i = 0; i < numbEquations; i++) {
@@ -159,14 +159,14 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         return new Configurator(this);
     }
 
-    public final PhysicalStore<Double> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public final PhysicalStore<Double> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         if (templateRHS.countColumns() != 1L) {
             throw new IllegalArgumentException("The RHS must have precisely 1 column!");
         }
         return Primitive64Store.FACTORY.make(templateBody.countColumns(), 1L);
     }
 
-    public final Optional<MatrixStore<Double>> solve(final MatrixStore<Double> body, final MatrixStore<Double> rhs) {
+    public final Optional<MatrixStore<Double>> solve( MatrixStore<Double> body,  MatrixStore<Double> rhs) {
         try {
             return Optional.of(this.solve(body, rhs, this.preallocate(body, rhs)));
         } catch (RecoverableCondition xcptn) {
@@ -174,7 +174,7 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         }
     }
 
-    protected final void debug(final int iteration, final double error, final Access1D<?> current) {
+    protected final void debug( int iteration,  double error,  Access1D<?> current) {
         if (myDebugPrinter != null) {
             myDebugPrinter.println("{}: {} – {}", iteration, error, Array1D.R064.copy(current));
         }
@@ -192,15 +192,15 @@ public abstract class IterativeSolverTask implements SolverTask<Double> {
         return myDebugPrinter != null;
     }
 
-    protected void setAccuracyContext(final NumberContext accuracyContext) {
+    protected void setAccuracyContext( NumberContext accuracyContext) {
         myAccuracyContext = accuracyContext;
     }
 
-    protected void setDebugPrinter(final BasicLogger debugPrinter) {
+    protected void setDebugPrinter( BasicLogger debugPrinter) {
         myDebugPrinter = debugPrinter;
     }
 
-    protected void setIterationsLimit(final int iterationsLimit) {
+    protected void setIterationsLimit( int iterationsLimit) {
         myIterationsLimit = iterationsLimit;
     }
 

@@ -21,6 +21,7 @@
  */
 package org.ojalgo.machine;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.MissingMath;
 import org.ojalgo.netio.ASCII;
@@ -57,7 +58,7 @@ public final class VirtualMachine extends CommonMachine {
     private final Hardware myHardware;
     private final Runtime myRuntime;
 
-    VirtualMachine(final Hardware hardware, final Runtime runtime) {
+    VirtualMachine( Hardware hardware,  Runtime runtime) {
 
         super(hardware, runtime);
 
@@ -65,7 +66,7 @@ public final class VirtualMachine extends CommonMachine {
         myRuntime = runtime;
     }
 
-    VirtualMachine(final VirtualMachine base, final int modUnits, final int modCores, final int modThreads) {
+    VirtualMachine( VirtualMachine base,  int modUnits,  int modCores,  int modThreads) {
         super(base, modUnits, modCores, modThreads);
         myHardware = base.myHardware;
         myRuntime = base.myRuntime;
@@ -75,8 +76,8 @@ public final class VirtualMachine extends CommonMachine {
 
         myRuntime.runFinalization();
 
-        long tmpIsFree = myRuntime.freeMemory();
-        long tmpWasFree;
+        @Var long tmpIsFree = myRuntime.freeMemory();
+        @Var long tmpWasFree;
 
         do {
             tmpWasFree = tmpIsFree;
@@ -93,14 +94,14 @@ public final class VirtualMachine extends CommonMachine {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof VirtualMachine)) {
             return false;
         }
-        VirtualMachine other = (VirtualMachine) obj;
+        var other = (VirtualMachine) obj;
         if (myHardware == null) {
             if (other.myHardware != null) {
                 return false;
@@ -118,11 +119,11 @@ public final class VirtualMachine extends CommonMachine {
         return true;
     }
 
-    public int getAvailableDim1D(final long elementSize) {
+    public int getAvailableDim1D( long elementSize) {
         return (int) CommonMachine.elements(this.getAvailableMemory(), elementSize);
     }
 
-    public int getAvailableDim2D(final long elementSize) {
+    public int getAvailableDim2D( long elementSize) {
         return (int) PrimitiveMath.SQRT.invoke(CommonMachine.elements(this.getAvailableMemory(), elementSize));
     }
 
@@ -137,17 +138,18 @@ public final class VirtualMachine extends CommonMachine {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + ((myHardware == null) ? 0 : myHardware.hashCode());
         return prime * result + ((myRuntime == null) ? 0 : myRuntime.hashCode());
     }
 
     /**
-     * @param fraction [0.0, 1.0]
-     * @return A limited VirtualMachine
+     *Returns a limited VirtualMachine.
+ @param fraction [0.0, 1.0]
+     * 
      */
-    public VirtualMachine limitBy(final double fraction) {
+    public VirtualMachine limitBy( double fraction) {
 
         double factor = Math.max(0.0, Math.min(Math.abs(fraction), 1.0));
 

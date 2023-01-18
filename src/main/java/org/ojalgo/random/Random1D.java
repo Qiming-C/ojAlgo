@@ -32,7 +32,7 @@ import org.ojalgo.structure.Access2D;
 
 public final class Random1D {
 
-    public static void setSeed(final long seed) {
+    public static void setSeed( long seed) {
         Random1D.random().setSeed(seed);
     }
 
@@ -44,7 +44,7 @@ public final class Random1D {
 
     private final MatrixStore<Double> myCholeskiedCorrelations;
 
-    public Random1D(final Access2D<?> correlations) {
+    public Random1D( Access2D<?> correlations) {
 
         super();
 
@@ -60,7 +60,7 @@ public final class Random1D {
     /**
      * If the variables are uncorrelated.
      */
-    public Random1D(final int size) {
+    public Random1D( int size) {
 
         super();
 

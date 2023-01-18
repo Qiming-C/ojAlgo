@@ -33,11 +33,11 @@ import org.ojalgo.structure.Access2D;
  */
 final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
 
-    IdentityStore(final PhysicalStore.Factory<N, ?> factory, final int dimension) {
+    IdentityStore( PhysicalStore.Factory<N, ?> factory,  int dimension) {
         super(factory, dimension, dimension);
     }
 
-    IdentityStore(final PhysicalStore.Factory<N, ?> factory, final long dimension) {
+    IdentityStore( PhysicalStore.Factory<N, ?> factory,  long dimension) {
         super(factory, dimension, dimension);
     }
 
@@ -46,22 +46,22 @@ final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
         return this;
     }
 
-    public double doubleValue(final long aRow, final long aCol) {
+    @Override public double doubleValue( long aRow,  long aCol) {
         if (aRow == aCol) {
             return PrimitiveMath.ONE;
         }
         return PrimitiveMath.ZERO;
     }
 
-    public int firstInColumn(final int col) {
+    @Override public int firstInColumn( int col) {
         return col;
     }
 
-    public int firstInRow(final int row) {
+    @Override public int firstInRow( int row) {
         return row;
     }
 
-    public N get(final long aRow, final long aCol) {
+    @Override public N get( long aRow,  long aCol) {
         if (aRow == aCol) {
             return this.one().get();
         }
@@ -69,17 +69,17 @@ final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
     }
 
     @Override
-    public int limitOfColumn(final int col) {
+    public int limitOfColumn( int col) {
         return col + 1;
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         return row + 1;
     }
 
-    @SuppressWarnings("unchecked")
-    public void multiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    @Override @SuppressWarnings("unchecked")
+    public void multiply( Access1D<N> right,  TransformableRegion<N> target) {
         if (right instanceof Access2D.Collectable) {
             ((Access2D.Collectable<N, TransformableRegion<N>>) right).supplyTo(target);
         } else {
@@ -87,9 +87,9 @@ final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
         }
     }
 
-    public MatrixStore<N> multiply(final double scalar) {
+    @Override public MatrixStore<N> multiply( double scalar) {
 
-        final SparseStore<N> retVal = SparseStore.makeSparse(this.physical(), this);
+         SparseStore<N> retVal = SparseStore.makeSparse(this.physical(), this);
 
         retVal.fillDiagonal(this.physical().scalar().cast(scalar));
 
@@ -97,13 +97,13 @@ final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
     }
 
     @Override
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    public MatrixStore<N> multiply( MatrixStore<N> right) {
         return right.copy();
     }
 
-    public MatrixStore<N> multiply(final N scalar) {
+    @Override public MatrixStore<N> multiply( N scalar) {
 
-        final SparseStore<N> retVal = SparseStore.makeSparse(this.physical(), this);
+         SparseStore<N> retVal = SparseStore.makeSparse(this.physical(), this);
 
         retVal.fillDiagonal(scalar);
 
@@ -111,24 +111,24 @@ final class IdentityStore<N extends Comparable<N>> extends FactoryStore<N> {
     }
 
     @Override
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    public N multiplyBoth( Access1D<N> leftAndRight) {
         // TODO Auto-generated method stub
         return super.multiplyBoth(leftAndRight);
     }
 
-    public ElementsSupplier<N> premultiply(final Access1D<N> left) {
+    @Override public ElementsSupplier<N> premultiply( Access1D<N> left) {
         // TODO Auto-generated method stub
         return super.premultiply(left);
     }
 
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    @Override public void supplyTo( TransformableRegion<N> receiver) {
 
         receiver.reset();
 
         receiver.fillDiagonal(this.one().get());
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
         if (row == column) {
             return this.one();
         }

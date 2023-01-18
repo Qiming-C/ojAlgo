@@ -33,7 +33,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
 
     private final int[] myRows;
 
-    RowsStore(final MatrixStore<N> base, final int... rows) {
+    RowsStore( MatrixStore<N> base,  int... rows) {
 
         super(base, rows.length, (int) base.countColumns());
 
@@ -43,7 +43,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
     /**
      * @see org.ojalgo.matrix.store.MatrixStore#doubleValue(long, long)
      */
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         int rowIndex = this.toBaseIndex(row);
         if (rowIndex >= 0) {
             return this.base().doubleValue(rowIndex, col);
@@ -52,7 +52,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public int firstInRow(final int row) {
+    @Override public int firstInRow( int row) {
         int rowIndex = this.toBaseIndex(row);
         if (rowIndex >= 0) {
             return this.base().firstInRow(rowIndex);
@@ -61,7 +61,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         int rowIndex = this.toBaseIndex(row);
         if (rowIndex >= 0) {
             return this.base().get(rowIndex, col);
@@ -71,7 +71,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         int rowIndex = this.toBaseIndex(row);
         if (rowIndex >= 0) {
             return this.base().limitOfRow(rowIndex);
@@ -80,8 +80,8 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public void supplyTo(final TransformableRegion<N> consumer) {
-        final MatrixStore<N> base = this.base();
+    @Override public void supplyTo( TransformableRegion<N> consumer) {
+         MatrixStore<N> base = this.base();
         for (int i = 0; i < myRows.length; i++) {
             int rowIndex = this.toBaseIndex(i);
             if (rowIndex >= 0) {
@@ -92,7 +92,7 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public Scalar<N> toScalar(final long row, final long col) {
+    @Override public Scalar<N> toScalar( long row,  long col) {
         int rowIndex = this.toBaseIndex(row);
         if (rowIndex >= 0) {
             return this.base().toScalar(rowIndex, col);
@@ -101,11 +101,11 @@ final class RowsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    private int toBaseIndex(final int row) {
+    private int toBaseIndex( int row) {
         return myRows[row];
     }
 
-    private int toBaseIndex(final long row) {
+    private int toBaseIndex( long row) {
         return myRows[Math.toIntExact(row)];
     }
 

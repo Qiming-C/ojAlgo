@@ -39,7 +39,7 @@ public interface TypeContext<T> {
      * Will force the object to conform to the context's specification. The default implementation formats a
      * {@link String} and then parses that back to an object (of the original type).
      */
-    default T enforce(final T object) {
+    default T enforce( T object) {
         return this.parse(this.format(object));
     }
 

@@ -23,6 +23,7 @@ package org.ojalgo.ann;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.DoubleUnaryOperator;
 
 final class TrainingConfiguration {
@@ -40,14 +41,14 @@ final class TrainingConfiguration {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof TrainingConfiguration)) {
             return false;
         }
-        TrainingConfiguration other = (TrainingConfiguration) obj;
+        var other = (TrainingConfiguration) obj;
         if ((dropouts != other.dropouts) || (error != other.error) || (Double.doubleToLongBits(learningRate) != Double.doubleToLongBits(other.learningRate))
                 || (regularisationL1 != other.regularisationL1)) {
             return false;
@@ -66,11 +67,11 @@ final class TrainingConfiguration {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = (prime * result) + (dropouts ? 1231 : 1237);
         result = (prime * result) + ((error == null) ? 0 : error.hashCode());
-        long temp;
+        @Var long temp;
         temp = Double.doubleToLongBits(learningRate);
         result = (prime * result) + (int) (temp ^ (temp >>> 32));
         result = (prime * result) + (regularisationL1 ? 1231 : 1237);
@@ -81,7 +82,7 @@ final class TrainingConfiguration {
         return (prime * result) + (int) (temp ^ (temp >>> 32));
     }
 
-    private double doL1(final double current) {
+    private double doL1( double current) {
         if (current < ZERO) {
             return -regularisationL1Factor;
         } else {
@@ -89,17 +90,17 @@ final class TrainingConfiguration {
         }
     }
 
-    private double doL2(final double current) {
+    private double doL2( double current) {
         return regularisationL2Factor * current;
     }
 
     /**
      * Used to scale the weights after training with dropouts, and also to adjut the learning rate
      *
-     * @param layer
+     * 
      * @return The probabilityToKeep (as in not drop) the input nodes of this layer
      */
-    double probabilityDidKeepInput(final int layer) {
+    double probabilityDidKeepInput( int layer) {
         if (dropouts && (layer != 0)) {
             return HALF;
         } else {
@@ -111,11 +112,11 @@ final class TrainingConfiguration {
      * Used to modify the activation function – with this probabilty it will be used as is, for the other
      * parts the output is 0.
      *
-     * @param layer
-     * @param depth
-     * @return
+     * 
+     * 
+     * 
      */
-    double probabilityWillKeepOutput(final int layer, final int depth) {
+    double probabilityWillKeepOutput( int layer,  int depth) {
         if (dropouts && (layer < (depth - 1))) {
             return HALF;
         } else {

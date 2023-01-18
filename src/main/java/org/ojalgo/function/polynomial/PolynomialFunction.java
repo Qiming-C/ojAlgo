@@ -42,8 +42,8 @@ public interface PolynomialFunction<N extends Comparable<N>>
 
     void set(Access1D<?> coefficients);
 
-    void set(final int power, final double coefficient);
+    void set( int power,  double coefficient);
 
-    void set(final int power, final N coefficient);
+    void set( int power,  N coefficient);
 
 }

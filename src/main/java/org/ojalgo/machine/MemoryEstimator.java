@@ -21,6 +21,7 @@
  */
 package org.ojalgo.machine;
 
+import com.google.errorprone.annotations.Var;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -36,7 +37,7 @@ public final class MemoryEstimator {
     private static final long WORD = 8L;
     private static final long ZERO = 0L;
 
-    public static long estimateArray(final Class<?> componentType, final int length) {
+    public static long estimateArray( Class<?> componentType,  int length) {
 
         MemoryEstimator estimator = MemoryEstimator.makeForClassExtendingObject();
 
@@ -48,7 +49,7 @@ public final class MemoryEstimator {
         return estimator.estimate();
     }
 
-    public static long estimateObject(final Class<?> type) {
+    public static long estimateObject( Class<?> type) {
         return MemoryEstimator.make(type).estimate();
     }
 
@@ -56,13 +57,13 @@ public final class MemoryEstimator {
         return new MemoryEstimator(WORD + JavaType.REFERENCE.memory());
     }
 
-    public static MemoryEstimator makeForSubclass(final MemoryEstimator parentEstimation) {
+    public static MemoryEstimator makeForSubclass( MemoryEstimator parentEstimation) {
         return new MemoryEstimator(parentEstimation.align(PARENT_ALIGNEMENT));
     }
 
-    static MemoryEstimator make(final Class<?> type) {
+    static MemoryEstimator make( Class<?> type) {
 
-        MemoryEstimator retVal = null;
+        @Var MemoryEstimator retVal = null;
 
         Class<?> tmpParent = type.getSuperclass();
 
@@ -93,18 +94,18 @@ public final class MemoryEstimator {
         this(ZERO);
     }
 
-    MemoryEstimator(final long aBase) {
+    MemoryEstimator( long aBase) {
 
         super();
 
         myShallowSize = aBase;
     }
 
-    public MemoryEstimator add(final Class<?> type) {
+    public MemoryEstimator add( Class<?> type) {
         return this.add(JavaType.match(type));
     }
 
-    public MemoryEstimator add(final JavaType type) {
+    public MemoryEstimator add( JavaType type) {
         return this.add(type.memory());
     }
 
@@ -112,12 +113,12 @@ public final class MemoryEstimator {
         return this.align(FINAL_ALIGNEMENT);
     }
 
-    private MemoryEstimator add(final long bytes) {
+    private MemoryEstimator add( long bytes) {
         myShallowSize += bytes;
         return this;
     }
 
-    private long align(final long alignement) {
+    private long align( long alignement) {
 
         long remainder = myShallowSize % alignement;
 

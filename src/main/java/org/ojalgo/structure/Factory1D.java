@@ -44,7 +44,7 @@ public interface Factory1D<I extends Structure1D> extends FactorySupplement {
 
         I makeFilled(long count, NullaryFunction<?> supplier);
 
-        default I makeFilled(final Structure1D shape, final NullaryFunction<?> supplier) {
+        default I makeFilled( Structure1D shape,  NullaryFunction<?> supplier) {
             return this.makeFilled(shape.count(), supplier);
         }
 
@@ -59,25 +59,25 @@ public interface Factory1D<I extends Structure1D> extends FactorySupplement {
 
         DR makeDense(long count);
 
-        default DR makeDense(final Structure1D shape) {
+        default DR makeDense( Structure1D shape) {
             return this.makeDense(shape.count());
         }
 
         SR makeSparse(long count);
 
-        default SR makeSparse(final Structure1D shape) {
+        default SR makeSparse( Structure1D shape) {
             return this.makeSparse(shape.count());
         }
 
     }
 
-    default I make(final int count) {
+    default I make( int count) {
         return this.make((long) count);
     }
 
     I make(long count);
 
-    default I make(final Structure1D shape) {
+    default I make( Structure1D shape) {
         return this.make(shape.count());
     }
 

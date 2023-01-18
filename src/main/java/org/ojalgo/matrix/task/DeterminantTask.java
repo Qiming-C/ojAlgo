@@ -39,15 +39,15 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
 
     public static abstract class Factory<N extends Comparable<N>> {
 
-        public final DeterminantTask<N> make(final int dim, final boolean symmetric) {
+        public final DeterminantTask<N> make( int dim,  boolean symmetric) {
 
-            final Structure2D template = new Structure2D() {
+             var template = new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return dim;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return dim;
                 }
             };
@@ -55,7 +55,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
             return this.make(template, symmetric, false);
         }
 
-        public final DeterminantTask<N> make(final MatrixStore<N> template) {
+        public final DeterminantTask<N> make( MatrixStore<N> template) {
             return this.make(template, template.isHermitian(), false);
         }
 
@@ -66,7 +66,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
     Factory<ComplexNumber> COMPLEX = new Factory<>() {
 
         @Override
-        public DeterminantTask<ComplexNumber> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public DeterminantTask<ComplexNumber> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (symmetric && positiveDefinite) {
                 return Cholesky.COMPLEX.make(template);
             }
@@ -78,8 +78,8 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
     Factory<Double> PRIMITIVE = new Factory<>() {
 
         @Override
-        public DeterminantTask<Double> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
-            final long tmpDim = template.countRows();
+        public DeterminantTask<Double> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
+             long tmpDim = template.countRows();
             if (tmpDim == 1L) {
                 return AbstractDeterminator.FULL_1X1;
             }
@@ -118,7 +118,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
     Factory<Quadruple> QUADRUPLE = new Factory<>() {
 
         @Override
-        public DeterminantTask<Quadruple> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public DeterminantTask<Quadruple> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (symmetric && positiveDefinite) {
                 return Cholesky.QUADRUPLE.make(template);
             }
@@ -130,7 +130,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
     Factory<Quaternion> QUATERNION = new Factory<>() {
 
         @Override
-        public DeterminantTask<Quaternion> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public DeterminantTask<Quaternion> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (symmetric && positiveDefinite) {
                 return Cholesky.QUATERNION.make(template);
             }
@@ -142,7 +142,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
     Factory<RationalNumber> RATIONAL = new Factory<>() {
 
         @Override
-        public DeterminantTask<RationalNumber> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public DeterminantTask<RationalNumber> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (symmetric && positiveDefinite) {
                 return Cholesky.RATIONAL.make(template);
             }
@@ -153,7 +153,7 @@ public interface DeterminantTask<N extends Comparable<N>> extends MatrixTask<N> 
 
     N calculateDeterminant(Access2D<?> matrix);
 
-    default Provider2D.Determinant<N> toDeterminantProvider(final ElementsSupplier<N> original, final Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
+    default Provider2D.Determinant<N> toDeterminantProvider( ElementsSupplier<N> original,  Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
 
         N determinant = this.calculateDeterminant(alternativeOriginalSupplier.get());
 

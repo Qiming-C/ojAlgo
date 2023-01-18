@@ -441,42 +441,42 @@ public final class Hardware extends CommonMachine implements Comparable<Hardware
         return Hardware.makeSimple(VirtualMachine.getArchitecture(), VirtualMachine.getMemory(), VirtualMachine.getThreads());
     }
 
-    public static Hardware makeSimple(final String systemArchitecture, final long systemMemory, final int systemThreads) {
+    public static Hardware makeSimple( String systemArchitecture,  long systemMemory,  int systemThreads) {
 
         if (systemThreads > 8) {
             // Assume hyperthreading, L3 cache and more than 1 CPU
 
-            BasicMachine tmpL1Machine = new BasicMachine(32L * K, 2); //Hyperthreading
+            var tmpL1Machine = new BasicMachine(32L * K, 2); //Hyperthreading
 
-            BasicMachine tmpL2Machine = new BasicMachine(256L * K, tmpL1Machine.threads);
+            var tmpL2Machine = new BasicMachine(256L * K, tmpL1Machine.threads);
 
-            BasicMachine tmpL3Machine = new BasicMachine(4L * K * K, systemThreads / ((systemThreads + 7) / 8)); //More than 1 CPU
+            var tmpL3Machine = new BasicMachine(4L * K * K, systemThreads / ((systemThreads + 7) / 8)); //More than 1 CPU
 
-            BasicMachine tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
+            var tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
 
             return new Hardware(systemArchitecture, new BasicMachine[] { tmpSystemMachine, tmpL3Machine, tmpL2Machine, tmpL1Machine });
 
         } else if (systemThreads >= 4) {
             // Assume hyperthreading, L3 cache but only 1 CPU
 
-            BasicMachine tmpL1Machine = new BasicMachine(32L * K, 2); //Hyperthreading
+            var tmpL1Machine = new BasicMachine(32L * K, 2); //Hyperthreading
 
-            BasicMachine tmpL2Machine = new BasicMachine(256L * K, tmpL1Machine.threads);
+            var tmpL2Machine = new BasicMachine(256L * K, tmpL1Machine.threads);
 
-            BasicMachine tmpL3Machine = new BasicMachine(3L * K * K, systemThreads);
+            var tmpL3Machine = new BasicMachine(3L * K * K, systemThreads);
 
-            BasicMachine tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
+            var tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
 
             return new Hardware(systemArchitecture, new BasicMachine[] { tmpSystemMachine, tmpL3Machine, tmpL2Machine, tmpL1Machine });
 
         } else {
             // No hyperthreading, no L3 cache and 1 CPU
 
-            BasicMachine tmpL1Machine = new BasicMachine(32L * K, 1); //No hyperthreading
+            var tmpL1Machine = new BasicMachine(32L * K, 1); //No hyperthreading
 
-            BasicMachine tmpL2Machine = new BasicMachine(2L * K * K, tmpL1Machine.threads);
+            var tmpL2Machine = new BasicMachine(2L * K * K, tmpL1Machine.threads);
 
-            BasicMachine tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
+            var tmpSystemMachine = new BasicMachine(systemMemory, systemThreads);
 
             return new Hardware(systemArchitecture, new BasicMachine[] { tmpSystemMachine, tmpL2Machine, tmpL1Machine });
         }
@@ -489,7 +489,7 @@ public final class Hardware extends CommonMachine implements Comparable<Hardware
      * <code>new BasicMachine[] { SYSTEM, L2, L1 }</code> or in worst case
      * <code>new BasicMachine[] { SYSTEM, L1 }</code>
      */
-    public Hardware(final String arch, final BasicMachine[] levels) {
+    public Hardware( String arch,  BasicMachine[] levels) {
 
         super(arch, levels);
 
@@ -500,31 +500,31 @@ public final class Hardware extends CommonMachine implements Comparable<Hardware
         myLevels = COPY.copyOf(levels);
     }
 
-    public int compareTo(final Hardware other) {
+    @Override public int compareTo( Hardware other) {
         if (cores != other.cores) {
             return cores - other.cores;
         } else if (threads != other.threads) {
             return threads - other.threads;
         } else if (cache != other.cache) {
-            return (int) (cache - other.cache);
+            return Long.compare(cache, other.cache);
         } else if (units != other.units) {
             return units - other.units;
         } else if (memory != other.memory) {
-            return (int) (memory - other.memory);
+            return Long.compare(memory, other.memory);
         } else {
             return 0;
         }
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof Hardware)) {
             return false;
         }
-        Hardware other = (Hardware) obj;
+        var other = (Hardware) obj;
         if (!Arrays.equals(myLevels, other.myLevels)) {
             return false;
         }
@@ -533,7 +533,7 @@ public final class Hardware extends CommonMachine implements Comparable<Hardware
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = super.hashCode();
         return prime * result + Arrays.hashCode(myLevels);
     }
@@ -549,7 +549,7 @@ public final class Hardware extends CommonMachine implements Comparable<Hardware
     @Override
     public String toString() {
 
-        StringBuilder retVal = new StringBuilder("HW=");
+        var retVal = new StringBuilder("HW=");
 
         retVal.append(myLevels[0].toString());
         if (this.isL3Specified()) {

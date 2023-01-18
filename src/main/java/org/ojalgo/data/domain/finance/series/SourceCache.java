@@ -42,7 +42,7 @@ public final class SourceCache {
         CalendarDate updated = new CalendarDate();
         CalendarDate used = null;
 
-        Value(final String name) {
+        Value( String name) {
 
             super();
 
@@ -59,7 +59,7 @@ public final class SourceCache {
 
     private final CalendarDate.Resolution myRefreshInterval;
 
-    public SourceCache(final CalendarDateUnit refreshInterval) {
+    public SourceCache( CalendarDateUnit refreshInterval) {
 
         super();
 
@@ -76,9 +76,9 @@ public final class SourceCache {
 
     }
 
-    public synchronized BasicSeries<LocalDate, PrimitiveNumber> get(final FinanceData key) {
+    public synchronized BasicSeries<LocalDate, PrimitiveNumber> get( FinanceData key) {
 
-        final CalendarDate now = new CalendarDate();
+         var now = new CalendarDate();
 
         Value value = myCache.computeIfAbsent(key, k -> new SourceCache.Value(k.getSymbol()));
 
@@ -94,7 +94,7 @@ public final class SourceCache {
         }
     }
 
-    public synchronized void register(final FinanceData primary, final FinanceData secondary) {
+    public synchronized void register( FinanceData primary,  FinanceData secondary) {
 
         myCache.computeIfAbsent(primary, k -> new SourceCache.Value(k.getSymbol()));
 
@@ -105,9 +105,9 @@ public final class SourceCache {
 
     private void cleanUp() {
 
-        final CalendarDate now = new CalendarDate();
+         var now = new CalendarDate();
 
-        for (final Entry<FinanceData, SourceCache.Value> entry : myCache.entrySet()) {
+        for ( Entry<FinanceData, SourceCache.Value> entry : myCache.entrySet()) {
             FinanceData key = entry.getKey();
             Value value = entry.getValue();
             if ((value.used == null) || ((now.millis - value.used.millis) > myRefreshInterval.toDurationInMillis())) {
@@ -117,7 +117,7 @@ public final class SourceCache {
         }
     }
 
-    private void update(final Value cacheValue, final FinanceData cacheKey, final CalendarDate now) {
+    private void update( Value cacheValue,  FinanceData cacheKey,  CalendarDate now) {
         BasicSeries<LocalDate, PrimitiveNumber> priceSeries = cacheKey.getPriceSeries();
         for (Entry<LocalDate, PrimitiveNumber> entry : priceSeries.entrySet()) {
             LocalDate entryKey = entry.getKey();

@@ -21,10 +21,10 @@
  */
 package org.ojalgo.data.domain.finance.portfolio;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.type.context.NumberContext;
@@ -48,7 +48,7 @@ final class NormalisedPortfolio extends FinancePortfolio {
         ProgrammingError.throwForIllegalInvocation();
     }
 
-    NormalisedPortfolio(final FinancePortfolio basePortfolio, final NumberContext weightsContext) {
+    NormalisedPortfolio( FinancePortfolio basePortfolio,  NumberContext weightsContext) {
 
         super();
 
@@ -73,12 +73,12 @@ final class NormalisedPortfolio extends FinancePortfolio {
 
         BigDecimal totalWeight = this.getTotalWeight();
 
-        BigDecimal tmpSum = BigMath.ZERO;
-        BigDecimal tmpLargest = BigMath.ZERO;
-        int tmpIndexOfLargest = -1;
+        @Var BigDecimal tmpSum = BigMath.ZERO;
+        @Var BigDecimal tmpLargest = BigMath.ZERO;
+        @Var int tmpIndexOfLargest = -1;
 
         List<BigDecimal> weights = myBasePortfolio.getWeights();
-        BigDecimal weight;
+        @Var BigDecimal weight;
         for (int i = 0; i < weights.size(); i++) {
 
             weight = weights.get(i);
@@ -106,7 +106,7 @@ final class NormalisedPortfolio extends FinancePortfolio {
 
         if (myTotalWeight == null) {
             myTotalWeight = BigMath.ZERO;
-            for (final BigDecimal tmpWeight : myBasePortfolio.getWeights()) {
+            for ( BigDecimal tmpWeight : myBasePortfolio.getWeights()) {
                 myTotalWeight = myTotalWeight.add(tmpWeight);
             }
             if (myTotalWeight.signum() == 0) {

@@ -30,11 +30,11 @@ abstract class TableauCutGenerator {
 
     private static final NumberContext ACCURACY = NumberContext.of(4, 16);
 
-    private static double fraction(final double value) {
+    private static double fraction( double value) {
         return value - Math.floor(value);
     }
 
-    private static boolean ifFractionalEnough(final double value, final double fraction, final double away) {
+    private static boolean ifFractionalEnough( double value,  double fraction,  double away) {
         if (ACCURACY.isSmall(value, Math.min(fraction, ONE - fraction))) {
             return false;
         }
@@ -44,7 +44,7 @@ abstract class TableauCutGenerator {
     /**
      * All variables must be integer.
      */
-    static Equation doGomory(final Primitive1D body, final int variableIndex, final double rhs, final double fractionality) {
+    static Equation doGomory( Primitive1D body,  int variableIndex,  double rhs,  double fractionality) {
 
         int nbVariables = body.size();
 
@@ -71,8 +71,8 @@ abstract class TableauCutGenerator {
         return Equation.of(ONE, variableIndex, cut);
     }
 
-    static Equation doGomoryMixedInteger(final Primitive1D body, final int variableIndex, final double rhs, final boolean[] integer,
-            final double fractionality) {
+    static Equation doGomoryMixedInteger( Primitive1D body,  int variableIndex,  double rhs,  boolean[] integer,
+             double fractionality) {
 
         int nbVariables = body.size();
 

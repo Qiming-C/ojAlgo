@@ -30,32 +30,32 @@ final class ConfiguredIntegration<S extends Optimisation.Solver> extends Express
     private final ExpressionsBasedModel.Integration<S> myDelegate;
     private final Consumer<Optimisation.Options> myOptionsModifier;
 
-    ConfiguredIntegration(final ExpressionsBasedModel.Integration<S> delegate, final Predicate<ExpressionsBasedModel> capabilityPredicate,
-            final Consumer<Optimisation.Options> optionsModifier) {
+    ConfiguredIntegration( ExpressionsBasedModel.Integration<S> delegate,  Predicate<ExpressionsBasedModel> capabilityPredicate,
+             Consumer<Optimisation.Options> optionsModifier) {
         super();
         myDelegate = delegate;
         myCapabilityPredicate = capabilityPredicate;
         myOptionsModifier = optionsModifier;
     }
 
-    public S build(final ExpressionsBasedModel model) {
+    @Override public S build( ExpressionsBasedModel model) {
         if (myOptionsModifier != null) {
             myOptionsModifier.accept(model.options);
         }
         return myDelegate.build(model);
     }
 
-    public boolean isCapable(final ExpressionsBasedModel model) {
+    @Override public boolean isCapable( ExpressionsBasedModel model) {
         return (myCapabilityPredicate == null || myCapabilityPredicate.test(model)) && myDelegate.isCapable(model);
     }
 
     @Override
-    public Result toModelState(final Result solverState, final ExpressionsBasedModel model) {
+    public Result toModelState( Result solverState,  ExpressionsBasedModel model) {
         return myDelegate.toModelState(solverState, model);
     }
 
     @Override
-    public Result toSolverState(final Result modelState, final ExpressionsBasedModel model) {
+    public Result toSolverState( Result modelState,  ExpressionsBasedModel model) {
         return myDelegate.toSolverState(modelState, model);
     }
 

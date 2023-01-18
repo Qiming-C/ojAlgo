@@ -28,7 +28,7 @@ import org.ojalgo.structure.Access1D;
 
 public class NetworkInvoker extends WrappedANN implements BasicFunction.PlainUnary<Access1D<Double>, MatrixStore<Double>> {
 
-    NetworkInvoker(final ArtificialNeuralNetwork network, final int batchSize) {
+    NetworkInvoker( ArtificialNeuralNetwork network,  int batchSize) {
         super(network, batchSize);
     }
 
@@ -42,7 +42,7 @@ public class NetworkInvoker extends WrappedANN implements BasicFunction.PlainUna
      * @see org.ojalgo.function.BasicFunction.PlainUnary#invoke(java.lang.Object)
      */
     @Override
-    public MatrixStore<Double> invoke(final Access1D<Double> input) {
+    public MatrixStore<Double> invoke( Access1D<Double> input) {
         return super.invoke(input, null);
     }
 

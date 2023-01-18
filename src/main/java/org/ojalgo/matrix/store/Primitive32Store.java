@@ -21,9 +21,9 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.Array2D;
@@ -73,14 +73,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return ArrayR032.FACTORY;
         }
 
-        public Primitive32Store columns(final Access1D<?>... source) {
+        @Override public Primitive32Store columns( Access1D<?>... source) {
 
-            final int tmpRowDim = (int) source[0].count();
-            final int tmpColDim = source.length;
+             var tmpRowDim = (int) source[0].count();
+             int tmpColDim = source.length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            Access1D<?> tmpColumn;
+            @Var Access1D<?> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -91,14 +91,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store columns(final Comparable<?>[]... source) {
+        @Override public Primitive32Store columns( Comparable<?>[]... source) {
 
-            final int tmpRowDim = source[0].length;
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].length;
+             int tmpColDim = source.length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            Comparable<?>[] tmpColumn;
+            @Var Comparable<?>[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -109,14 +109,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store columns(final double[]... source) {
+        @Override public Primitive32Store columns( double[]... source) {
 
-            final int tmpRowDim = source[0].length;
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].length;
+             int tmpColDim = source.length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            double[] tmpColumn;
+            @Var double[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -127,14 +127,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store columns(final List<? extends Comparable<?>>... source) {
+        @Override public Primitive32Store columns( List<? extends Comparable<?>>... source) {
 
-            final int tmpRowDim = source[0].size();
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].size();
+             int tmpColDim = source.length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            List<? extends Comparable<?>> tmpColumn;
+            @Var List<? extends Comparable<?>> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -145,19 +145,19 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store copy(final Access2D<?> source) {
+        @Override public Primitive32Store copy( Access2D<?> source) {
 
-            final int tmpRowDim = (int) source.countRows();
-            final int tmpColDim = (int) source.countColumns();
+             var tmpRowDim = (int) source.countRows();
+             var tmpColDim = (int) source.countColumns();
 
-            final Primitive32Store retVal = new Primitive32Store(tmpRowDim, tmpColDim);
+             var retVal = new Primitive32Store(tmpRowDim, tmpColDim);
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int aFirst, final int aLimit) {
+                    public void conquer( int aFirst,  int aLimit) {
                         FillMatchingSingle.copy(retVal.data, tmpRowDim, aFirst, aLimit, source);
                     }
 
@@ -173,23 +173,23 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return retVal;
         }
 
-        public Primitive32Store make(final long rows, final long columns) {
+        @Override public Primitive32Store make( long rows,  long columns) {
             return new Primitive32Store((int) rows, (int) columns);
         }
 
         @Override
-        public Householder<Double> makeHouseholder(final int length) {
+        public Householder<Double> makeHouseholder( int length) {
             return new Householder.Primitive32(length);
         }
 
-        public Primitive32Store rows(final Access1D<?>... source) {
+        @Override public Primitive32Store rows( Access1D<?>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = (int) source[0].count();
+             int tmpRowDim = source.length;
+             var tmpColDim = (int) source[0].count();
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            Access1D<?> tmpRow;
+            @Var Access1D<?> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -200,14 +200,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store rows(final Comparable<?>[]... source) {
+        @Override public Primitive32Store rows( Comparable<?>[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            Comparable<?>[] tmpRow;
+            @Var Comparable<?>[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -218,14 +218,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store rows(final double[]... source) {
+        @Override public Primitive32Store rows( double[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            double[] tmpRow;
+            @Var double[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -236,14 +236,14 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store rows(final List<? extends Comparable<?>>... source) {
+        @Override public Primitive32Store rows( List<? extends Comparable<?>>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].size();
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].size();
 
-            final float[] tmpData = new float[tmpRowDim * tmpColDim];
+             float[] tmpData = new float[tmpRowDim * tmpColDim];
 
-            List<? extends Comparable<?>> tmpRow;
+            @Var List<? extends Comparable<?>> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -254,19 +254,19 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
             return new Primitive32Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive32Store transpose(final Access2D<?> source) {
+        @Override public Primitive32Store transpose( Access2D<?> source) {
 
-            final Primitive32Store retVal = new Primitive32Store((int) source.countColumns(), (int) source.countRows());
+             var retVal = new Primitive32Store((int) source.countColumns(), (int) source.countRows());
 
-            final int tmpRowDim = retVal.getRowDim();
-            final int tmpColDim = retVal.getColDim();
+             int tmpRowDim = retVal.getRowDim();
+             int tmpColDim = retVal.getColDim();
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int first, final int limit) {
+                    public void conquer( int first,  int limit) {
                         FillMatchingSingle.transpose(retVal.data, tmpRowDim, first, limit, source);
                     }
 
@@ -284,7 +284,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
 
     };
 
-    static Primitive32Store cast(final Access1D<Double> matrix) {
+    static Primitive32Store cast( Access1D<Double> matrix) {
         if (matrix instanceof Primitive32Store) {
             return (Primitive32Store) matrix;
         }
@@ -294,7 +294,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         return FACTORY.columns(matrix);
     }
 
-    static Householder.Primitive32 cast(final Householder<Double> transformation) {
+    static Householder.Primitive32 cast( Householder<Double> transformation) {
         if (transformation instanceof Householder.Primitive32) {
             return (Householder.Primitive32) transformation;
         }
@@ -304,7 +304,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         return new Householder.Primitive32(transformation);
     }
 
-    static Rotation.Primitive cast(final Rotation<Double> transformation) {
+    static Rotation.Primitive cast( Rotation<Double> transformation) {
         if (transformation instanceof Rotation.Primitive) {
             return (Rotation.Primitive) transformation;
         }
@@ -321,7 +321,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
 
     private transient float[] myWorkerColumn;
 
-    Primitive32Store(final int numbRows, final int numbCols, final float[] dataArray) {
+    Primitive32Store( int numbRows,  int numbCols,  float[] dataArray) {
 
         super(dataArray);
 
@@ -336,7 +336,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         multiplyNeither = MultiplyNeither.newPrimitive32(myRowDim, myColDim);
     }
 
-    Primitive32Store(final long numbRows, final long numbCols) {
+    Primitive32Store( long numbRows,  long numbCols) {
 
         super(Math.toIntExact(numbRows * numbCols));
 
@@ -351,112 +351,112 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         multiplyNeither = MultiplyNeither.newPrimitive32(myRowDim, myColDim);
     }
 
-    public void accept(final Access2D<?> supplied) {
+    @Override public void accept( Access2D<?> supplied) {
         myUtility.accept(supplied);
     }
 
-    public void add(final long row, final long col, final Comparable<?> addend) {
+    @Override public void add( long row,  long col,  Comparable<?> addend) {
         myUtility.add(row, col, addend);
     }
 
-    public void add(final long row, final long col, final double addend) {
+    @Override public void add( long row,  long col,  double addend) {
         myUtility.add(row, col, addend);
     }
 
-    public Double aggregateColumn(final long col, final Aggregator aggregator) {
+    @Override public Double aggregateColumn( long col,  Aggregator aggregator) {
         return myUtility.aggregateColumn(col, aggregator);
     }
 
-    public Double aggregateColumn(final long row, final long col, final Aggregator aggregator) {
+    @Override public Double aggregateColumn( long row,  long col,  Aggregator aggregator) {
         return myUtility.aggregateColumn(row, col, aggregator);
     }
 
-    public Double aggregateDiagonal(final Aggregator aggregator) {
+    @Override public Double aggregateDiagonal( Aggregator aggregator) {
         return myUtility.aggregateDiagonal(aggregator);
     }
 
-    public Double aggregateDiagonal(final long row, final long col, final Aggregator aggregator) {
+    @Override public Double aggregateDiagonal( long row,  long col,  Aggregator aggregator) {
         return myUtility.aggregateDiagonal(row, col, aggregator);
     }
 
     @Override
-    public Double aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    public Double aggregateRange( long first,  long limit,  Aggregator aggregator) {
         return myUtility.aggregateRange(first, limit, aggregator);
     }
 
-    public Double aggregateRow(final long row, final Aggregator aggregator) {
+    @Override public Double aggregateRow( long row,  Aggregator aggregator) {
         return myUtility.aggregateRow(row, aggregator);
     }
 
-    public Double aggregateRow(final long row, final long col, final Aggregator aggregator) {
+    @Override public Double aggregateRow( long row,  long col,  Aggregator aggregator) {
         return myUtility.aggregateRow(row, col, aggregator);
     }
 
-    public <NN extends Comparable<NN>, R extends Mutate2D.Receiver<NN>> Access2D.Collectable<NN, R> asCollectable2D() {
+    @Override public <NN extends Comparable<NN>, R extends Mutate2D.Receiver<NN>> Access2D.Collectable<NN, R> asCollectable2D() {
         return myUtility.asCollectable2D();
     }
 
-    public Array1D<Double> asList() {
+    @Override public Array1D<Double> asList() {
         return myUtility.flatten();
     }
 
-    public byte byteValue(final long row, final long col) {
+    @Override public byte byteValue( long row,  long col) {
         return myUtility.byteValue(row, col);
     }
 
-    public ColumnView<Double> columns() {
+    @Override public ColumnView<Double> columns() {
         return myUtility.columns();
     }
 
-    public MatrixStore<Double> conjugate() {
+    @Override public MatrixStore<Double> conjugate() {
         return this.transpose();
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myColDim;
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myRowDim;
     }
 
     @Override
-    public double dot(final Access1D<?> vector) {
+    public double dot( Access1D<?> vector) {
         return myUtility.dot(vector);
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return myUtility.doubleValue(row, col);
     }
 
-    public ElementView2D<Double, ?> elements() {
+    @Override public ElementView2D<Double, ?> elements() {
         return myUtility.elements();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof Primitive32Store)) {
             return false;
         }
-        Primitive32Store other = (Primitive32Store) obj;
+        var other = (Primitive32Store) obj;
         if (myColDim != other.myColDim || myRowDim != other.myRowDim) {
             return false;
         }
         return true;
     }
 
-    public void exchangeColumns(final long colA, final long colB) {
+    @Override public void exchangeColumns( long colA,  long colB) {
         myUtility.exchangeColumns(colA, colB);
     }
 
-    public void exchangeRows(final long rowA, final long rowB) {
+    @Override public void exchangeRows( long rowA,  long rowB) {
         myUtility.exchangeRows(rowA, rowB);
     }
 
-    public void fillByMultiplying(final Access1D<Double> left, final Access1D<Double> right) {
+    @Override public void fillByMultiplying( Access1D<Double> left,  Access1D<Double> right) {
 
         int complexity = Math.toIntExact(left.count() / this.countRows());
         if (complexity != Math.toIntExact(right.count() / this.countColumns())) {
@@ -476,170 +476,170 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         }
     }
 
-    public void fillColumn(final long col, final Access1D<Double> values) {
+    @Override public void fillColumn( long col,  Access1D<Double> values) {
         myUtility.fillColumn(col, values);
     }
 
-    public void fillColumn(final long col, final Double value) {
+    @Override public void fillColumn( long col,  Double value) {
         myUtility.fillColumn(col, value);
     }
 
-    public void fillColumn(final long row, final long col, final Access1D<Double> values) {
+    @Override public void fillColumn( long row,  long col,  Access1D<Double> values) {
         myUtility.fillColumn(row, col, values);
     }
 
-    public void fillColumn(final long row, final long col, final Double value) {
+    @Override public void fillColumn( long row,  long col,  Double value) {
         myUtility.fillColumn(row, col, value);
     }
 
-    public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillColumn(row, col, supplier);
     }
 
-    public void fillColumn(final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long col,  NullaryFunction<?> supplier) {
         myUtility.fillColumn(col, supplier);
     }
 
-    public void fillDiagonal(final Access1D<Double> values) {
+    @Override public void fillDiagonal( Access1D<Double> values) {
         myUtility.fillDiagonal(values);
     }
 
-    public void fillDiagonal(final Double value) {
+    @Override public void fillDiagonal( Double value) {
         myUtility.fillDiagonal(value);
     }
 
-    public void fillDiagonal(final long row, final long col, final Access1D<Double> values) {
+    @Override public void fillDiagonal( long row,  long col,  Access1D<Double> values) {
         myUtility.fillDiagonal(row, col, values);
     }
 
-    public void fillDiagonal(final long row, final long col, final Double value) {
+    @Override public void fillDiagonal( long row,  long col,  Double value) {
         myUtility.fillDiagonal(row, col, value);
     }
 
-    public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillDiagonal(row, col, supplier);
     }
 
-    public void fillDiagonal(final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( NullaryFunction<?> supplier) {
         myUtility.fillDiagonal(supplier);
     }
 
     @Override
-    public void fillMatching(final Access1D<Double> left, final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public void fillMatching( Access1D<Double> left,  BinaryFunction<Double> function,  Access1D<Double> right) {
         myUtility.fillMatching(left, function, right);
     }
 
     @Override
-    public void fillMatching(final UnaryFunction<Double> function, final Access1D<Double> arguments) {
+    public void fillMatching( UnaryFunction<Double> function,  Access1D<Double> arguments) {
         myUtility.fillMatching(function, arguments);
     }
 
-    public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
         myUtility.fillOne(row, col, values, valueIndex);
     }
 
-    public void fillOne(final long row, final long col, final Double value) {
+    public void fillOne( long row,  long col,  Double value) {
         myUtility.fillOne(row, col, value);
     }
 
-    public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+    public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillOne(row, col, supplier);
     }
 
-    public void fillRow(final long row, final Access1D<Double> values) {
+    @Override public void fillRow( long row,  Access1D<Double> values) {
         myUtility.fillRow(row, values);
     }
 
-    public void fillRow(final long row, final Double value) {
+    @Override public void fillRow( long row,  Double value) {
         myUtility.fillRow(row, value);
     }
 
-    public void fillRow(final long row, final long col, final Access1D<Double> values) {
+    @Override public void fillRow( long row,  long col,  Access1D<Double> values) {
         myUtility.fillRow(row, col, values);
     }
 
-    public void fillRow(final long row, final long col, final Double value) {
+    @Override public void fillRow( long row,  long col,  Double value) {
         myUtility.fillRow(row, col, value);
     }
 
-    public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillRow(row, col, supplier);
     }
 
-    public void fillRow(final long row, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  NullaryFunction<?> supplier) {
         myUtility.fillRow(row, supplier);
     }
 
-    public float floatValue(final long row, final long col) {
+    @Override public float floatValue( long row,  long col) {
         return myUtility.floatValue(row, col);
     }
 
-    public Double get(final long row, final long col) {
+    @Override public Double get( long row,  long col) {
         return myUtility.get(row, col);
     }
 
-    public int getColDim() {
+    @Override public int getColDim() {
         return myColDim;
     }
 
-    public int getMaxDim() {
+    @Override public int getMaxDim() {
         return Math.max(myRowDim, myColDim);
     }
 
-    public int getMinDim() {
+    @Override public int getMinDim() {
         return Math.min(myRowDim, myColDim);
     }
 
-    public int getRowDim() {
+    @Override public int getRowDim() {
         return myRowDim;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + myColDim;
         return prime * result + myRowDim;
     }
 
-    public int intValue(final long row, final long col) {
+    @Override public int intValue( long row,  long col) {
         return myUtility.intValue(row, col);
     }
 
-    public boolean isAcceptable(final Structure2D supplier) {
+    @Override public boolean isAcceptable( Structure2D supplier) {
         return myUtility.isAcceptable(supplier);
     }
 
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return myUtility.isEmpty();
     }
 
-    public boolean isFat() {
+    @Override public boolean isFat() {
         return myUtility.isFat();
     }
 
-    public boolean isScalar() {
+    @Override public boolean isScalar() {
         return myUtility.isScalar();
     }
 
-    public boolean isSquare() {
+    @Override public boolean isSquare() {
         return myUtility.isSquare();
     }
 
-    public boolean isTall() {
+    @Override public boolean isTall() {
         return myUtility.isTall();
     }
 
-    public boolean isVector() {
+    @Override public boolean isVector() {
         return myUtility.isVector();
     }
 
-    public long longValue(final long row, final long col) {
+    @Override public long longValue( long row,  long col) {
         return myUtility.longValue(row, col);
     }
 
     @Override
-    public void modifyAll(final UnaryFunction<Double> modifier) {
+    public void modifyAll( UnaryFunction<Double> modifier) {
 
         this.modify(0, myRowDim * myColDim, 1, modifier);
 
@@ -662,65 +662,65 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         //        }
     }
 
-    public void modifyAny(final Transformation2D<Double> modifier) {
+    @Override public void modifyAny( Transformation2D<Double> modifier) {
         myUtility.modifyAny(modifier);
     }
 
-    public void modifyColumn(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyColumn( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyColumn(row, col, modifier);
     }
 
-    public void modifyColumn(final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyColumn( long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyColumn(col, modifier);
     }
 
-    public void modifyDiagonal(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyDiagonal(row, col, modifier);
     }
 
-    public void modifyDiagonal(final UnaryFunction<Double> modifier) {
+    @Override public void modifyDiagonal( UnaryFunction<Double> modifier) {
         myUtility.modifyDiagonal(modifier);
     }
 
     @Override
-    public void modifyMatching(final Access1D<Double> left, final BinaryFunction<Double> function) {
+    public void modifyMatching( Access1D<Double> left,  BinaryFunction<Double> function) {
         myUtility.modifyMatching(left, function);
     }
 
     @Override
-    public void modifyMatching(final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public void modifyMatching( BinaryFunction<Double> function,  Access1D<Double> right) {
         myUtility.modifyMatching(function, right);
     }
 
-    public void modifyMatchingInColumns(final Access1D<Double> left, final BinaryFunction<Double> function) {
+    @Override public void modifyMatchingInColumns( Access1D<Double> left,  BinaryFunction<Double> function) {
         myUtility.modifyMatchingInColumns(left, function);
     }
 
-    public void modifyMatchingInColumns(final BinaryFunction<Double> function, final Access1D<Double> right) {
+    @Override public void modifyMatchingInColumns( BinaryFunction<Double> function,  Access1D<Double> right) {
         myUtility.modifyMatchingInColumns(function, right);
     }
 
-    public void modifyMatchingInRows(final Access1D<Double> left, final BinaryFunction<Double> function) {
+    @Override public void modifyMatchingInRows( Access1D<Double> left,  BinaryFunction<Double> function) {
         myUtility.modifyMatchingInRows(left, function);
     }
 
-    public void modifyMatchingInRows(final BinaryFunction<Double> function, final Access1D<Double> right) {
+    @Override public void modifyMatchingInRows( BinaryFunction<Double> function,  Access1D<Double> right) {
         myUtility.modifyMatchingInRows(function, right);
     }
 
-    public void modifyOne(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyOne( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyOne(row, col, modifier);
     }
 
-    public void modifyRow(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyRow( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyRow(row, col, modifier);
     }
 
-    public void modifyRow(final long row, final UnaryFunction<Double> modifier) {
+    @Override public void modifyRow( long row,  UnaryFunction<Double> modifier) {
         myUtility.modifyRow(row, modifier);
     }
 
-    public MatrixStore<Double> multiply(final MatrixStore<Double> right) {
+    @Override public MatrixStore<Double> multiply( MatrixStore<Double> right) {
 
         Primitive32Store retVal = FACTORY.make(myRowDim, right.countColumns());
 
@@ -733,7 +733,7 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         return retVal;
     }
 
-    public Double multiplyBoth(final Access1D<Double> leftAndRight) {
+    @Override public Double multiplyBoth( Access1D<Double> leftAndRight) {
 
         PhysicalStore<Double> tmpStep1 = FACTORY.make(1L, leftAndRight.count());
         PhysicalStore<Double> tmpStep2 = FACTORY.make(1L, 1L);
@@ -744,89 +744,89 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         return tmpStep2.get(0L);
     }
 
-    public PhysicalStore.Factory<Double, ?> physical() {
+    @Override public PhysicalStore.Factory<Double, ?> physical() {
         return FACTORY;
     }
 
-    public void reduceColumns(final Aggregator aggregator, final Mutate1D receiver) {
+    @Override public void reduceColumns( Aggregator aggregator,  Mutate1D receiver) {
         myUtility.reduceColumns(aggregator, receiver);
     }
 
-    public void reduceRows(final Aggregator aggregator, final Mutate1D receiver) {
+    @Override public void reduceRows( Aggregator aggregator,  Mutate1D receiver) {
         myUtility.reduceRows(aggregator, receiver);
     }
 
-    public TransformableRegion<Double> regionByColumns(final int... columns) {
+    @Override public TransformableRegion<Double> regionByColumns( int... columns) {
         return new Subregion2D.ColumnsRegion<>(this, multiplyBoth, columns);
     }
 
-    public TransformableRegion<Double> regionByLimits(final int rowLimit, final int columnLimit) {
+    @Override public TransformableRegion<Double> regionByLimits( int rowLimit,  int columnLimit) {
         return new Subregion2D.LimitRegion<>(this, multiplyBoth, rowLimit, columnLimit);
     }
 
-    public TransformableRegion<Double> regionByOffsets(final int rowOffset, final int columnOffset) {
+    @Override public TransformableRegion<Double> regionByOffsets( int rowOffset,  int columnOffset) {
         return new Subregion2D.OffsetRegion<>(this, multiplyBoth, rowOffset, columnOffset);
     }
 
-    public TransformableRegion<Double> regionByRows(final int... rows) {
+    @Override public TransformableRegion<Double> regionByRows( int... rows) {
         return new Subregion2D.RowsRegion<>(this, multiplyBoth, rows);
     }
 
-    public TransformableRegion<Double> regionByTransposing() {
+    @Override public TransformableRegion<Double> regionByTransposing() {
         return new Subregion2D.TransposedRegion<>(this, multiplyBoth);
     }
 
-    public RowView<Double> rows() {
+    @Override public RowView<Double> rows() {
         return myUtility.rows();
     }
 
-    public void set(final long row, final long col, final Comparable<?> value) {
+    @Override public void set( long row,  long col,  Comparable<?> value) {
         myUtility.set(row, col, value);
     }
 
-    public void set(final long row, final long col, final double value) {
+    @Override public void set( long row,  long col,  double value) {
         myUtility.set(row, col, value);
     }
 
-    public short shortValue(final long row, final long col) {
+    @Override public short shortValue( long row,  long col) {
         return myUtility.shortValue(row, col);
     }
 
-    public Array1D<Double> sliceColumn(final long col) {
+    @Override public Array1D<Double> sliceColumn( long col) {
         return myUtility.sliceColumn(col);
     }
 
-    public Array1D<Double> sliceColumn(final long row, final long col) {
+    @Override public Array1D<Double> sliceColumn( long row,  long col) {
         return myUtility.sliceColumn(row, col);
     }
 
-    public Access1D<Double> sliceDiagonal() {
+    @Override public Access1D<Double> sliceDiagonal() {
         return myUtility.sliceDiagonal();
     }
 
-    public Array1D<Double> sliceDiagonal(final long row, final long col) {
+    @Override public Array1D<Double> sliceDiagonal( long row,  long col) {
         return myUtility.sliceDiagonal(row, col);
     }
 
-    public Array1D<Double> sliceRow(final long row) {
+    @Override public Array1D<Double> sliceRow( long row) {
         return myUtility.sliceRow(row);
     }
 
-    public Array1D<Double> sliceRow(final long row, final long col) {
+    @Override public Array1D<Double> sliceRow( long row,  long col) {
         return myUtility.sliceRow(row, col);
     }
 
-    public void substituteBackwards(final Access2D<Double> body, final boolean unitDiagonal, final boolean conjugated, final boolean hermitian) {
+    @Override public void substituteBackwards( Access2D<Double> body,  boolean unitDiagonal,  boolean conjugated,  boolean hermitian) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteBackwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int first, final int limit) {
+                public void conquer( int first,  int limit) {
                     SubstituteBackwards.invoke(Primitive32Store.this.data, tmpRowDim, first, limit, body, unitDiagonal, conjugated, hermitian);
                 }
 
@@ -840,17 +840,17 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         }
     }
 
-    public void substituteForwards(final Access2D<Double> body, final boolean unitDiagonal, final boolean conjugated, final boolean identity) {
+    @Override public void substituteForwards( Access2D<Double> body,  boolean unitDiagonal,  boolean conjugated,  boolean identity) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteForwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int first, final int limit) {
+                public void conquer( int first,  int limit) {
                     SubstituteForwards.invoke(Primitive32Store.this.data, tmpRowDim, first, limit, body, unitDiagonal, conjugated, identity);
                 }
 
@@ -864,11 +864,11 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         }
     }
 
-    public double[] toRawCopy1D() {
+    @Override public double[] toRawCopy1D() {
         return myUtility.toRawCopy1D();
     }
 
-    public double[][] toRawCopy2D() {
+    @Override public double[][] toRawCopy2D() {
         return myUtility.toRawCopy2D();
     }
 
@@ -877,16 +877,16 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         return Access2D.toString(this);
     }
 
-    public void transformLeft(final Householder<Double> transformation, final int firstColumn) {
+    @Override public void transformLeft( Householder<Double> transformation,  int firstColumn) {
         HouseholderLeft.call(data, myRowDim, firstColumn, Primitive32Store.cast(transformation));
     }
 
-    public void transformLeft(final Rotation<Double> transformation) {
+    @Override public void transformLeft( Rotation<Double> transformation) {
 
-        final Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
+         Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (!Double.isNaN(tmpTransf.cos) && !Double.isNaN(tmpTransf.sin)) {
@@ -903,16 +903,16 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         }
     }
 
-    public void transformRight(final Householder<Double> transformation, final int firstRow) {
+    @Override public void transformRight( Householder<Double> transformation,  int firstRow) {
         HouseholderRight.call(data, myRowDim, firstRow, Primitive32Store.cast(transformation), this.getWorkerColumn());
     }
 
-    public void transformRight(final Rotation<Double> transformation) {
+    @Override public void transformRight( Rotation<Double> transformation) {
 
-        final Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
+         Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (!Double.isNaN(tmpTransf.cos) && !Double.isNaN(tmpTransf.sin)) {
@@ -929,31 +929,31 @@ public final class Primitive32Store extends ArrayR032 implements PhysicalStore<D
         }
     }
 
-    public void visitColumn(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitColumn( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitColumn(row, col, visitor);
     }
 
-    public void visitColumn(final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitColumn( long col,  VoidFunction<Double> visitor) {
         myUtility.visitColumn(col, visitor);
     }
 
-    public void visitDiagonal(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitDiagonal( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitDiagonal(row, col, visitor);
     }
 
-    public void visitDiagonal(final VoidFunction<Double> visitor) {
+    @Override public void visitDiagonal( VoidFunction<Double> visitor) {
         myUtility.visitDiagonal(visitor);
     }
 
-    public void visitOne(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitOne( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitOne(row, col, visitor);
     }
 
-    public void visitRow(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitRow( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitRow(row, col, visitor);
     }
 
-    public void visitRow(final long row, final VoidFunction<Double> visitor) {
+    @Override public void visitRow( long row,  VoidFunction<Double> visitor) {
         myUtility.visitRow(row, visitor);
     }
 

@@ -21,11 +21,11 @@
  */
 package org.ojalgo.type;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
-
 import org.ojalgo.structure.Access1D;
 
 /**
@@ -38,38 +38,38 @@ import org.ojalgo.structure.Access1D;
  */
 public final class FloatingPointReceptacle {
 
-    public static FloatingPointReceptacle of(final Access1D<?> values) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( Access1D<?> values) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(values);
         return retVal;
     }
 
-    public static FloatingPointReceptacle of(final double... values) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( double... values) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(values);
         return retVal;
     }
 
-    public static FloatingPointReceptacle of(final float... values) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( float... values) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(values);
         return retVal;
     }
 
-    public static FloatingPointReceptacle of(final int count, final double value) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( int count,  double value) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(count, value);
         return retVal;
     }
 
-    public static FloatingPointReceptacle of(final int count, final float value) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( int count,  float value) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(count, value);
         return retVal;
     }
 
-    public static FloatingPointReceptacle of(final List<? extends Comparable<?>> values) {
-        FloatingPointReceptacle retVal = new FloatingPointReceptacle();
+    public static FloatingPointReceptacle of( List<? extends Comparable<?>> values) {
+        var retVal = new FloatingPointReceptacle();
         retVal.append(values);
         return retVal;
     }
@@ -81,39 +81,39 @@ public final class FloatingPointReceptacle {
         super();
     }
 
-    public void append(final Access1D<?> part) {
+    public void append( Access1D<?> part) {
         myContents.addLast(part);
         mySize += part.size();
     }
 
-    public void append(final double... part) {
+    public void append( double... part) {
         myContents.addLast(part);
         mySize += part.length;
     }
 
-    public void append(final float... part) {
+    public void append( float... part) {
         myContents.addLast(part);
         mySize += part.length;
     }
 
-    public void append(final FloatingPointReceptacle part) {
+    public void append( FloatingPointReceptacle part) {
         myContents.addLast(part);
         mySize += part.size();
     }
 
-    public void append(final int count, final double value) {
+    public void append( int count,  double value) {
         double[] part = new double[count];
         Arrays.fill(part, value);
         this.append(part);
     }
 
-    public void append(final int count, final float value) {
+    public void append( int count,  float value) {
         float[] part = new float[count];
         Arrays.fill(part, value);
         this.append(part);
     }
 
-    public void append(final List<? extends Comparable<?>> part) {
+    public void append( List<? extends Comparable<?>> part) {
         myContents.addLast(part);
         mySize += part.size();
     }
@@ -123,39 +123,39 @@ public final class FloatingPointReceptacle {
         mySize = 0;
     }
 
-    public void prepend(final Access1D<?> part) {
+    public void prepend( Access1D<?> part) {
         myContents.addFirst(part);
         mySize += part.size();
     }
 
-    public void prepend(final double... part) {
+    public void prepend( double... part) {
         myContents.addFirst(part);
         mySize += part.length;
     }
 
-    public void prepend(final float... part) {
+    public void prepend( float... part) {
         myContents.addFirst(part);
         mySize += part.length;
     }
 
-    public void prepend(final FloatingPointReceptacle part) {
+    public void prepend( FloatingPointReceptacle part) {
         myContents.addFirst(part);
         mySize += part.size();
     }
 
-    public void prepend(final int count, final double value) {
+    public void prepend( int count,  double value) {
         double[] part = new double[count];
         Arrays.fill(part, value);
         this.prepend(part);
     }
 
-    public void prepend(final int count, final float value) {
+    public void prepend( int count,  float value) {
         float[] part = new float[count];
         Arrays.fill(part, value);
         this.prepend(part);
     }
 
-    public void prepend(final List<? extends Comparable<?>> part) {
+    public void prepend( List<? extends Comparable<?>> part) {
         myContents.addFirst(part);
         mySize += part.size();
     }
@@ -164,11 +164,11 @@ public final class FloatingPointReceptacle {
         return mySize;
     }
 
-    public void supplyTo(final double[] destination) {
+    public void supplyTo( double[] destination) {
         this.supplyTo(destination, 0);
     }
 
-    public void supplyTo(final float[] destination) {
+    public void supplyTo( float[] destination) {
         this.supplyTo(destination, 0);
     }
 
@@ -192,7 +192,7 @@ public final class FloatingPointReceptacle {
         return retVal;
     }
 
-    private int copy(final Access1D<?> source, final double[] destination, final int offset) {
+    private int copy( Access1D<?> source,  double[] destination,  int offset) {
         int limit = Math.min(source.size(), destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = source.doubleValue(s);
@@ -200,7 +200,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final Access1D<?> source, final float[] destination, final int offset) {
+    private int copy( Access1D<?> source,  float[] destination,  int offset) {
         int limit = Math.min(source.size(), destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = source.floatValue(s);
@@ -208,7 +208,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final double[] source, final double[] destination, final int offset) {
+    private int copy( double[] source,  double[] destination,  int offset) {
         int limit = Math.min(source.length, destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = source[s];
@@ -216,7 +216,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final double[] source, final float[] destination, final int offset) {
+    private int copy( double[] source,  float[] destination,  int offset) {
         int limit = Math.min(source.length, destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = (float) source[s];
@@ -224,7 +224,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final float[] source, final double[] destination, final int offset) {
+    private int copy( float[] source,  double[] destination,  int offset) {
         int limit = Math.min(source.length, destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = source[s];
@@ -232,7 +232,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final float[] source, final float[] destination, final int offset) {
+    private int copy( float[] source,  float[] destination,  int offset) {
         int limit = Math.min(source.length, destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = source[s];
@@ -240,7 +240,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final List<? extends Comparable<?>> source, final double[] destination, final int offset) {
+    private int copy( List<? extends Comparable<?>> source,  double[] destination,  int offset) {
         int limit = Math.min(source.size(), destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = NumberDefinition.doubleValue(source.get(s));
@@ -248,7 +248,7 @@ public final class FloatingPointReceptacle {
         return offset + limit;
     }
 
-    private int copy(final List<? extends Comparable<?>> source, final float[] destination, final int offset) {
+    private int copy( List<? extends Comparable<?>> source,  float[] destination,  int offset) {
         int limit = Math.min(source.size(), destination.length - offset);
         for (int s = 0; s < limit; s++) {
             destination[offset + s] = NumberDefinition.floatValue(source.get(s));
@@ -257,7 +257,7 @@ public final class FloatingPointReceptacle {
     }
 
     @SuppressWarnings("unchecked")
-    private int supplyTo(final double[] destination, int offset) {
+    private int supplyTo( double[] destination, @Var int offset) {
         for (Object source : myContents) {
             if (source instanceof float[]) {
                 offset = this.copy((float[]) source, destination, offset);
@@ -277,7 +277,7 @@ public final class FloatingPointReceptacle {
     }
 
     @SuppressWarnings("unchecked")
-    private int supplyTo(final float[] destination, int offset) {
+    private int supplyTo( float[] destination, @Var int offset) {
         for (Object source : myContents) {
             if (source instanceof float[]) {
                 offset = this.copy((float[]) source, destination, offset);

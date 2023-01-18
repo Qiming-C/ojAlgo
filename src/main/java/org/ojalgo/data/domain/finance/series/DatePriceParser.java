@@ -37,7 +37,7 @@ public final class DatePriceParser extends DetectingParser<DatePrice> {
 
         private final LineSplittingParser myDelegate = new LineSplittingParser();
 
-        public DatePrice parse(final String line) {
+        @Override public DatePrice parse( String line) {
             String[] parsed = myDelegate.parse(line);
             return DatePrice.of(parsed[0], parsed[1]);
         }

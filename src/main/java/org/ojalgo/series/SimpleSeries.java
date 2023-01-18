@@ -28,13 +28,13 @@ import java.util.function.UnaryOperator;
 
 public final class SimpleSeries<K extends Comparable<? super K>, V extends Comparable<V>> extends TreeSeries<K, V, SimpleSeries<K, V>> {
 
-    public static <K extends Comparable<? super K>, V extends Comparable<V>> SimpleSeries<K, V> copy(final Map<? extends K, ? extends V> entries) {
+    public static <K extends Comparable<? super K>, V extends Comparable<V>> SimpleSeries<K, V> copy( Map<? extends K, ? extends V> entries) {
         SimpleSeries<K, V> retVal = new SimpleSeries<>();
         retVal.putAll(entries);
         return retVal;
     }
 
-    public static <K extends Comparable<? super K>, V extends Comparable<V>> SimpleSeries<K, V> wrap(final NavigableMap<K, V> delegate) {
+    public static <K extends Comparable<? super K>, V extends Comparable<V>> SimpleSeries<K, V> wrap( NavigableMap<K, V> delegate) {
         return new SimpleSeries<>(delegate);
     }
 
@@ -42,11 +42,11 @@ public final class SimpleSeries<K extends Comparable<? super K>, V extends Compa
         super(new TreeMap<>());
     }
 
-    SimpleSeries(final NavigableMap<K, V> delegate) {
+    SimpleSeries( NavigableMap<K, V> delegate) {
         super(delegate);
     }
 
-    public BasicSeries<K, V> resample(final UnaryOperator<K> keyTranslator) {
+    @Override public BasicSeries<K, V> resample( UnaryOperator<K> keyTranslator) {
         BasicSeries<K, V> retVal = new SimpleSeries<>();
         this.resample(keyTranslator, retVal);
         return retVal;

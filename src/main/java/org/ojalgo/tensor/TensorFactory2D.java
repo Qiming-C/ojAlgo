@@ -21,9 +21,9 @@
  */
 package org.ojalgo.tensor;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.scalar.Scalar;
-import org.ojalgo.scalar.Scalar.Factory;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Access2D;
 import org.ojalgo.structure.Factory2D;
@@ -31,20 +31,20 @@ import org.ojalgo.structure.Mutate2D;
 
 public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> implements Factory2D<T> {
 
-    public static <N extends Comparable<N>, T extends Mutate2D> TensorFactory2D<N, T> of(final Factory2D<T> factory) {
+    public static <N extends Comparable<N>, T extends Mutate2D> TensorFactory2D<N, T> of( Factory2D<T> factory) {
         return new TensorFactory2D<>(factory);
     }
 
     private final Factory2D<T> myFactory;
 
-    TensorFactory2D(final Factory2D<T> factory) {
+    TensorFactory2D( Factory2D<T> factory) {
 
         super();
 
         myFactory = factory;
     }
 
-    public T copy(final Access2D<N> elements) {
+    public T copy( Access2D<N> elements) {
 
         T retVal = myFactory.make(elements.countRows(), elements.countColumns());
 
@@ -56,14 +56,14 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof TensorFactory2D)) {
             return false;
         }
-        TensorFactory2D other = (TensorFactory2D) obj;
+        var other = (TensorFactory2D) obj;
         if (myFactory == null) {
             if (other.myFactory != null) {
                 return false;
@@ -74,19 +74,19 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
         return true;
     }
 
-    public FunctionSet<N> function() {
+    @Override public FunctionSet<N> function() {
         return (FunctionSet<N>) myFactory.function();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + (myFactory == null ? 0 : myFactory.hashCode());
         return result;
     }
 
-    public T identity(final int dimensions) {
+    public T identity( int dimensions) {
 
         T retVal = myFactory.make(dimensions, dimensions);
 
@@ -99,14 +99,14 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
         return retVal;
     }
 
-    public T make(final long rows, final long columns) {
+    @Override public T make( long rows,  long columns) {
         return myFactory.make(rows, columns);
     }
 
     /**
      * Same as {@link TensorFactoryAnyD#product(Access1D...)} but explicitly for rank 2.
      */
-    public T product(final Access1D<N> vector1, final Access1D<N> vector2) {
+    public T product( Access1D<N> vector1,  Access1D<N> vector2) {
 
         long rows = vector1.count();
         long cols = vector2.count();
@@ -122,14 +122,14 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
         return retVal;
     }
 
-    public T power2(final Access1D<N> vector) {
+    public T power2( Access1D<N> vector) {
         return this.product(vector, vector);
     }
 
     /**
      * The Kronecker matrix product / matrix tensor product
      */
-    public T kronecker(final Access2D<N> matrix1, final Access2D<N> matrix2) {
+    public T kronecker( Access2D<N> matrix1,  Access2D<N> matrix2) {
 
         long rows1 = matrix1.countRows();
         long cols1 = matrix1.countColumns();
@@ -140,7 +140,7 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
 
         T retVal = myFactory.make(rows, cols);
 
-        long i, j;
+        @Var long i, j;
 
         for (long j1 = 0; j1 < cols1; j1++) {
             for (long j2 = 0; j2 < cols2; j2++) {
@@ -164,17 +164,17 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
         return retVal;
     }
 
-    public Scalar.Factory<N> scalar() {
-        return (Factory<N>) myFactory.scalar();
+    @Override public Scalar.Factory<N> scalar() {
+        return (Scalar.Factory<N>) myFactory.scalar();
     }
 
     /**
      * Will create a block diagonal tensor using the input matrices as blocks in the supplied order.
      */
-    public T blocks(final Access2D<N>... matrices) {
+    public T blocks( Access2D<N>... matrices) {
 
-        long rows = 0;
-        long cols = 0;
+        @Var long rows = 0;
+        @Var long cols = 0;
         for (Access2D<N> matrix : matrices) {
             rows += matrix.countRows();
             cols += matrix.countColumns();
@@ -182,8 +182,8 @@ public final class TensorFactory2D<N extends Comparable<N>, T extends Mutate2D> 
 
         T retVal = myFactory.make(rows, cols);
 
-        long rowOffset = 0L;
-        long colOffset = 0L;
+        @Var long rowOffset = 0L;
+        @Var long colOffset = 0L;
         for (Access2D<N> matrix : matrices) {
 
             long m = matrix.countRows();

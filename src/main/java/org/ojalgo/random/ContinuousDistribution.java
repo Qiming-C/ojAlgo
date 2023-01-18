@@ -51,7 +51,7 @@ public interface ContinuousDistribution extends Distribution {
      */
     double getDistribution(double value);
 
-    default double getLowerConfidenceQuantile(final double confidence) {
+    default double getLowerConfidenceQuantile( double confidence) {
         return this.getQuantile((ONE - confidence) / TWO);
     }
 
@@ -66,7 +66,7 @@ public interface ContinuousDistribution extends Distribution {
      */
     double getQuantile(double probability);
 
-    default double getUpperConfidenceQuantile(final double confidence) {
+    default double getUpperConfidenceQuantile( double confidence) {
         return this.getQuantile(ONE - ((ONE - confidence) / TWO));
     }
 

@@ -21,6 +21,7 @@
  */
 package org.ojalgo.ann;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ann.ArtificialNeuralNetwork.Activator;
 
 final class LayerTemplate {
@@ -29,7 +30,7 @@ final class LayerTemplate {
     final int inputs;
     final int outputs;
 
-    LayerTemplate(final int pInputs, final int pOutputs, final Activator pActivator) {
+    LayerTemplate( int pInputs,  int pOutputs,  Activator pActivator) {
         super();
         inputs = pInputs;
         outputs = pOutputs;
@@ -37,14 +38,14 @@ final class LayerTemplate {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof LayerTemplate)) {
             return false;
         }
-        LayerTemplate other = (LayerTemplate) obj;
+        var other = (LayerTemplate) obj;
         if (activator != other.activator) {
             return false;
         }
@@ -59,8 +60,8 @@ final class LayerTemplate {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = (prime * result) + ((activator == null) ? 0 : activator.hashCode());
         result = (prime * result) + inputs;
         result = (prime * result) + outputs;

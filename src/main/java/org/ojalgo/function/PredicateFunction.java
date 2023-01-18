@@ -26,53 +26,53 @@ import java.util.function.Predicate;
 
 public interface PredicateFunction<N extends Comparable<N>> extends BasicFunction, Predicate<N>, DoublePredicate {
 
-    default boolean invoke(final byte arg) {
+    default boolean invoke( byte arg) {
         return this.invoke((double) arg);
     }
 
     boolean invoke(double arg);
 
-    default boolean invoke(final float arg) {
+    default boolean invoke( float arg) {
         return this.invoke((double) arg);
     }
 
-    default boolean invoke(final int arg) {
+    default boolean invoke( int arg) {
         return this.invoke((double) arg);
     }
 
-    default boolean invoke(final long arg) {
+    default boolean invoke( long arg) {
         return this.invoke((double) arg);
     }
 
     boolean invoke(N arg);
 
-    default boolean invoke(final short arg) {
+    default boolean invoke( short arg) {
         return this.invoke((double) arg);
     }
 
-    default PredicateFunction<N> negate() {
+    @Override default PredicateFunction<N> negate() {
         return new PredicateFunction<N>() {
 
-            public boolean invoke(final double arg) {
+            @Override public boolean invoke( double arg) {
                 return !PredicateFunction.this.invoke(arg);
             }
 
-            public boolean invoke(final float arg) {
+            @Override public boolean invoke( float arg) {
                 return !PredicateFunction.this.invoke(arg);
             }
 
-            public boolean invoke(final N arg) {
+            @Override public boolean invoke( N arg) {
                 return !PredicateFunction.this.invoke(arg);
             }
 
         };
     }
 
-    default boolean test(final double arg) {
+    @Override default boolean test( double arg) {
         return this.invoke(arg);
     }
 
-    default boolean test(final N arg) {
+    @Override default boolean test( N arg) {
         return this.invoke(arg);
     }
 

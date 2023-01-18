@@ -21,6 +21,7 @@
  */
 package org.ojalgo.random;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.structure.Access2D;
@@ -29,7 +30,7 @@ abstract class AbstractDistribution1D implements Distribution1D {
 
     private final Random1D myRandom;
 
-    protected AbstractDistribution1D(final Access2D<?> correlations) {
+    protected AbstractDistribution1D( Access2D<?> correlations) {
 
         super();
 
@@ -42,13 +43,13 @@ abstract class AbstractDistribution1D implements Distribution1D {
      * @see org.ojalgo.random.Distribution#getStandardDeviation()
      * @see org.ojalgo.random.Distribution#getVariance()
      */
-    public Array1D<Double> getStandardDeviation() {
+    @Override public Array1D<Double> getStandardDeviation() {
 
-        final Array1D<Double> tmpVar = this.getVariance();
+         Array1D<Double> tmpVar = this.getVariance();
 
-        final int tmpLength = tmpVar.size();
+         int tmpLength = tmpVar.size();
 
-        final Array1D<Double> retVal = Array1D.R064.make(tmpLength);
+         Array1D<Double> retVal = Array1D.R064.make(tmpLength);
 
         for (int i = 0; i < tmpLength; i++) {
             retVal.set(i, PrimitiveMath.SQRT.invoke(tmpVar.doubleValue(i)));
@@ -63,15 +64,15 @@ abstract class AbstractDistribution1D implements Distribution1D {
      * @see org.ojalgo.random.Distribution#getStandardDeviation()
      * @see org.ojalgo.random.Distribution#getVariance()
      */
-    public Array1D<Double> getVariance() {
+    @Override public Array1D<Double> getVariance() {
 
-        final Array1D<Double> tmpStdDev = this.getStandardDeviation();
+         Array1D<Double> tmpStdDev = this.getStandardDeviation();
 
-        final int tmpLength = tmpStdDev.size();
+         int tmpLength = tmpStdDev.size();
 
-        final Array1D<Double> retVal = Array1D.R064.make(tmpLength);
+         Array1D<Double> retVal = Array1D.R064.make(tmpLength);
 
-        double tmpVal;
+        @Var double tmpVal;
         for (int i = 0; i < tmpLength; i++) {
             tmpVal = tmpStdDev.doubleValue(i);
             retVal.set(i, tmpVal * tmpVal);

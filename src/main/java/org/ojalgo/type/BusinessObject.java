@@ -56,15 +56,15 @@ public interface BusinessObject {
         return Collections.emptySet();
     }
 
-    static <E> List<E> makeSingleEntryList(final E listEntry) {
+    static <E> List<E> makeSingleEntryList( E listEntry) {
         return Collections.singletonList(listEntry);
     }
 
-    static <K, V> Map<K, V> makeSingleEntryMap(final K mpEntryKey, final V mapEntryValue) {
+    static <K, V> Map<K, V> makeSingleEntryMap( K mpEntryKey,  V mapEntryValue) {
         return Collections.singletonMap(mpEntryKey, mapEntryValue);
     }
 
-    static <E> Set<E> makeSingleEntrySet(final E setEntry) {
+    static <E> Set<E> makeSingleEntrySet( E setEntry) {
         return Collections.singleton(setEntry);
     }
 

@@ -21,8 +21,8 @@
  */
 package org.ojalgo.matrix.operation;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.IntSupplier;
-
 import org.ojalgo.array.operation.AXPY;
 import org.ojalgo.array.operation.DOT;
 import org.ojalgo.concurrent.DivideAndConquer;
@@ -39,7 +39,7 @@ public final class HouseholderLeft implements MatrixOperation {
 
     private static final DivideAndConquer.Divider DIVIDER = ProcessingService.INSTANCE.divider();
 
-    public static void call(final double[] data, final int structure, final int first, final double[] hVector, final int hFirst, final double hBeta) {
+    public static void call( double[] data,  int structure,  int first,  double[] hVector,  int hFirst,  double hBeta) {
 
         int nbCols = data.length / structure;
 
@@ -50,11 +50,11 @@ public final class HouseholderLeft implements MatrixOperation {
         }
     }
 
-    public static void call(final double[] data, final int structure, final int first, final Householder.Primitive64 householder) {
+    public static void call( double[] data,  int structure,  int first,  Householder.Primitive64 householder) {
         HouseholderLeft.call(data, structure, first, householder.vector, householder.first, householder.beta);
     }
 
-    public static void call(final double[][] data, final int structure, final int first, final double[] hVector, final int hFirst, final double hBeta) {
+    public static void call( double[][] data,  int structure,  int first,  double[] hVector,  int hFirst,  double hBeta) {
 
         int nbCols = data.length;
 
@@ -65,11 +65,11 @@ public final class HouseholderLeft implements MatrixOperation {
         }
     }
 
-    public static void call(final double[][] data, final int structure, final int first, final Householder.Primitive64 householder) {
+    public static void call( double[][] data,  int structure,  int first,  Householder.Primitive64 householder) {
         HouseholderLeft.call(data, structure, first, householder.vector, householder.first, householder.beta);
     }
 
-    public static void call(final float[] data, final int structure, final int first, final Householder.Primitive32 householder) {
+    public static void call( float[] data,  int structure,  int first,  Householder.Primitive32 householder) {
 
         int nbCols = data.length / structure;
 
@@ -80,8 +80,8 @@ public final class HouseholderLeft implements MatrixOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void call(final N[] data, final int structure, final int first, final Householder.Generic<N> householder,
-            final Scalar.Factory<N> scalar) {
+    public static <N extends Scalar<N>> void call( N[] data,  int structure,  int first,  Householder.Generic<N> householder,
+             Scalar.Factory<N> scalar) {
 
         int nbCols = data.length / structure;
 
@@ -92,35 +92,35 @@ public final class HouseholderLeft implements MatrixOperation {
         }
     }
 
-    private static void doColumn(final double[] data, final int offset, final double[] vector, final double beta, final int first, final int limit) {
+    private static void doColumn( double[] data,  int offset,  double[] vector,  double beta,  int first,  int limit) {
         double scale = beta * DOT.invoke(data, offset, vector, 0, first, limit);
         AXPY.invoke(data, offset, -scale, vector, 0, first, limit);
     }
 
-    private static void doColumn(final float[] data, final int offset, final float[] vector, final float beta, final int first, final int limit) {
+    private static void doColumn( float[] data,  int offset,  float[] vector,  float beta,  int first,  int limit) {
         float scale = beta * DOT.invoke(data, offset, vector, 0, first, limit);
         AXPY.invoke(data, offset, -scale, vector, 0, first, limit);
     }
 
-    static void divide(final int first, final int limit, final Conquerer conquerer) {
+    static void divide( int first,  int limit,  Conquerer conquerer) {
         DIVIDER.parallelism(PARALLELISM).threshold(THRESHOLD).divide(first, limit, conquerer);
     }
 
-    static void invoke(final double[] data, final int structure, final int first, final int limit, final double[] hVector, final int hFirst,
-            final double hBeta) {
+    static void invoke( double[] data,  int structure,  int first,  int limit,  double[] hVector,  int hFirst,
+             double hBeta) {
         for (int j = first; j < limit; j++) {
             HouseholderLeft.doColumn(data, j * structure, hVector, hBeta, hFirst, structure);
         }
     }
 
-    static void invoke(final double[][] data, final int structure, final int first, final int limit, final double[] hVector, final int hFirst,
-            final double hBeta) {
+    static void invoke( double[][] data,  int structure,  int first,  int limit,  double[] hVector,  int hFirst,
+             double hBeta) {
         for (int j = first; j < limit; j++) {
             HouseholderLeft.doColumn(data[j], 0, hVector, hBeta, hFirst, structure);
         }
     }
 
-    static void invoke(final float[] data, final int structure, final int first, final int limit, final Householder.Primitive32 householder) {
+    static void invoke( float[] data,  int structure,  int first,  int limit,  Householder.Primitive32 householder) {
 
         float[] hVector = householder.vector;
         int hFirst = householder.first;
@@ -131,15 +131,15 @@ public final class HouseholderLeft implements MatrixOperation {
         }
     }
 
-    static <N extends Scalar<N>> void invoke(final N[] data, final int structure, final int first, final int limit, final Householder.Generic<N> householder,
-            final Scalar.Factory<N> scalar) {
+    static <N extends Scalar<N>> void invoke( N[] data,  int structure,  int first,  int limit,  Householder.Generic<N> householder,
+             Scalar.Factory<N> scalar) {
 
         N[] hVector = householder.vector;
         int hFirst = householder.first;
         N hBeta = householder.beta;
 
-        Scalar<N> tmpScale;
-        int tmpIndex;
+        @Var Scalar<N> tmpScale;
+        @Var int tmpIndex;
         for (int j = first; j < limit; j++) {
             tmpScale = scalar.zero();
             tmpIndex = hFirst + j * structure;

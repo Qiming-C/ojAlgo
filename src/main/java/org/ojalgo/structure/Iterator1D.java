@@ -31,11 +31,11 @@ public final class Iterator1D<N extends Comparable<N>> implements ListIterator<N
     private final long myCount;
     private long myNextIndex;
 
-    public Iterator1D(final Access1D<? extends N> access) {
+    public Iterator1D( Access1D<? extends N> access) {
         this(access, 0L);
     }
 
-    public Iterator1D(final Access1D<? extends N> access, final long cursor) {
+    public Iterator1D( Access1D<? extends N> access,  long cursor) {
 
         super();
 
@@ -44,39 +44,39 @@ public final class Iterator1D<N extends Comparable<N>> implements ListIterator<N
         myNextIndex = cursor;
     }
 
-    public void add(final N e) {
+    @Override public void add( N e) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
     }
 
-    public boolean hasNext() {
+    @Override public boolean hasNext() {
         return myNextIndex < myCount;
     }
 
-    public boolean hasPrevious() {
+    @Override public boolean hasPrevious() {
         return myNextIndex > 0L;
     }
 
-    public N next() {
+    @Override public N next() {
         return myAccess.get(myNextIndex++);
     }
 
-    public int nextIndex() {
+    @Override public int nextIndex() {
         return (int) myNextIndex;
     }
 
-    public N previous() {
+    @Override public N previous() {
         return myAccess.get(--myNextIndex);
     }
 
-    public int previousIndex() {
+    @Override public int previousIndex() {
         return (int) (myNextIndex - 1L);
     }
 
-    public void remove() {
+    @Override public void remove() {
         ProgrammingError.throwForUnsupportedOptionalOperation();
     }
 
-    public void set(final N e) {
+    @Override public void set( N e) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
     }
 

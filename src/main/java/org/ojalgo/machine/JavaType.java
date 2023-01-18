@@ -49,8 +49,8 @@ public enum JavaType {
      */
     REFERENCE(Object.class, 64, 4L), SHORT(short.class, 16, 2L);
 
-    public static final JavaType match(final Class<?> aClass) {
-        for (final JavaType tmpType : JavaType.values()) {
+    public static final JavaType match( Class<?> aClass) {
+        for ( JavaType tmpType : JavaType.values()) {
             if (tmpType.getJavaClass().isAssignableFrom(aClass)) {
                 return tmpType;
             }
@@ -62,7 +62,7 @@ public enum JavaType {
     private final Class<?> myJavaClass;
     private final long myMemoryBytes;
 
-    JavaType(final Class<?> aClass, final int informationBits, final long memoryBytes) {
+    JavaType( Class<?> aClass,  int informationBits,  long memoryBytes) {
         myJavaClass = aClass;
         myInformationBits = informationBits;
         myMemoryBytes = memoryBytes;

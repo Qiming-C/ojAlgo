@@ -36,12 +36,14 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     }
 
     /**
-     * @see Math#abs(double)
+     *See {@link Math#abs(double)}.
+ 
      */
     public abstract UnaryFunction<N> abs();
 
     /**
-     * @see Math#acos(double)
+     *See {@link Math#acos(double)}.
+ 
      */
     public abstract UnaryFunction<N> acos();
 
@@ -55,19 +57,22 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract AggregatorSet<N> aggregator();
 
     /**
-     * @see Math#asin(double)
+     *See {@link Math#asin(double)}.
+ 
      */
     public abstract UnaryFunction<N> asin();
 
     public abstract UnaryFunction<N> asinh();
 
     /**
-     * @see Math#atan(double)
+     *See {@link Math#atan(double)}.
+ 
      */
     public abstract UnaryFunction<N> atan();
 
     /**
-     * @see Math#atan2(double,double)
+     *See {@link Math#atan2(double,double)}.
+ 
      */
     public abstract BinaryFunction<N> atan2();
 
@@ -76,24 +81,28 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract UnaryFunction<N> cardinality();
 
     /**
-     * @see Math#cbrt(double)
+     *See {@link Math#cbrt(double)}.
+ 
      */
     public abstract UnaryFunction<N> cbrt();
 
     /**
-     * @see Math#ceil(double)
+     *See {@link Math#ceil(double)}.
+ 
      */
     public abstract UnaryFunction<N> ceil();
 
     public abstract UnaryFunction<N> conjugate();
 
     /**
-     * @see Math#cos(double)
+     *See {@link Math#cos(double)}.
+ 
      */
     public abstract UnaryFunction<N> cos();
 
     /**
-     * @see Math#cosh(double)
+     *See {@link Math#cosh(double)}.
+ 
      */
     public abstract UnaryFunction<N> cosh();
 
@@ -105,39 +114,46 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract UnaryFunction<N> enforce(NumberContext context);
 
     /**
-     * @see Math#exp(double)
+     *See {@link Math#exp(double)}.
+ 
      */
     public abstract UnaryFunction<N> exp();
 
     /**
-     * @see Math#expm1(double)
+     *See {@link Math#expm1(double)}.
+ 
      */
     public abstract UnaryFunction<N> expm1();
 
     /**
-     * @see Math#floor(double)
+     *See {@link Math#floor(double)}.
+ 
      */
     public abstract UnaryFunction<N> floor();
 
     /**
-     * @see Math#hypot(double, double)
+     *See {@link Math#hypot(double, double)}.
+ 
      */
     public abstract BinaryFunction<N> hypot();
 
     public abstract UnaryFunction<N> invert();
 
     /**
-     * @see Math#log(double)
+     *See {@link Math#log(double)}.
+ 
      */
     public abstract UnaryFunction<N> log();
 
     /**
-     * @see Math#log10(double)
+     *See {@link Math#log10(double)}.
+ 
      */
     public abstract UnaryFunction<N> log10();
 
     /**
-     * @see Math#log1p(double)
+     *See {@link Math#log1p(double)}.
+ 
      */
     public abstract UnaryFunction<N> log1p();
 
@@ -149,12 +165,14 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract UnaryFunction<N> logit();
 
     /**
-     * @see Math#max(double, double)
+     *See {@link Math#max(double, double)}.
+ 
      */
     public abstract BinaryFunction<N> max();
 
     /**
-     * @see Math#min(double, double)
+     *See {@link Math#min(double, double)}.
+ 
      */
     public abstract BinaryFunction<N> min();
 
@@ -166,14 +184,16 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract UnaryFunction<N> negate();
 
     /**
-     * @see Math#pow(double, double)
+     *See {@link Math#pow(double, double)}.
+ 
      */
     public abstract BinaryFunction<N> pow();
 
     public abstract ParameterFunction<N> power();
 
     /**
-     * @see Math#rint(double)
+     *See {@link Math#rint(double)}.
+ 
      */
     public abstract UnaryFunction<N> rint();
 
@@ -182,27 +202,32 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract ParameterFunction<N> scale();
 
     /**
-     * @see Math#signum(double)
+     *See {@link Math#signum(double)}.
+ 
      */
     public abstract UnaryFunction<N> signum();
 
     /**
-     * @see Math#sin(double)
+     *See {@link Math#sin(double)}.
+ 
      */
     public abstract UnaryFunction<N> sin();
 
     /**
-     * @see Math#sinh(double)
+     *See {@link Math#sinh(double)}.
+ 
      */
     public abstract UnaryFunction<N> sinh();
 
     /**
-     * @see Math#sqrt(double)
+     *See {@link Math#sqrt(double)}.
+ 
      */
     public abstract UnaryFunction<N> sqrt();
 
     /**
-     * @return sqrt(1.0 + x<sup>2</sup>)
+     *Returns sqrt(1.0 + x<sup>2</sup>).
+ 
      */
     public abstract UnaryFunction<N> sqrt1px2();
 
@@ -212,12 +237,14 @@ public abstract class FunctionSet<N extends Comparable<N>> {
     public abstract BinaryFunction<N> subtract();
 
     /**
-     * @see Math#tan(double)
+     *See {@link Math#tan(double)}.
+ 
      */
     public abstract UnaryFunction<N> tan();
 
     /**
-     * @see Math#tanh(double)
+     *See {@link Math#tanh(double)}.
+ 
      */
     public abstract UnaryFunction<N> tanh();
 

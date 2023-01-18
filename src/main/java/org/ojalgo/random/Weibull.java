@@ -40,7 +40,7 @@ public class Weibull extends RandomNumber {
         this(ONE, ONE);
     }
 
-    public Weibull(final double lambda, final double beta) {
+    public Weibull( double lambda,  double beta) {
 
         super();
 
@@ -48,15 +48,15 @@ public class Weibull extends RandomNumber {
         myShape = beta;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return GammaFunction.gamma(ONE + (ONE / myShape)) / myRate;
     }
 
     @Override
     public double getVariance() {
 
-        final double tmpA = GammaFunction.gamma(ONE + (TWO / myShape));
-        final double tmpB = GammaFunction.gamma(ONE + (ONE / myShape));
+         double tmpA = GammaFunction.gamma(ONE + (TWO / myShape));
+         double tmpB = GammaFunction.gamma(ONE + (ONE / myShape));
 
         return (tmpA - (tmpB * tmpB)) / (myRate * myRate);
     }

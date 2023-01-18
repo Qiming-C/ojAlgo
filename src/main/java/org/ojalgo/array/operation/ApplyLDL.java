@@ -27,16 +27,16 @@ public abstract class ApplyLDL implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static void invoke(final double[] data, final int structure, final int firstColumn, final int columnLimit, final double[] multipliers,
-            final int iterationPoint) {
+    public static void invoke( double[] data,  int structure,  int firstColumn,  int columnLimit,  double[] multipliers,
+             int iterationPoint) {
         double diagVal = data[iterationPoint + iterationPoint * structure];
         for (int j = firstColumn; j < columnLimit; j++) {
             AXPY.invoke(data, j * structure, -(diagVal * multipliers[j]), multipliers, 0, j, structure);
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] data, final int structure, final int firstColumn, final int columnLimit, final N[] multipliers,
-            final int iterationPoint) {
+    public static <N extends Scalar<N>> void invoke( N[] data,  int structure,  int firstColumn,  int columnLimit,  N[] multipliers,
+             int iterationPoint) {
         Scalar<N> diagVal = data[iterationPoint + iterationPoint * structure];
         for (int j = firstColumn; j < columnLimit; j++) {
             AXPY.invoke(data, j * structure, diagVal.multiply(multipliers[j].conjugate()).negate().get(), multipliers, 0, j, structure);

@@ -21,8 +21,8 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.NullaryFunction;
 import org.ojalgo.function.UnaryFunction;
@@ -37,45 +37,45 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         private final int[] myColumns;
 
         /**
-         * @param base
-         * @param multiplier
-         * @param columns
+         * 
+         * 
+         * 
          */
-        ColumnsRegion(final TransformableRegion<N> base, final TransformableRegion.FillByMultiplying<N> multiplier, final int... columns) {
+        ColumnsRegion( TransformableRegion<N> base,  TransformableRegion.FillByMultiplying<N> multiplier,  int... columns) {
             super(multiplier, base.countRows(), columns.length);
             myBase = base;
             myColumns = columns;
         }
 
-        public void add(final long row, final long col, final Comparable<?> addend) {
+        @Override public void add( long row,  long col,  Comparable<?> addend) {
             myBase.add(row, myColumns[(int) col], addend);
         }
 
-        public void add(final long row, final long col, final double addend) {
+        @Override public void add( long row,  long col,  double addend) {
             myBase.add(row, myColumns[(int) col], addend);
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myColumns.length;
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myBase.countRows();
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myBase.doubleValue(row, myColumns[(int) col]);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ColumnsRegion)) {
                 return false;
             }
-            ColumnsRegion other = (ColumnsRegion) obj;
+            var other = (ColumnsRegion) obj;
             if (myBase == null) {
                 if (other.myBase != null) {
                     return false;
@@ -89,56 +89,56 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
             return true;
         }
 
-        public void fillColumn(final long row, final long col, final Access1D<N> values) {
+        @Override public void fillColumn( long row,  long col,  Access1D<N> values) {
             myBase.fillColumn(row, myColumns[(int) col], values);
         }
 
-        public void fillColumn(final long row, final long col, final N value) {
+        @Override public void fillColumn( long row,  long col,  N value) {
             myBase.fillColumn(row, myColumns[(int) col], value);
         }
 
-        public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillColumn(row, myColumns[(int) col], supplier);
         }
 
-        public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+        public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
             myBase.fillOne(row, myColumns[(int) col], values, valueIndex);
         }
 
-        public void fillOne(final long row, final long col, final N value) {
+        public void fillOne( long row,  long col,  N value) {
             myBase.fillOne(row, myColumns[(int) col], value);
         }
 
-        public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+        public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillOne(row, myColumns[(int) col], supplier);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myBase.get(row, myColumns[(int) col]);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myBase == null ? 0 : myBase.hashCode());
             result = prime * result + Arrays.hashCode(myColumns);
             return result;
         }
 
-        public void modifyColumn(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyColumn( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyColumn(row, myColumns[(int) col], modifier);
         }
 
-        public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyOne(row, myColumns[(int) col], modifier);
         }
 
-        public void set(final long row, final long col, final Comparable<?> value) {
+        @Override public void set( long row,  long col,  Comparable<?> value) {
             myBase.set(row, myColumns[(int) col], value);
         }
 
-        public void set(final long row, final long col, final double value) {
+        @Override public void set( long row,  long col,  double value) {
             myBase.set(row, myColumns[(int) col], value);
         }
 
@@ -149,42 +149,42 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         private final TransformableRegion<N> myBase;
         private final int myRowLimit, myColumnLimit; // limits
 
-        LimitRegion(final TransformableRegion<N> base, final TransformableRegion.FillByMultiplying<N> multiplier, final int rowLimit, final int columnLimit) {
+        LimitRegion( TransformableRegion<N> base,  TransformableRegion.FillByMultiplying<N> multiplier,  int rowLimit,  int columnLimit) {
             super(multiplier, rowLimit, columnLimit);
             myBase = base;
             myRowLimit = rowLimit;
             myColumnLimit = columnLimit;
         }
 
-        public void add(final long row, final long col, final Comparable<?> addend) {
+        @Override public void add( long row,  long col,  Comparable<?> addend) {
             myBase.add(row, col, addend);
         }
 
-        public void add(final long row, final long col, final double addend) {
+        @Override public void add( long row,  long col,  double addend) {
             myBase.add(row, col, addend);
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myColumnLimit;
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myRowLimit;
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myBase.doubleValue(row, col);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof LimitRegion)) {
                 return false;
             }
-            LimitRegion other = (LimitRegion) obj;
+            var other = (LimitRegion) obj;
             if (myBase == null) {
                 if (other.myBase != null) {
                     return false;
@@ -198,41 +198,41 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
             return true;
         }
 
-        public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+        public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
             myBase.fillOne(row, col, values, valueIndex);
         }
 
-        public void fillOne(final long row, final long col, final N value) {
+        public void fillOne( long row,  long col,  N value) {
             myBase.fillOne(row, col, value);
         }
 
-        public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+        public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillOne(row, col, supplier);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myBase.get(row, col);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myBase == null ? 0 : myBase.hashCode());
             result = prime * result + myColumnLimit;
             result = prime * result + myRowLimit;
             return result;
         }
 
-        public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyOne(row, col, modifier);
         }
 
-        public void set(final long row, final long col, final Comparable<?> value) {
+        @Override public void set( long row,  long col,  Comparable<?> value) {
             myBase.set(row, col, value);
         }
 
-        public void set(final long row, final long col, final double value) {
+        @Override public void set( long row,  long col,  double value) {
             myBase.set(row, col, value);
         }
 
@@ -243,43 +243,43 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         private final TransformableRegion<N> myBase;
         private final int myRowOffset, myColumnOffset; // origin/offset
 
-        OffsetRegion(final TransformableRegion<N> base, final TransformableRegion.FillByMultiplying<N> multiplier, final int rowOffset,
-                final int columnOffset) {
+        OffsetRegion( TransformableRegion<N> base,  TransformableRegion.FillByMultiplying<N> multiplier,  int rowOffset,
+                 int columnOffset) {
             super(multiplier, base.countRows() - rowOffset, base.countColumns() - columnOffset);
             myBase = base;
             myRowOffset = rowOffset;
             myColumnOffset = columnOffset;
         }
 
-        public void add(final long row, final long col, final Comparable<?> addend) {
+        @Override public void add( long row,  long col,  Comparable<?> addend) {
             myBase.add(myRowOffset + row, myColumnOffset + col, addend);
         }
 
-        public void add(final long row, final long col, final double addend) {
+        @Override public void add( long row,  long col,  double addend) {
             myBase.add(myRowOffset + row, myColumnOffset + col, addend);
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myBase.countColumns() - myColumnOffset;
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myBase.countRows() - myRowOffset;
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myBase.doubleValue(myRowOffset + row, myColumnOffset + col);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof OffsetRegion)) {
                 return false;
             }
-            OffsetRegion other = (OffsetRegion) obj;
+            var other = (OffsetRegion) obj;
             if (myBase == null) {
                 if (other.myBase != null) {
                     return false;
@@ -294,98 +294,98 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         }
 
         @Override
-        public void fillAll(final N value) {
-            final long tmpCountColumns = myBase.countColumns();
+        public void fillAll( N value) {
+             long tmpCountColumns = myBase.countColumns();
             for (long j = myColumnOffset; j < tmpCountColumns; j++) {
                 myBase.fillColumn(myRowOffset, j, value);
             }
         }
 
         @Override
-        public void fillAll(final NullaryFunction<?> supplier) {
-            final long tmpCountColumns = myBase.countColumns();
+        public void fillAll( NullaryFunction<?> supplier) {
+             long tmpCountColumns = myBase.countColumns();
             for (long j = myColumnOffset; j < tmpCountColumns; j++) {
                 myBase.fillColumn(myRowOffset, j, supplier);
             }
         }
 
-        public void fillColumn(final long row, final long col, final N value) {
+        @Override public void fillColumn( long row,  long col,  N value) {
             myBase.fillColumn(myRowOffset + row, myColumnOffset + col, value);
         }
 
-        public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillColumn(myRowOffset + row, myColumnOffset + col, supplier);
         }
 
-        public void fillDiagonal(final long row, final long col, final N value) {
+        @Override public void fillDiagonal( long row,  long col,  N value) {
             myBase.fillDiagonal(myRowOffset + row, myColumnOffset + col, value);
         }
 
-        public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillDiagonal(myRowOffset + row, myColumnOffset + col, supplier);
         }
 
-        public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+        public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
             myBase.fillOne(myRowOffset + row, myColumnOffset + col, values, valueIndex);
         }
 
-        public void fillOne(final long row, final long col, final N value) {
+        public void fillOne( long row,  long col,  N value) {
             myBase.fillOne(myRowOffset + row, myColumnOffset + col, value);
         }
 
-        public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+        public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillOne(myRowOffset + row, myColumnOffset + col, supplier);
         }
 
-        public void fillRow(final long row, final long col, final N value) {
+        @Override public void fillRow( long row,  long col,  N value) {
             myBase.fillRow(myRowOffset + row, myColumnOffset + col, value);
         }
 
-        public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillRow(myRowOffset + row, myColumnOffset + col, supplier);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myBase.get(myRowOffset + row, myColumnOffset + col);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myBase == null ? 0 : myBase.hashCode());
             result = prime * result + myColumnOffset;
             result = prime * result + myRowOffset;
             return result;
         }
 
-        public void modifyAll(final UnaryFunction<N> modifier) {
+        @Override public void modifyAll( UnaryFunction<N> modifier) {
             for (long j = myColumnOffset; j < myBase.countColumns(); j++) {
                 myBase.modifyColumn(myRowOffset, j, modifier);
             }
         }
 
-        public void modifyColumn(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyColumn( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyColumn(myRowOffset + row, myColumnOffset + col, modifier);
         }
 
-        public void modifyDiagonal(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyDiagonal(myRowOffset + row, myColumnOffset + col, modifier);
         }
 
-        public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyOne(myRowOffset + row, myColumnOffset + col, modifier);
         }
 
-        public void modifyRow(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyRow( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyRow(myRowOffset + row, myColumnOffset + col, modifier);
         }
 
-        public void set(final long row, final long col, final Comparable<?> value) {
+        @Override public void set( long row,  long col,  Comparable<?> value) {
             myBase.set(myRowOffset + row, myColumnOffset + col, value);
         }
 
-        public void set(final long row, final long col, final double value) {
+        @Override public void set( long row,  long col,  double value) {
             myBase.set(myRowOffset + row, myColumnOffset + col, value);
         }
 
@@ -396,41 +396,41 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         private final TransformableRegion<N> myBase;
         private final int[] myRows;
 
-        RowsRegion(final TransformableRegion<N> base, final TransformableRegion.FillByMultiplying<N> multiplier, final int... rows) {
+        RowsRegion( TransformableRegion<N> base,  TransformableRegion.FillByMultiplying<N> multiplier,  int... rows) {
             super(multiplier, rows.length, base.countColumns());
             myBase = base;
             myRows = rows;
         }
 
-        public void add(final long row, final long col, final Comparable<?> addend) {
+        @Override public void add( long row,  long col,  Comparable<?> addend) {
             myBase.add(myRows[(int) row], col, addend);
         }
 
-        public void add(final long row, final long col, final double addend) {
+        @Override public void add( long row,  long col,  double addend) {
             myBase.add(myRows[(int) row], col, addend);
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myBase.countColumns();
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myRows.length;
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myBase.doubleValue(myRows[(int) row], col);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof RowsRegion)) {
                 return false;
             }
-            RowsRegion other = (RowsRegion) obj;
+            var other = (RowsRegion) obj;
             if (myBase == null) {
                 if (other.myBase != null) {
                     return false;
@@ -444,56 +444,56 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
             return true;
         }
 
-        public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+        public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
             myBase.fillOne(myRows[(int) row], col, values, valueIndex);
         }
 
-        public void fillOne(final long row, final long col, final N value) {
+        public void fillOne( long row,  long col,  N value) {
             myBase.fillOne(myRows[(int) row], col, value);
         }
 
-        public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+        public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillOne(myRows[(int) row], col, supplier);
         }
 
-        public void fillRow(final long row, final long col, final Access1D<N> values) {
+        @Override public void fillRow( long row,  long col,  Access1D<N> values) {
             myBase.fillRow(myRows[(int) row], col, values);
         }
 
-        public void fillRow(final long row, final long col, final N value) {
+        @Override public void fillRow( long row,  long col,  N value) {
             myBase.fillRow(myRows[(int) row], col, value);
         }
 
-        public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillRow(myRows[(int) row], col, supplier);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myBase.get(myRows[(int) row], col);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myBase == null ? 0 : myBase.hashCode());
             result = prime * result + Arrays.hashCode(myRows);
             return result;
         }
 
-        public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyOne(myRows[(int) row], col, modifier);
         }
 
-        public void modifyRow(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyRow( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyRow(myRows[(int) row], col, modifier);
         }
 
-        public void set(final long row, final long col, final Comparable<?> value) {
+        @Override public void set( long row,  long col,  Comparable<?> value) {
             myBase.set(myRows[(int) row], col, value);
         }
 
-        public void set(final long row, final long col, final double value) {
+        @Override public void set( long row,  long col,  double value) {
             myBase.set(myRows[(int) row], col, value);
         }
 
@@ -503,40 +503,40 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
 
         private final TransformableRegion<N> myBase;
 
-        TransposedRegion(final TransformableRegion<N> base, final TransformableRegion.FillByMultiplying<N> multiplier) {
+        TransposedRegion( TransformableRegion<N> base,  TransformableRegion.FillByMultiplying<N> multiplier) {
             super(multiplier, base.countColumns(), base.countRows());
             myBase = base;
         }
 
-        public void add(final long row, final long col, final Comparable<?> addend) {
+        @Override public void add( long row,  long col,  Comparable<?> addend) {
             myBase.add(col, row, addend);
         }
 
-        public void add(final long row, final long col, final double addend) {
+        @Override public void add( long row,  long col,  double addend) {
             myBase.add(col, row, addend);
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myBase.countRows();
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myBase.countColumns();
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myBase.doubleValue(col, row);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof TransposedRegion)) {
                 return false;
             }
-            TransposedRegion other = (TransposedRegion) obj;
+            var other = (TransposedRegion) obj;
             if (myBase == null) {
                 if (other.myBase != null) {
                     return false;
@@ -547,67 +547,67 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
             return true;
         }
 
-        public void fillColumn(final long row, final long col, final N value) {
+        @Override public void fillColumn( long row,  long col,  N value) {
             myBase.fillRow(col, row, value);
         }
 
-        public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillRow(col, row, supplier);
         }
 
-        public void fillDiagonal(final long row, final long col, final N value) {
+        @Override public void fillDiagonal( long row,  long col,  N value) {
             myBase.fillDiagonal(col, row, value);
         }
 
-        public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillRow(col, row, supplier);
         }
 
-        public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+        public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
             myBase.fillOne(col, row, values, valueIndex);
         }
 
-        public void fillOne(final long row, final long col, final N value) {
+        public void fillOne( long row,  long col,  N value) {
             myBase.fillOne(col, row, value);
         }
 
-        public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+        public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillOne(col, row, supplier);
         }
 
-        public void fillRow(final long row, final long col, final N value) {
+        @Override public void fillRow( long row,  long col,  N value) {
             myBase.fillDiagonal(col, row, value);
         }
 
-        public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+        @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
             myBase.fillDiagonal(col, row, supplier);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myBase.get(col, row);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myBase == null ? 0 : myBase.hashCode());
             return result;
         }
 
-        public void modifyColumn(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyColumn( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyRow(col, row, modifier);
         }
 
-        public void modifyDiagonal(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyDiagonal(col, row, modifier);
         }
 
-        public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyOne(col, row, modifier);
         }
 
-        public void modifyRow(final long row, final long col, final UnaryFunction<N> modifier) {
+        @Override public void modifyRow( long row,  long col,  UnaryFunction<N> modifier) {
             myBase.modifyColumn(col, row, modifier);
         }
 
@@ -616,11 +616,11 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
             return myBase;
         }
 
-        public void set(final long row, final long col, final Comparable<?> value) {
+        @Override public void set( long row,  long col,  Comparable<?> value) {
             myBase.set(col, row, value);
         }
 
-        public void set(final long row, final long col, final double value) {
+        @Override public void set( long row,  long col,  double value) {
             myBase.set(col, row, value);
         }
 
@@ -634,7 +634,7 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
     }
 
     @SuppressWarnings("unchecked")
-    Subregion2D(final TransformableRegion.FillByMultiplying<N> multiplier, final long rows, final long columns) {
+    Subregion2D( TransformableRegion.FillByMultiplying<N> multiplier,  long rows,  long columns) {
 
         super();
 
@@ -647,9 +647,9 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         }
     }
 
-    public final void fillByMultiplying(final Access1D<N> left, final Access1D<N> right) {
+    @Override public final void fillByMultiplying( Access1D<N> left,  Access1D<N> right) {
 
-        final int complexity = Math.toIntExact(left.count() / this.countRows());
+         int complexity = Math.toIntExact(left.count() / this.countRows());
         if (complexity != Math.toIntExact(right.count() / this.countColumns())) {
             ProgrammingError.throwForMultiplicationNotPossible();
         }
@@ -657,23 +657,23 @@ abstract class Subregion2D<N extends Comparable<N>> implements TransformableRegi
         myMultiplier.invoke(this, left, (int) (left.count() / this.countRows()), right);
     }
 
-    public final TransformableRegion<N> regionByColumns(final int... columns) {
+    @Override public final TransformableRegion<N> regionByColumns( int... columns) {
         return new Subregion2D.ColumnsRegion<>(this, myMultiplier, columns);
     }
 
-    public final TransformableRegion<N> regionByLimits(final int rowLimit, final int columnLimit) {
+    @Override public final TransformableRegion<N> regionByLimits( int rowLimit,  int columnLimit) {
         return new Subregion2D.LimitRegion<>(this, myMultiplier, rowLimit, columnLimit);
     }
 
-    public final TransformableRegion<N> regionByOffsets(final int rowOffset, final int columnOffset) {
+    @Override public final TransformableRegion<N> regionByOffsets( int rowOffset,  int columnOffset) {
         return new Subregion2D.OffsetRegion<>(this, myMultiplier, rowOffset, columnOffset);
     }
 
-    public final TransformableRegion<N> regionByRows(final int... rows) {
+    @Override public final TransformableRegion<N> regionByRows( int... rows) {
         return new Subregion2D.RowsRegion<>(this, myMultiplier, rows);
     }
 
-    public TransformableRegion<N> regionByTransposing() {
+    @Override public TransformableRegion<N> regionByTransposing() {
         return new Subregion2D.TransposedRegion<>(this, myMultiplier);
     }
 

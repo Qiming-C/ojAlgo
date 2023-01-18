@@ -28,26 +28,26 @@ final class OffHeapZ032 extends OffHeapArray {
 
     private final long myPointer;
 
-    OffHeapZ032(final long count) {
+    OffHeapZ032( long count) {
 
         super(OffHeapArray.Z032, count);
 
         myPointer = NativeMemory.allocateIntArray(this, count);
     }
 
-    public void add(final long index, final Comparable<?> addend) {
+    @Override public void add( long index,  Comparable<?> addend) {
         this.add(index, Scalar.intValue(addend));
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return NativeMemory.getInt(myPointer, index);
     }
 
-    public float floatValue(final long index) {
+    @Override public float floatValue( long index) {
         return NativeMemory.getInt(myPointer, index);
     }
 
-    public int intValue(final long index) {
+    @Override public int intValue( long index) {
         return NativeMemory.getInt(myPointer, index);
     }
 
@@ -56,19 +56,19 @@ final class OffHeapZ032 extends OffHeapArray {
         NativeMemory.initialiseIntArray(myPointer, this.count());
     }
 
-    public void set(final long index, final Comparable<?> value) {
+    @Override public void set( long index,  Comparable<?> value) {
         this.set(index, Scalar.intValue(value));
     }
 
-    public void set(final long index, final double value) {
+    @Override public void set( long index,  double value) {
         NativeMemory.setInt(myPointer, index, Math.toIntExact(Math.round(value)));
     }
 
-    public void set(final long index, final float value) {
+    @Override public void set( long index,  float value) {
         NativeMemory.setInt(myPointer, index, Math.round(value));
     }
 
-    public void set(final long index, final int value) {
+    @Override public void set( long index,  int value) {
         NativeMemory.setInt(myPointer, index, value);
     }
 

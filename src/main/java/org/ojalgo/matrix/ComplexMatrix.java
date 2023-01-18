@@ -47,12 +47,12 @@ public final class ComplexMatrix extends BasicMatrix<ComplexNumber, ComplexMatri
 
     public static final class DenseReceiver extends Mutator2D<ComplexNumber, ComplexMatrix, PhysicalStore<ComplexNumber>> {
 
-        DenseReceiver(final PhysicalStore<ComplexNumber> delegate) {
+        DenseReceiver( PhysicalStore<ComplexNumber> delegate) {
             super(delegate);
         }
 
         @Override
-        ComplexMatrix instantiate(final MatrixStore<ComplexNumber> store) {
+        ComplexMatrix instantiate( MatrixStore<ComplexNumber> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -65,12 +65,12 @@ public final class ComplexMatrix extends BasicMatrix<ComplexNumber, ComplexMatri
         }
 
         @Override
-        ComplexMatrix.DenseReceiver dense(final PhysicalStore<ComplexNumber> store) {
+        ComplexMatrix.DenseReceiver dense( PhysicalStore<ComplexNumber> store) {
             return new ComplexMatrix.DenseReceiver(store);
         }
 
         @Override
-        ComplexMatrix.SparseReceiver sparse(final SparseStore<ComplexNumber> store) {
+        ComplexMatrix.SparseReceiver sparse( SparseStore<ComplexNumber> store) {
             return new ComplexMatrix.SparseReceiver(store);
         }
 
@@ -78,12 +78,12 @@ public final class ComplexMatrix extends BasicMatrix<ComplexNumber, ComplexMatri
 
     public static final class SparseReceiver extends Mutator2D<ComplexNumber, ComplexMatrix, SparseStore<ComplexNumber>> {
 
-        SparseReceiver(final SparseStore<ComplexNumber> delegate) {
+        SparseReceiver( SparseStore<ComplexNumber> delegate) {
             super(delegate);
         }
 
         @Override
-        ComplexMatrix instantiate(final MatrixStore<ComplexNumber> store) {
+        ComplexMatrix instantiate( MatrixStore<ComplexNumber> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -94,7 +94,7 @@ public final class ComplexMatrix extends BasicMatrix<ComplexNumber, ComplexMatri
     /**
      * This method is for internal use only - YOU should NOT use it!
      */
-    ComplexMatrix(final ElementsSupplier<ComplexNumber> supplier) {
+    ComplexMatrix( ElementsSupplier<ComplexNumber> supplier) {
         super(FACTORY.getPhysicalFactory(), supplier);
     }
 
@@ -104,80 +104,84 @@ public final class ComplexMatrix extends BasicMatrix<ComplexNumber, ComplexMatri
     }
 
     /**
-     * @return A primitive double valued matrix containg this matrix' element arguments
+     *Returns a primitive double valued matrix containg this matrix' element arguments.
+ 
      */
     public Primitive64Matrix getArgument() {
         return Primitive64Matrix.FACTORY.instantiate(Primitive64Store.getComplexArgument(this.store()));
     }
 
     /**
-     * @return A primitive double valued matrix containg this matrix' element imaginary parts
+     *Returns a primitive double valued matrix containg this matrix' element imaginary parts.
+ 
      */
     public Primitive64Matrix getImaginary() {
         return Primitive64Matrix.FACTORY.instantiate(Primitive64Store.getComplexImaginary(this.store()));
     }
 
     /**
-     * @return A primitive double valued matrix containg this matrix' element modulus
+     *Returns a primitive double valued matrix containg this matrix' element modulus.
+ 
      */
     public Primitive64Matrix getModulus() {
         return Primitive64Matrix.FACTORY.instantiate(Primitive64Store.getComplexModulus(this.store()));
     }
 
     /**
-     * @return A primitive double valued matrix containg this matrix' element real parts
+     *Returns a primitive double valued matrix containg this matrix' element real parts.
+ 
      */
     public Primitive64Matrix getReal() {
         return Primitive64Matrix.FACTORY.instantiate(Primitive64Store.getComplexReal(this.store()));
     }
 
     @Override
-    Cholesky<ComplexNumber> newCholesky(final Structure2D typical) {
+    Cholesky<ComplexNumber> newCholesky( Structure2D typical) {
         return Cholesky.COMPLEX.make(typical);
     }
 
     @Override
-    DeterminantTask<ComplexNumber> newDeterminantTask(final Structure2D template) {
+    DeterminantTask<ComplexNumber> newDeterminantTask( Structure2D template) {
         return DeterminantTask.COMPLEX.make(template, this.isHermitian(), false);
     }
 
     @Override
-    Eigenvalue<ComplexNumber> newEigenvalue(final Structure2D typical) {
+    Eigenvalue<ComplexNumber> newEigenvalue( Structure2D typical) {
         return Eigenvalue.COMPLEX.make(typical, this.isHermitian());
     }
 
     @Override
-    ComplexMatrix newInstance(final ElementsSupplier<ComplexNumber> store) {
+    ComplexMatrix newInstance( ElementsSupplier<ComplexNumber> store) {
         return new ComplexMatrix(store);
     }
 
     @Override
-    InverterTask<ComplexNumber> newInverterTask(final Structure2D base) {
+    InverterTask<ComplexNumber> newInverterTask( Structure2D base) {
         return InverterTask.COMPLEX.make(base, this.isHermitian(), false);
     }
 
     @Override
-    LDL<ComplexNumber> newLDL(final Structure2D typical) {
+    LDL<ComplexNumber> newLDL( Structure2D typical) {
         return LDL.COMPLEX.make(typical);
     }
 
     @Override
-    LU<ComplexNumber> newLU(final Structure2D typical) {
+    LU<ComplexNumber> newLU( Structure2D typical) {
         return LU.COMPLEX.make(typical);
     }
 
     @Override
-    QR<ComplexNumber> newQR(final Structure2D typical) {
+    QR<ComplexNumber> newQR( Structure2D typical) {
         return QR.COMPLEX.make(typical);
     }
 
     @Override
-    SingularValue<ComplexNumber> newSingularValue(final Structure2D typical) {
+    SingularValue<ComplexNumber> newSingularValue( Structure2D typical) {
         return SingularValue.COMPLEX.make(typical);
     }
 
     @Override
-    SolverTask<ComplexNumber> newSolverTask(final Structure2D templateBody, final Structure2D templateRHS) {
+    SolverTask<ComplexNumber> newSolverTask( Structure2D templateBody,  Structure2D templateRHS) {
         return SolverTask.COMPLEX.make(templateBody, templateRHS, this.isHermitian(), false);
     }
 

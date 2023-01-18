@@ -21,6 +21,7 @@
  */
 package org.ojalgo.type.function;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -31,27 +32,27 @@ final class MappedSupplier<IN, OUT> implements AutoSupplier<OUT> {
     private final Supplier<IN> mySupplier;
     private final Predicate<IN> myFilter;
 
-    MappedSupplier(final Supplier<IN> supplier, final Function<IN, OUT> mapper) {
+    MappedSupplier( Supplier<IN> supplier,  Function<IN, OUT> mapper) {
         this(supplier, in -> true, mapper);
     }
 
-    MappedSupplier(final Supplier<IN> supplier, final Predicate<IN> filter, final Function<IN, OUT> mapper) {
+    MappedSupplier( Supplier<IN> supplier,  Predicate<IN> filter,  Function<IN, OUT> mapper) {
         super();
         mySupplier = supplier;
         myFilter = filter;
         myMapper = mapper;
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         if (mySupplier instanceof AutoCloseable) {
             ((AutoCloseable) mySupplier).close();
         }
     }
 
-    public OUT read() {
+    @Override public OUT read() {
 
-        IN unmapped = null;
-        OUT retVal = null;
+        @Var IN unmapped = null;
+        @Var OUT retVal = null;
 
         while ((unmapped = mySupplier.get()) != null && (!myFilter.test(unmapped) || (retVal = myMapper.apply(unmapped)) == null)) {
             // Read until we get a non-null item that passes the test and mapping works (return not-null)

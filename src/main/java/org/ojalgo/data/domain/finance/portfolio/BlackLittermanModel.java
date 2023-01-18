@@ -21,10 +21,10 @@
  */
 package org.ojalgo.data.domain.finance.portfolio;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.function.constant.PrimitiveMath;
@@ -48,7 +48,7 @@ public final class BlackLittermanModel extends EquilibriumModel {
         private BigDecimal myScale = null;
         private final List<BigDecimal> myWeights;
 
-        public View(final BlackLittermanModel aModel, final List<BigDecimal> someWeights) {
+        public View( BlackLittermanModel aModel,  List<BigDecimal> someWeights) {
 
             super();
 
@@ -83,9 +83,9 @@ public final class BlackLittermanModel extends EquilibriumModel {
                 return myReturnVariance.doubleValue();
 
             }
-            final MatrixR064 tmpWeights = MATRIX_FACTORY.columns(myWeights);
+             MatrixR064 tmpWeights = MATRIX_FACTORY.columns(myWeights);
 
-            BigDecimal retVal = myModel.calculateVariance(tmpWeights);
+            @Var BigDecimal retVal = myModel.calculateVariance(tmpWeights);
 
             if (myScale != null) {
 
@@ -108,15 +108,15 @@ public final class BlackLittermanModel extends EquilibriumModel {
         protected void reset() {
         }
 
-        protected void setMeanReturn(final BigDecimal aMeanReturn) {
+        void setMeanReturn( BigDecimal aMeanReturn) {
             myMeanReturn = aMeanReturn;
         }
 
-        protected void setReturnVariance(final BigDecimal aReturnVariance) {
+        void setReturnVariance( BigDecimal aReturnVariance) {
             myReturnVariance = aReturnVariance;
         }
 
-        protected void setScale(final BigDecimal aScale) {
+        void setScale( BigDecimal aScale) {
             myScale = aScale;
         }
 
@@ -126,7 +126,7 @@ public final class BlackLittermanModel extends EquilibriumModel {
     private final MatrixR064 myOriginalWeights;
     private final List<FinancePortfolio> myViews;
 
-    public BlackLittermanModel(final Context context, final FinancePortfolio originalWeights) {
+    public BlackLittermanModel( Context context,  FinancePortfolio originalWeights) {
 
         super(context);
 
@@ -138,7 +138,7 @@ public final class BlackLittermanModel extends EquilibriumModel {
      * @param marketEquilibrium The covariance matrix, and market risk aversion
      * @param originalWeights The market portfolio
      */
-    public BlackLittermanModel(final MarketEquilibrium marketEquilibrium, final MatrixR064 originalWeights) {
+    public BlackLittermanModel( MarketEquilibrium marketEquilibrium,  MatrixR064 originalWeights) {
 
         super(marketEquilibrium);
 
@@ -146,23 +146,15 @@ public final class BlackLittermanModel extends EquilibriumModel {
         myViews = new ArrayList<>();
     }
 
-    private BlackLittermanModel(final MarketEquilibrium aMarketEquilibrium) {
+    
 
-        super(aMarketEquilibrium);
-
-        myOriginalWeights = null;
-        myViews = null;
-
-        ProgrammingError.throwForIllegalInvocation();
-    }
-
-    public void addView(final FinancePortfolio aView) {
+    public void addView( FinancePortfolio aView) {
         myViews.add(aView);
     }
 
-    public void addViewWithBalancedConfidence(final List<BigDecimal> someWeights, final Comparable<?> aReturn) {
+    public void addViewWithBalancedConfidence( List<BigDecimal> someWeights,  Comparable<?> aReturn) {
 
-        final View tmpView = new View(this, someWeights);
+         var tmpView = new View(this, someWeights);
 
         tmpView.setMeanReturn(TypeUtils.toBigDecimal(aReturn));
         tmpView.setReturnVariance(null);
@@ -171,9 +163,9 @@ public final class BlackLittermanModel extends EquilibriumModel {
         myViews.add(tmpView);
     }
 
-    public void addViewWithScaledConfidence(final List<BigDecimal> someWeights, final Comparable<?> aReturn, final Comparable<?> aScale) {
+    public void addViewWithScaledConfidence( List<BigDecimal> someWeights,  Comparable<?> aReturn,  Comparable<?> aScale) {
 
-        final View tmpView = new View(this, someWeights);
+         var tmpView = new View(this, someWeights);
 
         tmpView.setMeanReturn(TypeUtils.toBigDecimal(aReturn));
         tmpView.setReturnVariance(null);
@@ -186,9 +178,9 @@ public final class BlackLittermanModel extends EquilibriumModel {
      * @deprecated v30
      */
     @Deprecated
-    public void addViewWithStandardDeviation(final List<BigDecimal> someWeights, final BigDecimal aReturn, final BigDecimal aStdDev) {
+    public void addViewWithStandardDeviation( List<BigDecimal> someWeights,  BigDecimal aReturn,  BigDecimal aStdDev) {
 
-        final View tmpView = new View(this, someWeights);
+         var tmpView = new View(this, someWeights);
 
         tmpView.setMeanReturn(aReturn);
         tmpView.setReturnVariance(aStdDev.multiply(aStdDev));
@@ -207,9 +199,10 @@ public final class BlackLittermanModel extends EquilibriumModel {
     }
 
     /**
-     * @see #getConfidence()
+     *See {@link #getConfidence()}.
+ 
      */
-    public void setConfidence(final Comparable<?> aWeight) {
+    public void setConfidence( Comparable<?> aWeight) {
         myConfidence = TypeUtils.toBigDecimal(aWeight);
     }
 
@@ -221,42 +214,43 @@ public final class BlackLittermanModel extends EquilibriumModel {
     @Override
     protected MatrixR064 calculateAssetWeights() {
 
-        final MatrixR064 tmpViewPortfolios = this.getViewPortfolios();
-        final MatrixR064 tmpViewReturns = this.getViewReturns();
-        final MatrixR064 tmpViewVariances = this.getViewVariances();
+         MatrixR064 tmpViewPortfolios = this.getViewPortfolios();
+         MatrixR064 tmpViewReturns = this.getViewReturns();
+         MatrixR064 tmpViewVariances = this.getViewVariances();
 
-        final MatrixR064 tmpCovariances = this.getCovariances();
+         MatrixR064 tmpCovariances = this.getCovariances();
 
-        final MatrixR064 tmpRightParenthesis = tmpViewReturns.subtract(tmpViewPortfolios.multiply(tmpCovariances).multiply(myOriginalWeights));
+         MatrixR064 tmpRightParenthesis = tmpViewReturns.subtract(tmpViewPortfolios.multiply(tmpCovariances).multiply(myOriginalWeights));
 
-        final MatrixR064 tmpViewsTransposed = tmpViewPortfolios.transpose();
+         MatrixR064 tmpViewsTransposed = tmpViewPortfolios.transpose();
 
-        final MatrixR064 tmpLeftParenthesis = tmpViewVariances.add(tmpViewPortfolios.multiply(tmpCovariances).multiply(tmpViewsTransposed));
+         MatrixR064 tmpLeftParenthesis = tmpViewVariances.add(tmpViewPortfolios.multiply(tmpCovariances).multiply(tmpViewsTransposed));
 
         return myOriginalWeights.add(tmpViewsTransposed.multiply(tmpLeftParenthesis.solve(tmpRightParenthesis)));
     }
 
-    protected MatrixR064 getOriginalReturns() {
+    MatrixR064 getOriginalReturns() {
         return this.calculateAssetReturns(myOriginalWeights);
     }
 
     /**
-     * @see org.ojalgo.data.domain.finance.portfolio.BlackLittermanModel#getOriginalWeights()
-     * @see org.ojalgo.data.domain.finance.portfolio.BlackLittermanModel#getAssetWeights()
+     *See {@link org.ojalgo.data.domain.finance.portfolio.BlackLittermanModel#getAssetWeights()}.
+ @see org.ojalgo.data.domain.finance.portfolio.BlackLittermanModel#getOriginalWeights()
+     * 
      */
-    protected MatrixR064 getOriginalWeights() {
+    MatrixR064 getOriginalWeights() {
         return myOriginalWeights;
     }
 
-    protected MatrixR064 getViewPortfolios() {
+    MatrixR064 getViewPortfolios() {
 
-        final int tmpRowDim = myViews.size();
-        final int tmpColDim = (int) myOriginalWeights.count();
+         int tmpRowDim = myViews.size();
+         var tmpColDim = (int) myOriginalWeights.count();
 
-        final MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpRowDim, tmpColDim);
+         MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpRowDim, tmpColDim);
 
-        FinancePortfolio tmpView;
-        List<BigDecimal> tmpWeights;
+        @Var FinancePortfolio tmpView;
+        @Var List<BigDecimal> tmpWeights;
 
         for (int i = 0; i < tmpRowDim; i++) {
 
@@ -274,15 +268,15 @@ public final class BlackLittermanModel extends EquilibriumModel {
     /**
      * Scaled by risk aversion factor.
      */
-    protected MatrixR064 getViewReturns() {
+    MatrixR064 getViewReturns() {
 
-        final int tmpRowDim = myViews.size();
-        final int tmpColDim = 1;
+         int tmpRowDim = myViews.size();
+         int tmpColDim = 1;
 
-        final MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpRowDim, tmpColDim);
+         MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpRowDim, tmpColDim);
 
-        double tmpRet;
-        final double tmpRAF = this.getRiskAversion().doubleValue();
+        @Var double tmpRet;
+         double tmpRAF = this.getRiskAversion().doubleValue();
 
         for (int i = 0; i < tmpRowDim; i++) {
 
@@ -294,18 +288,18 @@ public final class BlackLittermanModel extends EquilibriumModel {
         return retVal.get();
     }
 
-    protected List<FinancePortfolio> getViews() {
+    List<FinancePortfolio> getViews() {
         return myViews;
     }
 
     /**
      * Scaled by tau / weight on views
      */
-    protected MatrixR064 getViewVariances() {
+    MatrixR064 getViewVariances() {
 
-        final int tmpDim = myViews.size();
+         int tmpDim = myViews.size();
 
-        final MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpDim, tmpDim);
+         MatrixR064.DenseReceiver retVal = MATRIX_FACTORY.makeDense(tmpDim, tmpDim);
 
         if (myConfidence.compareTo(BigMath.ONE) == 0) {
 
@@ -315,9 +309,9 @@ public final class BlackLittermanModel extends EquilibriumModel {
 
         } else {
 
-            final double tmpScale = myConfidence.doubleValue();
+             double tmpScale = myConfidence.doubleValue();
 
-            double tmpVar;
+            @Var double tmpVar;
             for (int ij = 0; ij < tmpDim; ij++) {
 
                 tmpVar = myViews.get(ij).getReturnVariance();
@@ -329,9 +323,9 @@ public final class BlackLittermanModel extends EquilibriumModel {
         return retVal.get();
     }
 
-    BigDecimal calculateVariance(final MatrixR064 weights) {
+    BigDecimal calculateVariance( MatrixR064 weights) {
 
-        MatrixR064 tmpVal = this.getCovariances();
+        @Var MatrixR064 tmpVal = this.getCovariances();
 
         tmpVal = tmpVal.multiply(weights);
 

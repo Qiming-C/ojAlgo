@@ -23,10 +23,10 @@ package org.ojalgo.data.domain.finance.portfolio;
 
 import static org.ojalgo.function.constant.BigMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
-
 import org.ojalgo.matrix.MatrixR064;
 import org.ojalgo.optimisation.Expression;
 import org.ojalgo.optimisation.ExpressionsBasedModel;
@@ -43,9 +43,9 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         /**
          * Will turn on debug logging for the optimisation solver.
          */
-        public Optimiser debug(final boolean debug) {
+        public Optimiser debug( boolean debug) {
 
-            final boolean tmpValidate = myOptimisationOptions.validate;
+             boolean tmpValidate = myOptimisationOptions.validate;
 
             if (debug) {
                 myOptimisationOptions.debug(Optimisation.Solver.class);
@@ -58,7 +58,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
             return this;
         }
 
-        public Optimiser feasibility(final int scale) {
+        public Optimiser feasibility( int scale) {
             myOptimisationOptions.feasibility = myOptimisationOptions.feasibility.withScale(scale);
             return this;
         }
@@ -78,7 +78,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         /**
          * @param max The maximum amount of time for the optimisation solver
          */
-        public Optimiser time(final CalendarDateDuration max) {
+        public Optimiser time( CalendarDateDuration max) {
             long maxDurationInMillis = max.toDurationInMillis();
             myOptimisationOptions.time_abort = maxDurationInMillis;
             myOptimisationOptions.time_suffice = maxDurationInMillis;
@@ -89,7 +89,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
          * Will validate the generated optimisation problem and throws an excption if it's not ok. This should
          * typically not be enabled in a production environment.
          */
-        public Optimiser validate(final boolean validate) {
+        public Optimiser validate( boolean validate) {
             myOptimisationOptions.validate = validate;
             return this;
         }
@@ -105,13 +105,13 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
     private boolean myShortingAllowed = false;
     private final Variable[] myVariables;
 
-    OptimisedPortfolio(final FinancePortfolio.Context portfolioContext) {
+    OptimisedPortfolio( FinancePortfolio.Context portfolioContext) {
 
         super(portfolioContext);
 
         myExpectedExcessReturns = portfolioContext.getAssetReturns();
 
-        final String[] tmpSymbols = this.getMarketEquilibrium().getAssetKeys();
+         String[] tmpSymbols = this.getMarketEquilibrium().getAssetKeys();
         myVariables = new Variable[tmpSymbols.length];
         for (int i = 0; i < tmpSymbols.length; i++) {
             myVariables[i] = new Variable(tmpSymbols[i]);
@@ -121,7 +121,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         myOptimisationOptions.solution = myOptimisationOptions.solution.withPrecision(7).withScale(6);
     }
 
-    OptimisedPortfolio(final MarketEquilibrium marketEquilibrium, final MatrixR064 expectedExcessReturns) {
+    OptimisedPortfolio( MarketEquilibrium marketEquilibrium,  MatrixR064 expectedExcessReturns) {
 
         super(marketEquilibrium);
 
@@ -131,7 +131,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
 
         myExpectedExcessReturns = expectedExcessReturns;
 
-        final String[] tmpSymbols = this.getMarketEquilibrium().getAssetKeys();
+         String[] tmpSymbols = this.getMarketEquilibrium().getAssetKeys();
         myVariables = new Variable[tmpSymbols.length];
         for (int i = 0; i < tmpSymbols.length; i++) {
             myVariables[i] = new Variable(tmpSymbols[i]);
@@ -141,7 +141,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         myOptimisationOptions.solution = myOptimisationOptions.solution.withPrecision(7).withScale(6);
     }
 
-    OptimisedPortfolio(final MatrixR064 covarianceMatrix, final MatrixR064 expectedExcessReturns) {
+    OptimisedPortfolio( MatrixR064 covarianceMatrix,  MatrixR064 expectedExcessReturns) {
         this(new MarketEquilibrium(covarianceMatrix), expectedExcessReturns);
     }
 
@@ -153,7 +153,7 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         return new Optimiser();
     }
 
-    public final void setShortingAllowed(final boolean allowed) {
+    public final void setShortingAllowed( boolean allowed) {
         myShortingAllowed = allowed;
         this.reset();
     }
@@ -163,17 +163,17 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         return myExpectedExcessReturns;
     }
 
-    protected final MatrixR064 handle(final Optimisation.Result optimisationResult) {
+    protected final MatrixR064 handle( Optimisation.Result optimisationResult) {
 
-        final int tmpLength = myVariables.length;
+         int tmpLength = myVariables.length;
 
         myOptimisationState = optimisationResult.getState();
-        final boolean tmpFeasible = optimisationResult.getState().isFeasible();
-        final boolean tmpShortingAllowed = this.isShortingAllowed();
+         boolean tmpFeasible = optimisationResult.getState().isFeasible();
+         boolean tmpShortingAllowed = this.isShortingAllowed();
 
-        final MatrixR064.DenseReceiver tmpMtrxBuilder = MATRIX_FACTORY.makeDense(tmpLength);
+         MatrixR064.DenseReceiver tmpMtrxBuilder = MATRIX_FACTORY.makeDense(tmpLength);
 
-        BigDecimal tmpValue;
+        @Var BigDecimal tmpValue;
         for (int i = 0; i < tmpLength; i++) {
             if (tmpFeasible) {
                 tmpValue = tmpShortingAllowed ? optimisationResult.get(i) : optimisationResult.get(i).max(ZERO);
@@ -199,15 +199,15 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
         return myOptimisationOptions;
     }
 
-    Variable getVariable(final int index) {
+    Variable getVariable( int index) {
         return myVariables[index];
     }
 
-    final ExpressionsBasedModel makeModel(final Map<int[], LowerUpper> constraints) {
+    final ExpressionsBasedModel makeModel( Map<int[], LowerUpper> constraints) {
 
-        final int tmpLength = myVariables.length;
+         int tmpLength = myVariables.length;
 
-        final Variable[] tmpVariables = new Variable[tmpLength];
+         Variable[] tmpVariables = new Variable[tmpLength];
         for (int i = 0; i < tmpVariables.length; i++) {
             tmpVariables[i] = myVariables[i].copy();
             if (!this.isShortingAllowed() && ((myVariables[i].getLowerLimit() == null) || (myVariables[i].getLowerLimit().signum() == -1))) {
@@ -215,30 +215,30 @@ abstract class OptimisedPortfolio extends EquilibriumModel {
             }
         }
 
-        final ExpressionsBasedModel retVal = new ExpressionsBasedModel(myOptimisationOptions);
+         var retVal = new ExpressionsBasedModel(myOptimisationOptions);
 
         retVal.addVariables(tmpVariables);
 
-        final Expression myOptimisationVariance = retVal.newExpression(VARIANCE);
-        final MatrixR064 tmpCovariances = this.getCovariances();
+         Expression myOptimisationVariance = retVal.newExpression(VARIANCE);
+         MatrixR064 tmpCovariances = this.getCovariances();
         for (int j = 0; j < tmpLength; j++) {
             for (int i = 0; i < tmpLength; i++) {
                 myOptimisationVariance.set(i, j, tmpCovariances.get(i, j));
             }
         }
 
-        final Expression tmpBalanceExpression = retVal.newExpression(BALANCE);
+         Expression tmpBalanceExpression = retVal.newExpression(BALANCE);
         for (int i = 0; i < tmpLength; i++) {
             tmpBalanceExpression.set(i, ONE);
         }
         tmpBalanceExpression.level(ONE);
 
-        for (final Map.Entry<int[], LowerUpper> tmpEntry : constraints.entrySet()) {
+        for ( Map.Entry<int[], LowerUpper> tmpEntry : constraints.entrySet()) {
 
-            final int[] tmpKey = tmpEntry.getKey();
-            final LowerUpper tmpValue = tmpEntry.getValue();
+             int[] tmpKey = tmpEntry.getKey();
+             LowerUpper tmpValue = tmpEntry.getValue();
 
-            final Expression tmpExpression = retVal.newExpression(Arrays.toString(tmpKey));
+             Expression tmpExpression = retVal.newExpression(Arrays.toString(tmpKey));
             for (int i = 0; i < tmpKey.length; i++) {
                 tmpExpression.set(tmpKey[i], ONE);
             }

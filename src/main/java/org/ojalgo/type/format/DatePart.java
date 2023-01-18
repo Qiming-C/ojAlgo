@@ -34,14 +34,14 @@ public enum DatePart {
         return this.getFormat(DateStyle.SHORT, Locale.getDefault());
     }
 
-    public Format getFormat(final DateStyle style) {
+    public Format getFormat( DateStyle style) {
         return this.getFormat(style, Locale.getDefault());
     }
 
-    public Format getFormat(final DateStyle style, final Locale locale) {
+    public Format getFormat( DateStyle style,  Locale locale) {
 
-        final DateStyle tmpStyle = style != null ? style : DateStyle.SHORT;
-        final Locale tmpLocale = locale != null ? locale : Locale.getDefault();
+         DateStyle tmpStyle = style != null ? style : DateStyle.SHORT;
+         Locale tmpLocale = locale != null ? locale : Locale.getDefault();
 
         switch (tmpStyle) {
 
@@ -81,7 +81,7 @@ public enum DatePart {
         }
     }
 
-    public Format getFormat(final Locale locale) {
+    public Format getFormat( Locale locale) {
         return this.getFormat(DateStyle.SHORT, locale);
     }
 

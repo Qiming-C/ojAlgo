@@ -23,8 +23,8 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.matrix.store.ElementsSupplier;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.Primitive64Store;
@@ -43,7 +43,7 @@ import org.ojalgo.optimisation.Optimisation;
  */
 final class DirectASS extends ActiveSetSolver {
 
-    DirectASS(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    DirectASS( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
         super(convexSolverBuilder, optimisationOptions);
     }
 
@@ -61,7 +61,7 @@ final class DirectASS extends ActiveSetSolver {
         int[] incl = this.getIncluded();
         int[] excl = this.getExcluded();
 
-        boolean solved = false;
+        @Var boolean solved = false;
 
         int numbConstr = this.countIterationConstraints();
         int numbVars = this.countVariables();
@@ -85,7 +85,7 @@ final class DirectASS extends ActiveSetSolver {
 
                 MatrixStore<Double> iterA = this.getIterationA();
                 MatrixStore<Double> iterB = this.getIterationB();
-                MatrixStore<Double> iterC = this.getIterationC();
+                
 
                 MatrixStore<Double> invQAt = this.getSolutionQ(iterA.transpose());
                 // TODO Only 1 column change inbetween active set iterations (add or remove 1 column)
@@ -101,7 +101,7 @@ final class DirectASS extends ActiveSetSolver {
                     this.log("Negated Schur complement: " + Arrays.toString(incl), tmpS.collect(MATRIX_FACTORY));
                 }
 
-                if (solved = this.computeGeneral(tmpS)) {
+                if ((solved = this.computeGeneral(tmpS))) {
 
                     ElementsSupplier<Double> rhsL = invQC.premultiply(iterA).onMatching(SUBTRACT, iterB);
                     this.getSolutionGeneral(rhsL, iterL);
@@ -124,7 +124,7 @@ final class DirectASS extends ActiveSetSolver {
 
             Primitive64Store tmpXL = MATRIX_FACTORY.make(numbVars + numbConstr, 1L);
 
-            if (solved = this.solveFullKKT(tmpXL)) {
+            if ((solved = this.solveFullKKT(tmpXL))) {
 
                 iterX.fillMatching(tmpXL.limits(numbVars, 1));
                 iterL.fillMatching(tmpXL.offsets(numbVars, 0));

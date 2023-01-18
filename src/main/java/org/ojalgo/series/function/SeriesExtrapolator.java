@@ -32,11 +32,11 @@ import org.ojalgo.series.BasicSeries;
  */
 public abstract class SeriesExtrapolator<K extends Comparable<? super K>> extends SeriesFunction<K> {
 
-    protected SeriesExtrapolator(final BasicSeries<K, ? extends Comparable<?>> data) {
+    protected SeriesExtrapolator( BasicSeries<K, ? extends Comparable<?>> data) {
         super(data);
     }
 
-    protected SeriesExtrapolator(final Map<String, ? extends BasicSeries<K, ? extends Comparable<?>>> data) {
+    protected SeriesExtrapolator( Map<String, ? extends BasicSeries<K, ? extends Comparable<?>>> data) {
         super(data);
     }
 

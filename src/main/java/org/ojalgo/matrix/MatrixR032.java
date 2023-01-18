@@ -48,12 +48,12 @@ public final class MatrixR032 extends BasicMatrix<Double, MatrixR032> {
 
     public static final class DenseReceiver extends Mutator2D<Double, MatrixR032, PhysicalStore<Double>> {
 
-        DenseReceiver(final PhysicalStore<Double> delegate) {
+        DenseReceiver( PhysicalStore<Double> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixR032 instantiate(final MatrixStore<Double> store) {
+        MatrixR032 instantiate( MatrixStore<Double> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -66,12 +66,12 @@ public final class MatrixR032 extends BasicMatrix<Double, MatrixR032> {
         }
 
         @Override
-        MatrixR032.DenseReceiver dense(final PhysicalStore<Double> store) {
+        MatrixR032.DenseReceiver dense( PhysicalStore<Double> store) {
             return new MatrixR032.DenseReceiver(store);
         }
 
         @Override
-        MatrixR032.SparseReceiver sparse(final SparseStore<Double> store) {
+        MatrixR032.SparseReceiver sparse( SparseStore<Double> store) {
             return new MatrixR032.SparseReceiver(store);
         }
 
@@ -79,12 +79,12 @@ public final class MatrixR032 extends BasicMatrix<Double, MatrixR032> {
 
     public static final class SparseReceiver extends Mutator2D<Double, MatrixR032, SparseStore<Double>> {
 
-        SparseReceiver(final SparseStore<Double> delegate) {
+        SparseReceiver( SparseStore<Double> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixR032 instantiate(final MatrixStore<Double> store) {
+        MatrixR032 instantiate( MatrixStore<Double> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -95,7 +95,7 @@ public final class MatrixR032 extends BasicMatrix<Double, MatrixR032> {
     /**
      * This method is for internal use only - YOU should NOT use it!
      */
-    MatrixR032(final ElementsSupplier<Double> supplier) {
+    MatrixR032( ElementsSupplier<Double> supplier) {
         super(FACTORY.getPhysicalFactory(), supplier);
     }
 
@@ -105,52 +105,52 @@ public final class MatrixR032 extends BasicMatrix<Double, MatrixR032> {
     }
 
     @Override
-    Cholesky<Double> newCholesky(final Structure2D typical) {
+    Cholesky<Double> newCholesky( Structure2D typical) {
         return Cholesky.PRIMITIVE.make(typical);
     }
 
     @Override
-    DeterminantTask<Double> newDeterminantTask(final Structure2D template) {
+    DeterminantTask<Double> newDeterminantTask( Structure2D template) {
         return DeterminantTask.PRIMITIVE.make(template, this.isHermitian(), false);
     }
 
     @Override
-    Eigenvalue<Double> newEigenvalue(final Structure2D typical) {
+    Eigenvalue<Double> newEigenvalue( Structure2D typical) {
         return Eigenvalue.PRIMITIVE.make(typical, this.isHermitian());
     }
 
     @Override
-    MatrixR032 newInstance(final ElementsSupplier<Double> store) {
+    MatrixR032 newInstance( ElementsSupplier<Double> store) {
         return new MatrixR032(store);
     }
 
     @Override
-    InverterTask<Double> newInverterTask(final Structure2D base) {
+    InverterTask<Double> newInverterTask( Structure2D base) {
         return InverterTask.PRIMITIVE.make(base, this.isHermitian(), false);
     }
 
     @Override
-    LDL<Double> newLDL(final Structure2D typical) {
+    LDL<Double> newLDL( Structure2D typical) {
         return LDL.PRIMITIVE.make(typical);
     }
 
     @Override
-    LU<Double> newLU(final Structure2D typical) {
+    LU<Double> newLU( Structure2D typical) {
         return LU.PRIMITIVE.make(typical);
     }
 
     @Override
-    QR<Double> newQR(final Structure2D typical) {
+    QR<Double> newQR( Structure2D typical) {
         return QR.PRIMITIVE.make(typical);
     }
 
     @Override
-    SingularValue<Double> newSingularValue(final Structure2D typical) {
+    SingularValue<Double> newSingularValue( Structure2D typical) {
         return SingularValue.PRIMITIVE.make(typical);
     }
 
     @Override
-    SolverTask<Double> newSolverTask(final Structure2D templateBody, final Structure2D templateRHS) {
+    SolverTask<Double> newSolverTask( Structure2D templateBody,  Structure2D templateRHS) {
         return SolverTask.PRIMITIVE.make(templateBody, templateRHS, this.isHermitian(), false);
     }
 

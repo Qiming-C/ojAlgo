@@ -28,54 +28,54 @@ import org.ojalgo.ProgrammingError;
 
 public interface VoidFunction<N extends Comparable<N>> extends BasicFunction, Consumer<N>, DoubleConsumer {
 
-    default void accept(final double arg) {
+    @Override default void accept( double arg) {
         this.invoke(arg);
     }
 
-    default void accept(final N arg) {
+    @Override default void accept( N arg) {
         this.invoke(arg);
     }
 
-    default VoidFunction<N> compose(final UnaryFunction<N> before) {
+    default VoidFunction<N> compose( UnaryFunction<N> before) {
         ProgrammingError.throwIfNull(before);
         return new VoidFunction<N>() {
 
-            public void invoke(final double arg) {
+            @Override public void invoke( double arg) {
                 VoidFunction.this.invoke(before.invoke(arg));
             }
 
-            public void invoke(final float arg) {
+            @Override public void invoke( float arg) {
                 VoidFunction.this.invoke(before.invoke(arg));
             }
 
-            public void invoke(final N arg) {
+            @Override public void invoke( N arg) {
                 VoidFunction.this.invoke(before.invoke(arg));
             }
 
         };
     }
 
-    default void invoke(final byte arg) {
+    default void invoke( byte arg) {
         this.invoke((double) arg);
     }
 
     void invoke(double arg);
 
-    default void invoke(final float arg) {
+    default void invoke( float arg) {
         this.invoke((double) arg);
     }
 
-    default void invoke(final int arg) {
+    default void invoke( int arg) {
         this.invoke((double) arg);
     }
 
-    default void invoke(final long arg) {
+    default void invoke( long arg) {
         this.invoke((double) arg);
     }
 
     void invoke(N arg);
 
-    default void invoke(final short arg) {
+    default void invoke( short arg) {
         this.invoke((double) arg);
     }
 

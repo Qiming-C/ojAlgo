@@ -25,19 +25,19 @@ import org.ojalgo.structure.Mutate1D;
 
 public abstract class PrimitiveArray extends PlainArray<Double> implements Mutate1D.Sortable {
 
-    public static PrimitiveArray make(final int size) {
+    public static PrimitiveArray make( int size) {
         return ArrayR064.make(size);
     }
 
-    public static PrimitiveArray wrap(final double... data) {
+    public static PrimitiveArray wrap( double... data) {
         return ArrayR064.wrap(data);
     }
 
-    public static PrimitiveArray wrap(final float... data) {
+    public static PrimitiveArray wrap( float... data) {
         return ArrayR032.wrap(data);
     }
 
-    PrimitiveArray(final DenseArray.Factory<Double> factory, final int size) {
+    PrimitiveArray( DenseArray.Factory<Double> factory,  int size) {
         super(factory, size);
     }
 

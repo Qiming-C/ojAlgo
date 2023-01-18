@@ -104,7 +104,7 @@ public interface LU<N extends Comparable<N>> extends LDU<N>, MatrixDecomposition
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final LU<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  LU<N> decomposition,  NumberContext context) {
 
         MatrixStore<N> tmpL = decomposition.getL();
         MatrixStore<N> tmpU = decomposition.getU();
@@ -126,7 +126,7 @@ public interface LU<N extends Comparable<N>> extends LDU<N>, MatrixDecomposition
      */
     MatrixStore<N> getU();
 
-    default MatrixStore<N> reconstruct() {
+    @Override default MatrixStore<N> reconstruct() {
         MatrixStore<N> mtrxL = this.getL();
         MatrixStore<N> mtrxU = this.getU();
         int[] reversePivotOrder = this.getReversePivotOrder();

@@ -51,7 +51,7 @@ public interface Tensor<N extends Comparable<N>, T extends Tensor<N, T>> extends
      */
     int dimensions();
 
-    default boolean isSameShape(final Tensor<?, ?> other) {
+    default boolean isSameShape( Tensor<?, ?> other) {
         return this.rank() == other.rank() && this.dimensions() == other.dimensions();
     }
 

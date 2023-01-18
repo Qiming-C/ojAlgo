@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.MissingMath;
 
@@ -38,7 +39,7 @@ import org.ojalgo.function.special.MissingMath;
  */
 public class Poisson extends AbstractDiscrete {
 
-    public static Poisson of(final double lambda) {
+    public static Poisson of( double lambda) {
         return new Poisson(lambda);
     }
 
@@ -48,18 +49,18 @@ public class Poisson extends AbstractDiscrete {
         this(ONE);
     }
 
-    public Poisson(final double lambda) {
+    public Poisson( double lambda) {
 
         super();
 
         myLambda = lambda;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myLambda;
     }
 
-    public double getProbability(final int value) {
+    @Override public double getProbability( int value) {
         return (PrimitiveMath.EXP.invoke(-myLambda) * PrimitiveMath.POW.invoke(myLambda, value)) / MissingMath.factorial(value);
     }
 
@@ -71,8 +72,8 @@ public class Poisson extends AbstractDiscrete {
     @Override
     protected double generate() {
 
-        int retVal = -1;
-        double tmpVal = ZERO;
+        @Var int retVal = -1;
+        @Var double tmpVal = ZERO;
 
         while (tmpVal <= ONE) {
 

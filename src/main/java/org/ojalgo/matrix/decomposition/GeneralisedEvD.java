@@ -42,8 +42,8 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
     private transient PhysicalStore<N> myReduced = null;
     private final Eigenvalue.Generalisation myType;
 
-    GeneralisedEvD(final PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory, final Cholesky<N> cholesky, final Eigenvalue<N> eigenvalue,
-            final Eigenvalue.Generalisation type) {
+    GeneralisedEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory,  Cholesky<N> cholesky,  Eigenvalue<N> eigenvalue,
+             Eigenvalue.Generalisation type) {
 
         super(factory);
 
@@ -53,27 +53,27 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
         myType = type;
     }
 
-    public N getDeterminant() {
+    @Override public N getDeterminant() {
         return myEigenvalue.getDeterminant();
     }
 
-    public ComplexNumber getTrace() {
+    @Override public ComplexNumber getTrace() {
         return myEigenvalue.getTrace();
     }
 
-    public boolean isHermitian() {
+    @Override public boolean isHermitian() {
         return myEigenvalue.isHermitian();
     }
 
-    public boolean isOrdered() {
+    @Override public boolean isOrdered() {
         return myEigenvalue.isOrdered();
     }
 
-    public boolean prepare(final Collectable<N, ? super PhysicalStore<N>> matrixB) {
+    @Override public boolean prepare( Collectable<N, ? super PhysicalStore<N>> matrixB) {
         return myCholesky.decompose(matrixB);
     }
 
-    public MatrixStore<N> reconstruct() {
+    @Override public MatrixStore<N> reconstruct() {
         if (myReduced == null) {
             myReduced = myEigenvalue.reconstruct().copy();
         }
@@ -90,7 +90,7 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
     }
 
     @Override
-    protected boolean doDecompose(final Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly) {
+    protected boolean doDecompose( Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly) {
 
         if (myCholesky.isComputed()) {
             myReduced = this.reduce(matrix);
@@ -115,7 +115,7 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
         return myEigenvalue.getEigenvalues();
     }
 
-    public Eigenpair getEigenpair(final int index) {
+    @Override public Eigenpair getEigenpair( int index) {
 
         ComplexNumber value = ComplexNumber.FACTORY.cast(this.getD().get(index, index));
         DenseArray<ComplexNumber> vector = ArrayC128.FACTORY.copy(this.getV().sliceColumn(index));
@@ -133,7 +133,7 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
         }
     }
 
-    MatrixStore<N> recover(final MatrixStore<N> reduced) {
+    MatrixStore<N> recover( MatrixStore<N> reduced) {
 
         MatrixStore<N> mtrxL = myCholesky.getL();
 
@@ -165,7 +165,7 @@ final class GeneralisedEvD<N extends Comparable<N>> extends EigenvalueDecomposit
         }
     }
 
-    PhysicalStore<N> reduce(final Access2D.Collectable<N, ? super PhysicalStore<N>> original) {
+    PhysicalStore<N> reduce( Access2D.Collectable<N, ? super PhysicalStore<N>> original) {
 
         MatrixStore<N> mtrxL = myCholesky.getL();
 

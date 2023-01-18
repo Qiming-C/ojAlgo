@@ -30,11 +30,11 @@ import org.ojalgo.scalar.RationalNumber;
 @Deprecated
 public final class RationalPolynomial extends PolynomialQ128 {
 
-    public RationalPolynomial(final Array1D<RationalNumber> coefficients) {
+    public RationalPolynomial( Array1D<RationalNumber> coefficients) {
         super(coefficients);
     }
 
-    public RationalPolynomial(final int degree) {
+    public RationalPolynomial( int degree) {
         super(degree);
     }
 

@@ -58,7 +58,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
 
         protected final ModelStrategy delegate;
 
-        protected AbstractStrategy(final ExpressionsBasedModel model, final IntegerStrategy strategy) {
+        protected AbstractStrategy( ExpressionsBasedModel model,  IntegerStrategy strategy) {
 
             super(model, strategy);
 
@@ -81,7 +81,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
          */
         private final double[] mySignificances;
 
-        DefaultStrategy(final ExpressionsBasedModel model, final IntegerStrategy strategy) {
+        DefaultStrategy( ExpressionsBasedModel model,  IntegerStrategy strategy) {
 
             super(model, strategy);
 
@@ -91,7 +91,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
             mySignificances = new double[nbIntegers];
         }
 
-        private void addSignificance(final int idx, final double significance) {
+        private void addSignificance( int idx,  double significance) {
             mySignificances[idx] = MissingMath.hypot(mySignificances[idx], significance);
         }
 
@@ -99,7 +99,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
          * Initialise the integer significances, based on the objective function gradient.
          */
         @Override
-        protected ModelStrategy initialise(final MultiaryFunction.TwiceDifferentiable<Double> function, final Access1D<?> point) {
+        protected ModelStrategy initialise( MultiaryFunction.TwiceDifferentiable<Double> function,  Access1D<?> point) {
 
             Arrays.fill(mySignificances, ONE);
 
@@ -125,7 +125,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
         }
 
         @Override
-        protected boolean isCutRatherThanBranch(final double displacement, final boolean found) {
+        protected boolean isCutRatherThanBranch( double displacement,  boolean found) {
             if (cutting && found) {
                 return displacement > 0.49;
             }
@@ -133,12 +133,12 @@ public abstract class ModelStrategy implements IntegerStrategy {
         }
 
         @Override
-        protected boolean isDirect(final NodeKey node, final boolean found) {
+        protected boolean isDirect( NodeKey node,  boolean found) {
             return found ? node.displacement < THIRD : node.displacement < HALF;
         }
 
         @Override
-        protected void markInfeasible(final NodeKey key, final boolean found) {
+        protected void markInfeasible( NodeKey key,  boolean found) {
             int index = key.index;
             if (index >= 0) {
                 this.addSignificance(index, found ? 0.2 : 0.1);
@@ -149,7 +149,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
          * Update the integer significances, based on new integer solution found.
          */
         @Override
-        protected void markInteger(final NodeKey key, final Optimisation.Result result) {
+        protected void markInteger( NodeKey key,  Optimisation.Result result) {
 
             if (myIterationPoint != null) {
 
@@ -172,7 +172,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
          * @see org.ojalgo.optimisation.integer.ModelStrategy#toComparable(int, double, boolean)
          */
         @Override
-        protected double toComparable(final int idx, final double displacement, final boolean found) {
+        protected double toComparable( int idx,  double displacement,  boolean found) {
             return found ? displacement * mySignificances[idx] : ONE - displacement;
         }
 
@@ -192,7 +192,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
      */
     protected boolean cutting = true;
 
-    protected ModelStrategy(final ExpressionsBasedModel model, final IntegerStrategy strategy) {
+    protected ModelStrategy( ExpressionsBasedModel model,  IntegerStrategy strategy) {
 
         myOptimisationSense = (model.getOptimisationSense() != Optimisation.Sense.MAX) ? Sense.MIN : Sense.MAX;
 
@@ -211,23 +211,23 @@ public abstract class ModelStrategy implements IntegerStrategy {
         myWorkerPriorities = strategy.getWorkerPriorities();
     }
 
-    public NumberContext getGapTolerance() {
+    @Override public NumberContext getGapTolerance() {
         return myStrategy.getGapTolerance();
     }
 
-    public GMICutConfiguration getGMICutConfiguration() {
+    @Override public GMICutConfiguration getGMICutConfiguration() {
         return myStrategy.getGMICutConfiguration();
     }
 
-    public NumberContext getIntegralityTolerance() {
+    @Override public NumberContext getIntegralityTolerance() {
         return myStrategy.getIntegralityTolerance();
     }
 
-    public List<Comparator<NodeKey>> getWorkerPriorities() {
+    @Override public List<Comparator<NodeKey>> getWorkerPriorities() {
         return myWorkerPriorities;
     }
 
-    public ModelStrategy newModelStrategy(final ExpressionsBasedModel model) {
+    @Override public ModelStrategy newModelStrategy( ExpressionsBasedModel model) {
         return myStrategy.newModelStrategy(model);
     }
 
@@ -245,14 +245,14 @@ public abstract class ModelStrategy implements IntegerStrategy {
      *
      * @param idx Index among the integer variables
      */
-    protected int getIndex(final int idx) {
+    protected int getIndex( int idx) {
         return myIndices[idx];
     }
 
     /**
      * Called, once, at the very beginning of the solve process.
      */
-    protected abstract ModelStrategy initialise(final MultiaryFunction.TwiceDifferentiable<Double> function, final Access1D<?> point);
+    protected abstract ModelStrategy initialise( MultiaryFunction.TwiceDifferentiable<Double> function,  Access1D<?> point);
 
     protected abstract boolean isCutRatherThanBranch(double displacement, boolean found);
 
@@ -271,7 +271,7 @@ public abstract class ModelStrategy implements IntegerStrategy {
      * Is the node's result good enough to continue branching? (Compare the node's objective function value
      * with the that of the best integer solution found so far.)
      */
-    protected boolean isGoodEnough(final Result bestResultSoFar, final double relaxedNodeValue) {
+    protected boolean isGoodEnough( Result bestResultSoFar,  double relaxedNodeValue) {
 
         if (bestResultSoFar == null) {
             return true;
@@ -287,8 +287,8 @@ public abstract class ModelStrategy implements IntegerStrategy {
             return false;
         }
 
-        if (myOptimisationSense == Sense.MIN && relaxedNodeValue < bestIntegerValue
-                || myOptimisationSense == Sense.MAX && relaxedNodeValue > bestIntegerValue) {
+        if ((myOptimisationSense == Sense.MIN && relaxedNodeValue < bestIntegerValue)
+                || (myOptimisationSense == Sense.MAX && relaxedNodeValue > bestIntegerValue)) {
             return true;
         }
 

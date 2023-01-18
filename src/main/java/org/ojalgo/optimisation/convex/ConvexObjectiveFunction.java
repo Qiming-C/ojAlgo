@@ -38,7 +38,7 @@ public final class ConvexObjectiveFunction implements MultiaryFunction.TwiceDiff
     private final LinearFunction<Double> myLinear;
     private final PureQuadraticFunction<Double> myPureQuadratic;
 
-    ConvexObjectiveFunction(final PhysicalStore<Double> quadratic, final PhysicalStore<Double> linear) {
+    ConvexObjectiveFunction( PhysicalStore<Double> quadratic,  PhysicalStore<Double> linear) {
 
         super();
 
@@ -50,42 +50,42 @@ public final class ConvexObjectiveFunction implements MultiaryFunction.TwiceDiff
         }
     }
 
-    public int arity() {
+    @Override public int arity() {
         return myLinear.arity();
     }
 
-    public Double getConstant() {
+    @Override public Double getConstant() {
         return myPureQuadratic.getConstant();
     }
 
-    public MatrixStore<Double> getGradient(final Access1D<Double> point) {
+    @Override public MatrixStore<Double> getGradient( Access1D<Double> point) {
         return myPureQuadratic.getGradient(point).subtract(myLinear.getGradient(point));
     }
 
-    public MatrixStore<Double> getHessian(final Access1D<Double> point) {
+    @Override public MatrixStore<Double> getHessian( Access1D<Double> point) {
         return myPureQuadratic.getHessian(point);
     }
 
-    public MatrixStore<Double> getLinearFactors(final boolean negated) {
+    @Override public MatrixStore<Double> getLinearFactors( boolean negated) {
         return myLinear.getLinearFactors(!negated);
     }
 
     @Override
-    public Double invoke(final Access1D<Double> arg) {
+    public Double invoke( Access1D<Double> arg) {
         double quadratic = myPureQuadratic.invoke(arg).doubleValue();
         double linear = myLinear.invoke(arg).doubleValue();
         return Double.valueOf(quadratic - linear);
     }
 
-    public PhysicalStore<Double> linear() {
+    @Override public PhysicalStore<Double> linear() {
         return myLinear.linear();
     }
 
-    public PhysicalStore<Double> quadratic() {
+    @Override public PhysicalStore<Double> quadratic() {
         return myPureQuadratic.quadratic();
     }
 
-    public void setConstant(final Comparable<?> constant) {
+    @Override public void setConstant( Comparable<?> constant) {
         myPureQuadratic.setConstant(constant);
     }
 

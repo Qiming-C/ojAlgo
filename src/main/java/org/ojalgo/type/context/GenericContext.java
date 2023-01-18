@@ -30,7 +30,7 @@ public final class GenericContext<T> extends FormatContext<T> {
 
     private final TypeContext<T> myDelegate;
 
-    public GenericContext(final Format format) {
+    public GenericContext( Format format) {
 
         super(format);
 
@@ -38,14 +38,14 @@ public final class GenericContext<T> extends FormatContext<T> {
     }
 
     @SuppressWarnings("unchecked")
-    GenericContext(final TypeContext<?> delegate, final Format format) {
+    GenericContext( TypeContext<?> delegate,  Format format) {
 
         super(format);
 
         myDelegate = (TypeContext<T>) delegate;
     }
 
-    public T enforce(final T object) {
+    @Override public T enforce( T object) {
         if (myDelegate != null) {
             return myDelegate.enforce(object);
         } else {
@@ -54,16 +54,16 @@ public final class GenericContext<T> extends FormatContext<T> {
     }
 
     @Override
-    protected void configureFormat(final Format format, final Object object) {
+    protected void configureFormat( Format format,  Object object) {
     }
 
     @Override
-    protected String handleFormatException(final Format format, final Object object) {
+    protected String handleFormatException( Format format,  Object object) {
         return myDelegate.format(object);
     }
 
     @Override
-    protected T handleParseException(final Format format, final String string) {
+    protected T handleParseException( Format format,  String string) {
         return myDelegate.parse(string);
     }
 

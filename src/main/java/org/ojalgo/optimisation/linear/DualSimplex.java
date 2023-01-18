@@ -34,75 +34,9 @@ import org.ojalgo.type.context.NumberContext;
 
 final class DualSimplex extends SimplexTableauSolver {
 
-    /**
-     * Variant of
-     * {@link #build(org.ojalgo.optimisation.convex.ConvexSolver.Builder, org.ojalgo.optimisation.Optimisation.Options, boolean)}
-     * that sets a RHS to correspond to the phase 1 objective of the primal.
-     */
-    private static SimplexTableau buildAlt(final OptimisationData convex, final Optimisation.Options options, final boolean checkFeasibility) {
+    
 
-        int nbVars = convex.countVariables();
-        int nbEqus = convex.countEqualityConstraints();
-        int nbInes = convex.countInequalityConstraints();
-
-        int nbProblemVariables = nbEqus + nbEqus + nbInes;
-        int nbConstraints = nbVars;
-
-        SimplexTableau retVal = SimplexTableau.make(nbConstraints, nbProblemVariables, 0, 0, 0, true, options);
-        MetaData meta = retVal.meta;
-        Primitive2D constraintsBody = retVal.constraintsBody();
-        Primitive1D constraintsRHS = retVal.constraintsRHS();
-        Primitive1D objective = retVal.objective();
-
-        MatrixStore<Double> convexC = convex.getObjective().getLinearFactors(true);
-        MatrixStore<Double> convexAE = convex.getAE();
-        MatrixStore<Double> convexBE = convex.getBE();
-
-        double[] feasibilityC = new double[checkFeasibility ? nbConstraints : 0];
-        if (checkFeasibility) {
-            for (RowView<Double> rowAI : convex.getRowsAI()) {
-                for (ElementView1D<Double, ?> element : rowAI.nonzeros()) {
-                    feasibilityC[Math.toIntExact(element.index())] += element.doubleValue();
-                }
-            }
-        }
-
-        for (int i = 0; i < nbConstraints; i++) {
-            double rhs = checkFeasibility ? i : convexC.doubleValue(i);
-            boolean neg = meta.negatedDual[i] = NumberContext.compare(rhs, ZERO) < 0;
-            for (int j = 0; j < nbEqus; j++) {
-                double valE = convexAE.doubleValue(j, i);
-                constraintsBody.set(i, j, neg ? -valE : valE);
-                constraintsBody.set(i, nbEqus + j, neg ? valE : -valE);
-            }
-            constraintsRHS.set(i, neg ? -rhs : rhs);
-        }
-
-        for (RowView<Double> rowAI : convex.getRowsAI()) {
-            int tabJ = Math.toIntExact(rowAI.row());
-
-            for (ElementView1D<Double, ?> element : rowAI.nonzeros()) {
-                int tabI = Math.toIntExact(element.index());
-
-                double tabVal = element.doubleValue();
-                constraintsBody.set(tabI, nbEqus + nbEqus + tabJ, meta.negatedDual[tabI] ? -tabVal : tabVal);
-            }
-        }
-
-        for (int j = 0; j < nbEqus; j++) {
-            double valBE = convexBE.doubleValue(j);
-            objective.set(j, valBE);
-            objective.set(nbEqus + j, -valBE);
-        }
-        for (int j = 0; j < nbInes; j++) {
-            double valBI = convex.getBI(j);
-            objective.set(nbEqus + nbEqus + j, valBI);
-        }
-
-        return retVal;
-    }
-
-    static SimplexTableau build(final OptimisationData convex, final Optimisation.Options options, final boolean checkFeasibility) {
+    static SimplexTableau build( OptimisationData convex,  Optimisation.Options options,  boolean checkFeasibility) {
 
         int nbVars = convex.countVariables();
         int nbEqus = convex.countEqualityConstraints();
@@ -165,18 +99,18 @@ final class DualSimplex extends SimplexTableauSolver {
         return retVal;
     }
 
-    static Optimisation.Result doSolve(final OptimisationData convex, final Optimisation.Options options, final boolean zeroC) {
+    static Optimisation.Result doSolve( OptimisationData convex,  Optimisation.Options options,  boolean zeroC) {
 
         SimplexTableau tableau = DualSimplex.build(convex, options, zeroC);
 
-        DualSimplex solver = new DualSimplex(tableau, options);
+        var solver = new DualSimplex(tableau, options);
 
         Result result = solver.solve();
 
         return DualSimplex.toConvexState(result, convex);
     }
 
-    static int size(final OptimisationData convex) {
+    static int size( OptimisationData convex) {
 
         int numbVars = convex.countVariables();
         int numbEqus = convex.countEqualityConstraints();
@@ -185,14 +119,14 @@ final class DualSimplex extends SimplexTableauSolver {
         return SimplexTableau.size(numbVars, numbEqus + numbEqus + numbInes, 0, 0, true);
     }
 
-    static Optimisation.Result toConvexState(final Result result, final OptimisationData convex) {
+    static Optimisation.Result toConvexState( Result result,  OptimisationData convex) {
 
         int nbEqus = convex.countEqualityConstraints();
         int nbInes = convex.countInequalityConstraints();
 
         Access1D<?> multipliers = result.getMultipliers().get();
 
-        Optimisation.Result retVal = new Optimisation.Result(result.getState(), result.getValue(), result);
+        var retVal = new Optimisation.Result(result.getState(), result.getValue(), result);
 
         retVal.multipliers(new Primitive1D() {
 
@@ -202,7 +136,7 @@ final class DualSimplex extends SimplexTableauSolver {
             }
 
             @Override
-            double doubleValue(final int index) {
+            double doubleValue( int index) {
                 if (index < nbEqus) {
                     return -(multipliers.doubleValue(index) - multipliers.doubleValue(nbEqus + index));
                 }
@@ -210,7 +144,7 @@ final class DualSimplex extends SimplexTableauSolver {
             }
 
             @Override
-            void set(final int index, final double value) {
+            void set( int index,  double value) {
                 throw new IllegalArgumentException();
             }
 
@@ -219,12 +153,12 @@ final class DualSimplex extends SimplexTableauSolver {
         return retVal;
     }
 
-    DualSimplex(final SimplexTableau tableau, final Options solverOptions) {
+    DualSimplex( SimplexTableau tableau,  Options solverOptions) {
         super(tableau, solverOptions);
     }
 
     @Override
-    protected double evaluateFunction(final Access1D<?> solution) {
+    protected double evaluateFunction( Access1D<?> solution) {
         return -super.evaluateFunction(solution);
     }
 

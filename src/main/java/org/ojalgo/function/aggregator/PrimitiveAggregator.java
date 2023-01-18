@@ -32,15 +32,15 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
     static abstract class PrimitiveAggregatorFunction implements AggregatorFunction<Double> {
 
-        public final Double get() {
+        @Override public final Double get() {
             return Double.valueOf(this.doubleValue());
         }
 
-        public final void invoke(final Double arg) {
+        @Override public final void invoke( Double arg) {
             this.invoke(arg.doubleValue());
         }
 
-        public final void invoke(final float arg) {
+        @Override public final void invoke( float arg) {
             this.invoke((double) arg);
         }
 
@@ -59,20 +59,20 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
                 private int myCount = 0;
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue / myCount;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myCount++;
                     myValue += anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myCount = 0;
                     myValue = ZERO;
                     return this;
@@ -90,21 +90,21 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private int myCount = 0;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myCount;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return myCount;
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     if (!PrimitiveScalar.isSmall(PrimitiveMath.ONE, anArg)) {
                         myCount++;
                     }
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myCount = 0;
                     return this;
                 }
@@ -121,19 +121,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue = PrimitiveMath.MAX.invoke(myValue, PrimitiveMath.ABS.invoke(anArg));
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ZERO;
                     return this;
                 }
@@ -150,19 +150,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = NEGATIVE_INFINITY;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue = PrimitiveMath.MAX.invoke(myValue, anArg);
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = NEGATIVE_INFINITY;
                     return this;
                 }
@@ -179,22 +179,22 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = POSITIVE_INFINITY;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     if (Double.isInfinite(myValue)) {
                         return ZERO;
                     }
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue = PrimitiveMath.MIN.invoke(myValue, anArg);
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = POSITIVE_INFINITY;
                     return this;
                 }
@@ -211,19 +211,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue += PrimitiveMath.ABS.invoke(anArg);
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ZERO;
                     return this;
                 }
@@ -240,19 +240,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return PrimitiveMath.SQRT.invoke(myValue);
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue += anArg * anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ZERO;
                     return this;
                 }
@@ -269,19 +269,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ONE;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue *= anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ONE;
                     return this;
                 }
@@ -298,19 +298,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ONE;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue *= anArg * anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ONE;
                     return this;
                 }
@@ -329,25 +329,25 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = POSITIVE_INFINITY;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     if (Double.isInfinite(myValue)) {
                         return ZERO;
                     }
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
-                    final double tmpArg = PrimitiveMath.ABS.invoke(anArg);
+                @Override public void invoke( double anArg) {
+                     double tmpArg = PrimitiveMath.ABS.invoke(anArg);
                     if (NumberContext.compare(tmpArg, ZERO) != 0) {
                         myValue = PrimitiveMath.MIN.invoke(myValue, tmpArg);
                     }
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = POSITIVE_INFINITY;
                     return this;
                 }
@@ -364,19 +364,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue += anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ZERO;
                     return this;
                 }
@@ -393,19 +393,19 @@ public final class PrimitiveAggregator extends AggregatorSet<Double> {
 
                 private double myValue = ZERO;
 
-                public double doubleValue() {
+                @Override public double doubleValue() {
                     return myValue;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return (int) this.doubleValue();
                 }
 
-                public void invoke(final double anArg) {
+                @Override public void invoke( double anArg) {
                     myValue += anArg * anArg;
                 }
 
-                public AggregatorFunction<Double> reset() {
+                @Override public AggregatorFunction<Double> reset() {
                     myValue = ZERO;
                     return this;
                 }

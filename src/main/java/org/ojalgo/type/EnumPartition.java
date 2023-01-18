@@ -36,7 +36,7 @@ public final class EnumPartition<E extends Enum<E>> {
     private final int[] myCounts;
     private final byte[] myValues;
 
-    public EnumPartition(final int size, final E initialValue) {
+    public EnumPartition( int size,  E initialValue) {
 
         super();
 
@@ -50,7 +50,7 @@ public final class EnumPartition<E extends Enum<E>> {
     /**
      * Count the number of times a specific value appears.
      */
-    public int count(final E value) {
+    public int count( E value) {
         return this.count(value, false);
     }
 
@@ -58,7 +58,7 @@ public final class EnumPartition<E extends Enum<E>> {
      * Generalised version of {@link #count(Enum)} that allows to instead count the number of times something
      * else is set.
      */
-    public int count(final E value, final boolean negate) {
+    public int count( E value,  boolean negate) {
         int count = myCounts[value.ordinal()];
         if (negate) {
             return myValues.length - count;
@@ -70,7 +70,7 @@ public final class EnumPartition<E extends Enum<E>> {
     /**
      * Get the indices where this value is set.
      */
-    public int[] extract(final E value) {
+    public int[] extract( E value) {
         return this.extract(value, false);
     }
 
@@ -78,7 +78,7 @@ public final class EnumPartition<E extends Enum<E>> {
      * Generalised version of {@link #extract(Enum)} that allows to instead get the negated (complement) set
      * of indices.
      */
-    public int[] extract(final E value, final boolean negate) {
+    public int[] extract( E value,  boolean negate) {
 
         int count = this.count(value, negate);
         int[] retVal = new int[count];
@@ -92,9 +92,9 @@ public final class EnumPartition<E extends Enum<E>> {
      * Generalised version of {@link #extract(Enum, boolean)} that allows to supply the array the resulting
      * indices should be written to.
      */
-    public void extract(final E value, final boolean negate, final int[] receiver) {
+    public void extract( E value,  boolean negate,  int[] receiver) {
 
-        byte key = (byte) value.ordinal();
+        var key = (byte) value.ordinal();
 
         for (int i = 0, j = 0; i < myValues.length && j < receiver.length; i++) {
             if ((myValues[i] == key) != negate) {
@@ -104,21 +104,21 @@ public final class EnumPartition<E extends Enum<E>> {
         }
     }
 
-    public void fill(final E value) {
+    public void fill( E value) {
 
         int index = value.ordinal();
-        byte key = (byte) index;
+        var key = (byte) index;
 
         Arrays.fill(myValues, key);
         Arrays.fill(myCounts, 0);
         myCounts[index] = myValues.length;
     }
 
-    public E get(final int index) {
+    public E get( int index) {
         return myConstants[myValues[index]];
     }
 
-    public boolean is(final int index, final E value) {
+    public boolean is( int index,  E value) {
         return myValues[index] == value.ordinal();
     }
 
@@ -126,7 +126,7 @@ public final class EnumPartition<E extends Enum<E>> {
         return myValues.length;
     }
 
-    public void update(final int index, final E value) {
+    public void update( int index,  E value) {
 
         int oldKey = myValues[index];
         int newKey = value.ordinal();

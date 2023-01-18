@@ -23,11 +23,11 @@ package org.ojalgo.random.process;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
-
 import org.ojalgo.array.Array2D;
 import org.ojalgo.random.Distribution;
 import org.ojalgo.type.keyvalue.EntryPair;
@@ -43,7 +43,7 @@ abstract class MultipleValuesBasedProcess<D extends Distribution> extends Abstra
         super();
     }
 
-    public boolean addObservation(final Double x, final double y) {
+    public boolean addObservation( Double x,  double y) {
         return myObservations.add(EntryPair.of(x, y));
     }
 
@@ -51,7 +51,7 @@ abstract class MultipleValuesBasedProcess<D extends Distribution> extends Abstra
      * @return An array of sample sets. The array has aNumberOfSteps elements, and each sample set has
      *         aNumberOfRealisations samples.
      */
-    public RandomProcess.SimulationResults simulate(final int numberOfRealisations, final int numberOfSteps, final double stepSize) {
+    @Override public RandomProcess.SimulationResults simulate( int numberOfRealisations,  int numberOfSteps,  double stepSize) {
 
         List<KeyedPrimitive<Double>> initialState = new ArrayList<>(myObservations);
         double initialValue = this.getCurrentValue();
@@ -59,7 +59,7 @@ abstract class MultipleValuesBasedProcess<D extends Distribution> extends Abstra
         Array2D<Double> tmpRealisationValues = Array2D.R064.make(numberOfRealisations, numberOfSteps);
 
         for (int r = 0; r < numberOfRealisations; r++) {
-            double tmpCurrentValue = initialValue;
+            @Var double tmpCurrentValue = initialValue;
             for (int s = 0; s < numberOfSteps; s++) {
                 tmpCurrentValue = this.doStep(stepSize, this.getNormalisedRandomIncrement());
                 tmpRealisationValues.set(r, s, tmpCurrentValue);
@@ -80,7 +80,7 @@ abstract class MultipleValuesBasedProcess<D extends Distribution> extends Abstra
     }
 
     @Override
-    void setCurrentValue(final double newValue) {
+    void setCurrentValue( double newValue) {
         if (myObservations.size() <= 0) {
             myObservations.add(EntryPair.of(Double.valueOf(ZERO), newValue));
         } else {
@@ -88,7 +88,7 @@ abstract class MultipleValuesBasedProcess<D extends Distribution> extends Abstra
         }
     }
 
-    final void setObservations(final Collection<? extends KeyedPrimitive<Double>> c) {
+    final void setObservations( Collection<? extends KeyedPrimitive<Double>> c) {
         myObservations.clear();
         myObservations.addAll(c);
     }

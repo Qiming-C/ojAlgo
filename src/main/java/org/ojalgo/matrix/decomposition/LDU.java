@@ -66,7 +66,7 @@ package org.ojalgo.matrix.decomposition;
 public interface LDU<N extends Comparable<N>>
         extends MatrixDecomposition<N>, MatrixDecomposition.Solver<N>, MatrixDecomposition.Determinant<N>, MatrixDecomposition.RankRevealing<N> {
 
-    default boolean isOrdered() {
+    @Override default boolean isOrdered() {
         return false;
     }
 

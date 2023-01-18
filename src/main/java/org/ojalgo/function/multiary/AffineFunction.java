@@ -21,6 +21,8 @@
  */
 package org.ojalgo.function.multiary;
 
+import com.google.errorprone.annotations.InlineMe;
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.matrix.store.GenericStore;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -42,17 +44,17 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
         private Access1D<?> myCoefficients = null;
         private final PhysicalStore.Factory<N, ?> myFactory;
 
-        Factory(final PhysicalStore.Factory<N, ?> factory) {
+        Factory( PhysicalStore.Factory<N, ?> factory) {
             super();
             myFactory = factory;
         }
 
-        public Factory<N> coefficients(final Access1D<?> coefficients) {
+        public Factory<N> coefficients( Access1D<?> coefficients) {
             myCoefficients = coefficients;
             return this;
         }
 
-        public AffineFunction<N> make(final int arity) {
+        public AffineFunction<N> make( int arity) {
             if (myCoefficients != null) {
                 return new AffineFunction<>(myFactory.rows(myCoefficients));
             } else {
@@ -62,7 +64,7 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
 
     }
 
-    public static <N extends Comparable<N>> Factory<N> factory(final PhysicalStore.Factory<N, ?> factory) {
+    public static <N extends Comparable<N>> Factory<N> factory( PhysicalStore.Factory<N, ?> factory) {
         return new Factory<>(factory);
     }
 
@@ -70,7 +72,7 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static AffineFunction<ComplexNumber> makeComplex(final Access1D<?> coefficients) {
+    public static AffineFunction<ComplexNumber> makeComplex( Access1D<?> coefficients) {
         // return new AffineFunction<>(GenericStore.C128.rows(coefficients));
         return AffineFunction.factory(GenericStore.C128).coefficients(coefficients).make(coefficients.size());
     }
@@ -78,8 +80,9 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static AffineFunction<ComplexNumber> makeComplex(final int arity) {
+    @InlineMe(replacement = "AffineFunction.factory(GenericStore.C128).make(arity)", imports = {"org.ojalgo.function.multiary.AffineFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static AffineFunction<ComplexNumber> makeComplex( int arity) {
         // return new AffineFunction<>(GenericStore.C128.make(1, arity));
         return AffineFunction.factory(GenericStore.C128).make(arity);
     }
@@ -88,7 +91,7 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static AffineFunction<Double> makePrimitive(final Access1D<?> coefficients) {
+    public static AffineFunction<Double> makePrimitive( Access1D<?> coefficients) {
         // return new AffineFunction<>(Primitive64Store.FACTORY.rows(coefficients));
         return AffineFunction.factory(Primitive64Store.FACTORY).coefficients(coefficients).make(coefficients.size());
     }
@@ -96,8 +99,9 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static AffineFunction<Double> makePrimitive(final int arity) {
+    @InlineMe(replacement = "AffineFunction.factory(Primitive64Store.FACTORY).make(arity)", imports = {"org.ojalgo.function.multiary.AffineFunction", "org.ojalgo.matrix.store.Primitive64Store"})
+@Deprecated
+    public static AffineFunction<Double> makePrimitive( int arity) {
         // return new AffineFunction<>(Primitive64Store.FACTORY.make(1, arity));
         return AffineFunction.factory(Primitive64Store.FACTORY).make(arity);
     }
@@ -106,7 +110,7 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static AffineFunction<RationalNumber> makeRational(final Access1D<?> coefficients) {
+    public static AffineFunction<RationalNumber> makeRational( Access1D<?> coefficients) {
         // return new AffineFunction<>(GenericStore.Q128.rows(coefficients));
         return AffineFunction.factory(GenericStore.Q128).coefficients(coefficients).make(coefficients.size());
     }
@@ -114,20 +118,21 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static AffineFunction<RationalNumber> makeRational(final int arity) {
+    @InlineMe(replacement = "AffineFunction.factory(GenericStore.Q128).make(arity)", imports = {"org.ojalgo.function.multiary.AffineFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static AffineFunction<RationalNumber> makeRational( int arity) {
         // return new AffineFunction<>(GenericStore.Q128.make(1, arity));
         return AffineFunction.factory(GenericStore.Q128).make(arity);
     }
 
-    public static <N extends Comparable<N>> AffineFunction<N> wrap(final PhysicalStore<N> coefficients) {
+    public static <N extends Comparable<N>> AffineFunction<N> wrap( PhysicalStore<N> coefficients) {
         return new AffineFunction<>(coefficients);
     }
 
     private final MatrixStore<N> myCoefficients;
     private final ConstantFunction<N> myConstant;
 
-    AffineFunction(final MatrixStore<N> coefficients) {
+    AffineFunction( MatrixStore<N> coefficients) {
 
         super();
 
@@ -139,27 +144,27 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
         myConstant = new ConstantFunction<>(coefficients.count(), coefficients.physical());
     }
 
-    public int arity() {
+    @Override public int arity() {
         return Math.toIntExact(myCoefficients.count());
     }
 
-    public N getConstant() {
+    @Override public N getConstant() {
         return myConstant.getConstant();
     }
 
     @Override
-    public MatrixStore<N> getGradient(final Access1D<N> point) {
+    public MatrixStore<N> getGradient( Access1D<N> point) {
         return this.getLinearFactors(false);
     }
 
     @Override
-    public MatrixStore<N> getHessian(final Access1D<N> point) {
+    public MatrixStore<N> getHessian( Access1D<N> point) {
         return myCoefficients.physical().makeZero(this.arity(), this.arity());
     }
 
-    public MatrixStore<N> getLinearFactors(final boolean negated) {
+    @Override public MatrixStore<N> getLinearFactors( boolean negated) {
 
-        MatrixStore<N> retVal = myCoefficients;
+        @Var MatrixStore<N> retVal = myCoefficients;
 
         if (myCoefficients.countRows() == 1L) {
             retVal = retVal.transpose();
@@ -173,15 +178,15 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
     }
 
     @Override
-    public N invoke(final Access1D<N> arg) {
+    public N invoke( Access1D<N> arg) {
         return this.getScalarValue(arg).get();
     }
 
-    public PhysicalStore<N> linear() {
+    @Override public PhysicalStore<N> linear() {
         return (PhysicalStore<N>) myCoefficients;
     }
 
-    public void setConstant(final Comparable<?> constant) {
+    @Override public void setConstant( Comparable<?> constant) {
         myConstant.setConstant(constant);
     }
 
@@ -189,7 +194,7 @@ public final class AffineFunction<N extends Comparable<N>> implements MultiaryFu
         return myCoefficients.physical();
     }
 
-    Scalar<N> getScalarValue(final Access1D<N> arg) {
+    Scalar<N> getScalarValue( Access1D<N> arg) {
 
         PhysicalStore<N> preallocated = myCoefficients.physical().make(1L, 1L);
 

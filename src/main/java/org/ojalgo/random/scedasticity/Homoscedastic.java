@@ -26,15 +26,16 @@ import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 public final class Homoscedastic extends AbstractScedasticity {
 
     /**
-     * @see #newInstance(double, double)
+     *See {@link #newInstance(double, double)}.
+ 
      */
     public static Homoscedastic newInstance() {
         return Homoscedastic.newInstance(ZERO, DEFAULT_VARIANCE);
     }
 
-    public static Homoscedastic newInstance(final double mean, final double variance) {
+    public static Homoscedastic newInstance( double mean,  double variance) {
 
-        Homoscedastic retVal = new Homoscedastic();
+        var retVal = new Homoscedastic();
 
         retVal.initialise(mean, variance);
 
@@ -44,20 +45,20 @@ public final class Homoscedastic extends AbstractScedasticity {
     private double myMean = ZERO;
     private double myVariance = DEFAULT_VARIANCE;
 
-    public double getMean() {
+    @Override public double getMean() {
         return myMean;
     }
 
-    public double getVariance() {
+    @Override public double getVariance() {
         return myVariance;
     }
 
-    public void initialise(final double mean, final double variance) {
+    @Override public void initialise( double mean,  double variance) {
         myMean = mean;
         myVariance = variance;
     }
 
-    public void update(final double value) {
+    @Override public void update( double value) {
         // Nothing to do for homoscedastic
     }
 

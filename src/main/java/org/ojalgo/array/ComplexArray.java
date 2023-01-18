@@ -30,19 +30,19 @@ import org.ojalgo.scalar.ComplexNumber;
 @Deprecated
 public class ComplexArray extends ArrayC128 {
 
-    public static ComplexArray make(final int size) {
+    public static ComplexArray make( int size) {
         return new ComplexArray(size);
     }
 
-    public static ComplexArray wrap(final ComplexNumber... data) {
+    public static ComplexArray wrap( ComplexNumber... data) {
         return new ComplexArray(data);
     }
 
-    ComplexArray(final ComplexNumber[] data) {
+    ComplexArray( ComplexNumber[] data) {
         super(data);
     }
 
-    ComplexArray(final int size) {
+    ComplexArray( int size) {
         super(size);
     }
 

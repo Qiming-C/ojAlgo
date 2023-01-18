@@ -44,65 +44,65 @@ public final class TextLineWriter implements ToFileWriter<CharSequence> {
         private final StringBuilder myTextLine = new StringBuilder();
         private final TextLineWriter myWriter;
 
-        CSVLineBuilder(final TextLineWriter writer, final char delimiter) {
+        CSVLineBuilder( TextLineWriter writer,  char delimiter) {
             this(writer, Character.toString(delimiter));
         }
 
-        CSVLineBuilder(final TextLineWriter writer, final String delimiter) {
+        CSVLineBuilder( TextLineWriter writer,  String delimiter) {
             super();
             myWriter = writer;
             myDelimiter = delimiter;
         }
 
-        public CSVLineBuilder append(final boolean colVal) {
+        public CSVLineBuilder append( boolean colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final byte colVal) {
+        public CSVLineBuilder append( byte colVal) {
             this.delimit();
             myTextLine.append(Byte.toString(colVal));
             return this;
         }
 
-        public CSVLineBuilder append(final char colVal) {
+        public CSVLineBuilder append( char colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final double colVal) {
+        public CSVLineBuilder append( double colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final float colVal) {
+        public CSVLineBuilder append( float colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final int colVal) {
+        public CSVLineBuilder append( int colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final long colVal) {
+        public CSVLineBuilder append( long colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final Object colVal) {
+        public CSVLineBuilder append( Object colVal) {
             this.delimit();
             myTextLine.append(colVal);
             return this;
         }
 
-        public CSVLineBuilder append(final short colVal) {
+        public CSVLineBuilder append( short colVal) {
             this.delimit();
             myTextLine.append(Short.toString(colVal));
             return this;
@@ -134,25 +134,25 @@ public final class TextLineWriter implements ToFileWriter<CharSequence> {
 
     }
 
-    public static TextLineWriter of(final File file) {
+    public static TextLineWriter of( File file) {
         return new TextLineWriter(ToFileWriter.output(file));
     }
 
-    public static TextLineWriter of(final File file, final OperatorWithException<OutputStream> filter) {
+    public static TextLineWriter of( File file,  OperatorWithException<OutputStream> filter) {
         return new TextLineWriter(filter.apply(ToFileWriter.output(file)));
     }
 
-    public static TextLineWriter of(final InMemoryFile file) {
+    public static TextLineWriter of( InMemoryFile file) {
         return new TextLineWriter(file.newOutputStream());
     }
 
-    public static TextLineWriter of(final InMemoryFile file, final OperatorWithException<OutputStream> filter) {
+    public static TextLineWriter of( InMemoryFile file,  OperatorWithException<OutputStream> filter) {
         return new TextLineWriter(filter.apply(file.newOutputStream()));
     }
 
     private final BufferedWriter myWriter;
 
-    public TextLineWriter(final OutputStream outputStream) {
+    public TextLineWriter( OutputStream outputStream) {
         super();
         try {
             myWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
@@ -161,29 +161,31 @@ public final class TextLineWriter implements ToFileWriter<CharSequence> {
         }
     }
 
-    public void close() throws IOException {
+    @Override public void close() throws IOException {
         myWriter.close();
     }
 
     /**
-     * @see CSVLineBuilder
+     *See {@link CSVLineBuilder}.
+ 
      */
-    public CSVLineBuilder newCSVLineBuilder(final char delimiter) {
+    public CSVLineBuilder newCSVLineBuilder( char delimiter) {
         return new CSVLineBuilder(this, delimiter);
     }
 
     /**
-     * @see CSVLineBuilder
+     *See {@link CSVLineBuilder}.
+ 
      */
-    public CSVLineBuilder newCSVLineBuilder(final String delimiter) {
+    public CSVLineBuilder newCSVLineBuilder( String delimiter) {
         return new CSVLineBuilder(this, delimiter);
     }
 
-    public <T> AutoConsumer<T> withFormatter(final Formatter<T> formatter) {
+    public <T> AutoConsumer<T> withFormatter( Formatter<T> formatter) {
         return AutoConsumer.mapped(formatter::format, this);
     }
 
-    public void write(final CharSequence itemToWrite) {
+    @Override public void write( CharSequence itemToWrite) {
         try {
             myWriter.write(itemToWrite.toString());
             myWriter.newLine();

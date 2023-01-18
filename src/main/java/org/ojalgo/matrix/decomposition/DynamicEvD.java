@@ -44,15 +44,15 @@ abstract class DynamicEvD<N extends Comparable<N>> extends EigenvalueDecompositi
     private final EigenvalueDecomposition<N> myHermitianDelegate;
 
     @SuppressWarnings("unused")
-    private DynamicEvD(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    private DynamicEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
 
         this(factory, null, null);
 
         ProgrammingError.throwForIllegalInvocation();
     }
 
-    protected DynamicEvD(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory, final EigenvalueDecomposition<N> hermitianDelegate,
-            final EigenvalueDecomposition<N> generalDelegate) {
+    protected DynamicEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory,  EigenvalueDecomposition<N> hermitianDelegate,
+             EigenvalueDecomposition<N> generalDelegate) {
 
         super(factory);
 
@@ -60,7 +60,7 @@ abstract class DynamicEvD<N extends Comparable<N>> extends EigenvalueDecompositi
         myGeneralDelegate = generalDelegate;
     }
 
-    public boolean checkAndDecompose(final MatrixStore<N> matrix) {
+    @Override public boolean checkAndDecompose( MatrixStore<N> matrix) {
         return this.decompose(matrix);
     }
 
@@ -73,7 +73,7 @@ abstract class DynamicEvD<N extends Comparable<N>> extends EigenvalueDecompositi
         }
     }
 
-    public ComplexNumber getTrace() {
+    @Override public ComplexNumber getTrace() {
         if (myHermitian) {
             return myHermitianDelegate.getTrace();
         } else {
@@ -81,11 +81,11 @@ abstract class DynamicEvD<N extends Comparable<N>> extends EigenvalueDecompositi
         }
     }
 
-    public boolean isHermitian() {
+    @Override public boolean isHermitian() {
         return myHermitian;
     }
 
-    public boolean isOrdered() {
+    @Override public boolean isOrdered() {
         return myHermitian ? myHermitianDelegate.isOrdered() : myGeneralDelegate.isOrdered();
     }
 
@@ -99,7 +99,7 @@ abstract class DynamicEvD<N extends Comparable<N>> extends EigenvalueDecompositi
     }
 
     @Override
-    protected boolean doDecompose(final Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly) {
+    protected boolean doDecompose( Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly) {
 
         if (matrix instanceof MatrixStore) {
             myHermitian = ((MatrixStore<?>) matrix).isHermitian();

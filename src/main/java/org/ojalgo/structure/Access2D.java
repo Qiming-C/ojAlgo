@@ -21,12 +21,12 @@
  */
 package org.ojalgo.structure;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.VoidFunction;
 import org.ojalgo.function.aggregator.Aggregator;
@@ -43,31 +43,31 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
 
     public interface Aggregatable<N extends Comparable<N>> extends Structure2D, Access1D.Aggregatable<N> {
 
-        default N aggregateColumn(final long col, final Aggregator aggregator) {
+        default N aggregateColumn( long col,  Aggregator aggregator) {
             return this.aggregateColumn(0L, col, aggregator);
         }
 
         N aggregateColumn(long row, long col, Aggregator aggregator);
 
-        default N aggregateDiagonal(final Aggregator aggregator) {
+        default N aggregateDiagonal( Aggregator aggregator) {
             return this.aggregateDiagonal(0L, 0L, aggregator);
         }
 
         N aggregateDiagonal(long row, long col, Aggregator aggregator);
 
-        default N aggregateRow(final long row, final Aggregator aggregator) {
+        default N aggregateRow( long row,  Aggregator aggregator) {
             return this.aggregateRow(row, 0L, aggregator);
         }
 
         N aggregateRow(long row, long col, Aggregator aggregator);
 
-        default void reduceColumns(final Aggregator aggregator, final Mutate1D receiver) {
+        default void reduceColumns( Aggregator aggregator,  Mutate1D receiver) {
             for (long j = 0L, limit = Math.min(this.countColumns(), receiver.count()); j < limit; j++) {
                 receiver.set(j, this.aggregateColumn(j, aggregator));
             }
         }
 
-        default void reduceRows(final Aggregator aggregator, final Mutate1D receiver) {
+        default void reduceRows( Aggregator aggregator,  Mutate1D receiver) {
             for (long i = 0L, limit = Math.min(this.countRows(), receiver.count()); i < limit; i++) {
                 receiver.set(i, this.aggregateRow(i, aggregator));
             }
@@ -77,7 +77,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
 
     public interface Collectable<N extends Comparable<N>, R extends Mutate2D> extends Structure2D {
 
-        default <I extends R> I collect(final Factory2D<I> factory) {
+        default <I extends R> I collect( Factory2D<I> factory) {
 
             I retVal = factory.make(this.countRows(), this.countColumns());
 
@@ -100,7 +100,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         private final Access2D<N> myDelegate2D;
         private final long myLastColumn;
 
-        private ColumnView(final Access2D<N> access, final long column, final long lastColumn) {
+        private ColumnView( Access2D<N> access,  long column,  long lastColumn) {
 
             super();
 
@@ -110,15 +110,15 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             myColumn = column;
         }
 
-        protected ColumnView(final Access2D<N> access) {
+        protected ColumnView( Access2D<N> access) {
             this(access, -1L, access.countColumns() - 1L);
         }
 
-        ColumnView(final Access2D<N> access, final long column) {
+        ColumnView( Access2D<N> access,  long column) {
             this(access, column, access.countColumns() - 1L);
         }
 
-        public int characteristics() {
+        @Override public int characteristics() {
             return CHARACTERISTICS;
         }
 
@@ -126,35 +126,35 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return myColumn;
         }
 
-        public int compareTo(final ColumnView<N> other) {
+        @Override public int compareTo( ColumnView<N> other) {
             return Long.compare(myColumn, other.column());
         }
 
-        public long count() {
+        @Override public long count() {
             return myDelegate2D.countRows();
         }
 
-        public double doubleValue(final long index) {
+        @Override public double doubleValue( long index) {
             return myDelegate2D.doubleValue(index, myColumn);
         }
 
-        public long estimateSize() {
+        @Override public long estimateSize() {
             return myLastColumn - myColumn;
         }
 
-        public void forEachRemaining(final Consumer<? super ColumnView<N>> action) {
+        @Override public void forEachRemaining( Consumer<? super ColumnView<N>> action) {
             Iterator.super.forEachRemaining(action);
         }
 
-        public N get(final long index) {
+        @Override public N get( long index) {
             return myDelegate2D.get(index, myColumn);
         }
 
-        public void goToColumn(final long column) {
+        public void goToColumn( long column) {
             myColumn = column;
         }
 
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return myColumn < myLastColumn;
         }
 
@@ -162,11 +162,11 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return myColumn > 0L;
         }
 
-        public ColumnView<N> iterator() {
+        @Override public ColumnView<N> iterator() {
             return new ColumnView<>(myDelegate2D);
         }
 
-        public ColumnView<N> next() {
+        @Override public ColumnView<N> next() {
             myColumn++;
             return this;
         }
@@ -176,7 +176,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return this;
         }
 
-        public void remove() {
+        @Override public void remove() {
             ProgrammingError.throwForUnsupportedOptionalOperation();
         }
 
@@ -184,7 +184,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return StreamSupport.stream(this, false);
         }
 
-        public void supplyTo(final Mutate1D receiver) {
+        @Override public void supplyTo( Mutate1D receiver) {
             for (long i = 0L, limit = Math.min(myDelegate2D.countRows(), receiver.count()); i < limit; i++) {
                 receiver.set(i, myDelegate2D.get(i, myColumn));
             }
@@ -195,7 +195,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return Access1D.toString(this);
         }
 
-        public boolean tryAdvance(final Consumer<? super ColumnView<N>> action) {
+        @Override public boolean tryAdvance( Consumer<? super ColumnView<N>> action) {
             if (this.hasNext()) {
                 action.accept(this.next());
                 return true;
@@ -204,15 +204,15 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             }
         }
 
-        public Spliterator<ColumnView<N>> trySplit() {
+        @Override public Spliterator<ColumnView<N>> trySplit() {
 
-            final long remaining = myLastColumn - myColumn;
+             long remaining = myLastColumn - myColumn;
 
             if (remaining > 1L) {
 
-                final long split = myColumn + (remaining / 2L);
+                 long split = myColumn + (remaining / 2L);
 
-                final ColumnView<N> retVal = new ColumnView<>(myDelegate2D, myColumn, split);
+                 ColumnView<N> retVal = new ColumnView<>(myDelegate2D, myColumn, split);
 
                 myColumn = split;
 
@@ -231,7 +231,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         private final ElementView1D<N, ?> myDelegate1D;
         private final long myStructure;
 
-        public ElementView(final ElementView1D<N, ?> delegate, final long structure) {
+        public ElementView( ElementView1D<N, ?> delegate,  long structure) {
 
             super();
 
@@ -239,57 +239,57 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             myStructure = structure;
         }
 
-        public long column() {
+        @Override public long column() {
             return Structure2D.column(myDelegate1D.index(), myStructure);
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myDelegate1D.doubleValue();
         }
 
-        public long estimateSize() {
+        @Override public long estimateSize() {
             return myDelegate1D.estimateSize();
         }
 
-        public N get() {
+        @Override public N get() {
             return myDelegate1D.get();
         }
 
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return myDelegate1D.hasNext();
         }
 
-        public boolean hasPrevious() {
+        @Override public boolean hasPrevious() {
             return myDelegate1D.hasPrevious();
         }
 
-        public long index() {
+        @Override public long index() {
             return myDelegate1D.index();
         }
 
-        public ElementView<N> iterator() {
+        @Override public ElementView<N> iterator() {
             return new ElementView<>(myDelegate1D.iterator(), myStructure);
         }
 
-        public ElementView<N> next() {
+        @Override public ElementView<N> next() {
             myDelegate1D.next();
             return this;
         }
 
-        public long nextIndex() {
+        @Override public long nextIndex() {
             return myDelegate1D.nextIndex();
         }
 
-        public ElementView<N> previous() {
+        @Override public ElementView<N> previous() {
             myDelegate1D.previous();
             return this;
         }
 
-        public long previousIndex() {
+        @Override public long previousIndex() {
             return myDelegate1D.previousIndex();
         }
 
-        public long row() {
+        @Override public long row() {
             return Structure2D.row(myDelegate1D.index(), myStructure);
         }
 
@@ -298,7 +298,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return myDelegate1D.toString();
         }
 
-        public ElementView<N> trySplit() {
+        @Override public ElementView<N> trySplit() {
 
             ElementView1D<N, ?> delegateSpliterator = myDelegate1D.trySplit();
 
@@ -320,7 +320,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         private final long myLastRow;
         private long myRow = -1L;
 
-        private RowView(final Access2D<N> access, final long row, final long lastRow) {
+        private RowView( Access2D<N> access,  long row,  long lastRow) {
 
             super();
 
@@ -330,47 +330,47 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             myRow = row;
         }
 
-        protected RowView(final Access2D<N> access) {
+        protected RowView( Access2D<N> access) {
             this(access, -1L, access.countRows() - 1L);
         }
 
-        RowView(final Access2D<N> access, final long row) {
+        RowView( Access2D<N> access,  long row) {
             this(access, row, access.countRows() - 1L);
         }
 
-        public int characteristics() {
+        @Override public int characteristics() {
             return CHARACTERISTICS;
         }
 
-        public int compareTo(final RowView<N> other) {
+        @Override public int compareTo( RowView<N> other) {
             return Long.compare(myRow, other.row());
         }
 
-        public long count() {
+        @Override public long count() {
             return myDelegate2D.countColumns();
         }
 
-        public double doubleValue(final long index) {
+        @Override public double doubleValue( long index) {
             return myDelegate2D.doubleValue(myRow, index);
         }
 
-        public long estimateSize() {
+        @Override public long estimateSize() {
             return myLastRow - myRow;
         }
 
-        public void forEachRemaining(final Consumer<? super RowView<N>> action) {
+        @Override public void forEachRemaining( Consumer<? super RowView<N>> action) {
             Iterator.super.forEachRemaining(action);
         }
 
-        public N get(final long index) {
+        @Override public N get( long index) {
             return myDelegate2D.get(myRow, index);
         }
 
-        public void goToRow(final long row) {
+        public void goToRow( long row) {
             myRow = row;
         }
 
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return myRow < myLastRow;
         }
 
@@ -378,11 +378,11 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return myRow > 0L;
         }
 
-        public RowView<N> iterator() {
+        @Override public RowView<N> iterator() {
             return new RowView<>(myDelegate2D);
         }
 
-        public RowView<N> next() {
+        @Override public RowView<N> next() {
             myRow++;
             return this;
         }
@@ -392,7 +392,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return this;
         }
 
-        public void remove() {
+        @Override public void remove() {
             ProgrammingError.throwForUnsupportedOptionalOperation();
         }
 
@@ -404,7 +404,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return StreamSupport.stream(this, false);
         }
 
-        public void supplyTo(final Mutate1D receiver) {
+        @Override public void supplyTo( Mutate1D receiver) {
             for (long j = 0L, limit = Math.min(myDelegate2D.countColumns(), receiver.count()); j < limit; j++) {
                 receiver.set(j, myDelegate2D.get(myRow, j));
             }
@@ -415,7 +415,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             return Access1D.toString(this);
         }
 
-        public boolean tryAdvance(final Consumer<? super RowView<N>> action) {
+        @Override public boolean tryAdvance( Consumer<? super RowView<N>> action) {
             if (this.hasNext()) {
                 action.accept(this.next());
                 return true;
@@ -424,15 +424,15 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             }
         }
 
-        public Spliterator<RowView<N>> trySplit() {
+        @Override public Spliterator<RowView<N>> trySplit() {
 
-            final long remaining = myLastRow - myRow;
+             long remaining = myLastRow - myRow;
 
             if (remaining > 1L) {
 
-                final long split = myRow + (remaining / 2L);
+                 long split = myRow + (remaining / 2L);
 
-                final RowView<N> retVal = new RowView<>(myDelegate2D, myRow, split);
+                 RowView<N> retVal = new RowView<>(myDelegate2D, myRow, split);
 
                 myRow = split;
 
@@ -452,7 +452,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         private final Access2D<N> myFullData;
         private final long[] myRows;
 
-        SelectionView(final Access2D<N> fullData, final long[] rows, final long[] columns) {
+        SelectionView( Access2D<N> fullData,  long[] rows,  long[] columns) {
 
             super();
 
@@ -461,23 +461,23 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
             myColumns = Structure1D.replaceNullOrEmptyWithFull(columns, fullData.getColDim());
         }
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return myColumns.length;
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return myRows.length;
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
             return myFullData.doubleValue(myRows[Math.toIntExact(row)], myColumns[Math.toIntExact(col)]);
         }
 
-        public N get(final long row, final long col) {
+        @Override public N get( long row,  long col) {
             return myFullData.get(myRows[Math.toIntExact(row)], myColumns[Math.toIntExact(col)]);
         }
 
-        public void supplyTo(final Mutate2D receiver) {
+        @Override public void supplyTo( Mutate2D receiver) {
             for (int j = 0; j < myColumns.length; j++) {
                 for (int i = 0; i < myRows.length; i++) {
                     receiver.set(i, j, myFullData.get(myRows[i], myColumns[j]));
@@ -494,7 +494,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
 
     public interface Sliceable<N extends Comparable<N>> extends Structure2D, Access1D.Sliceable<N> {
 
-        default Access1D<N> sliceColumn(final long col) {
+        default Access1D<N> sliceColumn( long col) {
             return this.sliceColumn(0L, col);
             // return new ColumnView<N>(this, col);
         }
@@ -507,7 +507,7 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
 
         Access1D<N> sliceDiagonal(long row, long col);
 
-        default Access1D<N> sliceRow(final long row) {
+        default Access1D<N> sliceRow( long row) {
             return this.sliceRow(row, 0L);
         }
 
@@ -517,67 +517,67 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
 
     public interface Visitable<N extends Comparable<N>> extends Structure2D, Access1D.Visitable<N> {
 
-        default void visitColumn(final long row, final long col, final VoidFunction<N> visitor) {
+        default void visitColumn( long row,  long col,  VoidFunction<N> visitor) {
             this.loopColumn(row, col, (r, c) -> this.visitOne(r, c, visitor));
         }
 
-        default void visitColumn(final long col, final VoidFunction<N> visitor) {
+        default void visitColumn( long col,  VoidFunction<N> visitor) {
             this.visitColumn(0L, col, visitor);
         }
 
-        default void visitDiagonal(final long row, final long col, final VoidFunction<N> visitor) {
+        default void visitDiagonal( long row,  long col,  VoidFunction<N> visitor) {
             this.loopDiagonal(row, col, (r, c) -> this.visitOne(r, c, visitor));
         }
 
-        default void visitDiagonal(final VoidFunction<N> visitor) {
+        default void visitDiagonal( VoidFunction<N> visitor) {
             this.visitDiagonal(0L, 0L, visitor);
         }
 
         void visitOne(long row, long col, VoidFunction<N> visitor);
 
-        default void visitOne(final long index, final VoidFunction<N> visitor) {
+        @Override default void visitOne( long index,  VoidFunction<N> visitor) {
             long tmpStructure = this.countRows();
             this.visitOne(Structure2D.row(index, tmpStructure), Structure2D.column(index, tmpStructure), visitor);
         }
 
-        default void visitRow(final long row, final long col, final VoidFunction<N> visitor) {
+        default void visitRow( long row,  long col,  VoidFunction<N> visitor) {
             this.loopRow(row, col, (r, c) -> this.visitOne(r, c, visitor));
         }
 
-        default void visitRow(final long row, final VoidFunction<N> visitor) {
+        default void visitRow( long row,  VoidFunction<N> visitor) {
             this.visitRow(row, 0L, visitor);
         }
 
     }
 
-    static Access2D<Double> asPrimitive2D(final Access2D<?> access) {
+    static Access2D<Double> asPrimitive2D( Access2D<?> access) {
         return new Access2D<>() {
 
-            public long count() {
+            @Override public long count() {
                 return access.count();
             }
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return access.countColumns();
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return access.countRows();
             }
 
-            public double doubleValue(final long index) {
+            @Override public double doubleValue( long index) {
                 return access.doubleValue(index);
             }
 
-            public double doubleValue(final long row, final long col) {
+            @Override public double doubleValue( long row,  long col) {
                 return access.doubleValue(row, col);
             }
 
-            public Double get(final long index) {
+            @Override public Double get( long index) {
                 return access.doubleValue(index);
             }
 
-            public Double get(final long row, final long col) {
+            @Override public Double get( long row,  long col) {
                 return access.doubleValue(row, col);
             }
 
@@ -589,22 +589,22 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         };
     }
 
-    static boolean equals(final Access2D<?> accessA, final Access2D<?> accessB, final NumberContext accuracy) {
+    static boolean equals( Access2D<?> accessA,  Access2D<?> accessB,  NumberContext accuracy) {
         return accessA.countRows() == accessB.countRows() && accessA.countColumns() == accessB.countColumns() && Access1D.equals(accessA, accessB, accuracy);
     }
 
-    static <R extends Mutate2D.Receiver<Double>> Access2D.Collectable<Double, R> newPrimitiveColumnCollectable(final Access1D<?> anything1D) {
+    static <R extends Mutate2D.Receiver<Double>> Access2D.Collectable<Double, R> newPrimitiveColumnCollectable( Access1D<?> anything1D) {
         return new Access2D.Collectable<>() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return 1L;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return anything1D.count();
             }
 
-            public void supplyTo(final R receiver) {
+            @Override public void supplyTo( R receiver) {
                 receiver.reset();
                 anything1D.nonzeros().forEach(nz -> receiver.set(nz.index(), 0L, nz.doubleValue()));
             }
@@ -612,18 +612,18 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         };
     }
 
-    static <R extends Mutate2D.Receiver<Double>> Access2D.Collectable<Double, R> newPrimitiveRowCollectable(final Access1D<?> anything1D) {
+    static <R extends Mutate2D.Receiver<Double>> Access2D.Collectable<Double, R> newPrimitiveRowCollectable( Access1D<?> anything1D) {
         return new Access2D.Collectable<>() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return anything1D.count();
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return 1L;
             }
 
-            public void supplyTo(final R receiver) {
+            @Override public void supplyTo( R receiver) {
                 receiver.reset();
                 anything1D.nonzeros().forEach(nz -> receiver.set(0L, nz.index(), nz.doubleValue()));
             }
@@ -631,9 +631,9 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         };
     }
 
-    static String toString(final Access2D<?> matrix) {
+    static String toString( Access2D<?> matrix) {
 
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
         int numbRows = Math.toIntExact(matrix.countRows());
         int numbCols = Math.toIntExact(matrix.countColumns());
@@ -670,26 +670,26 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         return builder.toString();
     }
 
-    static Access2D<Double> wrap(final double[][] target) {
+    static Access2D<Double> wrap( double[][] target) {
         return new Access2D<>() {
 
-            public long count() {
+            @Override public long count() {
                 return Structure2D.count(target.length, target[0].length);
             }
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return target[0].length;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return target.length;
             }
 
-            public double doubleValue(final long row, final long col) {
+            @Override public double doubleValue( long row,  long col) {
                 return target[(int) row][(int) col];
             }
 
-            public Double get(final long row, final long col) {
+            @Override public Double get( long row,  long col) {
                 return target[(int) row][(int) col];
             }
 
@@ -701,30 +701,30 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         };
     }
 
-    static <N extends Comparable<N>> Access2D<N> wrap(final N[][] target) {
+    static <N extends Comparable<N>> Access2D<N> wrap( N[][] target) {
         return new Access2D<>() {
 
-            public long count() {
+            @Override public long count() {
                 return Structure2D.count(target.length, target[0].length);
             }
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return target[0].length;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return target.length;
             }
 
-            public double doubleValue(final long index) {
+            @Override public double doubleValue( long index) {
                 return NumberDefinition.doubleValue(this.get(index));
             }
 
-            public double doubleValue(final long row, final long col) {
+            @Override public double doubleValue( long row,  long col) {
                 return NumberDefinition.doubleValue(this.get(row, col));
             }
 
-            public N get(final long row, final long col) {
+            @Override public N get( long row,  long col) {
                 return target[(int) row][(int) col];
             }
 
@@ -739,27 +739,27 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
     default <NN extends Comparable<NN>, R extends Mutate2D.Receiver<NN>> Collectable<NN, R> asCollectable2D() {
         return new Collectable<>() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return Access2D.this.countColumns();
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return Access2D.this.countRows();
             }
 
-            public void supplyTo(final R receiver) {
+            @Override public void supplyTo( R receiver) {
                 receiver.accept(Access2D.this);
             }
 
         };
     }
 
-    default byte byteValue(final long index) {
+    @Override default byte byteValue( long index) {
         long structure = this.countRows();
         return this.byteValue(Structure2D.row(index, structure), Structure2D.column(index, structure));
     }
 
-    default byte byteValue(final long row, final long col) {
+    default byte byteValue( long row,  long col) {
         return (byte) this.shortValue(row, col);
     }
 
@@ -767,15 +767,15 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         return new ColumnView<>(this);
     }
 
-    default Access2D<N> columns(final int... columns) {
+    default Access2D<N> columns( int... columns) {
         return this.select(null, columns);
     }
 
-    default Access2D<N> columns(final long... columns) {
+    default Access2D<N> columns( long... columns) {
         return this.select(null, columns);
     }
 
-    default double doubleValue(final long index) {
+    @Override default double doubleValue( long index) {
         long structure = this.countRows();
         long row = Structure2D.row(index, structure);
         long col = Structure2D.column(index, structure);
@@ -791,45 +791,45 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
      */
     double doubleValue(long row, long col);
 
-    default ElementView2D<N, ?> elements() {
+    @Override default ElementView2D<N, ?> elements() {
         return new Access2D.ElementView<>(Access1D.super.elements(), this.countRows());
     }
 
-    default float floatValue(final long index) {
+    @Override default float floatValue( long index) {
         long structure = this.countRows();
         return this.floatValue(Structure2D.row(index, structure), Structure2D.column(index, structure));
     }
 
-    default float floatValue(final long row, final long col) {
+    default float floatValue( long row,  long col) {
         return (float) this.doubleValue(row, col);
     }
 
-    default N get(final long index) {
+    @Override default N get( long index) {
         long tmpStructure = this.countRows();
         return this.get(Structure2D.row(index, tmpStructure), Structure2D.column(index, tmpStructure));
     }
 
     N get(long row, long col);
 
-    default int intValue(final long index) {
+    @Override default int intValue( long index) {
         long structure = this.countRows();
         return this.intValue(Structure2D.row(index, structure), Structure2D.column(index, structure));
     }
 
-    default int intValue(final long row, final long col) {
+    default int intValue( long row,  long col) {
         return (int) this.longValue(row, col);
     }
 
-    default long longValue(final long index) {
+    @Override default long longValue( long index) {
         long structure = this.countRows();
         return this.longValue(Structure2D.row(index, structure), Structure2D.column(index, structure));
     }
 
-    default long longValue(final long row, final long col) {
+    default long longValue( long row,  long col) {
         return Math.round(this.doubleValue(row, col));
     }
 
-    default ElementView2D<N, ?> nonzeros() {
+    @Override default ElementView2D<N, ?> nonzeros() {
         return new Access2D.ElementView<>(Access1D.super.nonzeros(), this.countRows());
     }
 
@@ -837,15 +837,15 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
         return new RowView<>(this);
     }
 
-    default Access2D<N> rows(final int... rows) {
+    default Access2D<N> rows( int... rows) {
         return this.select(rows, null);
     }
 
-    default Access2D<N> rows(final long... rows) {
+    default Access2D<N> rows( long... rows) {
         return this.select(rows, null);
     }
 
-    default Access2D<N> select(final int[] rows, final int[] columns) {
+    default Access2D<N> select( int[] rows,  int[] columns) {
         return new Access2D.SelectionView<>(this, Structure1D.toLongIndexes(rows), Structure1D.toLongIndexes(columns));
     }
 
@@ -853,27 +853,27 @@ public interface Access2D<N extends Comparable<N>> extends Structure2D, Access1D
      * Creates a view of the underlying data structure of only the selected elements. If either the rows or
      * columns input arguments are null or empty arrays, then that transaltes to all rows and/or columns.
      */
-    default Access2D<N> select(final long[] rows, final long[] columns) {
+    default Access2D<N> select( long[] rows,  long[] columns) {
         return new Access2D.SelectionView<>(this, rows, columns);
     }
 
-    default short shortValue(final long index) {
+    @Override default short shortValue( long index) {
         long structure = this.countRows();
         return this.shortValue(Structure2D.row(index, structure), Structure2D.column(index, structure));
     }
 
-    default short shortValue(final long row, final long col) {
+    default short shortValue( long row,  long col) {
         return (short) this.intValue(row, col);
     }
 
     default double[][] toRawCopy2D() {
 
-        int tmpRowDim = (int) this.countRows();
-        int tmpColDim = (int) this.countColumns();
+        var tmpRowDim = (int) this.countRows();
+        var tmpColDim = (int) this.countColumns();
 
         double[][] retVal = new double[tmpRowDim][tmpColDim];
 
-        double[] tmpRow;
+        @Var double[] tmpRow;
         for (int i = 0; i < tmpRowDim; i++) {
             tmpRow = retVal[i];
             for (int j = 0; j < tmpColDim; j++) {

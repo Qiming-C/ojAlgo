@@ -23,6 +23,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.array.BasicArray;
 import org.ojalgo.function.UnaryFunction;
@@ -85,26 +86,26 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
     private double myMinDiag = ZERO;
     private boolean mySPD = false;
 
-    protected CholeskyDecomposition(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
+    protected CholeskyDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> aFactory) {
         super(aFactory);
     }
 
-    public N calculateDeterminant(final Access2D<?> matrix) {
+    @Override public N calculateDeterminant( Access2D<?> matrix) {
         this.decompose(this.wrap(matrix));
         return this.getDeterminant();
     }
 
-    public boolean checkAndDecompose(final MatrixStore<N> matrix) {
+    @Override public boolean checkAndDecompose( MatrixStore<N> matrix) {
         return this.compute(matrix, true);
     }
 
-    public int countSignificant(final double threshold) {
+    @Override public int countSignificant( double threshold) {
 
         double minimum = Math.sqrt(threshold);
 
         DecompositionStore<N> internal = this.getInPlace();
 
-        int significant = 0;
+        @Var int significant = 0;
         for (int ij = 0, limit = this.getMinDim(); ij < limit; ij++) {
             if (internal.doubleValue(ij, ij) > minimum) {
                 significant++;
@@ -114,11 +115,11 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         return significant;
     }
 
-    public boolean decompose(final Access2D.Collectable<N, ? super PhysicalStore<N>> aStore) {
+    @Override public boolean decompose( Access2D.Collectable<N, ? super PhysicalStore<N>> aStore) {
         return this.compute(aStore, false);
     }
 
-    public N getDeterminant() {
+    @Override public N getDeterminant() {
 
         AggregatorFunction<N> tmpAggrFunc = this.aggregator().product2();
 
@@ -128,7 +129,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
     }
 
     @Override
-    public MatrixStore<N> getInverse(final PhysicalStore<N> preallocated) {
+    public MatrixStore<N> getInverse( PhysicalStore<N> preallocated) {
 
         DecompositionStore<N> body = this.getInPlace();
 
@@ -138,15 +139,15 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         return preallocated.hermitian(false);
     }
 
-    public MatrixStore<N> getL() {
+    @Override public MatrixStore<N> getL() {
         return this.getInPlace().triangular(false, false);
     }
 
-    public double getRankThreshold() {
+    @Override public double getRankThreshold() {
         return TEN * myMaxDiag * this.getDimensionalEpsilon();
     }
 
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs) {
+    @Override public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs) {
         return this.getSolution(rhs, this.preallocate(this.getInPlace(), rhs));
     }
 
@@ -169,7 +170,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
      * @return [X] The solution will be written to "preallocated" and then returned.
      */
     @Override
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs, final PhysicalStore<N> preallocated) {
+    public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs,  PhysicalStore<N> preallocated) {
 
         rhs.supplyTo(preallocated);
 
@@ -181,7 +182,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         return preallocated;
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original) throws RecoverableCondition {
 
         this.decompose(this.wrap(original));
 
@@ -191,7 +192,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original,  PhysicalStore<N> preallocated) throws RecoverableCondition {
 
         this.decompose(this.wrap(original));
 
@@ -210,16 +211,16 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         return super.isSolvable();
     }
 
-    public boolean isSPD() {
+    @Override public boolean isSPD() {
         return mySPD;
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D template) {
+    @Override public PhysicalStore<N> preallocate( Structure2D template) {
         long tmpCountRows = template.countRows();
         return this.allocate(tmpCountRows, tmpCountRows);
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public PhysicalStore<N> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         return this.allocate(templateRHS.countRows(), templateRHS.countColumns());
     }
 
@@ -231,7 +232,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         mySPD = false;
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -241,7 +242,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         throw RecoverableCondition.newEquationSystemNotSolvable();
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<N> preallocated) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -256,7 +257,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         return mySPD && myMinDiag > this.getRankThreshold();
     }
 
-    boolean compute(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix, final boolean checkHermitian) {
+    boolean compute( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix,  boolean checkHermitian) {
 
         this.reset();
 
@@ -267,7 +268,7 @@ abstract class CholeskyDecomposition<N extends Comparable<N>> extends InPlaceDec
         int tmpMinDim = Math.min(tmpRowDim, tmpColDim);
 
         // true if (Hermitian) Positive Definite
-        boolean tmpPositiveDefinite = tmpRowDim == tmpColDim;
+        @Var boolean tmpPositiveDefinite = tmpRowDim == tmpColDim;
         myMaxDiag = MACHINE_SMALLEST;
         myMinDiag = MACHINE_LARGEST;
 

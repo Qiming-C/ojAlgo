@@ -21,9 +21,9 @@
  */
 package org.ojalgo.scalar;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.MathContext;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.MissingMath;
 import org.ojalgo.type.TypeUtils;
@@ -51,22 +51,22 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     public static Scalar.Factory<Quadruple> FACTORY = new Scalar.Factory<>() {
 
         @Override
-        public Quadruple cast(final Comparable<?> number) {
+        public Quadruple cast( Comparable<?> number) {
             return Quadruple.valueOf(number);
         }
 
         @Override
-        public Quadruple cast(final double value) {
+        public Quadruple cast( double value) {
             return Quadruple.valueOf(value);
         }
 
         @Override
-        public Quadruple convert(final Comparable<?> number) {
+        public Quadruple convert( Comparable<?> number) {
             return Quadruple.valueOf(number);
         }
 
         @Override
-        public Quadruple convert(final double value) {
+        public Quadruple convert( double value) {
             return Quadruple.valueOf(value);
         }
 
@@ -100,32 +100,32 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     static final MathContext MATH_CONTEXT = MathContext.DECIMAL128;
     static final NumberContext NUMBER_CONTEXT = NumberContext.ofMath(MATH_CONTEXT);
 
-    public static boolean isAbsolute(final Quadruple value) {
+    public static boolean isAbsolute( Quadruple value) {
         return value.isAbsolute();
     }
 
-    public static boolean isInfinite(final Quadruple value) {
+    public static boolean isInfinite( Quadruple value) {
         return Double.isInfinite(value.getBase()) || Double.isInfinite(value.getRemainder());
     }
 
-    public static boolean isNaN(final Quadruple value) {
+    public static boolean isNaN( Quadruple value) {
         return Double.isNaN(value.getBase()) || Double.isNaN(value.getRemainder());
     }
 
-    public static boolean isSmall(final double comparedTo, final Quadruple value) {
+    public static boolean isSmall( double comparedTo,  Quadruple value) {
         return value.isSmall(comparedTo);
     }
 
-    public static Quadruple parse(final CharSequence plainNumberString) {
-        BigDecimal decimal = new BigDecimal(plainNumberString.toString());
+    public static Quadruple parse( CharSequence plainNumberString) {
+        var decimal = new BigDecimal(plainNumberString.toString());
         return Quadruple.valueOf(decimal);
     }
 
-    public static Quadruple valueOf(final BigDecimal number) {
+    public static Quadruple valueOf( BigDecimal number) {
 
         double base = number.doubleValue();
 
-        BigDecimal mag = new BigDecimal(base);
+        var mag = new BigDecimal(base);
         BigDecimal rem = number.subtract(mag);
 
         double remainder = rem.doubleValue();
@@ -133,7 +133,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
         return new Quadruple(base, remainder);
     }
 
-    public static Quadruple valueOf(final Comparable<?> number) {
+    public static Quadruple valueOf( Comparable<?> number) {
 
         if (number == null) {
             return ZERO;
@@ -151,14 +151,14 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
         }
     }
 
-    public static Quadruple valueOf(final double value) {
+    public static Quadruple valueOf( double value) {
         return new Quadruple(value);
     }
 
     /**
      * https://blog.cyclemap.link/2011-06-09-glsl-part2-emu/
      */
-    private static Quadruple add(final double base1, final double remainder1, final double base2, final double remainder2) {
+    private static Quadruple add( double base1,  double remainder1,  double base2,  double remainder2) {
 
         double t1, t2, e;
 
@@ -172,7 +172,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
         return new Quadruple(base, remainder);
     }
 
-    private static Quadruple divide(final Quadruple arg1, final Quadruple arg2) {
+    private static Quadruple divide( Quadruple arg1,  Quadruple arg2) {
 
         // TODO How to do this with only primitive double – same as multiply
 
@@ -187,7 +187,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     /**
      * https://blog.cyclemap.link/2011-06-09-glsl-part2-emu/
      */
-    private static Quadruple multiply(final double base1, final double remainder1, final double base2, final double remainder2) {
+    private static Quadruple multiply( double base1,  double remainder1,  double base2,  double remainder2) {
 
         double c11, c21, c2, e, t1, t2;
         double a1, a2, b1, b2, cona, conb;
@@ -222,11 +222,11 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
         this(0.0, 0.0);
     }
 
-    private Quadruple(final double base) {
+    private Quadruple( double base) {
         this(base, 0.0);
     }
 
-    private Quadruple(final double base, final double remainder) {
+    private Quadruple( double base,  double remainder) {
 
         super();
 
@@ -235,12 +235,12 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple add(final double arg) {
+    public Quadruple add( double arg) {
         return new Quadruple(myBase + arg, myRemainder);
     }
 
     @Override
-    public Quadruple add(final Quadruple arg) {
+    public Quadruple add( Quadruple arg) {
 
         if (Quadruple.isNaN(this) || Quadruple.isNaN(arg)) {
             return NaN;
@@ -264,7 +264,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public int compareTo(final Quadruple reference) {
+    public int compareTo( Quadruple reference) {
         return Double.compare(this.doubleValue(), reference.doubleValue());
     }
 
@@ -274,12 +274,12 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple divide(final double arg) {
+    public Quadruple divide( double arg) {
         return this.divide(Quadruple.valueOf(arg));
     }
 
     @Override
-    public Quadruple divide(final Quadruple arg) {
+    public Quadruple divide( Quadruple arg) {
 
         if (Quadruple.isNaN(this) || Quadruple.isNaN(arg)) {
             return NaN;
@@ -295,19 +295,19 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple enforce(final NumberContext context) {
+    public Quadruple enforce( NumberContext context) {
         return Quadruple.valueOf(this.toBigDecimal(context.getMathContext()));
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof Quadruple)) {
             return false;
         }
-        Quadruple other = (Quadruple) obj;
+        var other = (Quadruple) obj;
         if ((Double.doubleToLongBits(myBase) != Double.doubleToLongBits(other.myBase))
                 || (Double.doubleToLongBits(myRemainder) != Double.doubleToLongBits(other.myRemainder))) {
             return false;
@@ -328,8 +328,8 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     @Override
     public int hashCode() {
         int prime = 31;
-        int result = 1;
-        long temp;
+        @Var int result = 1;
+        @Var long temp;
         temp = Double.doubleToLongBits(myBase);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(myRemainder);
@@ -352,7 +352,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public boolean isSmall(final double comparedTo) {
+    public boolean isSmall( double comparedTo) {
         return BigScalar.CONTEXT.isSmall(comparedTo, this.doubleValue());
     }
 
@@ -362,12 +362,12 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple multiply(final double arg) {
+    public Quadruple multiply( double arg) {
         return Quadruple.multiply(myBase, myRemainder, arg, 0.0);
     }
 
     @Override
-    public Quadruple multiply(final Quadruple arg) {
+    public Quadruple multiply( Quadruple arg) {
 
         if (Quadruple.isNaN(this) || Quadruple.isNaN(arg)) {
             return NaN;
@@ -397,9 +397,9 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple power(final int power) {
+    public Quadruple power( int power) {
 
-        Quadruple retVal = ONE;
+        @Var Quadruple retVal = ONE;
 
         for (int p = 0; p < power; p++) {
             retVal = retVal.multiply(this);
@@ -420,12 +420,12 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public Quadruple subtract(final double arg) {
+    public Quadruple subtract( double arg) {
         return new Quadruple(myBase - arg, myRemainder);
     }
 
     @Override
-    public Quadruple subtract(final Quadruple arg) {
+    public Quadruple subtract( Quadruple arg) {
 
         if (Quadruple.isNaN(this) || Quadruple.isNaN(arg)) {
             return NaN;
@@ -462,7 +462,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
     }
 
     @Override
-    public String toString(final NumberContext context) {
+    public String toString( NumberContext context) {
         return context.enforce(this.toBigDecimal()).toString();
     }
 
@@ -470,7 +470,7 @@ public class Quadruple implements SelfDeclaringScalar<Quadruple> {
         return Double.compare(this.doubleValue(), 0L);
     }
 
-    private BigDecimal toBigDecimal(final MathContext context) {
+    private BigDecimal toBigDecimal( MathContext context) {
         return new BigDecimal(myBase).add(new BigDecimal(myRemainder), context);
     }
 

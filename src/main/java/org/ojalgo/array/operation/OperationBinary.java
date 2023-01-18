@@ -37,8 +37,8 @@ public abstract class OperationBinary implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static <N extends Comparable<N>> void invoke(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final BinaryFunction<N> function, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void invoke( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             BinaryFunction<N> function,  Access1D<N> right) {
 
         if (data.isPrimitive()) {
             if (function == PrimitiveMath.ADD) {
@@ -82,8 +82,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final BinaryFunction<N> function, final N right) {
+    public static <N extends Comparable<N>> void invoke( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             BinaryFunction<N> function,  N right) {
 
         if (data.isPrimitive()) {
             if (function == PrimitiveMath.ADD) {
@@ -131,8 +131,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final BasicArray<N> data, final long first, final long limit, final long step, final N left,
-            final BinaryFunction<N> function, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void invoke( BasicArray<N> data,  long first,  long limit,  long step,  N left,
+             BinaryFunction<N> function,  Access1D<N> right) {
 
         if (data.isPrimitive()) {
             if (function == PrimitiveMath.ADD) {
@@ -180,8 +180,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayZ008 && right instanceof ArrayZ008) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ008) left).data, function, ((ArrayZ008) right).data);
         } else {
@@ -191,8 +191,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final byte right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  byte right) {
         if (left instanceof ArrayZ008) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ008) left).data, function, right);
         } else {
@@ -202,8 +202,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayZ008) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayZ008) right).data);
         } else {
@@ -213,8 +213,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte left, final BinaryFunction<Double> function,
-            final byte[] right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte left,  BinaryFunction<Double> function,
+             byte[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -230,8 +230,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte[] left, final BinaryFunction<Double> function,
-            final byte right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte[] left,  BinaryFunction<Double> function,
+             byte right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -247,8 +247,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final byte[] data, final int first, final int limit, final int step, final byte[] left, final BinaryFunction<Double> function,
-            final byte[] right) {
+    public static void invoke( byte[] data,  int first,  int limit,  int step,  byte[] left,  BinaryFunction<Double> function,
+             byte[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -264,8 +264,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayR064 && right instanceof ArrayR064) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayR064) left).data, function, ((ArrayR064) right).data);
         } else {
@@ -275,8 +275,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final double right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  double right) {
         if (left instanceof ArrayR064) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayR064) left).data, function, right);
         } else {
@@ -286,8 +286,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayR064) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayR064) right).data);
         } else {
@@ -297,8 +297,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double left, final BinaryFunction<Double> function,
-            final double[] right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double left,  BinaryFunction<Double> function,
+             double[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -314,8 +314,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double[] left, final BinaryFunction<Double> function,
-            final double right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double[] left,  BinaryFunction<Double> function,
+             double right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -331,8 +331,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final double[] data, final int first, final int limit, final int step, final double[] left, final BinaryFunction<Double> function,
-            final double[] right) {
+    public static void invoke( double[] data,  int first,  int limit,  int step,  double[] left,  BinaryFunction<Double> function,
+             double[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -348,8 +348,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayR032 && right instanceof ArrayR032) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayR032) left).data, function, ((ArrayR032) right).data);
         } else {
@@ -359,8 +359,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final float right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  float right) {
         if (left instanceof ArrayR032) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayR032) left).data, function, right);
         } else {
@@ -370,8 +370,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayR032) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayR032) right).data);
         } else {
@@ -381,8 +381,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float left, final BinaryFunction<Double> function,
-            final float[] right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float left,  BinaryFunction<Double> function,
+             float[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -398,8 +398,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float[] left, final BinaryFunction<Double> function,
-            final float right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float[] left,  BinaryFunction<Double> function,
+             float right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -415,8 +415,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final float[] data, final int first, final int limit, final int step, final float[] left, final BinaryFunction<Double> function,
-            final float[] right) {
+    public static void invoke( float[] data,  int first,  int limit,  int step,  float[] left,  BinaryFunction<Double> function,
+             float[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -432,8 +432,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayZ032 && right instanceof ArrayZ032) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ032) left).data, function, ((ArrayZ032) right).data);
         } else {
@@ -443,8 +443,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final int right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  int right) {
         if (left instanceof ArrayZ032) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ032) left).data, function, right);
         } else {
@@ -454,8 +454,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayZ032) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayZ032) right).data);
         } else {
@@ -465,8 +465,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int left, final BinaryFunction<Double> function,
-            final int[] right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int left,  BinaryFunction<Double> function,
+             int[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -482,8 +482,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int[] left, final BinaryFunction<Double> function,
-            final int right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int[] left,  BinaryFunction<Double> function,
+             int right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -499,8 +499,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final int[] data, final int first, final int limit, final int step, final int[] left, final BinaryFunction<Double> function,
-            final int[] right) {
+    public static void invoke( int[] data,  int first,  int limit,  int step,  int[] left,  BinaryFunction<Double> function,
+             int[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -516,8 +516,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayZ064 && right instanceof ArrayZ064) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ064) left).data, function, ((ArrayZ064) right).data);
         } else {
@@ -527,8 +527,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final long right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  long right) {
         if (left instanceof ArrayZ064) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ064) left).data, function, right);
         } else {
@@ -538,8 +538,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayZ064) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayZ064) right).data);
         } else {
@@ -549,8 +549,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long left, final BinaryFunction<Double> function,
-            final long[] right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long left,  BinaryFunction<Double> function,
+             long[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -566,8 +566,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long[] left, final BinaryFunction<Double> function,
-            final long right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long[] left,  BinaryFunction<Double> function,
+             long right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -583,8 +583,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final long[] data, final int first, final int limit, final int step, final long[] left, final BinaryFunction<Double> function,
-            final long[] right) {
+    public static void invoke( long[] data,  int first,  int limit,  int step,  long[] left,  BinaryFunction<Double> function,
+             long[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -600,29 +600,29 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final N[] data, final int first, final int limit, final int step, final Access1D<N> left,
-            final BinaryFunction<N> function, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void invoke( N[] data,  int first,  int limit,  int step,  Access1D<N> left,
+             BinaryFunction<N> function,  Access1D<N> right) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(left.get(i), right.get(i));
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final N[] data, final int first, final int limit, final int step, final Access1D<N> left,
-            final BinaryFunction<N> function, final N right) {
+    public static <N extends Comparable<N>> void invoke( N[] data,  int first,  int limit,  int step,  Access1D<N> left,
+             BinaryFunction<N> function,  N right) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(left.get(i), right);
         }
     }
 
-    public static <N extends Comparable<N>> void invoke(final N[] data, final int first, final int limit, final int step, final N left,
-            final BinaryFunction<N> function, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void invoke( N[] data,  int first,  int limit,  int step,  N left,
+             BinaryFunction<N> function,  Access1D<N> right) {
         for (int i = first; i < limit; i += step) {
             data[i] = function.invoke(left, right.get(i));
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  Access1D<Double> right) {
         if (left instanceof ArrayZ016 && right instanceof ArrayZ016) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ016) left).data, function, ((ArrayZ016) right).data);
         } else {
@@ -632,8 +632,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final Access1D<Double> left,
-            final BinaryFunction<Double> function, final short right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  Access1D<Double> left,
+             BinaryFunction<Double> function,  short right) {
         if (left instanceof ArrayZ016) {
             OperationBinary.invoke(data, first, limit, step, ((ArrayZ016) left).data, function, right);
         } else {
@@ -643,8 +643,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short left, final BinaryFunction<Double> function,
-            final Access1D<Double> right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short left,  BinaryFunction<Double> function,
+             Access1D<Double> right) {
         if (right instanceof ArrayZ016) {
             OperationBinary.invoke(data, first, limit, step, left, function, ((ArrayZ016) right).data);
         } else {
@@ -654,8 +654,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short left, final BinaryFunction<Double> function,
-            final short[] right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short left,  BinaryFunction<Double> function,
+             short[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -671,8 +671,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short[] left, final BinaryFunction<Double> function,
-            final short right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short[] left,  BinaryFunction<Double> function,
+             short right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {
@@ -688,8 +688,8 @@ public abstract class OperationBinary implements ArrayOperation {
         }
     }
 
-    public static void invoke(final short[] data, final int first, final int limit, final int step, final short[] left, final BinaryFunction<Double> function,
-            final short[] right) {
+    public static void invoke( short[] data,  int first,  int limit,  int step,  short[] left,  BinaryFunction<Double> function,
+             short[] right) {
         if (function == PrimitiveMath.ADD) {
             CorePrimitiveOperation.add(data, first, limit, step, left, right);
         } else if (function == PrimitiveMath.DIVIDE) {

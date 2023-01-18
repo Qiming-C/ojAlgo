@@ -31,7 +31,7 @@ public abstract class TypeCache<T> {
 
     private volatile boolean myDirty;
 
-    public TypeCache(final long aPurgeIntervalMeassure, final CalendarDateUnit aPurgeIntervalUnit) {
+    public TypeCache( long aPurgeIntervalMeassure,  CalendarDateUnit aPurgeIntervalUnit) {
 
         super();
 

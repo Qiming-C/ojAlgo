@@ -21,6 +21,7 @@
  */
 package org.ojalgo.concurrent;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Queue;
@@ -47,7 +48,7 @@ public final class MultiviewSet<T> {
 
         private final PriorityBlockingQueue<T> myQueue;
 
-        PrioritisedView(final Set<T> initial, final Comparator<? super T> comparator) {
+        PrioritisedView( Set<T> initial,  Comparator<? super T> comparator) {
 
             super();
 
@@ -62,16 +63,17 @@ public final class MultiviewSet<T> {
         /**
          * The entry is also added to the common {@link Set} and therefore to all views backed by it.
          */
-        public void offer(final T entry) {
+        public void offer( T entry) {
             MultiviewSet.this.add(entry);
         }
 
         /**
-         * @return The highest priority item (that also existed in the backing {@link Set})
+         *Returns the highest priority item (that also existed in the backing {@link Set}).
+ 
          */
         public T poll() {
 
-            T candidate = null;
+            @Var T candidate = null;
 
             do {
                 candidate = myQueue.poll();
@@ -84,7 +86,7 @@ public final class MultiviewSet<T> {
             return myQueue.size();
         }
 
-        boolean add(final T entry) {
+        boolean add( T entry) {
             return myQueue.add(entry);
         }
 
@@ -92,7 +94,7 @@ public final class MultiviewSet<T> {
             myQueue.clear();
         }
 
-        boolean remove(final Object entry) {
+        boolean remove( Object entry) {
             return myQueue.remove(entry);
         }
 
@@ -113,7 +115,7 @@ public final class MultiviewSet<T> {
      *        innefficient, and is unnecessary as a call to {@link PrioritisedView#poll()} will assert that
      *        the returned instance did exist in the main {@link Set}.
      */
-    public MultiviewSet(final boolean removeFromViews) {
+    public MultiviewSet( boolean removeFromViews) {
         super();
         myRemoveFromViews = removeFromViews;
     }
@@ -121,7 +123,7 @@ public final class MultiviewSet<T> {
     /**
      * Add an entry to the common {@link Set} and all {@link Queue}:s.
      */
-    public boolean add(final T entry) {
+    public boolean add( T entry) {
         boolean retVal = myCommonSet.add(entry);
         if (retVal) {
             for (MultiviewSet<T>.PrioritisedView view : myViews) {
@@ -139,7 +141,8 @@ public final class MultiviewSet<T> {
     }
 
     /**
-     * @return true if the main set or any of the priority queues have any contents
+     *Returns true if the main set or any of the priority queues have any contents.
+ 
      */
     public boolean isAnyContents() {
 
@@ -160,8 +163,8 @@ public final class MultiviewSet<T> {
         return myCommonSet.isEmpty();
     }
 
-    public PrioritisedView newView(final Comparator<? super T> comparator) {
-        PrioritisedView view = new PrioritisedView(myCommonSet, comparator);
+    public PrioritisedView newView( Comparator<? super T> comparator) {
+        var view = new PrioritisedView(myCommonSet, comparator);
         myViews.add(view);
         return view;
     }
@@ -169,7 +172,7 @@ public final class MultiviewSet<T> {
     /**
      * Remove an entry from the common {@link Set} and all {@link Queue}:s.
      */
-    public boolean remove(final T entry) {
+    public boolean remove( T entry) {
         boolean retVal = myCommonSet.remove(entry);
         if (myRemoveFromViews && retVal) {
             for (MultiviewSet<T>.PrioritisedView view : myViews) {

@@ -40,10 +40,11 @@ public interface Matrix2D<N extends Comparable<N>, M extends Matrix2D<N, M>>
         ScalarOperation.Addition<M, N>, ScalarOperation.Subtraction<M, N>, ScalarOperation.Division<M, N> {
 
     /**
-     * @return true if the same size/shape and elements are equal to the given accuracy. norm of the
-     *         difference between [this] and [another] is zero within the limits of [precision].
+     *Returns true if the same size/shape and elements are equal to the given accuracy. norm of the
+         difference between [this] and [another] is zero within the limits of [precision].
+ 
      */
-    default boolean equals(final Access2D<?> another, final NumberContext accuracy) {
+    default boolean equals( Access2D<?> another,  NumberContext accuracy) {
         return Access2D.equals(this, another, accuracy);
     }
 

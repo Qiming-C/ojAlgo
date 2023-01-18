@@ -23,6 +23,7 @@ package org.ojalgo.optimisation.integer;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
-
 import org.ojalgo.concurrent.MultiviewSet;
 import org.ojalgo.concurrent.ProcessingService;
 import org.ojalgo.function.multiary.MultiaryFunction;
@@ -50,21 +50,21 @@ public final class IntegerSolver extends GenericSolver {
 
     public static final class ModelIntegration extends ExpressionsBasedModel.Integration<IntegerSolver> {
 
-        public IntegerSolver build(final ExpressionsBasedModel model) {
+        @Override public IntegerSolver build( ExpressionsBasedModel model) {
             return IntegerSolver.make(model);
         }
 
-        public boolean isCapable(final ExpressionsBasedModel model) {
+        @Override public boolean isCapable( ExpressionsBasedModel model) {
             return !model.isAnyConstraintQuadratic();
         }
 
         @Override
-        public Result toModelState(final Result solverState, final ExpressionsBasedModel model) {
+        public Result toModelState( Result solverState,  ExpressionsBasedModel model) {
             return solverState;
         }
 
         @Override
-        public Result toSolverState(final Result modelState, final ExpressionsBasedModel model) {
+        public Result toSolverState( Result modelState,  ExpressionsBasedModel model) {
             return modelState;
         }
 
@@ -89,7 +89,7 @@ public final class IntegerSolver extends GenericSolver {
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.append("NodeStatistics [I=");
             builder.append(myInteger);
             builder.append(", E=");
@@ -164,11 +164,11 @@ public final class IntegerSolver extends GenericSolver {
 
     public static final ModelIntegration INTEGRATION = new ModelIntegration();
 
-    public static IntegerSolver make(final ExpressionsBasedModel model) {
+    public static IntegerSolver make( ExpressionsBasedModel model) {
         return new IntegerSolver(model);
     }
 
-    static void flush(final RingLogger buffer, final BasicLogger receiver) {
+    static void flush( RingLogger buffer,  BasicLogger receiver) {
         if (buffer != null && receiver != null) {
             buffer.flush(receiver);
         }
@@ -181,7 +181,7 @@ public final class IntegerSolver extends GenericSolver {
     private final boolean myMinimisation;
     private final NodeStatistics myNodeStatistics = new NodeStatistics();
 
-    IntegerSolver(final ExpressionsBasedModel model) {
+    IntegerSolver( ExpressionsBasedModel model) {
 
         super(model.options);
 
@@ -191,7 +191,7 @@ public final class IntegerSolver extends GenericSolver {
         myMinimisation = myIntegerModel.getOptimisationSense() == Optimisation.Sense.MIN;
     }
 
-    public Result solve(final Result kickStarter) {
+    @Override public Result solve( Result kickStarter) {
 
         Result point = kickStarter != null ? kickStarter : myIntegerModel.getVariableValues();
 
@@ -207,29 +207,29 @@ public final class IntegerSolver extends GenericSolver {
 
         ExpressionsBasedModel cutModel = myIntegerModel.snapshot();
         NodeSolver cutSolver = cutModel.prepare(NodeSolver::new);
-        Result cutResult = cutSolver.solve();
+        
         cutSolver.generateCuts(strategy, myIntegerModel);
 
-        NodeKey rootNode = new NodeKey(myIntegerModel);
+        var rootNode = new NodeKey(myIntegerModel);
         ExpressionsBasedModel rootModel = myIntegerModel.snapshot();
         rootNode.setNodeState(rootModel, strategy);
 
         RingLogger rootPrinter = this.newPrinter();
 
-        AtomicBoolean solverNormalExit = new AtomicBoolean(this.compute(rootNode, rootModel.prepare(NodeSolver::new), rootPrinter, strategy));
+        var solverNormalExit = new AtomicBoolean(this.compute(rootNode, rootModel.prepare(NodeSolver::new), rootPrinter, strategy));
         rootNode.dispose();
 
         Map<Comparator<NodeKey>, MultiviewSet<NodeKey>.PrioritisedView> views = new ConcurrentHashMap<>();
 
         ProcessingService.INSTANCE.process(strategy.getWorkerPriorities(), workerStrategy -> {
 
-            boolean workerNormalExit = solverNormalExit.get();
+            @Var boolean workerNormalExit = solverNormalExit.get();
 
             MultiviewSet<NodeKey>.PrioritisedView view = views.computeIfAbsent(workerStrategy, myDeferredNodes::newView);
 
             RingLogger nodePrinter = this.newPrinter();
 
-            NodeKey node = null;
+            @Var NodeKey node = null;
             while (workerNormalExit && solverNormalExit.get() && !myDeferredNodes.isEmpty()) {
                 if ((node = view.poll()) != null) {
 
@@ -284,7 +284,7 @@ public final class IntegerSolver extends GenericSolver {
         return options.validate || this.isLogProgress() ? CharacterRing.newRingLogger() : null;
     }
 
-    protected Optimisation.Result buildResult() {
+    Optimisation.Result buildResult() {
 
         Access1D<?> solution = this.extractSolution();
         double value = this.evaluateFunction(solution);
@@ -293,22 +293,22 @@ public final class IntegerSolver extends GenericSolver {
         return new Optimisation.Result(state, value, solution);
     }
 
-    protected double evaluateFunction(final Access1D<?> solution) {
+    double evaluateFunction( Access1D<?> solution) {
         if (myFunction != null && solution != null && myFunction.arity() == solution.count()) {
             return myFunction.invoke(Access1D.asPrimitive1D(solution)).doubleValue();
         }
         return Double.NaN;
     }
 
-    protected MatrixStore<Double> extractSolution() {
+    MatrixStore<Double> extractSolution() {
         return Primitive64Store.FACTORY.columns(this.getBestResultSoFar());
     }
 
-    protected Optimisation.Result getBestEstimate() {
+    Optimisation.Result getBestEstimate() {
         return new Optimisation.Result(Optimisation.State.APPROXIMATE, this.getBestResultSoFar());
     }
 
-    protected Optimisation.Result getBestResultSoFar() {
+    Optimisation.Result getBestResultSoFar() {
 
         Result currentlyTheBest = myBestResultSoFar;
 
@@ -323,7 +323,7 @@ public final class IntegerSolver extends GenericSolver {
         return new Optimisation.Result(tmpSate, tmpValue, tmpSolution);
     }
 
-    protected boolean isIterationNecessary() {
+    boolean isIterationNecessary() {
 
         if (myBestResultSoFar == null) {
             return true;
@@ -333,16 +333,16 @@ public final class IntegerSolver extends GenericSolver {
     }
 
     @Override
-    protected void logProgress(final int iterationsDone, final String classSimpleName, final CalendarDateDuration duration) {
+    protected void logProgress( int iterationsDone,  String classSimpleName,  CalendarDateDuration duration) {
         this.log("Done {} {} iterations in {} with {}", iterationsDone, classSimpleName, duration, myNodeStatistics);
     }
 
-    protected synchronized void markInteger(final NodeKey key, final Optimisation.Result result, final ModelStrategy strategy) {
+    synchronized void markInteger( NodeKey key,  Optimisation.Result result,  ModelStrategy strategy) {
 
         if (this.isLogProgress()) {
 
-            double low = Double.NEGATIVE_INFINITY;
-            double high = Double.POSITIVE_INFINITY;
+            @Var double low = Double.NEGATIVE_INFINITY;
+            @Var double high = Double.POSITIVE_INFINITY;
 
             if (key != null) {
                 if (myMinimisation) {
@@ -404,9 +404,9 @@ public final class IntegerSolver extends GenericSolver {
      *
      * @return Is the solver instance valid?
      */
-    protected boolean validate() {
+    boolean validate() {
 
-        boolean retVal = true;
+        @Var boolean retVal = true;
         this.setState(State.VALID);
 
         try {
@@ -425,7 +425,7 @@ public final class IntegerSolver extends GenericSolver {
         return retVal;
     }
 
-    boolean compute(final NodeKey nodeKey, final NodeSolver nodeSolver, final RingLogger nodePrinter, final ModelStrategy strategy) {
+    boolean compute( NodeKey nodeKey,  NodeSolver nodeSolver,  RingLogger nodePrinter,  ModelStrategy strategy) {
 
         if (this.isLogDebug()) {
             nodePrinter.println();
@@ -489,7 +489,7 @@ public final class IntegerSolver extends GenericSolver {
                 nodePrinter.println("Integer solution! Store it among the others, and stop this branch!");
             }
 
-            Optimisation.Result tmpIntegerSolutionResult = new Optimisation.Result(Optimisation.State.FEASIBLE, tmpSolutionValue, nodeResult);
+            var tmpIntegerSolutionResult = new Optimisation.Result(Optimisation.State.FEASIBLE, tmpSolutionValue, nodeResult);
 
             this.markInteger(nodeKey, tmpIntegerSolutionResult, strategy);
 
@@ -537,8 +537,8 @@ public final class IntegerSolver extends GenericSolver {
             }
         }
 
-        NodeKey lowerBranch = nodeKey.createLowerBranch(branchIntegerIndex, variableValue, tmpSolutionValue);
-        NodeKey upperBranch = nodeKey.createUpperBranch(branchIntegerIndex, variableValue, tmpSolutionValue);
+        @Var NodeKey lowerBranch = nodeKey.createLowerBranch(branchIntegerIndex, variableValue, tmpSolutionValue);
+        @Var NodeKey upperBranch = nodeKey.createUpperBranch(branchIntegerIndex, variableValue, tmpSolutionValue);
 
         if (!strategy.isDirect(lowerBranch, myBestResultSoFar != null)) {
             myDeferredNodes.add(lowerBranch);
@@ -555,7 +555,7 @@ public final class IntegerSolver extends GenericSolver {
             throw new IllegalStateException();
         }
 
-        boolean retVal = true;
+        @Var boolean retVal = true;
         if (lowerBranch != null) {
             retVal = retVal && this.compute(lowerBranch, nodeSolver, nodePrinter, strategy);
         }
@@ -570,13 +570,13 @@ public final class IntegerSolver extends GenericSolver {
      * an integer solution has been found (no further branching). Does NOT return a global variable index -
      * it's the index among the ineteger variable.
      */
-    int identifyNonIntegerVariable(final Optimisation.Result nodeResult, final NodeKey nodeKey, final ModelStrategy strategy) {
+    int identifyNonIntegerVariable( Optimisation.Result nodeResult,  NodeKey nodeKey,  ModelStrategy strategy) {
 
-        int retVal = -1;
+        @Var int retVal = -1;
 
-        double displacement;
-        double comparableDisplacement = ZERO;
-        double maxComparable = ZERO;
+        @Var double displacement;
+        @Var double comparableDisplacement = ZERO;
+        @Var double maxComparable = ZERO;
 
         for (int i = 0, limit = strategy.countIntegerVariables(); i < limit; i++) {
 

@@ -42,7 +42,7 @@ public final class PoissonProcess extends SingleValueBasedProcess<Poisson> {
 
     private final double myRate; // lambda, intensity
 
-    protected PoissonProcess(final double rate) {
+    PoissonProcess( double rate) {
 
         super();
 
@@ -51,7 +51,7 @@ public final class PoissonProcess extends SingleValueBasedProcess<Poisson> {
         myRate = rate;
     }
 
-    public Poisson getDistribution(final double evaluationPoint) {
+    @Override public Poisson getDistribution( double evaluationPoint) {
         return new Poisson(myRate * evaluationPoint);
     }
 
@@ -60,19 +60,19 @@ public final class PoissonProcess extends SingleValueBasedProcess<Poisson> {
     }
 
     @Override
-    double doStep(final double stepSize, final double normalisedRandomIncrement) {
+    double doStep( double stepSize,  double normalisedRandomIncrement) {
         double retVal = this.getCurrentValue() + ((myRate * stepSize) * normalisedRandomIncrement);
         this.setCurrentValue(retVal);
         return retVal;
     }
 
     @Override
-    double getExpected(final double stepSize) {
+    double getExpected( double stepSize) {
         return myRate * stepSize;
     }
 
     @Override
-    double getLowerConfidenceQuantile(final double stepSize, final double confidence) {
+    double getLowerConfidenceQuantile( double stepSize,  double confidence) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
         return ZERO;
     }
@@ -83,18 +83,18 @@ public final class PoissonProcess extends SingleValueBasedProcess<Poisson> {
     }
 
     @Override
-    double getStandardDeviation(final double stepSize) {
+    double getStandardDeviation( double stepSize) {
         return SQRT.invoke(myRate * stepSize);
     }
 
     @Override
-    double getUpperConfidenceQuantile(final double stepSize, final double confidence) {
+    double getUpperConfidenceQuantile( double stepSize,  double confidence) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
         return ZERO;
     }
 
     @Override
-    double getVariance(final double stepSize) {
+    double getVariance( double stepSize) {
         return myRate * stepSize;
     }
 

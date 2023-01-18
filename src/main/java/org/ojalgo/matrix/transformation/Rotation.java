@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.transformation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.constant.PrimitiveMath;
@@ -35,15 +36,15 @@ public abstract class Rotation<N extends Comparable<N>> {
         public final N cos;
         public final N sin;
 
-        public Generic(final int index) {
+        public Generic( int index) {
             this(index, index, null, null);
         }
 
-        public Generic(final int aLowerIndex, final int aHigherIndex) {
+        public Generic( int aLowerIndex,  int aHigherIndex) {
             this(aLowerIndex, aHigherIndex, null, null);
         }
 
-        public Generic(final int aLowerIndex, final int aHigherIndex, final N aCosine, final N aSine) {
+        public Generic( int aLowerIndex,  int aHigherIndex,  N aCosine,  N aSine) {
 
             super(aLowerIndex, aHigherIndex);
 
@@ -51,7 +52,7 @@ public abstract class Rotation<N extends Comparable<N>> {
             sin = aSine;
         }
 
-        public Generic(final Rotation<N> aRotation) {
+        public Generic( Rotation<N> aRotation) {
 
             super(aRotation.low, aRotation.high);
 
@@ -91,15 +92,15 @@ public abstract class Rotation<N extends Comparable<N>> {
         public final double cos;
         public final double sin;
 
-        public Primitive(final int index) {
+        public Primitive( int index) {
             this(index, index, PrimitiveMath.NaN, PrimitiveMath.NaN);
         }
 
-        public Primitive(final int aLowerIndex, final int aHigherIndex) {
+        public Primitive( int aLowerIndex,  int aHigherIndex) {
             this(aLowerIndex, aHigherIndex, PrimitiveMath.NaN, PrimitiveMath.NaN);
         }
 
-        public Primitive(final int aLowerIndex, final int aHigherIndex, final double aCosine, final double aSine) {
+        public Primitive( int aLowerIndex,  int aHigherIndex,  double aCosine,  double aSine) {
 
             super(aLowerIndex, aHigherIndex);
 
@@ -107,7 +108,7 @@ public abstract class Rotation<N extends Comparable<N>> {
             sin = aSine;
         }
 
-        public Primitive(final Rotation<Double> aRotation) {
+        public Primitive( Rotation<Double> aRotation) {
 
             super(aRotation.low, aRotation.high);
 
@@ -151,29 +152,29 @@ public abstract class Rotation<N extends Comparable<N>> {
 
     }
 
-    public static <N extends Scalar<N>> Generic<N> makeGeneric(final FunctionSet<N> functions, final int aLowerIndex, final int aHigherIndex, final N anAngle) {
+    public static <N extends Scalar<N>> Generic<N> makeGeneric( FunctionSet<N> functions,  int aLowerIndex,  int aHigherIndex,  N anAngle) {
         return new Generic<>(aLowerIndex, aHigherIndex, functions.cos().invoke(anAngle), functions.sin().invoke(anAngle));
     }
 
-    public static Primitive makePrimitive(final int aLowerIndex, final int aHigherIndex, final double anAngle) {
+    public static Primitive makePrimitive( int aLowerIndex,  int aHigherIndex,  double anAngle) {
         return new Primitive(aLowerIndex, aHigherIndex, PrimitiveMath.COS.invoke(anAngle), PrimitiveMath.SIN.invoke(anAngle));
     }
 
-    static Rotation<Double>[] rotationsP(final PhysicalStore<Double> matrix, final int low, final int high, final Rotation<Double>[] results) {
+    static Rotation<Double>[] rotationsP( PhysicalStore<Double> matrix,  int low,  int high,  Rotation<Double>[] results) {
 
-        final double a00 = matrix.doubleValue(low, low);
-        final double a01 = matrix.doubleValue(low, high);
-        final double a10 = matrix.doubleValue(high, low);
-        final double a11 = matrix.doubleValue(high, high);
+         double a00 = matrix.doubleValue(low, low);
+         double a01 = matrix.doubleValue(low, high);
+         double a10 = matrix.doubleValue(high, low);
+         double a11 = matrix.doubleValue(high, high);
 
-        final double x = a00 + a11;
-        final double y = a10 - a01;
+         double x = a00 + a11;
+         double y = a10 - a01;
 
-        double t; // tan, cot or something temporary
+        @Var double t; // tan, cot or something temporary
 
         // Symmetrise - Givens
-        final double cg; // cos Givens
-        final double sg; // sin Givens
+         double cg; // cos Givens
+         double sg; // sin Givens
 
         if (PrimitiveScalar.isSmall(PrimitiveMath.ONE, y)) {
             cg = PrimitiveMath.SIGNUM.invoke(x);
@@ -191,16 +192,16 @@ public abstract class Rotation<N extends Comparable<N>> {
             sg = cg * t;
         }
 
-        final double b00 = (cg * a00) + (sg * a10);
-        final double b11 = (cg * a11) - (sg * a01);
-        final double b2 = (cg * (a01 + a10)) + (sg * (a11 - a00)); // b01 + b10
+         double b00 = (cg * a00) + (sg * a10);
+         double b11 = (cg * a11) - (sg * a01);
+         double b2 = (cg * (a01 + a10)) + (sg * (a11 - a00)); // b01 + b10
 
         t = (b11 - b00) / b2;
         t = PrimitiveMath.SIGNUM.invoke(t) / (PrimitiveMath.SQRT1PX2.invoke(t) + PrimitiveMath.ABS.invoke(t)); // tan Jacobi
 
         // Annihilate - Jacobi
-        final double cj = PrimitiveMath.ONE / PrimitiveMath.SQRT1PX2.invoke(t); // cos Jacobi
-        final double sj = cj * t; // sin Jacobi
+         double cj = PrimitiveMath.ONE / PrimitiveMath.SQRT1PX2.invoke(t); // cos Jacobi
+         double sj = cj * t; // sin Jacobi
 
         results[1] = new Rotation.Primitive(low, high, cj, sj); // Jacobi
         results[0] = new Rotation.Primitive(low, high, ((cj * cg) + (sj * sg)), ((cj * sg) - (sj * cg))); // Givens - Jacobi
@@ -220,7 +221,7 @@ public abstract class Rotation<N extends Comparable<N>> {
         ProgrammingError.throwForIllegalInvocation();
     }
 
-    protected Rotation(final int aLowerIndex, final int aHigherIndex) {
+    protected Rotation( int aLowerIndex,  int aHigherIndex) {
 
         super();
 
@@ -243,7 +244,7 @@ public abstract class Rotation<N extends Comparable<N>> {
         return "low=" + low + ", high=" + high + ", cos=" + this.getCosine() + ", sin=" + this.getSine();
     }
 
-    public void transform(final PhysicalStore<N> matrix) {
+    public void transform( PhysicalStore<N> matrix) {
         matrix.transformLeft(this);
     }
 

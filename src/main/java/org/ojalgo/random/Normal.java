@@ -34,7 +34,7 @@ import org.ojalgo.function.special.ErrorFunction;
  */
 public class Normal extends AbstractContinuous {
 
-    public static Normal of(final double location, final double scale) {
+    public static Normal of( double location,  double scale) {
         return new Normal(location, scale);
     }
 
@@ -49,7 +49,7 @@ public class Normal extends AbstractContinuous {
         this(ZERO, ONE);
     }
 
-    public Normal(final double location, final double scale) {
+    public Normal( double location,  double scale) {
 
         super();
 
@@ -57,22 +57,22 @@ public class Normal extends AbstractContinuous {
         myScale = scale;
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
 
-        final double tmpVal = (value - myLocation) / myScale;
+         double tmpVal = (value - myLocation) / myScale;
 
         return PrimitiveMath.EXP.invoke((tmpVal * tmpVal) / -TWO) / (myScale * SQRT_TWO_PI);
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
         return (ONE + ErrorFunction.erf((value - myLocation) / (myScale * SQRT_TWO))) / TWO;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myLocation;
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
         this.checkProbabilty(probability);
 

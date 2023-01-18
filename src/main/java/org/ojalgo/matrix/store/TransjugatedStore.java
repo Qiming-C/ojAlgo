@@ -25,26 +25,21 @@ import org.ojalgo.ProgrammingError;
 
 abstract class TransjugatedStore<N extends Comparable<N>> extends LogicalStore<N> {
 
-    private TransjugatedStore(final MatrixStore<N> base, final int rows, final int columns) {
+    
 
-        super(base, rows, columns);
-
-        ProgrammingError.throwForIllegalInvocation();
-    }
-
-    protected TransjugatedStore(final MatrixStore<N> base) {
+    protected TransjugatedStore( MatrixStore<N> base) {
         super(base, base.countColumns(), base.countRows());
     }
 
-    public final double doubleValue(final long aRow, final long aCol) {
+    @Override public final double doubleValue( long aRow,  long aCol) {
         return this.base().doubleValue(aCol, aRow);
     }
 
-    public final int firstInColumn(final int col) {
+    @Override public final int firstInColumn( int col) {
         return this.base().firstInRow(col);
     }
 
-    public final int firstInRow(final int row) {
+    @Override public final int firstInRow( int row) {
         return this.base().firstInColumn(row);
     }
 
@@ -53,12 +48,12 @@ abstract class TransjugatedStore<N extends Comparable<N>> extends LogicalStore<N
     }
 
     @Override
-    public final int limitOfColumn(final int col) {
+    public final int limitOfColumn( int col) {
         return this.base().limitOfRow(col);
     }
 
     @Override
-    public final int limitOfRow(final int row) {
+    public final int limitOfRow( int row) {
         return this.base().limitOfColumn(row);
     }
 

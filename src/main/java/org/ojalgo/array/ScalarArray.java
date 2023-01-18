@@ -37,16 +37,16 @@ import org.ojalgo.structure.Mutate1D;
  */
 public abstract class ScalarArray<N extends Scalar<N>> extends ReferenceTypeArray<N> {
 
-    protected ScalarArray(final DenseArray.Factory<N> factory, final int length) {
+    protected ScalarArray( DenseArray.Factory<N> factory,  int length) {
         super(factory, length);
     }
 
-    protected ScalarArray(final DenseArray.Factory<N> factory, final N[] data) {
+    protected ScalarArray( DenseArray.Factory<N> factory,  N[] data) {
         super(factory, data);
     }
 
     @Override
-    public final void axpy(final double a, final Mutate1D.Modifiable<?> y) {
+    public final void axpy( double a,  Mutate1D.Modifiable<?> y) {
         AXPY.invoke(y, a, data);
     }
 
@@ -61,67 +61,67 @@ public abstract class ScalarArray<N extends Scalar<N>> extends ReferenceTypeArra
     }
 
     @Override
-    protected final void add(final int index, final Comparable<?> addend) {
+    protected final void add( int index,  Comparable<?> addend) {
         this.fillOne(index, this.get(index).add(this.valueOf(addend)).get());
     }
 
     @Override
-    protected final void add(final int index, final double addend) {
+    protected final void add( int index,  double addend) {
         this.fillOne(index, this.get(index).add(this.valueOf(addend)).get());
     }
 
     @Override
-    protected byte byteValue(final int index) {
+    protected byte byteValue( int index) {
         return this.get(index).byteValue();
     }
 
     @Override
-    protected final double doubleValue(final int index) {
+    protected final double doubleValue( int index) {
         return data[index].doubleValue();
     }
 
     @Override
-    protected final void fillOne(final int index, final Access1D<?> values, final long valueIndex) {
+    protected final void fillOne( int index,  Access1D<?> values,  long valueIndex) {
         data[index] = this.valueOf(values.get(valueIndex));
     }
 
     @Override
-    protected final float floatValue(final int index) {
+    protected final float floatValue( int index) {
         return data[index].floatValue();
     }
 
     @Override
-    protected final int indexOfLargest(final int first, final int limit, final int step) {
+    protected final int indexOfLargest( int first,  int limit,  int step) {
         return AMAX.invoke(data, first, limit, step);
     }
 
     @Override
-    protected int intValue(final int index) {
+    protected int intValue( int index) {
         return this.get(index).intValue();
     }
 
     @Override
-    protected final boolean isAbsolute(final int index) {
+    protected final boolean isAbsolute( int index) {
         return data[index].isAbsolute();
     }
 
     @Override
-    protected final boolean isSmall(final int index, final double comparedTo) {
+    protected final boolean isSmall( int index,  double comparedTo) {
         return data[index].isSmall(comparedTo);
     }
 
     @Override
-    protected long longValue(final int index) {
+    protected long longValue( int index) {
         return this.get(index).longValue();
     }
 
     @Override
-    protected short shortValue(final int index) {
+    protected short shortValue( int index) {
         return this.get(index).shortValue();
     }
 
     @Override
-    protected void set(final int index, final long value) {
+    protected void set( int index,  long value) {
         data[index] = this.valueOf(value);
     }
 

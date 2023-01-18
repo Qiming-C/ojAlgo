@@ -39,292 +39,292 @@ abstract class Mutator2D<N extends Comparable<N>, M extends BasicMatrix<N, M>, M
     private final MR myDelegate;
     private boolean mySafe = true;
 
-    Mutator2D(final MR delegate) {
+    Mutator2D( MR delegate) {
 
         super();
 
         myDelegate = delegate;
     }
 
-    public void accept(final Access2D<?> supplied) {
+    @Override public void accept( Access2D<?> supplied) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.accept(supplied);
     }
 
-    public void add(final long index, final Comparable<?> addend) {
+    @Override public void add( long index,  Comparable<?> addend) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.add(index, addend);
     }
 
-    public void add(final long index, final double addend) {
+    @Override public void add( long index,  double addend) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.add(index, addend);
     }
 
-    public void add(final long row, final long col, final Comparable<?> value) {
+    @Override public void add( long row,  long col,  Comparable<?> value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.add(row, col, value);
     }
 
-    public void add(final long row, final long col, final double value) {
+    @Override public void add( long row,  long col,  double value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.add(row, col, value);
     }
 
-    public long count() {
+    @Override public long count() {
         return myDelegate.count();
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myDelegate.countColumns();
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myDelegate.countRows();
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         if (mySafe) {
             return myDelegate.doubleValue(row, col);
         }
         throw new IllegalStateException();
     }
 
-    public void exchangeColumns(final long colA, final long colB) {
+    @Override public void exchangeColumns( long colA,  long colB) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.exchangeColumns(colA, colB);
     }
 
-    public void exchangeRows(final long rowA, final long rowB) {
+    @Override public void exchangeRows( long rowA,  long rowB) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.exchangeRows(rowA, rowB);
     }
 
-    public void fillAll(final N value) {
+    @Override public void fillAll( N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillAll(myDelegate.physical().scalar().cast(value));
     }
 
-    public void fillAll(final NullaryFunction<?> supplier) {
+    @Override public void fillAll( NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillAll(supplier);
     }
 
-    public void fillColumn(final long col, final Access1D<N> values) {
+    @Override public void fillColumn( long col,  Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillColumn(col, values);
     }
 
-    public void fillColumn(final long row, final long col, final Access1D<N> values) {
+    @Override public void fillColumn( long row,  long col,  Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillColumn(row, col, values);
     }
 
-    public void fillColumn(final long row, final long column, final N value) {
+    @Override public void fillColumn( long row,  long column,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
-        myDelegate.fillColumn((int) row, (int) column, myDelegate.physical().scalar().cast(value));
+        myDelegate.fillColumn(row, (int) column, myDelegate.physical().scalar().cast(value));
     }
 
-    public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillColumn(row, col, supplier);
     }
 
-    public void fillColumn(final long col, final N value) {
+    @Override public void fillColumn( long col,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillColumn(col, value);
     }
 
-    public void fillColumn(final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long col,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillColumn(col, supplier);
     }
 
-    public void fillDiagonal(final Access1D<N> values) {
+    @Override public void fillDiagonal( Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(values);
     }
 
-    public void fillDiagonal(final long row, final long col, final Access1D<N> values) {
+    @Override public void fillDiagonal( long row,  long col,  Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(row, col, values);
     }
 
-    public void fillDiagonal(final long row, final long column, final N value) {
+    @Override public void fillDiagonal( long row,  long column,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(row, column, myDelegate.physical().scalar().cast(value));
     }
 
-    public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(row, col, supplier);
     }
 
-    public void fillDiagonal(final N value) {
+    @Override public void fillDiagonal( N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(value);
     }
 
-    public void fillDiagonal(final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillDiagonal(supplier);
     }
 
-    public void fillMatching(final Access1D<?> values) {
+    @Override public void fillMatching( Access1D<?> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillMatching(values);
     }
 
-    public void fillMatching(final Access1D<N> left, final BinaryFunction<N> function, final Access1D<N> right) {
+    @Override public void fillMatching( Access1D<N> left,  BinaryFunction<N> function,  Access1D<N> right) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillMatching(left, function, right);
     }
 
-    public void fillMatching(final UnaryFunction<N> function, final Access1D<N> arguments) {
+    @Override public void fillMatching( UnaryFunction<N> function,  Access1D<N> arguments) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillMatching(function, arguments);
     }
 
-    public void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long index,  Access1D<?> values,  long valueIndex) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(index, values, valueIndex);
     }
 
-    public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(row, col, values, valueIndex);
     }
 
-    public void fillOne(final long row, final long col, final N value) {
+    public void fillOne( long row,  long col,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(row, col, value);
     }
 
-    public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+    public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(row, col, supplier);
     }
 
-    public void fillOne(final long index, final N value) {
+    public void fillOne( long index,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(index, value);
     }
 
-    public void fillOne(final long index, final NullaryFunction<?> supplier) {
+    public void fillOne( long index,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillOne(index, supplier);
     }
 
-    public void fillRange(final long first, final long limit, final N value) {
+    @Override public void fillRange( long first,  long limit,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRange(first, limit, value);
     }
 
-    public void fillRange(final long first, final long limit, final NullaryFunction<?> supplier) {
+    @Override public void fillRange( long first,  long limit,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRange(first, limit, supplier);
     }
 
-    public void fillRow(final long row, final Access1D<N> values) {
+    @Override public void fillRow( long row,  Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRow(row, values);
     }
 
-    public void fillRow(final long row, final long col, final Access1D<N> values) {
+    @Override public void fillRow( long row,  long col,  Access1D<N> values) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRow(row, col, values);
     }
 
-    public void fillRow(final long row, final long column, final N value) {
+    @Override public void fillRow( long row,  long column,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
-        myDelegate.fillRow((int) row, (int) column, myDelegate.physical().scalar().cast(value));
+        myDelegate.fillRow(row, (int) column, myDelegate.physical().scalar().cast(value));
     }
 
-    public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRow(row, col, supplier);
     }
 
-    public void fillRow(final long row, final N value) {
+    @Override public void fillRow( long row,  N value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.fillRow(row, value);
     }
 
-    public void fillRow(final long row, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  NullaryFunction<?> supplier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
@@ -337,168 +337,168 @@ abstract class Mutator2D<N extends Comparable<N>, M extends BasicMatrix<N, M>, M
         return this.instantiate(myDelegate);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         if (mySafe) {
             return myDelegate.get(row, col);
         }
         throw new IllegalStateException();
     }
 
-    public void modifyAll(final UnaryFunction<N> modifier) {
+    @Override public void modifyAll( UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyAll(modifier);
     }
 
-    public void modifyAny(final Transformation2D<N> modifier) {
+    @Override public void modifyAny( Transformation2D<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         modifier.transform(myDelegate);
     }
 
-    public void modifyColumn(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyColumn( long row,  long col,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyColumn(row, col, modifier);
     }
 
-    public void modifyColumn(final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyColumn( long col,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyColumn(col, modifier);
     }
 
-    public void modifyDiagonal(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyDiagonal(row, col, modifier);
     }
 
-    public void modifyDiagonal(final UnaryFunction<N> modifier) {
+    @Override public void modifyDiagonal( UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyDiagonal(modifier);
     }
 
-    public void modifyMatching(final Access1D<N> left, final BinaryFunction<N> function) {
+    @Override public void modifyMatching( Access1D<N> left,  BinaryFunction<N> function) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatching(left, function);
     }
 
-    public void modifyMatching(final BinaryFunction<N> function, final Access1D<N> right) {
+    @Override public void modifyMatching( BinaryFunction<N> function,  Access1D<N> right) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatching(function, right);
     }
 
-    public void modifyMatchingInColumns(final Access1D<N> left, final BinaryFunction<N> function) {
+    @Override public void modifyMatchingInColumns( Access1D<N> left,  BinaryFunction<N> function) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatchingInColumns(left, function);
     }
 
-    public void modifyMatchingInColumns(final BinaryFunction<N> function, final Access1D<N> right) {
+    @Override public void modifyMatchingInColumns( BinaryFunction<N> function,  Access1D<N> right) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatchingInColumns(function, right);
     }
 
-    public void modifyMatchingInRows(final Access1D<N> left, final BinaryFunction<N> function) {
+    @Override public void modifyMatchingInRows( Access1D<N> left,  BinaryFunction<N> function) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatchingInRows(left, function);
     }
 
-    public void modifyMatchingInRows(final BinaryFunction<N> function, final Access1D<N> right) {
+    @Override public void modifyMatchingInRows( BinaryFunction<N> function,  Access1D<N> right) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyMatchingInRows(function, right);
     }
 
-    public void modifyOne(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyOne( long row,  long col,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyOne(row, col, modifier);
     }
 
-    public void modifyOne(final long index, final UnaryFunction<N> modifier) {
+    @Override public void modifyOne( long index,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyOne(index, modifier);
     }
 
-    public void modifyRange(final long first, final long limit, final UnaryFunction<N> modifier) {
+    @Override public void modifyRange( long first,  long limit,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyRange(first, limit, modifier);
     }
 
-    public void modifyRow(final long row, final long col, final UnaryFunction<N> modifier) {
+    @Override public void modifyRow( long row,  long col,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyRow(row, col, modifier);
     }
 
-    public void modifyRow(final long row, final UnaryFunction<N> modifier) {
+    @Override public void modifyRow( long row,  UnaryFunction<N> modifier) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.modifyRow(row, modifier);
     }
 
-    public void reset() {
+    @Override public void reset() {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.reset();
     }
 
-    public void set(final long index, final Comparable<?> value) {
+    @Override public void set( long index,  Comparable<?> value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.set(index, myDelegate.physical().scalar().cast(value));
     }
 
-    public void set(final long index, final double value) {
+    @Override public void set( long index,  double value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.set(index, value);
     }
 
-    public void set(final long row, final long col, final Comparable<?> value) {
+    @Override public void set( long row,  long col,  Comparable<?> value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.set(row, col, value);
     }
 
-    public void set(final long row, final long col, final double value) {
+    @Override public void set( long row,  long col,  double value) {
         if (!mySafe) {
             throw new IllegalStateException();
         }
         myDelegate.set(row, col, value);
     }
 
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    @Override public void supplyTo( TransformableRegion<N> receiver) {
         myDelegate.supplyTo(receiver);
     }
 

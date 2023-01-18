@@ -21,8 +21,8 @@
  */
 package org.ojalgo.optimisation;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.optimisation.integer.IntegerSolver;
 import org.ojalgo.structure.Access1D;
@@ -42,21 +42,21 @@ public abstract class IntermediateSolver implements Optimisation.Solver {
     private transient Optimisation.Result myResult = null;
     private transient Optimisation.Solver mySolver = null;
 
-    protected IntermediateSolver(final ExpressionsBasedModel model) {
+    protected IntermediateSolver( ExpressionsBasedModel model) {
         super();
         myModel = model;
         myIntegration = null;
         mySolver = null;
     }
 
-    public void dispose() {
+    @Override public void dispose() {
 
         this.reset();
 
         Solver.super.dispose();
     }
 
-    public Variable getVariable(final int globalIndex) {
+    public Variable getVariable( int globalIndex) {
         return myModel.getVariable(globalIndex);
     }
 
@@ -75,7 +75,7 @@ public abstract class IntermediateSolver implements Optimisation.Solver {
         myIntegration = null;
     }
 
-    public Optimisation.Result solve(final Optimisation.Result candidate) {
+    @Override public Optimisation.Result solve( Optimisation.Result candidate) {
 
         if (mySolver == null && ExpressionsBasedModel.PRESOLVERS.size() > 0) {
             myModel.presolve();
@@ -112,7 +112,7 @@ public abstract class IntermediateSolver implements Optimisation.Solver {
         ExpressionsBasedModel.Integration<?> integration = this.getIntegration();
         Optimisation.Solver solver = this.getSolver();
 
-        Optimisation.Result retVal = candidate != null ? candidate : myModel.getVariableValues();
+        @Var Optimisation.Result retVal = candidate != null ? candidate : myModel.getVariableValues();
         retVal = integration.toSolverState(retVal, myModel);
         retVal = solver.solve(retVal);
         retVal = integration.toModelState(retVal, myModel);
@@ -127,10 +127,10 @@ public abstract class IntermediateSolver implements Optimisation.Solver {
         return myModel.toString();
     }
 
-    public void update(final Variable variable) {
+    public void update( Variable variable) {
 
         if (myInPlaceUpdatesOK && mySolver instanceof UpdatableSolver && variable.isFixed()) {
-            UpdatableSolver updatableSolver = (UpdatableSolver) mySolver;
+            var updatableSolver = (UpdatableSolver) mySolver;
 
             int indexInSolver = this.getIntegration().getIndexInSolver(myModel, variable);
             double fixedValue = variable.getValue().doubleValue();
@@ -146,11 +146,11 @@ public abstract class IntermediateSolver implements Optimisation.Solver {
         mySolver = null;
     }
 
-    public boolean validate(final Access1D<BigDecimal> solution, final BasicLogger appender) {
+    public boolean validate( Access1D<BigDecimal> solution,  BasicLogger appender) {
         return myModel.validate(solution, appender);
     }
 
-    protected int getIndexInSolver(final int globalModelIndex) {
+    protected int getIndexInSolver( int globalModelIndex) {
         Variable variable = myModel.getVariable(globalModelIndex);
         ExpressionsBasedModel.Integration<?> integration = this.getIntegration();
         return integration.getIndexInSolver(myModel, variable);

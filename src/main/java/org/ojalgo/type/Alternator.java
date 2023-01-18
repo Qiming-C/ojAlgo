@@ -32,7 +32,7 @@ public class Alternator<T> {
     private final T myAlternativeB;
     private boolean mySwitch;
 
-    public Alternator(final T alternativeA, final T alternativeB) {
+    public Alternator( T alternativeA,  T alternativeB) {
 
         super();
 

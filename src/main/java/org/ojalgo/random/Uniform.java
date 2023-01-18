@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -32,28 +33,31 @@ import org.ojalgo.function.constant.PrimitiveMath;
  */
 public class Uniform extends AbstractContinuous {
 
-    public static Uniform of(final double lower, final double range) {
+    public static Uniform of( double lower,  double range) {
         return new Uniform(lower, range);
     }
 
     /**
-     * @return An integer: 0 <= ? < limit
+     *Returns an integer: 0 <= ? < limit.
+ 
      */
-    public static int randomInteger(final int limit) {
+    public static int randomInteger( int limit) {
         return (int) PrimitiveMath.FLOOR.invoke(limit * Math.random());
     }
 
     /**
-     * @return An integer: lower <= ? < higher
+     *Returns an integer: lower <= ? < higher.
+ 
      */
-    public static int randomInteger(final int lower, final int higher) {
+    public static int randomInteger( int lower,  int higher) {
         return lower + Uniform.randomInteger(higher - lower);
     }
 
     /**
-     * @return An integer: 0 &lt;= ? &lt; limit
+     *Returns an integer: 0 &lt;= ? &lt; limit.
+ 
      */
-    public static long randomInteger(final long limit) {
+    public static long randomInteger( long limit) {
         return (long) PrimitiveMath.FLOOR.invoke(limit * Math.random());
     }
 
@@ -68,7 +72,7 @@ public class Uniform extends AbstractContinuous {
         this(ZERO, ONE);
     }
 
-    public Uniform(final double lower, final double range) {
+    public Uniform( double lower,  double range) {
 
         super();
 
@@ -80,9 +84,9 @@ public class Uniform extends AbstractContinuous {
         myRange = range;
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
 
-        double retVal = ZERO;
+        @Var double retVal = ZERO;
 
         if ((myLower <= value) && (value <= (myLower + myRange))) {
             retVal = ONE / myRange;
@@ -91,9 +95,9 @@ public class Uniform extends AbstractContinuous {
         return retVal;
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
 
-        double retVal = ZERO;
+        @Var double retVal = ZERO;
 
         if ((value <= (myLower + myRange)) && (myLower <= value)) {
             retVal = (value - myLower) / myRange;
@@ -104,11 +108,11 @@ public class Uniform extends AbstractContinuous {
         return retVal;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myLower + (myRange / TWO);
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
         this.checkProbabilty(probability);
 

@@ -25,7 +25,7 @@ public abstract class CharArraySegment implements CharSequence {
 
     static final class RootSegment extends CharArraySegment {
 
-        RootSegment(final char[] array, final int start, final int end) {
+        RootSegment( char[] array,  int start,  int end) {
             super(array, start, end);
         }
 
@@ -40,7 +40,7 @@ public abstract class CharArraySegment implements CharSequence {
 
         private final CharArraySegment myParent;
 
-        Subsegment(final CharArraySegment parent, final int start, final int end) {
+        Subsegment( CharArraySegment parent,  int start,  int end) {
             super(parent, start, end);
             myParent = parent;
         }
@@ -52,11 +52,11 @@ public abstract class CharArraySegment implements CharSequence {
 
     }
 
-    public static CharArraySegment valueOf(final char[] array) {
+    public static CharArraySegment valueOf( char[] array) {
         return new RootSegment(array, 0, array.length);
     }
 
-    public static CharArraySegment valueOf(final char[] array, final int start, final int end) {
+    public static CharArraySegment valueOf( char[] array,  int start,  int end) {
         return new RootSegment(array, start, end);
     }
 
@@ -65,7 +65,7 @@ public abstract class CharArraySegment implements CharSequence {
     int end;
     int start;
 
-    CharArraySegment(final char[] array, final int start, final int end) {
+    CharArraySegment( char[] array,  int start,  int end) {
 
         super();
 
@@ -75,7 +75,7 @@ public abstract class CharArraySegment implements CharSequence {
         this.end = end;
     }
 
-    CharArraySegment(final CharArraySegment parent, final int start, final int end) {
+    CharArraySegment( CharArraySegment parent,  int start,  int end) {
 
         super();
 
@@ -85,15 +85,15 @@ public abstract class CharArraySegment implements CharSequence {
         this.end = end;
     }
 
-    public final char charAt(final int index) {
+    @Override public final char charAt( int index) {
         return myArray[this.start() + index];
     }
 
-    public final int length() {
+    @Override public final int length() {
         return end - start;
     }
 
-    public final CharArraySegment subSequence(final int start, final int end) {
+    @Override public final CharArraySegment subSequence( int start,  int end) {
         return new Subsegment(this, start, end);
     }
 

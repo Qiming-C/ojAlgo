@@ -23,8 +23,8 @@ package org.ojalgo.random.scedasticity;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.random.SampleSet;
 import org.ojalgo.structure.Access1D;
 
@@ -38,13 +38,13 @@ public final class GARCH extends AbstractScedasticity {
      * @param q Number of lagged squared error terms
      * @return Ready to use GARCH model
      */
-    public static GARCH estimate(final Access1D<?> series, final int p, final int q) {
+    public static GARCH estimate( Access1D<?> series,  int p,  int q) {
 
         SampleSet ss = SampleSet.wrap(series);
         double mean = ss.getMean();
         double variance = ss.getVariance();
 
-        GARCH model = GARCH.newInstance(p, q);
+        var model = GARCH.newInstance(p, q);
 
         int dim = 10 * Math.max(p, q);
 
@@ -54,7 +54,7 @@ public final class GARCH extends AbstractScedasticity {
 
         double[] varianceWeights = new double[p];
         double[] errorWeights = new double[q];
-        double totalErrorWeights = ZERO;
+        @Var double totalErrorWeights = ZERO;
 
         for (int i = 0; i < q; i++) {
             double weight = ELEVEN_TWELFTHS * parameters.doubleValue(i);
@@ -74,9 +74,10 @@ public final class GARCH extends AbstractScedasticity {
     }
 
     /**
-     * @see #newInstance(int, int, double, double)
+     *See {@link #newInstance(int, int, double, double)}.
+ 
      */
-    public static GARCH newInstance(final int p, final int q) {
+    public static GARCH newInstance( int p,  int q) {
         return GARCH.newInstance(p, q, ZERO, DEFAULT_VARIANCE);
     }
 
@@ -85,9 +86,9 @@ public final class GARCH extends AbstractScedasticity {
      * You're better of estimating suitable paramaters for your use case and then set {@link #base(double)},
      * {@link #errorWeights(double...)} and {@link #varianceWeights(double...)}.
      */
-    public static GARCH newInstance(final int p, final int q, final double mean, final double variance) {
+    public static GARCH newInstance( int p,  int q,  double mean,  double variance) {
 
-        GARCH retVal = new GARCH(p, q);
+        var retVal = new GARCH(p, q);
 
         retVal.base(variance / TWELVE);
 
@@ -108,7 +109,7 @@ public final class GARCH extends AbstractScedasticity {
     private final double[] myVariances;
     private final double[] myWeights;
 
-    public GARCH(final int p, final int q) {
+    public GARCH( int p,  int q) {
 
         super();
 
@@ -118,23 +119,23 @@ public final class GARCH extends AbstractScedasticity {
         myWeights = new double[p];
     }
 
-    public GARCH base(final double base) {
+    public GARCH base( double base) {
         myARCH.base(base);
         return this;
     }
 
-    public GARCH errorWeights(final double... lagged) {
+    public GARCH errorWeights( double... lagged) {
         myARCH.errorWeights(lagged);
         return this;
     }
 
-    public double getMean() {
+    @Override public double getMean() {
         return myARCH.getMean();
     }
 
-    public double getVariance() {
+    @Override public double getVariance() {
 
-        double retVal = myARCH.getVariance();
+        @Var double retVal = myARCH.getVariance();
 
         for (int i = 0, limit = Math.min(myWeights.length, myVariances.length); i < limit; i++) {
             retVal += myWeights[i] * myVariances[i];
@@ -143,12 +144,12 @@ public final class GARCH extends AbstractScedasticity {
         return retVal;
     }
 
-    public void initialise(final double mean, final double variance) {
+    @Override public void initialise( double mean,  double variance) {
         myARCH.initialise(mean, variance);
         Arrays.fill(myVariances, variance);
     }
 
-    public void update(final double value) {
+    @Override public void update( double value) {
 
         double variance = this.getVariance();
 
@@ -160,7 +161,7 @@ public final class GARCH extends AbstractScedasticity {
         myVariances[0] = variance;
     }
 
-    public GARCH varianceWeights(final double... lagged) {
+    public GARCH varianceWeights( double... lagged) {
         Arrays.fill(myWeights, ZERO);
         for (int i = 0, limit = Math.min(myWeights.length, lagged.length); i < limit; i++) {
             double tmpVal = lagged[i];

@@ -23,6 +23,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.array.operation.AXPY;
 import org.ojalgo.array.operation.SWAP;
@@ -48,9 +49,9 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         super();
     }
 
-    public Double calculateDeterminant(final Access2D<?> matrix) {
+    @Override public Double calculateDeterminant( Access2D<?> matrix) {
 
-        final double[][] data = this.reset(matrix, false);
+         double[][] data = this.reset(matrix, false);
 
         this.getInternalStore().fillMatching(matrix);
 
@@ -59,11 +60,11 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return this.getDeterminant();
     }
 
-    public int countSignificant(final double threshold) {
+    @Override public int countSignificant( double threshold) {
 
         RawStore internal = this.getInternalStore();
 
-        int significant = 0;
+        @Var int significant = 0;
         for (int ij = 0, limit = this.getMinDim(); ij < limit; ij++) {
             if (Math.abs(internal.doubleValue(ij, ij)) > threshold) {
                 significant++;
@@ -73,48 +74,48 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return significant;
     }
 
-    public boolean decompose(final Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    @Override public boolean decompose( Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
 
-        final double[][] data = this.reset(matrix, false);
+         double[][] data = this.reset(matrix, false);
 
         matrix.supplyTo(this.getInternalStore());
 
         return this.doDecompose(data, true);
     }
 
-    public boolean decomposeWithoutPivoting(final Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    @Override public boolean decomposeWithoutPivoting( Collectable<Double, ? super PhysicalStore<Double>> matrix) {
 
-        final double[][] data = this.reset(matrix, false);
+         double[][] data = this.reset(matrix, false);
 
         matrix.supplyTo(this.getInternalStore());
 
         return this.doDecompose(data, false);
     }
 
-    public Double getDeterminant() {
-        final int m = this.getRowDim();
-        final int n = this.getColDim();
+    @Override public Double getDeterminant() {
+         int m = this.getRowDim();
+         int n = this.getColDim();
         if (m != n) {
             throw new IllegalArgumentException("RawStore must be square.");
         }
-        final double[][] LU = this.getInternalData();
-        double d = myPivot.signum();
+         double[][] LU = this.getInternalData();
+        @Var double d = myPivot.signum();
         for (int j = 0; j < n; j++) {
             d *= LU[j][j];
         }
         return d;
     }
 
-    public MatrixStore<Double> getInverse() {
-        final int tmpRowDim = this.getRowDim();
+    @Override public MatrixStore<Double> getInverse() {
+         int tmpRowDim = this.getRowDim();
         return this.doGetInverse(this.allocate(tmpRowDim, tmpRowDim));
     }
 
-    public MatrixStore<Double> getInverse(final PhysicalStore<Double> preallocated) {
+    @Override public MatrixStore<Double> getInverse( PhysicalStore<Double> preallocated) {
         return this.doGetInverse(preallocated);
     }
 
-    public MatrixStore<Double> getL() {
+    @Override public MatrixStore<Double> getL() {
         MatrixStore<Double> logical = this.getInternalStore().triangular(false, true);
         int nbRows = this.getRowDim();
         if (nbRows < this.getColDim()) {
@@ -123,15 +124,15 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return logical;
     }
 
-    public int[] getPivotOrder() {
+    @Override public int[] getPivotOrder() {
         return myPivot.getOrder();
     }
 
-    public int[] getReversePivotOrder() {
+    @Override public int[] getReversePivotOrder() {
         return myPivot.reverseOrder();
     }
 
-    public double getRankThreshold() {
+    @Override public double getRankThreshold() {
 
         double largest = this.getInternalStore().aggregateDiagonal(Aggregator.LARGEST);
         double epsilon = this.getDimensionalEpsilon();
@@ -139,21 +140,21 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return epsilon * Math.max(MACHINE_SMALLEST, largest);
     }
 
-    public MatrixStore<Double> getSolution(final Collectable<Double, ? super PhysicalStore<Double>> rhs) {
-        final DecompositionStore<Double> tmpPreallocated = this.allocate(rhs.countRows(), rhs.countColumns());
+    @Override public MatrixStore<Double> getSolution( Collectable<Double, ? super PhysicalStore<Double>> rhs) {
+         DecompositionStore<Double> tmpPreallocated = this.allocate(rhs.countRows(), rhs.countColumns());
         return this.getSolution(rhs, tmpPreallocated);
     }
 
     @Override
-    public MatrixStore<Double> getSolution(final Collectable<Double, ? super PhysicalStore<Double>> rhs, final PhysicalStore<Double> preallocated) {
+    public MatrixStore<Double> getSolution( Collectable<Double, ? super PhysicalStore<Double>> rhs,  PhysicalStore<Double> preallocated) {
 
         this.collect(rhs).rows(myPivot.getOrder()).supplyTo(preallocated);
 
         return this.doSolve(preallocated);
     }
 
-    public MatrixStore<Double> getU() {
-        MatrixStore<Double> retVal = this.getInternalStore().triangular(true, false);
+    @Override public MatrixStore<Double> getU() {
+        @Var MatrixStore<Double> retVal = this.getInternalStore().triangular(true, false);
         int nbCols = this.getColDim();
         if (this.getRowDim() > nbCols) {
             retVal = retVal.limits(nbCols, nbCols);
@@ -162,9 +163,9 @@ final class RawLU extends RawDecomposition implements LU<Double> {
     }
 
     @Override
-    public MatrixStore<Double> invert(final Access2D<?> original, final PhysicalStore<Double> preallocated) throws RecoverableCondition {
+    public MatrixStore<Double> invert( Access2D<?> original,  PhysicalStore<Double> preallocated) throws RecoverableCondition {
 
-        final double[][] tmpData = this.reset(original, false);
+         double[][] tmpData = this.reset(original, false);
 
         this.getInternalStore().fillMatching(original);
 
@@ -176,7 +177,7 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public boolean isPivoted() {
+    @Override public boolean isPivoted() {
         return myPivot.isModified();
     }
 
@@ -185,18 +186,18 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return super.isSolvable();
     }
 
-    public PhysicalStore<Double> preallocate(final Structure2D template) {
+    @Override public PhysicalStore<Double> preallocate( Structure2D template) {
         return this.allocate(template.countRows(), template.countRows());
     }
 
-    public PhysicalStore<Double> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public PhysicalStore<Double> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         return this.allocate(templateBody.countRows(), templateRHS.countColumns());
     }
 
     @Override
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> preallocated) throws RecoverableCondition {
+    public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> preallocated) throws RecoverableCondition {
 
-        final double[][] tmpData = this.reset(body, false);
+         double[][] tmpData = this.reset(body, false);
 
         this.getInternalStore().fillMatching(body);
 
@@ -212,24 +213,24 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         throw RecoverableCondition.newEquationSystemNotSolvable();
     }
 
-    private boolean doDecompose(final double[][] data, final boolean pivoting) {
+    private boolean doDecompose( double[][] data,  boolean pivoting) {
 
-        final int m = this.getRowDim();
-        final int n = this.getColDim();
+         int m = this.getRowDim();
+         int n = this.getColDim();
 
         myPivot.reset(m);
 
-        double[] rowP;
-        double[] rowI;
+        @Var double[] rowP;
+        @Var double[] rowI;
 
-        double valP;
-        double valI;
+        @Var double valP;
+        @Var double valI;
 
         // Main loop along the diagonal
         for (int ij = 0, limit = Math.min(m, n); ij < limit; ij++) {
 
             if (pivoting) {
-                int p = ij;
+                @Var int p = ij;
                 valP = ABS.invoke(data[p][ij]);
                 for (int i = ij + 1; i < m; i++) {
                     valI = ABS.invoke(data[i][ij]);
@@ -264,7 +265,7 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return this.computed(true);
     }
 
-    private MatrixStore<Double> doGetInverse(final PhysicalStore<Double> preallocated) {
+    private MatrixStore<Double> doGetInverse( PhysicalStore<Double> preallocated) {
 
         int[] pivotOrder = myPivot.getOrder();
         int numbRows = this.getRowDim();
@@ -281,7 +282,7 @@ final class RawLU extends RawDecomposition implements LU<Double> {
         return preallocated;
     }
 
-    private MatrixStore<Double> doSolve(final PhysicalStore<Double> preallocated) {
+    private MatrixStore<Double> doSolve( PhysicalStore<Double> preallocated) {
 
         MatrixStore<Double> body = this.getInternalStore();
 

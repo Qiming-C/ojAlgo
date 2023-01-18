@@ -47,49 +47,49 @@ public interface DecompositionStore<N extends Comparable<N>> extends PhysicalSto
     /**
      * Cholesky transformations
      */
-    void applyCholesky(final int iterationPoint, final BasicArray<N> multipliers);
+    void applyCholesky( int iterationPoint,  BasicArray<N> multipliers);
 
     /**
      * LDL transformations
      */
-    void applyLDL(final int iterationPoint, final BasicArray<N> multipliers);
+    void applyLDL( int iterationPoint,  BasicArray<N> multipliers);
 
     /**
      * LU transformations
      */
-    void applyLU(final int iterationPoint, final BasicArray<N> multipliers);
+    void applyLU( int iterationPoint,  BasicArray<N> multipliers);
 
     Array1D<ComplexNumber> computeInPlaceSchur(PhysicalStore<N> transformationCollector, boolean eigenvalue);
 
     void divideAndCopyColumn(int row, int column, BasicArray<N> destination);
 
-    default void exchangeColumns(final int colA, final int colB) {
+    @Override default void exchangeColumns( int colA,  int colB) {
         this.exchangeColumns((long) colA, (long) colB);
     }
 
     void exchangeHermitian(int indexA, int indexB);
 
-    boolean generateApplyAndCopyHouseholderColumn(final int row, final int column, final Householder<N> destination);
+    boolean generateApplyAndCopyHouseholderColumn( int row,  int column,  Householder<N> destination);
 
-    boolean generateApplyAndCopyHouseholderRow(final int row, final int column, final Householder<N> destination);
+    boolean generateApplyAndCopyHouseholderRow( int row,  int column,  Householder<N> destination);
 
     void setToIdentity(int aCol);
 
-    default Array1D<N> sliceColumn(final long col) {
+    @Override default Array1D<N> sliceColumn( long col) {
         return this.sliceColumn(0L, col);
     }
 
-    Array1D<N> sliceColumn(long row, long col);
+    @Override Array1D<N> sliceColumn(long row, long col);
 
-    Array1D<N> sliceDiagonal(long row, long col);
+    @Override Array1D<N> sliceDiagonal(long row, long col);
 
-    Array1D<N> sliceRange(long first, long limit);
+    @Override Array1D<N> sliceRange(long first, long limit);
 
-    default Array1D<N> sliceRow(final long row) {
+    @Override default Array1D<N> sliceRow( long row) {
         return this.sliceRow(row, 0L);
     }
 
-    Array1D<N> sliceRow(long row, long col);
+    @Override Array1D<N> sliceRow(long row, long col);
 
     void transformSymmetric(Householder<N> transformation);
 

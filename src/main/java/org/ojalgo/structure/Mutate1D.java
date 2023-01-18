@@ -44,11 +44,11 @@ public interface Mutate1D extends Structure1D {
      */
     interface Fillable<N extends Comparable<N>> extends Mutate1D {
 
-        default void fillAll(final N value) {
+        default void fillAll( N value) {
             this.fillRange(0L, this.count(), value);
         }
 
-        default void fillAll(final NullaryFunction<?> supplier) {
+        default void fillAll( NullaryFunction<?> supplier) {
             this.fillRange(0L, this.count(), supplier);
         }
 
@@ -59,15 +59,15 @@ public interface Mutate1D extends Structure1D {
          * </p>
          * <code>this(i) = values(i)</code>
          */
-        default void fillMatching(final Access1D<?> values) {
+        default void fillMatching( Access1D<?> values) {
             Structure1D.loopMatching(this, values, i -> this.fillOne(i, values, i));
         }
 
-        default void fillMatching(final Access1D<N> left, final BinaryFunction<N> function, final Access1D<N> right) {
+        default void fillMatching( Access1D<N> left,  BinaryFunction<N> function,  Access1D<N> right) {
             Structure1D.loopMatching(left, right, i -> this.fillOne(i, function.invoke(left.get(i), right.get(i))));
         }
 
-        default void fillMatching(final UnaryFunction<N> function, final Access1D<N> arguments) {
+        default void fillMatching( UnaryFunction<N> function,  Access1D<N> arguments) {
             Structure1D.loopMatching(this, arguments, i -> this.fillOne(i, function.invoke(arguments.get(i))));
         }
 
@@ -75,7 +75,7 @@ public interface Mutate1D extends Structure1D {
          * @deprecated v52 Use {@link #set(long, Comparable)} instead.
          */
         @Deprecated
-        default void fillOne(final long index, final Access1D<?> values, final long valueIndex) {
+        default void fillOne( long index,  Access1D<?> values,  long valueIndex) {
             this.set(index, values.get(valueIndex));
         }
 
@@ -83,7 +83,7 @@ public interface Mutate1D extends Structure1D {
          * @deprecated v52 Use {@link #set(long, Comparable)} instead.
          */
         @Deprecated
-        default void fillOne(final long index, final N value) {
+        default void fillOne( long index,  N value) {
             this.set(index, value);
         }
 
@@ -91,15 +91,15 @@ public interface Mutate1D extends Structure1D {
          * @deprecated v52 Use {@link #set(long, Comparable)} instead.
          */
         @Deprecated
-        default void fillOne(final long index, final NullaryFunction<?> supplier) {
+        default void fillOne( long index,  NullaryFunction<?> supplier) {
             this.set(index, supplier.get());
         }
 
-        default void fillRange(final long first, final long limit, final N value) {
+        default void fillRange( long first,  long limit,  N value) {
             Structure1D.loopRange(first, limit, i -> this.fillOne(i, value));
         }
 
-        default void fillRange(final long first, final long limit, final NullaryFunction<?> supplier) {
+        default void fillRange( long first,  long limit,  NullaryFunction<?> supplier) {
             Structure1D.loopRange(first, limit, i -> this.fillOne(i, supplier));
         }
     }
@@ -114,7 +114,8 @@ public interface Mutate1D extends Structure1D {
     interface Mixable<N extends Comparable<N>> extends Structure1D {
 
         /**
-         * @return The new/mixed value
+         *Returns the new/mixed value.
+ 
          */
         double mix(long index, BinaryFunction<N> mixer, double addend);
 
@@ -124,7 +125,7 @@ public interface Mutate1D extends Structure1D {
 
     interface Modifiable<N extends Comparable<N>> extends Structure1D {
 
-        default void add(final long index, final byte addend) {
+        default void add( long index,  byte addend) {
             this.add(index, (short) addend);
         }
 
@@ -132,37 +133,37 @@ public interface Mutate1D extends Structure1D {
 
         void add(long index, double addend);
 
-        default void add(final long index, final float addend) {
+        default void add( long index,  float addend) {
             this.add(index, (double) addend);
         }
 
-        default void add(final long index, final int addend) {
+        default void add( long index,  int addend) {
             this.add(index, (long) addend);
         }
 
-        default void add(final long index, final long addend) {
+        default void add( long index,  long addend) {
             this.add(index, (double) addend);
         }
 
-        default void add(final long index, final short addend) {
+        default void add( long index,  short addend) {
             this.add(index, (int) addend);
         }
 
-        default void modifyAll(final UnaryFunction<N> modifier) {
+        default void modifyAll( UnaryFunction<N> modifier) {
             this.modifyRange(0L, this.count(), modifier);
         }
 
-        default void modifyMatching(final Access1D<N> left, final BinaryFunction<N> function) {
+        default void modifyMatching( Access1D<N> left,  BinaryFunction<N> function) {
             Structure1D.loopMatching(left, this, i -> this.modifyOne(i, function.first(left.get(i))));
         }
 
-        default void modifyMatching(final BinaryFunction<N> function, final Access1D<N> right) {
+        default void modifyMatching( BinaryFunction<N> function,  Access1D<N> right) {
             Structure1D.loopMatching(this, right, i -> this.modifyOne(i, function.second(right.get(i))));
         }
 
         void modifyOne(long index, UnaryFunction<N> modifier);
 
-        default void modifyRange(final long first, final long limit, final UnaryFunction<N> modifier) {
+        default void modifyRange( long first,  long limit,  UnaryFunction<N> modifier) {
             Structure1D.loopRange(first, limit, i -> this.modifyOne(i, modifier));
         }
 
@@ -186,14 +187,14 @@ public interface Mutate1D extends Structure1D {
     interface Receiver<N extends Comparable<N>> extends Mutate1D, Mutate1D.Fillable<N>, Consumer<Access1D<?>> {
 
         @Override
-        default void accept(final Access1D<?> supplied) {
+        default void accept( Access1D<?> supplied) {
             if (!this.isAcceptable(supplied)) {
                 throw new ProgrammingError("Not acceptable!");
             }
             supplied.loopAll(i -> this.set(i, supplied.get(i)));
         }
 
-        default boolean isAcceptable(final Structure1D supplier) {
+        default boolean isAcceptable( Structure1D supplier) {
             return this.count() >= supplier.count();
         }
 
@@ -210,28 +211,28 @@ public interface Mutate1D extends Structure1D {
     /**
      * Copies the argument of the ComplexNumber elements to the destination.
      */
-    static void copyComplexArgument(final Access1D<ComplexNumber> source, final Mutate1D destination) {
+    static void copyComplexArgument( Access1D<ComplexNumber> source,  Mutate1D destination) {
         source.loopAll(i -> destination.set(i, source.get(i).getArgument()));
     }
 
     /**
      * Copies the imaginary part of the ComplexNumber elements to the destination.
      */
-    static void copyComplexImaginary(final Access1D<ComplexNumber> source, final Mutate1D destination) {
+    static void copyComplexImaginary( Access1D<ComplexNumber> source,  Mutate1D destination) {
         source.loopAll(i -> destination.set(i, source.get(i).getImaginary()));
     }
 
     /**
      * Copies the modulus of the ComplexNumber elements to the destination.
      */
-    static void copyComplexModulus(final Access1D<ComplexNumber> source, final Mutate1D destination) {
+    static void copyComplexModulus( Access1D<ComplexNumber> source,  Mutate1D destination) {
         source.loopAll(i -> destination.set(i, source.get(i).getModulus()));
     }
 
     /**
      * Simultaneously copies the modulus and argument of the ComplexNumber elements to the destinations.
      */
-    static void copyComplexModulusAndArgument(final Access1D<ComplexNumber> source, final Mutate1D modDest, final Mutate1D argDest) {
+    static void copyComplexModulusAndArgument( Access1D<ComplexNumber> source,  Mutate1D modDest,  Mutate1D argDest) {
         source.loopAll(i -> {
             ComplexNumber cmplx = source.get(i);
             modDest.set(i, cmplx.getModulus());
@@ -242,14 +243,14 @@ public interface Mutate1D extends Structure1D {
     /**
      * Copies the real part of the ComplexNumber elements to the destination.
      */
-    static void copyComplexReal(final Access1D<ComplexNumber> source, final Mutate1D destination) {
+    static void copyComplexReal( Access1D<ComplexNumber> source,  Mutate1D destination) {
         source.loopAll(i -> destination.set(i, source.get(i).getReal()));
     }
 
     /**
      * Simultaneously copies the real and imaginary parts of the ComplexNumber elements to the destinations.
      */
-    static void copyComplexRealAndImaginary(final Access1D<ComplexNumber> source, final Mutate1D realDest, final Mutate1D imagDest) {
+    static void copyComplexRealAndImaginary( Access1D<ComplexNumber> source,  Mutate1D realDest,  Mutate1D imagDest) {
         source.loopAll(i -> {
             ComplexNumber cmplx = source.get(i);
             realDest.set(i, cmplx.getReal());
@@ -265,7 +266,7 @@ public interface Mutate1D extends Structure1D {
         this.loopAll(i -> this.set(i, PrimitiveMath.ZERO));
     }
 
-    default void set(final long index, final byte value) {
+    default void set( long index,  byte value) {
         this.set(index, (short) value);
     }
 
@@ -273,19 +274,19 @@ public interface Mutate1D extends Structure1D {
 
     void set(long index, double value);
 
-    default void set(final long index, final float value) {
+    default void set( long index,  float value) {
         this.set(index, (double) value);
     }
 
-    default void set(final long index, final int value) {
+    default void set( long index,  int value) {
         this.set(index, (long) value);
     }
 
-    default void set(final long index, final long value) {
+    default void set( long index,  long value) {
         this.set(index, (double) value);
     }
 
-    default void set(final long index, final short value) {
+    default void set( long index,  short value) {
         this.set(index, (int) value);
     }
 

@@ -43,9 +43,9 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
 
     public interface Context {
 
-        double calculatePortfolioReturn(final FinancePortfolio weightsPortfolio);
+        double calculatePortfolioReturn( FinancePortfolio weightsPortfolio);
 
-        double calculatePortfolioVariance(final FinancePortfolio weightsPortfolio);
+        double calculatePortfolioVariance( FinancePortfolio weightsPortfolio);
 
         MatrixR064 getAssetReturns();
 
@@ -65,28 +65,28 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
         super();
     }
 
-    public final int compareTo(final FinancePortfolio reference) {
+    @Override public final int compareTo( FinancePortfolio reference) {
         return NumberContext.compare(this.getSharpeRatio(), reference.getSharpeRatio());
     }
 
     public final GeometricBrownianMotion forecast() {
 
-        final double tmpInitialValue = ONE;
-        final double tmpExpectedValue = ONE + this.getMeanReturn();
-        final double tmpValueVariance = this.getReturnVariance();
-        final double tmpHorizon = ONE;
+         double tmpInitialValue = ONE;
+         double tmpExpectedValue = ONE + this.getMeanReturn();
+         double tmpValueVariance = this.getReturnVariance();
+         double tmpHorizon = ONE;
 
         return GeometricBrownianMotion.make(tmpInitialValue, tmpExpectedValue, tmpValueVariance, tmpHorizon);
     }
 
-    public final double getConformance(final FinancePortfolio reference) {
+    public final double getConformance( FinancePortfolio reference) {
 
-        final MatrixR064 tmpMyWeights = MATRIX_FACTORY.columns(this.getWeights());
-        final MatrixR064 tmpRefWeights = MATRIX_FACTORY.columns(reference.getWeights());
+         MatrixR064 tmpMyWeights = MATRIX_FACTORY.columns(this.getWeights());
+         MatrixR064 tmpRefWeights = MATRIX_FACTORY.columns(reference.getWeights());
 
-        final double tmpNumerator = tmpMyWeights.dot(tmpRefWeights);
-        final double tmpDenom1 = PrimitiveMath.SQRT.invoke(tmpMyWeights.dot(tmpMyWeights));
-        final double tmpDenom2 = PrimitiveMath.SQRT.invoke(tmpRefWeights.dot(tmpRefWeights));
+         double tmpNumerator = tmpMyWeights.dot(tmpRefWeights);
+         double tmpDenom1 = PrimitiveMath.SQRT.invoke(tmpMyWeights.dot(tmpMyWeights));
+         double tmpDenom2 = PrimitiveMath.SQRT.invoke(tmpRefWeights.dot(tmpRefWeights));
 
         return tmpNumerator / (tmpDenom1 * tmpDenom2);
     }
@@ -95,12 +95,12 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
         return this.getLossProbability(ONE);
     }
 
-    public final double getLossProbability(final Number timePeriod) {
+    public final double getLossProbability( Number timePeriod) {
 
-        final GeometricBrownianMotion tmpProc = this.forecast();
+         GeometricBrownianMotion tmpProc = this.forecast();
 
-        final double tmpDoubleValue = timePeriod.doubleValue();
-        final double tmpValue = tmpProc.getValue();
+         double tmpDoubleValue = timePeriod.doubleValue();
+         double tmpValue = tmpProc.getValue();
 
         return tmpProc.getDistribution(tmpDoubleValue).getDistribution(tmpValue);
     }
@@ -116,7 +116,7 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
      * {@linkplain #getVolatility()}.
      */
     public double getReturnVariance() {
-        final double tmpVolatility = this.getVolatility();
+         double tmpVolatility = this.getVolatility();
         return tmpVolatility * tmpVolatility;
     }
 
@@ -124,7 +124,7 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
         return this.getSharpeRatio(null);
     }
 
-    public final double getSharpeRatio(final Number riskFreeReturn) {
+    public final double getSharpeRatio( Number riskFreeReturn) {
         if (riskFreeReturn != null) {
             return (this.getMeanReturn() - riskFreeReturn.doubleValue()) / this.getVolatility();
         }
@@ -135,13 +135,13 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
      * Value at Risk (VaR) is the maximum loss not exceeded with a given probability defined as the confidence
      * level, over a given period of time.
      */
-    public final double getValueAtRisk(final Number confidenceLevel, final Number timePeriod) {
+    public final double getValueAtRisk( Number confidenceLevel,  Number timePeriod) {
 
-        final double aReturn = this.getMeanReturn();
-        final double aStdDev = this.getVolatility();
+         double aReturn = this.getMeanReturn();
+         double aStdDev = this.getVolatility();
 
-        final double tmpConfidenceScale = SQRT_TWO * ErrorFunction.erfi(ONE - TWO * (ONE - confidenceLevel.doubleValue()));
-        final double tmpTimePeriod = timePeriod.doubleValue();
+         double tmpConfidenceScale = SQRT_TWO * ErrorFunction.erfi(ONE - TWO * (ONE - confidenceLevel.doubleValue()));
+         double tmpTimePeriod = timePeriod.doubleValue();
 
         return PrimitiveMath.MAX.invoke(PrimitiveMath.SQRT.invoke(tmpTimePeriod) * aStdDev * tmpConfidenceScale - tmpTimePeriod * aReturn, ZERO);
     }
@@ -177,7 +177,7 @@ public abstract class FinancePortfolio implements Comparable<FinancePortfolio> {
     /**
      * Normalised weights Portfolio
      */
-    public final FinancePortfolio normalise(final NumberContext weightsContext) {
+    public final FinancePortfolio normalise( NumberContext weightsContext) {
         return new NormalisedPortfolio(this, weightsContext);
     }
 

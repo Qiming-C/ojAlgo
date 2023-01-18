@@ -51,12 +51,12 @@ public final class MatrixR128 extends BasicMatrix<Quadruple, MatrixR128> {
 
     public static final class DenseReceiver extends Mutator2D<Quadruple, MatrixR128, PhysicalStore<Quadruple>> {
 
-        DenseReceiver(final PhysicalStore<Quadruple> delegate) {
+        DenseReceiver( PhysicalStore<Quadruple> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixR128 instantiate(final MatrixStore<Quadruple> store) {
+        MatrixR128 instantiate( MatrixStore<Quadruple> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -69,12 +69,12 @@ public final class MatrixR128 extends BasicMatrix<Quadruple, MatrixR128> {
         }
 
         @Override
-        MatrixR128.DenseReceiver dense(final PhysicalStore<Quadruple> store) {
+        MatrixR128.DenseReceiver dense( PhysicalStore<Quadruple> store) {
             return new MatrixR128.DenseReceiver(store);
         }
 
         @Override
-        MatrixR128.SparseReceiver sparse(final SparseStore<Quadruple> store) {
+        MatrixR128.SparseReceiver sparse( SparseStore<Quadruple> store) {
             return new MatrixR128.SparseReceiver(store);
         }
 
@@ -82,12 +82,12 @@ public final class MatrixR128 extends BasicMatrix<Quadruple, MatrixR128> {
 
     public static final class SparseReceiver extends Mutator2D<Quadruple, MatrixR128, SparseStore<Quadruple>> {
 
-        SparseReceiver(final SparseStore<Quadruple> delegate) {
+        SparseReceiver( SparseStore<Quadruple> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixR128 instantiate(final MatrixStore<Quadruple> store) {
+        MatrixR128 instantiate( MatrixStore<Quadruple> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -98,7 +98,7 @@ public final class MatrixR128 extends BasicMatrix<Quadruple, MatrixR128> {
     /**
      * This method is for internal use only - YOU should NOT use it!
      */
-    MatrixR128(final ElementsSupplier<Quadruple> supplier) {
+    MatrixR128( ElementsSupplier<Quadruple> supplier) {
         super(FACTORY.getPhysicalFactory(), supplier);
     }
 
@@ -108,52 +108,52 @@ public final class MatrixR128 extends BasicMatrix<Quadruple, MatrixR128> {
     }
 
     @Override
-    Cholesky<Quadruple> newCholesky(final Structure2D typical) {
+    Cholesky<Quadruple> newCholesky( Structure2D typical) {
         return Cholesky.QUADRUPLE.make(typical);
     }
 
     @Override
-    DeterminantTask<Quadruple> newDeterminantTask(final Structure2D template) {
+    DeterminantTask<Quadruple> newDeterminantTask( Structure2D template) {
         return DeterminantTask.QUADRUPLE.make(template, this.isHermitian(), false);
     }
 
     @Override
-    Eigenvalue<Quadruple> newEigenvalue(final Structure2D typical) {
+    Eigenvalue<Quadruple> newEigenvalue( Structure2D typical) {
         return Eigenvalue.QUADRUPLE.make(typical, this.isHermitian());
     }
 
     @Override
-    MatrixR128 newInstance(final ElementsSupplier<Quadruple> store) {
+    MatrixR128 newInstance( ElementsSupplier<Quadruple> store) {
         return new MatrixR128(store);
     }
 
     @Override
-    InverterTask<Quadruple> newInverterTask(final Structure2D template) {
+    InverterTask<Quadruple> newInverterTask( Structure2D template) {
         return InverterTask.QUADRUPLE.make(template, this.isHermitian(), false);
     }
 
     @Override
-    LDL<Quadruple> newLDL(final Structure2D typical) {
+    LDL<Quadruple> newLDL( Structure2D typical) {
         return LDL.QUADRUPLE.make(typical);
     }
 
     @Override
-    LU<Quadruple> newLU(final Structure2D typical) {
+    LU<Quadruple> newLU( Structure2D typical) {
         return LU.QUADRUPLE.make(typical);
     }
 
     @Override
-    QR<Quadruple> newQR(final Structure2D typical) {
+    QR<Quadruple> newQR( Structure2D typical) {
         return QR.QUADRUPLE.make(typical);
     }
 
     @Override
-    SingularValue<Quadruple> newSingularValue(final Structure2D typical) {
+    SingularValue<Quadruple> newSingularValue( Structure2D typical) {
         return SingularValue.QUADRUPLE.make(typical);
     }
 
     @Override
-    SolverTask<Quadruple> newSolverTask(final Structure2D templateBody, final Structure2D templateRHS) {
+    SolverTask<Quadruple> newSolverTask( Structure2D templateBody,  Structure2D templateRHS) {
         return SolverTask.QUADRUPLE.make(templateBody, templateRHS, this.isHermitian(), false);
     }
 

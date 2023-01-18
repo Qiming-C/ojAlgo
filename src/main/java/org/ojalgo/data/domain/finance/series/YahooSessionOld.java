@@ -21,10 +21,10 @@
  */
 package org.ojalgo.data.domain.finance.series;
 
+import com.google.errorprone.annotations.Var;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
 import org.ojalgo.netio.BasicLogger;
 import org.ojalgo.netio.ResourceLocator;
 import org.ojalgo.netio.ResourceLocator.Request;
@@ -53,7 +53,7 @@ final class YahooSessionOld {
         private final ResourceLocator.Session mySession;
         private final String mySymbol;
 
-        Fetcher(final ResourceLocator.Session session, final String symbol, final CalendarDateUnit resolution) {
+        Fetcher( ResourceLocator.Session session,  String symbol,  CalendarDateUnit resolution) {
             super();
             mySession = session;
             mySymbol = symbol;
@@ -61,7 +61,7 @@ final class YahooSessionOld {
 
         }
 
-        public InputStream getInputStream() {
+        @Override public InputStream getInputStream() {
 
             if (debug) {
                 BasicLogger.debug();
@@ -119,11 +119,11 @@ final class YahooSessionOld {
             return response.getInputStream();
         }
 
-        public CalendarDateUnit getResolution() {
+        @Override public CalendarDateUnit getResolution() {
             return myResolution;
         }
 
-        public String getSymbol() {
+        @Override public String getSymbol() {
             return mySymbol;
         }
 
@@ -148,14 +148,14 @@ final class YahooSessionOld {
     /**
      * A request that requires consent and will set the "B" cookie, but not the crumb
      */
-    static ResourceLocator.Request buildChallengeRequest(final ResourceLocator.Session session, final String symbol) {
+    static ResourceLocator.Request buildChallengeRequest( ResourceLocator.Session session,  String symbol) {
         // The "options" part causes the cookie to be set.
         // Other path endings may also work,
         // but there has to be something after the symbol
         return session.request().host(FINANCE_YAHOO_COM).path("/quote/" + symbol + "/options");
     }
 
-    static ResourceLocator.Request buildConsentRequest(final ResourceLocator.Session session, final ResourceLocator.Request challengeRequest) {
+    static ResourceLocator.Request buildConsentRequest( ResourceLocator.Session session,  ResourceLocator.Request challengeRequest) {
 
         String sessionID = session.getParameterValue(SESSION_ID);
         String csrfToken = session.getParameterValue(CSRF_TOKEN);
@@ -185,11 +185,11 @@ final class YahooSessionOld {
         return request;
     }
 
-    static Request buildCrumbRequest(final ResourceLocator.Session session) {
+    static Request buildCrumbRequest( ResourceLocator.Session session) {
         return session.request().host(QUERY1_FINANCE_YAHOO_COM).path("/v1/test/getcrumb");
     }
 
-    static ResourceLocator.Request buildDataRequest(final Session session, final String symbol, final CalendarDateUnit resolution) {
+    static ResourceLocator.Request buildDataRequest( Session session,  String symbol,  CalendarDateUnit resolution) {
 
         ResourceLocator.Request request = session.request().host(QUERY1_FINANCE_YAHOO_COM).path("/v7/finance/download/" + symbol);
 
@@ -207,8 +207,8 @@ final class YahooSessionOld {
 
         request.query("events", "history");
 
-        final Instant now = Instant.now();
-        final Instant past = now.minus(DURATION_30_YEARS.toDurationInMillis(), ChronoUnit.MILLIS);
+         Instant now = Instant.now();
+         Instant past = now.minus(DURATION_30_YEARS.toDurationInMillis(), ChronoUnit.MILLIS);
 
         request.query("period1", Long.toString(past.getEpochSecond()));
         request.query("period2", Long.toString(now.getEpochSecond()));
@@ -217,7 +217,7 @@ final class YahooSessionOld {
         return request;
     }
 
-    static void scrapeChallengeResponse(final ResourceLocator.Session session, final ResourceLocator.Response challengeResponse) {
+    static void scrapeChallengeResponse( ResourceLocator.Session session,  ResourceLocator.Response challengeResponse) {
 
         String challengeResponseBody = challengeResponse.toString();
         ResourceLocator.Request finalRequest = challengeResponse.getRequest();
@@ -225,8 +225,8 @@ final class YahooSessionOld {
         String sessionId = finalRequest.getQueryValue(SESSION_ID);
         session.parameter(SESSION_ID, sessionId);
 
-        int begin = challengeResponseBody.indexOf(INPUT_TYPE_HIDDEN_NAME_CSRF_TOKEN_VALUE);
-        int end = 0;
+        @Var int begin = challengeResponseBody.indexOf(INPUT_TYPE_HIDDEN_NAME_CSRF_TOKEN_VALUE);
+        @Var int end = 0;
         if (begin >= 0) {
             begin += INPUT_TYPE_HIDDEN_NAME_CSRF_TOKEN_VALUE.length();
             end = challengeResponseBody.indexOf(END, begin);
@@ -243,7 +243,7 @@ final class YahooSessionOld {
         }
     }
 
-    static void scrapeCrumbResponse(final ResourceLocator.Session session, final ResourceLocator.Response crumbResponse) {
+    static void scrapeCrumbResponse( ResourceLocator.Session session,  ResourceLocator.Response crumbResponse) {
         session.parameter(CRUMB, crumbResponse.toString());
     }
 
@@ -253,7 +253,7 @@ final class YahooSessionOld {
         super();
     }
 
-    Fetcher newFetcher(final String symbol, final CalendarDateUnit resolution) {
+    Fetcher newFetcher( String symbol,  CalendarDateUnit resolution) {
         return new Fetcher(mySession, symbol, resolution);
     }
 

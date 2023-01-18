@@ -23,6 +23,7 @@ package org.ojalgo.matrix.task.iterative;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.function.aggregator.Aggregator;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -46,10 +47,10 @@ public final class JacobiSolver extends StationaryIterativeSolver {
         super();
     }
 
-    @SuppressWarnings("unchecked")
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> current) throws RecoverableCondition {
+    @Override @SuppressWarnings("unchecked")
+    public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> current) throws RecoverableCondition {
 
-        MatrixStore<Double> tmpBody = null;
+        @Var MatrixStore<Double> tmpBody = null;
         if (body instanceof MatrixStore<?> && body.get(0L) instanceof Double) {
             tmpBody = (MatrixStore<Double>) body;
         } else {
@@ -57,7 +58,7 @@ public final class JacobiSolver extends StationaryIterativeSolver {
         }
         MatrixStore<Double> tmpBodyDiagonal = Primitive64Store.FACTORY.columns(tmpBody.sliceDiagonal());
 
-        MatrixStore<Double> tmpRHS = null;
+        @Var MatrixStore<Double> tmpRHS = null;
         if (rhs instanceof MatrixStore<?> && rhs.get(0L) instanceof Double) {
             tmpRHS = (MatrixStore<Double>) rhs;
         } else {
@@ -67,10 +68,10 @@ public final class JacobiSolver extends StationaryIterativeSolver {
         PhysicalStore<Double> tmpIncrement = this.preallocate(body, rhs);
         TransformableRegion<Double> incremetReceiver = body.isFat() ? tmpIncrement.regionByLimits((int) body.countRows(), 1) : tmpIncrement;
 
-        double tmpNormErr = POSITIVE_INFINITY;
+        @Var double tmpNormErr = POSITIVE_INFINITY;
         double tmpNormRHS = tmpRHS.aggregateAll(Aggregator.NORM2);
 
-        int tmpIterations = 0;
+        @Var int tmpIterations = 0;
         int tmpLimit = this.getIterationsLimit();
         NumberContext tmpCntxt = this.getAccuracyContext();
         double tmpRelaxation = this.getRelaxationFactor();

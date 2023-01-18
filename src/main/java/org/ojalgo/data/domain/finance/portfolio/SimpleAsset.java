@@ -41,23 +41,23 @@ public final class SimpleAsset extends FinancePortfolio {
     private final double myVolatility;
     private final BigDecimal myWeight;
 
-    public SimpleAsset(final FinancePortfolio portfolio) {
+    public SimpleAsset( FinancePortfolio portfolio) {
         this(portfolio.getMeanReturn(), portfolio.getVolatility(), BigMath.ONE);
     }
 
-    public SimpleAsset(final FinancePortfolio portfolio, final Comparable<?> weight) {
+    public SimpleAsset( FinancePortfolio portfolio,  Comparable<?> weight) {
         this(portfolio.getMeanReturn(), portfolio.getVolatility(), weight);
     }
 
-    public SimpleAsset(final Comparable<?> weight) {
+    public SimpleAsset( Comparable<?> weight) {
         this(PrimitiveMath.ZERO, PrimitiveMath.ZERO, weight);
     }
 
-    public SimpleAsset(final Comparable<?> meanReturn, final Comparable<?> volatility) {
+    public SimpleAsset( Comparable<?> meanReturn,  Comparable<?> volatility) {
         this(meanReturn, volatility, BigMath.ONE);
     }
 
-    public SimpleAsset(final Comparable<?> meanReturn, final Comparable<?> volatility, final Comparable<?> weight) {
+    public SimpleAsset( Comparable<?> meanReturn,  Comparable<?> volatility,  Comparable<?> weight) {
 
         super();
 

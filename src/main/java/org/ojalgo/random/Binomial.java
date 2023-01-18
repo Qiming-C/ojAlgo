@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.CombinatorialFunctions;
 
@@ -33,7 +34,7 @@ import org.ojalgo.function.special.CombinatorialFunctions;
  */
 public class Binomial extends AbstractDiscrete {
 
-    public static Binomial of(final int count, final double probability) {
+    public static Binomial of( int count,  double probability) {
         return new Binomial(count, probability);
     }
 
@@ -44,7 +45,7 @@ public class Binomial extends AbstractDiscrete {
         this(1, HALF);
     }
 
-    public Binomial(final int count, final double probability) {
+    public Binomial( int count,  double probability) {
 
         super();
 
@@ -52,11 +53,11 @@ public class Binomial extends AbstractDiscrete {
         myProbability = probability;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myCount * myProbability;
     }
 
-    public double getProbability(final int value) {
+    @Override public double getProbability( int value) {
         return CombinatorialFunctions.subsets(myCount, value) * PrimitiveMath.POW.invoke(myProbability, value)
                 * PrimitiveMath.POW.invoke(ONE - myProbability, myCount - value);
     }
@@ -69,7 +70,7 @@ public class Binomial extends AbstractDiscrete {
     @Override
     protected double generate() {
 
-        int retVal = 0;
+        @Var int retVal = 0;
 
         for (int i = 0; i < myCount; i++) {
             retVal += (int) (myProbability + this.random().nextDouble());

@@ -39,7 +39,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     @FunctionalInterface
     public interface Binary extends BinaryFunction<Double> {
 
-        default Double invoke(final Double arg1, final Double arg2) {
+        @Override default Double invoke( Double arg1,  Double arg2) {
             return Double.valueOf(this.invoke(arg1.doubleValue(), arg2.doubleValue()));
         }
 
@@ -48,7 +48,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     @FunctionalInterface
     public interface Consumer extends VoidFunction<Double> {
 
-        default void invoke(final Double arg) {
+        @Override default void invoke( Double arg) {
             this.invoke(arg.doubleValue());
         }
 
@@ -57,7 +57,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     @FunctionalInterface
     public interface Parameter extends ParameterFunction<Double> {
 
-        default Double invoke(final Double arg, final int param) {
+        @Override default Double invoke( Double arg,  int param) {
             return Double.valueOf(this.invoke(arg.doubleValue(), param));
         }
 
@@ -66,7 +66,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     @FunctionalInterface
     public interface Predicate extends PredicateFunction<Double> {
 
-        default boolean invoke(final Double arg) {
+        @Override default boolean invoke( Double arg) {
             return this.invoke(arg.doubleValue());
         }
 
@@ -75,7 +75,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     @FunctionalInterface
     public interface Unary extends UnaryFunction<Double> {
 
-        default Double invoke(final Double arg) {
+        @Override default Double invoke( Double arg) {
             return Double.valueOf(this.invoke(arg.doubleValue()));
         }
 
@@ -177,7 +177,7 @@ public final class PrimitiveFunction extends FunctionSet<Double> {
     }
 
     @Override
-    public Unary enforce(final NumberContext context) {
+    public Unary enforce( NumberContext context) {
         return t -> context.enforce(t);
     }
 

@@ -28,19 +28,19 @@ package org.ojalgo.array;
 @Deprecated
 public final class Primitive32Array extends ArrayR032 {
 
-    public static Primitive32Array make(final int size) {
+    public static Primitive32Array make( int size) {
         return new Primitive32Array(size);
     }
 
-    public static Primitive32Array wrap(final float... data) {
+    public static Primitive32Array wrap( float... data) {
         return new Primitive32Array(data);
     }
 
-    Primitive32Array(final float[] data) {
+    Primitive32Array( float[] data) {
         super(data);
     }
 
-    Primitive32Array(final int size) {
+    Primitive32Array( int size) {
         super(size);
     }
 

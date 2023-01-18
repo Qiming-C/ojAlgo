@@ -59,25 +59,25 @@ public class ArrayC128 extends ScalarArray<ComplexNumber> {
         }
 
         @Override
-        PlainArray<ComplexNumber> makeDenseArray(final long size) {
+        PlainArray<ComplexNumber> makeDenseArray( long size) {
             return ArrayC128.make((int) size);
         }
 
     };
 
-    public static ArrayC128 make(final int size) {
+    public static ArrayC128 make( int size) {
         return new ArrayC128(size);
     }
 
-    public static ArrayC128 wrap(final ComplexNumber... data) {
+    public static ArrayC128 wrap( ComplexNumber... data) {
         return new ArrayC128(data);
     }
 
-    protected ArrayC128(final ComplexNumber[] data) {
+    protected ArrayC128( ComplexNumber[] data) {
         super(FACTORY, data);
     }
 
-    protected ArrayC128(final int size) {
+    protected ArrayC128( int size) {
         super(FACTORY, size);
     }
 

@@ -23,9 +23,9 @@ package org.ojalgo.matrix.store;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.Array2D;
@@ -69,14 +69,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
 
     public static final PhysicalStore.Factory<Double, Primitive64Store> FACTORY = new PrimitiveFactory<Primitive64Store>() {
 
-        public Primitive64Store columns(final Access1D<?>... source) {
+        @Override public Primitive64Store columns( Access1D<?>... source) {
 
-            final int tmpRowDim = (int) source[0].count();
-            final int tmpColDim = source.length;
+             var tmpRowDim = (int) source[0].count();
+             int tmpColDim = source.length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            Access1D<?> tmpColumn;
+            @Var Access1D<?> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -87,14 +87,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store columns(final Comparable<?>[]... source) {
+        @Override public Primitive64Store columns( Comparable<?>[]... source) {
 
-            final int tmpRowDim = source[0].length;
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].length;
+             int tmpColDim = source.length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            Comparable<?>[] tmpColumn;
+            @Var Comparable<?>[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -105,14 +105,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store columns(final double[]... source) {
+        @Override public Primitive64Store columns( double[]... source) {
 
-            final int tmpRowDim = source[0].length;
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].length;
+             int tmpColDim = source.length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            double[] tmpColumn;
+            @Var double[] tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -123,14 +123,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store columns(final List<? extends Comparable<?>>... source) {
+        @Override public Primitive64Store columns( List<? extends Comparable<?>>... source) {
 
-            final int tmpRowDim = source[0].size();
-            final int tmpColDim = source.length;
+             int tmpRowDim = source[0].size();
+             int tmpColDim = source.length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            List<? extends Comparable<?>> tmpColumn;
+            @Var List<? extends Comparable<?>> tmpColumn;
             for (int j = 0; j < tmpColDim; j++) {
                 tmpColumn = source[j];
                 for (int i = 0; i < tmpRowDim; i++) {
@@ -141,19 +141,19 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store copy(final Access2D<?> source) {
+        @Override public Primitive64Store copy( Access2D<?> source) {
 
-            final int tmpRowDim = (int) source.countRows();
-            final int tmpColDim = (int) source.countColumns();
+             var tmpRowDim = (int) source.countRows();
+             var tmpColDim = (int) source.countColumns();
 
-            final Primitive64Store retVal = new Primitive64Store(tmpRowDim, tmpColDim);
+             var retVal = new Primitive64Store(tmpRowDim, tmpColDim);
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int aFirst, final int aLimit) {
+                    public void conquer( int aFirst,  int aLimit) {
                         FillMatchingSingle.copy(retVal.data, tmpRowDim, aFirst, aLimit, source);
                     }
 
@@ -169,18 +169,18 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return retVal;
         }
 
-        public Primitive64Store make(final long rows, final long columns) {
+        @Override public Primitive64Store make( long rows,  long columns) {
             return new Primitive64Store((int) rows, (int) columns);
         }
 
-        public Primitive64Store rows(final Access1D<?>... source) {
+        @Override public Primitive64Store rows( Access1D<?>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = (int) source[0].count();
+             int tmpRowDim = source.length;
+             var tmpColDim = (int) source[0].count();
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            Access1D<?> tmpRow;
+            @Var Access1D<?> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -191,14 +191,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store rows(final Comparable<?>[]... source) {
+        @Override public Primitive64Store rows( Comparable<?>[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            Comparable<?>[] tmpRow;
+            @Var Comparable<?>[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -209,14 +209,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store rows(final double[]... source) {
+        @Override public Primitive64Store rows( double[]... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].length;
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].length;
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            double[] tmpRow;
+            @Var double[] tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -227,14 +227,14 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store rows(final List<? extends Comparable<?>>... source) {
+        @Override public Primitive64Store rows( List<? extends Comparable<?>>... source) {
 
-            final int tmpRowDim = source.length;
-            final int tmpColDim = source[0].size();
+             int tmpRowDim = source.length;
+             int tmpColDim = source[0].size();
 
-            final double[] tmpData = new double[tmpRowDim * tmpColDim];
+             double[] tmpData = new double[tmpRowDim * tmpColDim];
 
-            List<? extends Comparable<?>> tmpRow;
+            @Var List<? extends Comparable<?>> tmpRow;
             for (int i = 0; i < tmpRowDim; i++) {
                 tmpRow = source[i];
                 for (int j = 0; j < tmpColDim; j++) {
@@ -245,19 +245,19 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
             return new Primitive64Store(tmpRowDim, tmpColDim, tmpData);
         }
 
-        public Primitive64Store transpose(final Access2D<?> source) {
+        @Override public Primitive64Store transpose( Access2D<?> source) {
 
-            final Primitive64Store retVal = new Primitive64Store((int) source.countColumns(), (int) source.countRows());
+             var retVal = new Primitive64Store((int) source.countColumns(), (int) source.countRows());
 
-            final int tmpRowDim = retVal.getRowDim();
-            final int tmpColDim = retVal.getColDim();
+             int tmpRowDim = retVal.getRowDim();
+             int tmpColDim = retVal.getColDim();
 
             if (tmpColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int first, final int limit) {
+                    public void conquer( int first,  int limit) {
                         FillMatchingSingle.transpose(retVal.data, tmpRowDim, first, limit, source);
                     }
 
@@ -282,12 +282,12 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     /**
      * Extracts the argument of the ComplexNumber elements to a new primitive double valued matrix.
      */
-    public static Primitive64Store getComplexArgument(final Access2D<ComplexNumber> arg) {
+    public static Primitive64Store getComplexArgument( Access2D<ComplexNumber> arg) {
 
-        final long numberOfRows = arg.countRows();
-        final long numberOfColumns = arg.countColumns();
+         long numberOfRows = arg.countRows();
+         long numberOfColumns = arg.countColumns();
 
-        final Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
+         Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
 
         Mutate1D.copyComplexArgument(arg, retVal);
 
@@ -297,12 +297,12 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     /**
      * Extracts the imaginary part of the ComplexNumber elements to a new primitive double valued matrix.
      */
-    public static Primitive64Store getComplexImaginary(final Access2D<ComplexNumber> arg) {
+    public static Primitive64Store getComplexImaginary( Access2D<ComplexNumber> arg) {
 
-        final long numberOfRows = arg.countRows();
-        final long numberOfColumns = arg.countColumns();
+         long numberOfRows = arg.countRows();
+         long numberOfColumns = arg.countColumns();
 
-        final Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
+         Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
 
         Mutate1D.copyComplexImaginary(arg, retVal);
 
@@ -312,12 +312,12 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     /**
      * Extracts the modulus of the ComplexNumber elements to a new primitive double valued matrix.
      */
-    public static Primitive64Store getComplexModulus(final Access2D<ComplexNumber> arg) {
+    public static Primitive64Store getComplexModulus( Access2D<ComplexNumber> arg) {
 
-        final long numberOfRows = arg.countRows();
-        final long numberOfColumns = arg.countColumns();
+         long numberOfRows = arg.countRows();
+         long numberOfColumns = arg.countColumns();
 
-        final Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
+         Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
 
         Mutate1D.copyComplexModulus(arg, retVal);
 
@@ -327,27 +327,27 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     /**
      * Extracts the real part of the ComplexNumber elements to a new primitive double valued matrix.
      */
-    public static Primitive64Store getComplexReal(final Access2D<ComplexNumber> arg) {
+    public static Primitive64Store getComplexReal( Access2D<ComplexNumber> arg) {
 
-        final long numberOfRows = arg.countRows();
-        final long numberOfColumns = arg.countColumns();
+         long numberOfRows = arg.countRows();
+         long numberOfColumns = arg.countColumns();
 
-        final Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
+         Primitive64Store retVal = FACTORY.make(numberOfRows, numberOfColumns);
 
         Mutate1D.copyComplexReal(arg, retVal);
 
         return retVal;
     }
 
-    public static Primitive64Store wrap(final double... data) {
+    public static Primitive64Store wrap( double... data) {
         return new Primitive64Store(data);
     }
 
-    public static Primitive64Store wrap(final double[] data, final int structure) {
+    public static Primitive64Store wrap( double[] data,  int structure) {
         return new Primitive64Store(structure, data.length / structure, data);
     }
 
-    static Primitive64Store cast(final Access1D<Double> matrix) {
+    static Primitive64Store cast( Access1D<Double> matrix) {
         if (matrix instanceof Primitive64Store) {
             return (Primitive64Store) matrix;
         }
@@ -357,7 +357,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return FACTORY.columns(matrix);
     }
 
-    static Householder.Primitive64 cast(final Householder<Double> transformation) {
+    static Householder.Primitive64 cast( Householder<Double> transformation) {
         if (transformation instanceof Householder.Primitive64) {
             return (Householder.Primitive64) transformation;
         }
@@ -367,7 +367,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return new Householder.Primitive64(transformation);
     }
 
-    static Rotation.Primitive cast(final Rotation<Double> transformation) {
+    static Rotation.Primitive cast( Rotation<Double> transformation) {
         if (transformation instanceof Rotation.Primitive) {
             return (Rotation.Primitive) transformation;
         }
@@ -384,16 +384,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     private transient double[] myWorkerColumn;
 
     @SuppressWarnings("unused")
-    private Primitive64Store(final double[] dataArray) {
+    private Primitive64Store( double[] dataArray) {
         this(dataArray.length, 1, dataArray);
     }
 
     @SuppressWarnings("unused")
-    private Primitive64Store(final int numbRows) {
+    private Primitive64Store( int numbRows) {
         this(numbRows, 1);
     }
 
-    Primitive64Store(final int numbRows, final int numbCols, final double[] dataArray) {
+    Primitive64Store( int numbRows,  int numbCols,  double[] dataArray) {
 
         super(dataArray);
 
@@ -408,7 +408,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         multiplyNeither = MultiplyNeither.newPrimitive64(myRowDim, myColDim);
     }
 
-    Primitive64Store(final long numbRows, final long numbCols) {
+    Primitive64Store( long numbRows,  long numbCols) {
 
         super(Math.toIntExact(numbRows * numbCols));
 
@@ -423,7 +423,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         multiplyNeither = MultiplyNeither.newPrimitive64(myRowDim, myColDim);
     }
 
-    public void accept(final Access2D<?> supplied) {
+    @Override public void accept( Access2D<?> supplied) {
         for (long j = 0L; j < supplied.countColumns(); j++) {
             for (long i = 0L; i < supplied.countRows(); i++) {
                 this.set(i, j, supplied.doubleValue(i, j));
@@ -431,25 +431,25 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void add(final long row, final long col, final Comparable<?> addend) {
+    @Override public void add( long row,  long col,  Comparable<?> addend) {
         myUtility.add(row, col, addend);
     }
 
-    public void add(final long row, final long col, final double addend) {
+    @Override public void add( long row,  long col,  double addend) {
         myUtility.add(row, col, addend);
     }
 
-    public void applyCholesky(final int iterationPoint, final BasicArray<Double> multipliers) {
+    @Override public void applyCholesky( int iterationPoint,  BasicArray<Double> multipliers) {
 
-        final double[] tmpData = data;
-        final double[] tmpColumn = ((ArrayR064) multipliers).data;
+         double[] tmpData = data;
+         double[] tmpColumn = ((ArrayR064) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyCholesky.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     ApplyCholesky.invoke(tmpData, myRowDim, first, limit, tmpColumn);
                 }
             };
@@ -462,16 +462,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void applyLDL(final int iterationPoint, final BasicArray<Double> multipliers) {
+    @Override public void applyLDL( int iterationPoint,  BasicArray<Double> multipliers) {
 
-        final double[] column = ((ArrayR064) multipliers).data;
+         double[] column = ((ArrayR064) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyLDL.THRESHOLD) {
 
-            final DivideAndConquer conquerer = new DivideAndConquer() {
+             var conquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     ApplyLDL.invoke(data, myRowDim, first, limit, column, iterationPoint);
                 }
             };
@@ -484,16 +484,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void applyLU(final int iterationPoint, final BasicArray<Double> multipliers) {
+    @Override public void applyLU( int iterationPoint,  BasicArray<Double> multipliers) {
 
-        final double[] column = ((ArrayR064) multipliers).data;
+         double[] column = ((ArrayR064) multipliers).data;
 
         if (myColDim - iterationPoint - 1 > ApplyLU.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     ApplyLU.invoke(data, myRowDim, first, limit, column, iterationPoint);
                 }
             };
@@ -506,15 +506,15 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public Array1D<Double> asList() {
+    @Override public Array1D<Double> asList() {
         return myUtility.flatten();
     }
 
-    public void caxpy(final double aSclrA, final int aColX, final int aColY, final int aFirstRow) {
+    public void caxpy( double aSclrA,  int aColX,  int aColY,  int aFirstRow) {
         AXPY.invoke(data, aColY * myRowDim + aFirstRow, aSclrA, data, aColX * myRowDim + aFirstRow, 0, myRowDim - aFirstRow);
     }
 
-    public Array1D<ComplexNumber> computeInPlaceSchur(final PhysicalStore<Double> transformationCollector, final boolean eigenvalue) {
+    @Override public Array1D<ComplexNumber> computeInPlaceSchur( PhysicalStore<Double> transformationCollector,  boolean eigenvalue) {
 
         // final PrimitiveDenseStore tmpThisCopy = this.copy();
         // final PrimitiveDenseStore tmpCollCopy = (PrimitiveDenseStore)
@@ -524,23 +524,23 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
 
         // Actual
 
-        final double[] tmpData = data;
+         double[] tmpData = data;
 
-        final double[] tmpCollectorData = ((Primitive64Store) transformationCollector).data;
+         double[] tmpCollectorData = ((Primitive64Store) transformationCollector).data;
 
-        final double[] tmpVctrWork = new double[this.getMinDim()];
+         double[] tmpVctrWork = new double[this.getMinDim()];
         EvD1D.orthes(tmpData, tmpCollectorData, tmpVctrWork);
 
         // BasicLogger.logDebug("Schur Step", this);
         // BasicLogger.logDebug("Hessenberg", tmpThisCopy);
 
-        final double[][] tmpDiags = EvD1D.hqr2(tmpData, tmpCollectorData, eigenvalue);
-        final double[] aRawReal = tmpDiags[0];
-        final double[] aRawImag = tmpDiags[1];
-        final int tmpLength = Math.min(aRawReal.length, aRawImag.length);
+         double[][] tmpDiags = EvD1D.hqr2(tmpData, tmpCollectorData, eigenvalue);
+         double[] aRawReal = tmpDiags[0];
+         double[] aRawImag = tmpDiags[1];
+         int tmpLength = Math.min(aRawReal.length, aRawImag.length);
 
-        final ArrayC128 retVal = ArrayC128.make(tmpLength);
-        final ComplexNumber[] tmpRaw = retVal.data;
+         ArrayC128 retVal = ArrayC128.make(tmpLength);
+         ComplexNumber[] tmpRaw = retVal.data;
 
         for (int i = 0; i < tmpLength; i++) {
             tmpRaw[i] = ComplexNumber.of(aRawReal[i], aRawImag[i]);
@@ -549,27 +549,27 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return Array1D.C128.wrap(retVal);
     }
 
-    public MatrixStore<Double> conjugate() {
+    @Override public MatrixStore<Double> conjugate() {
         return this.transpose();
     }
 
-    public Primitive64Store copy() {
+    @Override public Primitive64Store copy() {
         return new Primitive64Store(myRowDim, myColDim, this.copyOfData());
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myColDim;
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myRowDim;
     }
 
-    public void divideAndCopyColumn(final int row, final int column, final BasicArray<Double> destination) {
+    @Override public void divideAndCopyColumn( int row,  int column,  BasicArray<Double> destination) {
 
         double[] destinationData = ((ArrayR064) destination).data;
 
-        int index = row + column * myRowDim;
+        @Var int index = row + column * myRowDim;
         double denominator = data[index];
 
         for (int i = row + 1; i < myRowDim; i++) {
@@ -577,35 +577,35 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return myUtility.doubleValue(row, col);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof Primitive64Store)) {
             return false;
         }
-        Primitive64Store other = (Primitive64Store) obj;
+        var other = (Primitive64Store) obj;
         if (myColDim != other.myColDim || myRowDim != other.myRowDim) {
             return false;
         }
         return true;
     }
 
-    public void exchangeColumns(final long colA, final long colB) {
+    @Override public void exchangeColumns( long colA,  long colB) {
         myUtility.exchangeColumns(colA, colB);
     }
 
-    public void exchangeHermitian(final int indexA, final int indexB) {
+    @Override public void exchangeHermitian( int indexA,  int indexB) {
 
-        final int indexMin = Math.min(indexA, indexB);
-        final int indexMax = Math.max(indexA, indexB);
+         int indexMin = Math.min(indexA, indexB);
+         int indexMax = Math.max(indexA, indexB);
 
-        double tmpVal;
+        @Var double tmpVal;
 
         for (int j = 0; j < indexMin; j++) {
             tmpVal = this.doubleValue(indexMin, j);
@@ -631,13 +631,13 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
 
     }
 
-    public void exchangeRows(final long rowA, final long rowB) {
+    @Override public void exchangeRows( long rowA,  long rowB) {
         myUtility.exchangeRows(rowA, rowB);
     }
 
-    public void fillByMultiplying(final Access1D<Double> left, final Access1D<Double> right) {
+    @Override public void fillByMultiplying( Access1D<Double> left,  Access1D<Double> right) {
 
-        final int complexity = Math.toIntExact(left.count() / this.countRows());
+         int complexity = Math.toIntExact(left.count() / this.countRows());
         if (complexity != Math.toIntExact(right.count() / this.countColumns())) {
             ProgrammingError.throwForMultiplicationNotPossible();
         }
@@ -655,38 +655,38 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void fillColumn(final long row, final long col, final Access1D<Double> values) {
+    @Override public void fillColumn( long row,  long col,  Access1D<Double> values) {
         myUtility.fillColumn(row, col, values);
     }
 
-    public void fillColumn(final long row, final long col, final Double value) {
+    @Override public void fillColumn( long row,  long col,  Double value) {
         myUtility.fillColumn(row, col, value);
     }
 
-    public void fillColumn(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillColumn( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillColumn(row, col, supplier);
     }
 
-    public void fillDiagonal(final long row, final long col, final Double value) {
+    @Override public void fillDiagonal( long row,  long col,  Double value) {
         myUtility.fillDiagonal(row, col, value);
     }
 
-    public void fillDiagonal(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillDiagonal( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillDiagonal(row, col, supplier);
     }
 
     @Override
-    public void fillMatching(final Access1D<?> values) {
+    public void fillMatching( Access1D<?> values) {
 
         if (values instanceof TransjugatedStore) {
-            final TransjugatedStore<?> transposed = (TransjugatedStore<?>) values;
+             var transposed = (TransjugatedStore<?>) values;
 
             if (myColDim > FillMatchingSingle.THRESHOLD) {
 
-                final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+                 var tmpConquerer = new DivideAndConquer() {
 
                     @Override
-                    public void conquer(final int first, final int limit) {
+                    public void conquer( int first,  int limit) {
                         FillMatchingSingle.transpose(data, myRowDim, first, limit, transposed.getOriginal());
                     }
 
@@ -706,16 +706,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     }
 
     @Override
-    public void fillMatching(final Access1D<Double> left, final BinaryFunction<Double> function, final Access1D<Double> right) {
+    public void fillMatching( Access1D<Double> left,  BinaryFunction<Double> function,  Access1D<Double> right) {
 
         int matchingCount = MissingMath.toMinIntExact(this.count(), left.count(), right.count());
 
         if (myColDim > FillMatchingDual.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     OperationBinary.invoke(data, first, limit, 1, left, function, right);
                 }
 
@@ -730,16 +730,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
     }
 
     @Override
-    public void fillMatching(final UnaryFunction<Double> function, final Access1D<Double> arguments) {
+    public void fillMatching( UnaryFunction<Double> function,  Access1D<Double> arguments) {
 
         int matchingCount = MissingMath.toMinIntExact(this.count(), arguments.count());
 
         if (myColDim > FillMatchingSingle.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                protected void conquer(final int first, final int limit) {
+                protected void conquer( int first,  int limit) {
                     OperationUnary.invoke(data, first, limit, 1, arguments, function);
                 }
 
@@ -753,35 +753,35 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void fillOne(final long row, final long col, final Access1D<?> values, final long valueIndex) {
+    public void fillOne( long row,  long col,  Access1D<?> values,  long valueIndex) {
         this.set(row, col, values.doubleValue(valueIndex));
     }
 
-    public void fillOne(final long row, final long col, final Double value) {
+    public void fillOne( long row,  long col,  Double value) {
         myUtility.fillOne(row, col, value);
     }
 
-    public void fillOne(final long row, final long col, final NullaryFunction<?> supplier) {
+    public void fillOne( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillOne(row, col, supplier);
     }
 
-    public void fillRow(final long row, final long col, final Access1D<Double> values) {
+    @Override public void fillRow( long row,  long col,  Access1D<Double> values) {
         myUtility.fillRow(row, col, values);
     }
 
-    public void fillRow(final long row, final long col, final Double value) {
+    @Override public void fillRow( long row,  long col,  Double value) {
         myUtility.fillRow(row, col, value);
     }
 
-    public void fillRow(final long row, final long col, final NullaryFunction<?> supplier) {
+    @Override public void fillRow( long row,  long col,  NullaryFunction<?> supplier) {
         myUtility.fillRow(row, col, supplier);
     }
 
-    public boolean generateApplyAndCopyHouseholderColumn(final int row, final int column, final Householder<Double> destination) {
+    @Override public boolean generateApplyAndCopyHouseholderColumn( int row,  int column,  Householder<Double> destination) {
         return GenerateApplyAndCopyHouseholderColumn.invoke(data, myRowDim, row, column, (Householder.Primitive64) destination);
     }
 
-    public boolean generateApplyAndCopyHouseholderRow(final int row, final int column, final Householder<Double> destination) {
+    @Override public boolean generateApplyAndCopyHouseholderRow( int row,  int column,  Householder<Double> destination) {
         return GenerateApplyAndCopyHouseholderRow.invoke(data, myRowDim, row, column, (Householder.Primitive64) destination);
     }
 
@@ -789,43 +789,43 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return this;
     }
 
-    public Double get(final long row, final long col) {
+    @Override public Double get( long row,  long col) {
         return myUtility.get(row, col);
     }
 
-    public int getColDim() {
+    @Override public int getColDim() {
         return myColDim;
     }
 
-    public int getMaxDim() {
+    @Override public int getMaxDim() {
         return Math.max(myRowDim, myColDim);
     }
 
-    public int getMinDim() {
+    @Override public int getMinDim() {
         return Math.min(myRowDim, myColDim);
     }
 
-    public int getRowDim() {
+    @Override public int getRowDim() {
         return myRowDim;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + myColDim;
         return prime * result + myRowDim;
     }
 
     @Override
-    public void modifyAll(final UnaryFunction<Double> modifier) {
+    public void modifyAll( UnaryFunction<Double> modifier) {
 
         if (myColDim > ModifyAll.THRESHOLD) {
 
-            final DivideAndConquer conquerer = new DivideAndConquer() {
+             var conquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int first, final int limit) {
+                public void conquer( int first,  int limit) {
                     Primitive64Store.this.modify(myRowDim * first, myRowDim * limit, 1, modifier);
                 }
 
@@ -839,28 +839,28 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void modifyColumn(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyColumn( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyColumn(row, col, modifier);
     }
 
-    public void modifyDiagonal(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyDiagonal( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyDiagonal(row, col, modifier);
     }
 
-    public void modifyOne(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyOne( long row,  long col,  UnaryFunction<Double> modifier) {
 
-        double tmpValue = this.doubleValue(row, col);
+        @Var double tmpValue = this.doubleValue(row, col);
 
         tmpValue = modifier.invoke(tmpValue);
 
         this.set(row, col, tmpValue);
     }
 
-    public void modifyRow(final long row, final long col, final UnaryFunction<Double> modifier) {
+    @Override public void modifyRow( long row,  long col,  UnaryFunction<Double> modifier) {
         myUtility.modifyRow(row, col, modifier);
     }
 
-    public MatrixStore<Double> multiply(final MatrixStore<Double> right) {
+    @Override public MatrixStore<Double> multiply( MatrixStore<Double> right) {
 
         Primitive64Store retVal = FACTORY.make(myRowDim, right.countColumns());
 
@@ -873,7 +873,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return retVal;
     }
 
-    public Double multiplyBoth(final Access1D<Double> leftAndRight) {
+    @Override public Double multiplyBoth( Access1D<Double> leftAndRight) {
 
         PhysicalStore<Double> tmpStep1 = FACTORY.make(1L, leftAndRight.count());
         PhysicalStore<Double> tmpStep2 = FACTORY.make(1L, 1L);
@@ -884,78 +884,78 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return tmpStep2.get(0L);
     }
 
-    public void negateColumn(final int column) {
+    @Override public void negateColumn( int column) {
         myUtility.modifyColumn(0, column, PrimitiveMath.NEGATE);
     }
 
-    public PhysicalStore.Factory<Double, Primitive64Store> physical() {
+    @Override public PhysicalStore.Factory<Double, Primitive64Store> physical() {
         return FACTORY;
     }
 
-    public TransformableRegion<Double> regionByColumns(final int... columns) {
+    @Override public TransformableRegion<Double> regionByColumns( int... columns) {
         return new Subregion2D.ColumnsRegion<>(this, multiplyBoth, columns);
     }
 
-    public TransformableRegion<Double> regionByLimits(final int rowLimit, final int columnLimit) {
+    @Override public TransformableRegion<Double> regionByLimits( int rowLimit,  int columnLimit) {
         return new Subregion2D.LimitRegion<>(this, multiplyBoth, rowLimit, columnLimit);
     }
 
-    public TransformableRegion<Double> regionByOffsets(final int rowOffset, final int columnOffset) {
+    @Override public TransformableRegion<Double> regionByOffsets( int rowOffset,  int columnOffset) {
         return new Subregion2D.OffsetRegion<>(this, multiplyBoth, rowOffset, columnOffset);
     }
 
-    public TransformableRegion<Double> regionByRows(final int... rows) {
+    @Override public TransformableRegion<Double> regionByRows( int... rows) {
         return new Subregion2D.RowsRegion<>(this, multiplyBoth, rows);
     }
 
-    public TransformableRegion<Double> regionByTransposing() {
+    @Override public TransformableRegion<Double> regionByTransposing() {
         return new Subregion2D.TransposedRegion<>(this, multiplyBoth);
     }
 
-    public void rotateRight(final int low, final int high, final double cos, final double sin) {
+    @Override public void rotateRight( int low,  int high,  double cos,  double sin) {
         RotateRight.invoke(data, myRowDim, low, high, cos, sin);
     }
 
-    public void set(final long row, final long col, final Comparable<?> value) {
+    @Override public void set( long row,  long col,  Comparable<?> value) {
         myUtility.set(row, col, value);
     }
 
-    public void set(final long row, final long col, final double value) {
+    @Override public void set( long row,  long col,  double value) {
         myUtility.set(row, col, value);
     }
 
-    public void setToIdentity(final int col) {
+    @Override public void setToIdentity( int col) {
         myUtility.set(col, col, ONE);
         myUtility.fillColumn(col + 1, col, ZERO);
     }
 
-    public Array1D<Double> sliceColumn(final long row, final long col) {
+    @Override public Array1D<Double> sliceColumn( long row,  long col) {
         return myUtility.sliceColumn(row, col);
     }
 
-    public Array1D<Double> sliceDiagonal(final long row, final long col) {
+    @Override public Array1D<Double> sliceDiagonal( long row,  long col) {
         return myUtility.sliceDiagonal(row, col);
     }
 
-    public Array1D<Double> sliceRange(final long first, final long limit) {
+    @Override public Array1D<Double> sliceRange( long first,  long limit) {
         return myUtility.sliceRange(first, limit);
     }
 
-    public Array1D<Double> sliceRow(final long row, final long col) {
+    @Override public Array1D<Double> sliceRow( long row,  long col) {
         return myUtility.sliceRow(row, col);
     }
 
-    public void substituteBackwards(final Access2D<Double> body, final boolean unitDiagonal, final boolean conjugated, final boolean hermitian) {
+    @Override public void substituteBackwards( Access2D<Double> body,  boolean unitDiagonal,  boolean conjugated,  boolean hermitian) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteBackwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int first, final int limit) {
+                public void conquer( int first,  int limit) {
                     SubstituteBackwards.invoke(Primitive64Store.this.data, tmpRowDim, first, limit, body, unitDiagonal, conjugated, hermitian);
                 }
 
@@ -969,17 +969,17 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void substituteForwards(final Access2D<Double> body, final boolean unitDiagonal, final boolean conjugated, final boolean identity) {
+    @Override public void substituteForwards( Access2D<Double> body,  boolean unitDiagonal,  boolean conjugated,  boolean identity) {
 
-        final int tmpRowDim = myRowDim;
-        final int tmpColDim = myColDim;
+         int tmpRowDim = myRowDim;
+         int tmpColDim = myColDim;
 
         if (tmpColDim > SubstituteForwards.THRESHOLD) {
 
-            final DivideAndConquer tmpConquerer = new DivideAndConquer() {
+             var tmpConquerer = new DivideAndConquer() {
 
                 @Override
-                public void conquer(final int first, final int limit) {
+                public void conquer( int first,  int limit) {
                     SubstituteForwards.invoke(Primitive64Store.this.data, tmpRowDim, first, limit, body, unitDiagonal, conjugated, identity);
                 }
 
@@ -993,7 +993,7 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public PrimitiveScalar toScalar(final long row, final long column) {
+    @Override public PrimitiveScalar toScalar( long row,  long column) {
         return PrimitiveScalar.of(this.doubleValue(row, column));
     }
 
@@ -1002,16 +1002,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         return Access2D.toString(this);
     }
 
-    public void transformLeft(final Householder<Double> transformation, final int firstColumn) {
+    @Override public void transformLeft( Householder<Double> transformation,  int firstColumn) {
         HouseholderLeft.call(data, myRowDim, firstColumn, Primitive64Store.cast(transformation));
     }
 
-    public void transformLeft(final Rotation<Double> transformation) {
+    @Override public void transformLeft( Rotation<Double> transformation) {
 
-        final Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
+         Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (!Double.isNaN(tmpTransf.cos) && !Double.isNaN(tmpTransf.sin)) {
@@ -1028,16 +1028,16 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void transformRight(final Householder<Double> transformation, final int firstRow) {
+    @Override public void transformRight( Householder<Double> transformation,  int firstRow) {
         HouseholderRight.call(data, myRowDim, firstRow, Primitive64Store.cast(transformation), this.getWorkerColumn());
     }
 
-    public void transformRight(final Rotation<Double> transformation) {
+    @Override public void transformRight( Rotation<Double> transformation) {
 
-        final Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
+         Rotation.Primitive tmpTransf = Primitive64Store.cast(transformation);
 
-        final int tmpLow = tmpTransf.low;
-        final int tmpHigh = tmpTransf.high;
+         int tmpLow = tmpTransf.low;
+         int tmpHigh = tmpTransf.high;
 
         if (tmpLow != tmpHigh) {
             if (!Double.isNaN(tmpTransf.cos) && !Double.isNaN(tmpTransf.sin)) {
@@ -1054,23 +1054,23 @@ public final class Primitive64Store extends ArrayR064 implements PhysicalStore<D
         }
     }
 
-    public void transformSymmetric(final Householder<Double> transformation) {
+    @Override public void transformSymmetric( Householder<Double> transformation) {
         HouseholderHermitian.invoke(data, Primitive64Store.cast(transformation), this.getWorkerColumn());
     }
 
-    public void tred2(final BasicArray<Double> mainDiagonal, final BasicArray<Double> offDiagonal, final boolean yesvecs) {
+    @Override public void tred2( BasicArray<Double> mainDiagonal,  BasicArray<Double> offDiagonal,  boolean yesvecs) {
         HouseholderHermitian.tred2j(data, ((ArrayR064) mainDiagonal).data, ((ArrayR064) offDiagonal).data, yesvecs);
     }
 
-    public void visitColumn(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitColumn( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitColumn(row, col, visitor);
     }
 
-    public void visitDiagonal(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitDiagonal( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitDiagonal(row, col, visitor);
     }
 
-    public void visitRow(final long row, final long col, final VoidFunction<Double> visitor) {
+    @Override public void visitRow( long row,  long col,  VoidFunction<Double> visitor) {
         myUtility.visitRow(row, col, visitor);
     }
 

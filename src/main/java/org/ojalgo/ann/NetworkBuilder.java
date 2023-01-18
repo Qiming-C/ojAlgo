@@ -21,10 +21,10 @@
  */
 package org.ojalgo.ann;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.ojalgo.ann.ArtificialNeuralNetwork.Activator;
 import org.ojalgo.matrix.store.PhysicalStore;
 
@@ -39,21 +39,21 @@ public final class NetworkBuilder implements Supplier<ArtificialNeuralNetwork> {
     private final List<LayerTemplate> myLayers = new ArrayList<>();
     private int myNextInputs = 0;
 
-    NetworkBuilder(final PhysicalStore.Factory<Double, ?> factory, final int networkInputs) {
+    NetworkBuilder( PhysicalStore.Factory<Double, ?> factory,  int networkInputs) {
         super();
         myFactory = factory;
         myNextInputs = networkInputs;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof NetworkBuilder)) {
             return false;
         }
-        NetworkBuilder other = (NetworkBuilder) obj;
+        var other = (NetworkBuilder) obj;
         if (myNextInputs != other.myNextInputs) {
             return false;
         }
@@ -70,27 +70,27 @@ public final class NetworkBuilder implements Supplier<ArtificialNeuralNetwork> {
         return true;
     }
 
-    public ArtificialNeuralNetwork get() {
-        ArtificialNeuralNetwork network = new ArtificialNeuralNetwork(this);
+    @Override public ArtificialNeuralNetwork get() {
+        var network = new ArtificialNeuralNetwork(this);
         network.randomise();
         return network;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = (prime * result) + ((myFactory == null) ? 0 : myFactory.hashCode());
         result = (prime * result) + myLayers.hashCode();
         result = (prime * result) + myNextInputs;
         return result;
     }
 
-    public NetworkBuilder layer(final int outputs) {
+    public NetworkBuilder layer( int outputs) {
         return this.layer(outputs, ArtificialNeuralNetwork.Activator.SIGMOID);
     }
 
-    public NetworkBuilder layer(final int outputs, final Activator activator) {
+    public NetworkBuilder layer( int outputs,  Activator activator) {
         myLayers.add(new LayerTemplate(myNextInputs, outputs, activator));
         myNextInputs = outputs;
         return this;

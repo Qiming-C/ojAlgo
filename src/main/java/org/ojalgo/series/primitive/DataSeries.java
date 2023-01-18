@@ -31,40 +31,40 @@ import org.ojalgo.structure.Access1D;
 
 public final class DataSeries extends PrimitiveSeries {
 
-    public static DataSeries copy(final Access1D<?> template) {
+    public static DataSeries copy( Access1D<?> template) {
         return new DataSeries(Array1D.R064.copy(template));
     }
 
-    public static DataSeries copy(final double[] template) {
+    public static DataSeries copy( double[] template) {
         return new DataSeries(Array1D.R064.copy(template));
     }
 
-    public static DataSeries wrap(final double[] raw) {
+    public static DataSeries wrap( double[] raw) {
         return new DataSeries(Array1D.R064.wrap(ArrayR064.wrap(raw)));
     }
 
     private final Array1D<Double> myValues;
 
-    private DataSeries(final Array1D<Double> values) {
+    private DataSeries( Array1D<Double> values) {
 
         super();
 
         myValues = values;
     }
 
-    public void modify(final BinaryFunction<Double> func, final double right) {
+    public void modify( BinaryFunction<Double> func,  double right) {
         myValues.modifyAll(func.second(right));
     }
 
-    public void modify(final double left, final BinaryFunction<Double> func) {
+    public void modify( double left,  BinaryFunction<Double> func) {
         myValues.modifyAll(func.first(left));
     }
 
-    public void modify(final ParameterFunction<Double> func, final int param) {
+    public void modify( ParameterFunction<Double> func,  int param) {
         myValues.modifyAll(func.parameter(param));
     }
 
-    public void modify(final UnaryFunction<Double> func) {
+    public void modify( UnaryFunction<Double> func) {
         myValues.modifyAll(func);
     }
 
@@ -74,11 +74,11 @@ public final class DataSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myValues.doubleValue(index);
     }
 
-    public void visit(final AggregatorFunction<Double> visitor) {
+    public void visit( AggregatorFunction<Double> visitor) {
         myValues.visitAll(visitor);
     }
 

@@ -23,6 +23,8 @@ package org.ojalgo.function.special;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
+
 public abstract class ErrorFunction {
 
     private static final double[] C;
@@ -45,7 +47,7 @@ public abstract class ErrorFunction {
      * <a href="http://en.wikipedia.org/wiki/Error_function">erf()&nbsp;@&nbsp;Wikipedia</a> <br>
      * <a href="http://mathworld.wolfram.com/Erf.html">erf()&nbsp;@&nbsp;Wolfram MathWorld</a>
      */
-    public static double erf(final double arg) {
+    public static double erf( double arg) {
 
         if (arg < -FOUR) {
 
@@ -57,9 +59,9 @@ public abstract class ErrorFunction {
 
         } else {
 
-            double retVal = ZERO;
-            final double squared = arg * arg;
-            double tmpVal;
+            @Var double retVal = ZERO;
+             double squared = arg * arg;
+            @Var double tmpVal;
 
             for (int n = 0; n <= 100; n++) {
                 tmpVal = arg / ((2 * n) + 1);
@@ -78,7 +80,7 @@ public abstract class ErrorFunction {
      * <a href="http://en.wikipedia.org/wiki/Error_function">erf()&nbsp;@&nbsp;Wikipedia</a> <br>
      * <a href="http://mathworld.wolfram.com/Erf.html">erf()&nbsp;@&nbsp;Wolfram MathWorld</a>
      */
-    public static double erfc(final double arg) {
+    public static double erfc( double arg) {
         return ONE - ErrorFunction.erf(arg);
     }
 
@@ -87,7 +89,7 @@ public abstract class ErrorFunction {
      * <a href="http://en.wikipedia.org/wiki/Error_function">erf()&nbsp;@&nbsp;Wikipedia</a> <br>
      * <a href="http://mathworld.wolfram.com/Erf.html">erf()&nbsp;@&nbsp;Wolfram MathWorld</a>
      */
-    public static double erfi(final double arg) {
+    public static double erfi( double arg) {
 
         if (Math.abs(arg) > ONE) {
             return NaN;
@@ -97,7 +99,7 @@ public abstract class ErrorFunction {
             return POSITIVE_INFINITY;
         } else {
 
-            double retVal = ZERO;
+            @Var double retVal = ZERO;
 
             double base = (SQRT_PI * arg) / TWO;
             for (int k = 500; k >= 0; k--) {

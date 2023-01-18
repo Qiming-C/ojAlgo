@@ -29,28 +29,28 @@ import org.ojalgo.structure.AccessScalar;
 
 public interface NullaryFunction<N extends Comparable<N>> extends BasicFunction, Supplier<N>, DoubleSupplier, AccessScalar<N> {
 
-    default NullaryFunction<N> andThen(final UnaryFunction<N> after) {
+    default NullaryFunction<N> andThen( UnaryFunction<N> after) {
         ProgrammingError.throwIfNull(after);
         return new NullaryFunction<N>() {
 
-            public double doubleValue() {
+            @Override public double doubleValue() {
                 return after.invoke(NullaryFunction.this.doubleValue());
             }
 
-            public N invoke() {
+            @Override public N invoke() {
                 return after.invoke(NullaryFunction.this.invoke());
             }
 
         };
     }
 
-    double doubleValue();
+    @Override double doubleValue();
 
-    default N get() {
+    @Override default N get() {
         return this.invoke();
     }
 
-    default double getAsDouble() {
+    @Override default double getAsDouble() {
         return this.doubleValue();
     }
 

@@ -42,11 +42,11 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     @FunctionalInterface
     public interface Binary extends BinaryFunction<BigDecimal> {
 
-        default double invoke(final double arg1, final double arg2) {
+        @Override default double invoke( double arg1,  double arg2) {
             return this.invoke(BigDecimal.valueOf(arg1), BigDecimal.valueOf(arg2)).doubleValue();
         }
 
-        default float invoke(final float arg1, final float arg2) {
+        @Override default float invoke( float arg1,  float arg2) {
             return this.invoke(BigDecimal.valueOf(arg1), BigDecimal.valueOf(arg2)).floatValue();
         }
 
@@ -55,11 +55,11 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     @FunctionalInterface
     public interface Consumer extends VoidFunction<BigDecimal> {
 
-        default void invoke(final double arg) {
+        @Override default void invoke( double arg) {
             this.invoke(BigDecimal.valueOf(arg));
         }
 
-        default void invoke(final float arg) {
+        @Override default void invoke( float arg) {
             this.invoke(BigDecimal.valueOf(arg));
         }
 
@@ -68,11 +68,11 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     @FunctionalInterface
     public interface Parameter extends ParameterFunction<BigDecimal> {
 
-        default double invoke(final double arg, final int param) {
+        @Override default double invoke( double arg,  int param) {
             return this.invoke(BigDecimal.valueOf(arg), param).doubleValue();
         }
 
-        default float invoke(final float arg, final int param) {
+        @Override default float invoke( float arg,  int param) {
             return this.invoke(BigDecimal.valueOf(arg), param).floatValue();
         }
 
@@ -81,11 +81,11 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     @FunctionalInterface
     public interface Predicate extends PredicateFunction<BigDecimal> {
 
-        default boolean invoke(final double arg) {
+        @Override default boolean invoke( double arg) {
             return this.invoke(BigDecimal.valueOf(arg));
         }
 
-        default boolean invoke(final float arg) {
+        @Override default boolean invoke( float arg) {
             return this.invoke(BigDecimal.valueOf(arg));
         }
 
@@ -94,11 +94,11 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     @FunctionalInterface
     public interface Unary extends UnaryFunction<BigDecimal> {
 
-        default double invoke(final double arg) {
+        @Override default double invoke( double arg) {
             return this.invoke(BigDecimal.valueOf(arg)).doubleValue();
         }
 
-        default float invoke(final float arg) {
+        @Override default float invoke( float arg) {
             return this.invoke(BigDecimal.valueOf(arg)).floatValue();
         }
 
@@ -200,7 +200,7 @@ public final class BigFunction extends FunctionSet<BigDecimal> {
     }
 
     @Override
-    public Unary enforce(final NumberContext context) {
+    public Unary enforce( NumberContext context) {
         return arg -> context.enforce(arg);
     }
 

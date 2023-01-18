@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -35,11 +36,11 @@ public abstract class AMIN implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static int invoke(final double[] data, final int first, final int limit, final int step) {
+    public static int invoke( double[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        double smallest = PrimitiveMath.POSITIVE_INFINITY;
-        double candidate;
+        @Var int retVal = first;
+        @Var double smallest = PrimitiveMath.POSITIVE_INFINITY;
+        @Var double candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = PrimitiveMath.ABS.invoke(data[i]);

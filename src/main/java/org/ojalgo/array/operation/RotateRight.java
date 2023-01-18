@@ -21,40 +21,20 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 
 public abstract class RotateRight implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void invoke(final double[] data, final int structure, final int colA, final int colB, final double cos, final double sin) {
+    public static void invoke( double[] data,  int structure,  int colA,  int colB,  double cos,  double sin) {
 
-        double oldA;
-        double oldB;
+        @Var double oldA;
+        @Var double oldB;
 
-        int indexA = colA * structure;
-        int indexB = colB * structure;
-
-        for (int i = 0; i < structure; i++) {
-
-            oldA = data[indexA];
-            oldB = data[indexB];
-
-            data[indexA] = cos * oldA - sin * oldB;
-            data[indexB] = cos * oldB + sin * oldA;
-
-            indexA++;
-            indexB++;
-        }
-    }
-
-    public static void invoke(final float[] data, final int structure, final int colA, final int colB, final float cos, final float sin) {
-
-        float oldA;
-        float oldB;
-
-        int indexA = colA * structure;
-        int indexB = colB * structure;
+        @Var int indexA = colA * structure;
+        @Var int indexB = colB * structure;
 
         for (int i = 0; i < structure; i++) {
 
@@ -69,13 +49,34 @@ public abstract class RotateRight implements ArrayOperation {
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] data, final int structure, final int colA, final int colB, final N cos, final N sin) {
+    public static void invoke( float[] data,  int structure,  int colA,  int colB,  float cos,  float sin) {
 
-        N oldA;
-        N oldB;
+        @Var float oldA;
+        @Var float oldB;
 
-        int indexA = colA * structure;
-        int indexB = colB * structure;
+        @Var int indexA = colA * structure;
+        @Var int indexB = colB * structure;
+
+        for (int i = 0; i < structure; i++) {
+
+            oldA = data[indexA];
+            oldB = data[indexB];
+
+            data[indexA] = cos * oldA - sin * oldB;
+            data[indexB] = cos * oldB + sin * oldA;
+
+            indexA++;
+            indexB++;
+        }
+    }
+
+    public static <N extends Scalar<N>> void invoke( N[] data,  int structure,  int colA,  int colB,  N cos,  N sin) {
+
+        @Var N oldA;
+        @Var N oldB;
+
+        @Var int indexA = colA * structure;
+        @Var int indexB = colB * structure;
 
         for (int i = 0; i < structure; i++) {
 

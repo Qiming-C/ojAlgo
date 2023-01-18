@@ -24,8 +24,6 @@ package org.ojalgo.data.batch;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.function.IntSupplier;
-
-import org.ojalgo.data.batch.BatchNode.Builder;
 import org.ojalgo.netio.DataInterpreter;
 import org.ojalgo.netio.FromFileReader;
 
@@ -44,7 +42,7 @@ public final class BatchManager {
     private IntSupplier myParallelism = null;
     private Integer myQueueCapacity = null;
 
-    public BatchManager(final File batchRootDirectory) {
+    public BatchManager( File batchRootDirectory) {
         super();
         myBatchRootDirectory = batchRootDirectory;
     }
@@ -61,24 +59,26 @@ public final class BatchManager {
     }
 
     /**
-     * @see BatchNode.Builder#executor(ExecutorService)
+     *See {@link BatchNode.Builder#executor(ExecutorService)}.
+ 
      */
-    public BatchManager executor(final ExecutorService executor) {
+    public BatchManager executor( ExecutorService executor) {
         myExecutor = executor;
         return this;
     }
 
     /**
-     * @see BatchNode.Builder#fragmentation(int)
+     *See {@link BatchNode.Builder#fragmentation(int)}.
+ 
      */
-    public BatchManager fragmentation(final int fragmentation) {
+    public BatchManager fragmentation( int fragmentation) {
         myFragmentation = Integer.valueOf(fragmentation);
         return this;
     }
 
-    public <T> BatchNode.Builder<T> newNodeBuilder(final String nodeName, final DataInterpreter<T> dataInterpreter) {
+    public <T> BatchNode.Builder<T> newNodeBuilder( String nodeName,  DataInterpreter<T> dataInterpreter) {
 
-        Builder<T> retVal = BatchNode.newBuilder(new File(myBatchRootDirectory, nodeName), dataInterpreter);
+        BatchNode.Builder<T> retVal = BatchNode.newBuilder(new File(myBatchRootDirectory, nodeName), dataInterpreter);
 
         if (myFragmentation != null) {
             retVal.fragmentation(myFragmentation.intValue());
@@ -100,24 +100,27 @@ public final class BatchManager {
     }
 
     /**
-     * @see BatchNode.Builder#parallelism(int)
+     *See {@link BatchNode.Builder#parallelism(int)}.
+ 
      */
-    public BatchManager parallelism(final int parallelism) {
+    public BatchManager parallelism( int parallelism) {
         return this.parallelism(() -> parallelism);
     }
 
     /**
-     * @see BatchNode.Builder#parallelism(IntSupplier)
+     *See {@link BatchNode.Builder#parallelism(IntSupplier)}.
+ 
      */
-    public BatchManager parallelism(final IntSupplier parallelism) {
+    public BatchManager parallelism( IntSupplier parallelism) {
         myParallelism = parallelism;
         return this;
     }
 
     /**
-     * @see BatchNode.Builder#queue(int)
+     *See {@link BatchNode.Builder#queue(int)}.
+ 
      */
-    public BatchManager queue(final int capacity) {
+    public BatchManager queue( int capacity) {
         myQueueCapacity = Integer.valueOf(capacity);
         return this;
     }

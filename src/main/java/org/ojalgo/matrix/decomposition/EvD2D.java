@@ -2,6 +2,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.type.context.NumberContext;
 
 public abstract class EvD2D {
@@ -12,7 +13,7 @@ public abstract class EvD2D {
      * @param e TODO
      * @param trnspV TODO
      */
-    public static void hqr2(final double[][] mtrxH, final double[] d, final double[] e, final double[][] trnspV) {
+    public static void hqr2( double[][] mtrxH,  double[] d,  double[] e,  double[][] trnspV) {
 
         //  This is derived from the Algol procedure hqr2,
         //  by Martin and Wilkinson, Handbook for Auto. Comp.,
@@ -21,16 +22,16 @@ public abstract class EvD2D {
 
         // Initialize
 
-        final int size = d.length;
+         int size = d.length;
 
-        int n = size - 1;
+        @Var int n = size - 1;
 
-        double exshift = ZERO;
-        double p = 0, q = 0, r = 0, s = 0, z = 0, t, w, x, y;
+        @Var double exshift = ZERO;
+        @Var double p = 0, q = 0, r = 0, s = 0, z = 0, t, w, x, y;
 
         // Store roots isolated by balanc and compute matrix norm
 
-        double norm = ZERO;
+        @Var double norm = ZERO;
         for (int i = 0; i < size; i++) {
             for (int j = Math.max(i - 1, 0); j < size; j++) {
                 norm = norm + ABS.invoke(mtrxH[i][j]);
@@ -39,12 +40,12 @@ public abstract class EvD2D {
 
         // Outer loop over eigenvalue index
 
-        int iter = 0;
+        @Var int iter = 0;
         while (n >= 0) {
 
             // Look for single small sub-diagonal element
 
-            int l = n;
+            @Var int l = n;
             while (l > 0) {
                 s = ABS.invoke(mtrxH[l - 1][l - 1]) + ABS.invoke(mtrxH[l][l]);
                 // if (s == ZERO) {
@@ -186,7 +187,7 @@ public abstract class EvD2D {
 
                 // Look for two consecutive small sub-diagonal elements
 
-                int m = n - 2;
+                @Var int m = n - 2;
                 while (m >= l) {
                     z = mtrxH[m][m];
                     r = x - z;
@@ -215,7 +216,7 @@ public abstract class EvD2D {
                 // Double QR step involving rows l:n and columns m:n
 
                 for (int k = m; k <= n - 1; k++) {
-                    final boolean notlast = k != n - 1;
+                     boolean notlast = k != n - 1;
                     if (k != m) {
                         p = mtrxH[k][k - 1];
                         q = mtrxH[k + 1][k - 1];
@@ -306,7 +307,7 @@ public abstract class EvD2D {
             // Real vector
 
             if (q == 0) {
-                int l = n;
+                @Var int l = n;
                 mtrxH[n][n] = ONE;
                 for (int i = n - 1; i >= 0; i--) {
                     w = mtrxH[i][i] - p;
@@ -356,9 +357,9 @@ public abstract class EvD2D {
                 // Complex vector
 
             } else if (q < 0) {
-                int l = n - 1;
+                @Var int l = n - 1;
 
-                final double[] cdiv = new double[2];
+                 double[] cdiv = new double[2];
 
                 // Last vector component imaginary so matrix is triangular
 
@@ -373,7 +374,7 @@ public abstract class EvD2D {
                 mtrxH[n][n - 1] = ZERO;
                 mtrxH[n][n] = ONE;
                 for (int i = n - 2; i >= 0; i--) {
-                    double ra, sa, vr, vi;
+                    @Var double ra, sa, vr, vi;
                     ra = ZERO;
                     sa = ZERO;
                     for (int j = l; j <= n; j++) {
@@ -451,17 +452,17 @@ public abstract class EvD2D {
      * @param mtrxH Array for internal storage of nonsymmetric Hessenberg form.
      * @param vctrWork Temporary work storage
      */
-    public static void orthes(final double[][] mtrxH, final double[][] trnspV, final double[] vctrWork) {
+    public static void orthes( double[][] mtrxH,  double[][] trnspV,  double[] vctrWork) {
 
-        final int size = vctrWork.length;
+         int size = vctrWork.length;
 
-        final int sizeM1 = size - 1;
-        final int sizeM2 = size - 2;
+         int sizeM1 = size - 1;
+         int sizeM2 = size - 2;
         for (int m = 0 + 1; m <= sizeM2; m++) {
-            final int ij = m - 1;
+             int ij = m - 1;
 
             // Scale column.
-            double scale = ZERO;
+            @Var double scale = ZERO;
 
             for (int i = m; i <= sizeM1; i++) {
                 scale = scale + ABS.invoke(mtrxH[i][ij]);
@@ -472,12 +473,12 @@ public abstract class EvD2D {
 
                 // Compute Householder transformation.
 
-                double h = ZERO;
+                @Var double h = ZERO;
                 for (int i = sizeM1; i >= m; i--) {
                     vctrWork[i] = mtrxH[i][ij] / scale;
                     h += vctrWork[i] * vctrWork[i];
                 }
-                double g = SQRT.invoke(h);
+                @Var double g = SQRT.invoke(h);
                 if (vctrWork[m] > 0) {
                     g = -g;
                 }
@@ -488,7 +489,7 @@ public abstract class EvD2D {
                 // H = (I-u*u'/h)*H*(I-u*u')/h)
 
                 for (int j = m; j < size; j++) {
-                    double f = ZERO;
+                    @Var double f = ZERO;
                     for (int i = sizeM1; i >= m; i--) {
                         f += vctrWork[i] * mtrxH[i][j];
                     }
@@ -499,7 +500,7 @@ public abstract class EvD2D {
                 }
 
                 for (int i = 0; i <= sizeM1; i++) {
-                    double f = ZERO;
+                    @Var double f = ZERO;
                     for (int j = sizeM1; j >= m; j--) {
                         f += vctrWork[j] * mtrxH[i][j];
                     }
@@ -529,7 +530,7 @@ public abstract class EvD2D {
                         vctrWork[i] = mtrxH[i][m - 1];
                     }
                     for (int j = m; j <= sizeM1; j++) {
-                        double g = ZERO;
+                        @Var double g = ZERO;
                         for (int i = m; i <= sizeM1; i++) {
                             //g += ort[i] * V[i][j];
                             g += vctrWork[i] * trnspV[j][i];
@@ -549,7 +550,7 @@ public abstract class EvD2D {
     /**
      * Complex scalar division.
      */
-    private static void cdiv(final double xr, final double xi, final double yr, final double yi, final double[] cdiv) {
+    private static void cdiv( double xr,  double xi,  double yr,  double yi,  double[] cdiv) {
         double r, d;
         if (ABS.invoke(yr) > ABS.invoke(yi)) {
             r = yi / yr;

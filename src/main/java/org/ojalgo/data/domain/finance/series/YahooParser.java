@@ -21,8 +21,10 @@
  */
 package org.ojalgo.data.domain.finance.series;
 
+import com.google.common.base.Splitter;
+import com.google.errorprone.annotations.Var;
 import java.time.LocalDate;
-
+import java.util.List;
 import org.ojalgo.netio.ASCII;
 import org.ojalgo.netio.BasicParser;
 
@@ -40,8 +42,8 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
         public final double open;
         public final double volume;
 
-        public Data(final LocalDate date, final double open, final double high, final double low, final double close, final double adjustedClose,
-                final double volume) {
+        public Data( LocalDate date,  double open,  double high,  double low,  double close,  double adjustedClose,
+                 double volume) {
 
             super(date);
 
@@ -54,14 +56,14 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!super.equals(obj) || !(obj instanceof Data)) {
                 return false;
             }
-            Data other = (Data) obj;
+            var other = (Data) obj;
             if ((Double.doubleToLongBits(adjustedClose) != Double.doubleToLongBits(other.adjustedClose))
                     || (Double.doubleToLongBits(close) != Double.doubleToLongBits(other.close))
                     || (Double.doubleToLongBits(high) != Double.doubleToLongBits(other.high))
@@ -82,9 +84,9 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = super.hashCode();
-            long temp;
+             int prime = 31;
+            @Var int result = super.hashCode();
+            @Var long temp;
             temp = Double.doubleToLongBits(adjustedClose);
             result = prime * result + (int) (temp ^ (temp >>> 32));
             temp = Double.doubleToLongBits(close);
@@ -106,21 +108,21 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
     /**
      * Checks if the header matches what this parser can handle.
      */
-    public static boolean testHeader(final String header) {
+    public static boolean testHeader( String header) {
 
-        String[] columns = header.split("" + ASCII.COMMA);
+        List<String> columns = Splitter.onPattern("" + ASCII.COMMA).splitToList(header);
 
-        int length = columns.length;
+        int length = columns.size();
         if (length != 7) {
             return false;
         }
 
-        String date = columns[0].trim();
+        String date = columns.get(0).trim();
         if (!"Date".equalsIgnoreCase(date)) {
             return false;
         }
 
-        String price = columns[5].trim();
+        String price = columns.get(5).trim();
         if (!"Adj Close".equalsIgnoreCase(price)) {
             return false;
         }
@@ -133,23 +135,23 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
     }
 
     @Override
-    public YahooParser.Data parse(final String line) {
+    public YahooParser.Data parse( String line) {
 
         // Date,Open,High,Low,Close,Adj Close,Volume
 
-        LocalDate date = null;
-        double open = Double.NaN;
-        double high = Double.NaN;
-        double low = Double.NaN;
-        double close = Double.NaN;
-        double adjustedClose = Double.NaN;
-        double volume = Double.NaN;
+        @Var LocalDate date = null;
+        @Var double open = Double.NaN;
+        @Var double high = Double.NaN;
+        @Var double low = Double.NaN;
+        @Var double close = Double.NaN;
+        @Var double adjustedClose = Double.NaN;
+        @Var double volume = Double.NaN;
 
         try {
 
-            int inclBegin = 0;
-            int exclEnd = line.indexOf(ASCII.COMMA, inclBegin);
-            String part = line.substring(inclBegin, exclEnd);
+            @Var int inclBegin = 0;
+            @Var int exclEnd = line.indexOf(ASCII.COMMA, inclBegin);
+            @Var String part = line.substring(inclBegin, exclEnd);
             date = LocalDate.parse(part);
 
             inclBegin = exclEnd + 1;
@@ -157,7 +159,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin, exclEnd);
             try {
                 open = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 open = Double.NaN;
             }
 
@@ -166,7 +168,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin, exclEnd);
             try {
                 high = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 high = Double.NaN;
             }
 
@@ -175,7 +177,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin, exclEnd);
             try {
                 low = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 low = Double.NaN;
             }
 
@@ -184,7 +186,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin, exclEnd);
             try {
                 close = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 close = Double.NaN;
             }
 
@@ -193,7 +195,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin, exclEnd);
             try {
                 adjustedClose = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 adjustedClose = Double.NaN;
             }
 
@@ -201,7 +203,7 @@ public class YahooParser implements BasicParser<YahooParser.Data> {
             part = line.substring(inclBegin);
             try {
                 volume = Double.parseDouble(part);
-            } catch (final NumberFormatException ex) {
+            } catch ( NumberFormatException ex) {
                 volume = Double.NaN;
             }
 

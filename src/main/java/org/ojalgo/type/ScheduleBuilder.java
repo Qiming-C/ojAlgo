@@ -32,7 +32,7 @@ public class ScheduleBuilder {
     private int myRepetitionMeassure;
     private CalendarDateUnit myRepetitionUnit = null;
 
-    public ScheduleBuilder(final TimerTask aTask) {
+    public ScheduleBuilder( TimerTask aTask) {
 
         super();
 
@@ -44,13 +44,13 @@ public class ScheduleBuilder {
         this(null);
     }
 
-    public ScheduleBuilder repetition(final int aRepetitionMeassure, final CalendarDateUnit aRepetitionUnit) {
+    public ScheduleBuilder repetition( int aRepetitionMeassure,  CalendarDateUnit aRepetitionUnit) {
         myRepetitionMeassure = aRepetitionMeassure;
         myRepetitionUnit = aRepetitionUnit;
         return this;
     }
 
-    public void schedule(final Timer aTimer) {
+    public void schedule( Timer aTimer) {
         if (myStartDate != null) {
             if (myRepetitionUnit != null) {
                 aTimer.scheduleAtFixedRate(myTask, myStartDate, myRepetitionMeassure * myRepetitionUnit.toDurationInMillis());
@@ -64,12 +64,12 @@ public class ScheduleBuilder {
         }
     }
 
-    public ScheduleBuilder start(final Date aStartDate) {
+    public ScheduleBuilder start( Date aStartDate) {
         myStartDate = new Date(aStartDate.getTime());
         return this;
     }
 
-    public ScheduleBuilder start(final int aDelayMeassure, final CalendarDateUnit aDelayUnit) {
+    public ScheduleBuilder start( int aDelayMeassure,  CalendarDateUnit aDelayUnit) {
         myStartDate = new Date(System.currentTimeMillis() + (aDelayMeassure * aDelayUnit.toDurationInMillis()));
         return this;
     }

@@ -21,9 +21,9 @@
  */
 package org.ojalgo.ann;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
 import java.util.Iterator;
-
 import org.ojalgo.ann.ArtificialNeuralNetwork.Activator;
 import org.ojalgo.ann.ArtificialNeuralNetwork.Error;
 import org.ojalgo.data.DataBatch;
@@ -43,7 +43,7 @@ public final class NetworkTrainer extends WrappedANN {
     private final TrainingConfiguration myConfiguration = new TrainingConfiguration();
     private final PhysicalStore<Double>[] myGradients;
 
-    NetworkTrainer(final ArtificialNeuralNetwork network, final int batchSize) {
+    NetworkTrainer( ArtificialNeuralNetwork network,  int batchSize) {
 
         super(network, batchSize);
 
@@ -61,7 +61,7 @@ public final class NetworkTrainer extends WrappedANN {
      * @deprecated Use {@link NetworkBuilder} and {@link NetworkBuilder#layer(int, Activator)} instead.
      */
     @Deprecated
-    public NetworkTrainer activator(final int layer, final ArtificialNeuralNetwork.Activator activator) {
+    public NetworkTrainer activator( int layer,  ArtificialNeuralNetwork.Activator activator) {
         this.setActivator(layer, activator);
         return this;
     }
@@ -70,7 +70,7 @@ public final class NetworkTrainer extends WrappedANN {
      * @deprecated Use {@link NetworkBuilder} and {@link NetworkBuilder#layer(int, Activator)} instead.
      */
     @Deprecated
-    public NetworkTrainer activators(final ArtificialNeuralNetwork.Activator activator) {
+    public NetworkTrainer activators( ArtificialNeuralNetwork.Activator activator) {
         for (int i = 0, limit = this.depth(); i < limit; i++) {
             this.activator(i, activator);
         }
@@ -81,14 +81,14 @@ public final class NetworkTrainer extends WrappedANN {
      * @deprecated Use {@link NetworkBuilder} and {@link NetworkBuilder#layer(int, Activator)} instead.
      */
     @Deprecated
-    public NetworkTrainer activators(final ArtificialNeuralNetwork.Activator... activators) {
+    public NetworkTrainer activators( ArtificialNeuralNetwork.Activator... activators) {
         for (int i = 0, limit = activators.length; i < limit; i++) {
             this.activator(i, activators[i]);
         }
         return this;
     }
 
-    public NetworkTrainer bias(final int layer, final int output, final double bias) {
+    public NetworkTrainer bias( int layer,  int output,  double bias) {
         this.setBias(layer, output, bias);
         return this;
     }
@@ -99,21 +99,21 @@ public final class NetworkTrainer extends WrappedANN {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof NetworkTrainer)) {
             return false;
         }
-        NetworkTrainer other = (NetworkTrainer) obj;
+        var other = (NetworkTrainer) obj;
         if (!myConfiguration.equals(other.myConfiguration) || !Arrays.equals(myGradients, other.myGradients)) {
             return false;
         }
         return true;
     }
 
-    public NetworkTrainer error(final ArtificialNeuralNetwork.Error error) {
+    public NetworkTrainer error( ArtificialNeuralNetwork.Error error) {
         if (this.getOutputActivator() == Activator.SOFTMAX) {
             if (error != Error.CROSS_ENTROPY) {
                 throw new IllegalArgumentException();
@@ -127,8 +127,8 @@ public final class NetworkTrainer extends WrappedANN {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + myConfiguration.hashCode();
         result = prime * result + Arrays.hashCode(myGradients);
         return result;
@@ -137,7 +137,7 @@ public final class NetworkTrainer extends WrappedANN {
     /**
      * L1 lasso regularisation
      */
-    public NetworkTrainer lasso(final double factor) {
+    public NetworkTrainer lasso( double factor) {
         myConfiguration.regularisationL1 = true;
         myConfiguration.regularisationL1Factor = factor;
         return this;
@@ -151,7 +151,7 @@ public final class NetworkTrainer extends WrappedANN {
         return super.newOutputBatch();
     }
 
-    public NetworkTrainer rate(final double rate) {
+    public NetworkTrainer rate( double rate) {
         myConfiguration.learningRate = rate;
         return this;
     }
@@ -159,7 +159,7 @@ public final class NetworkTrainer extends WrappedANN {
     /**
      * L2 ridge regularisation
      */
-    public NetworkTrainer ridge(final double factor) {
+    public NetworkTrainer ridge( double factor) {
         myConfiguration.regularisationL2 = true;
         myConfiguration.regularisationL2Factor = factor;
         return this;
@@ -172,7 +172,7 @@ public final class NetworkTrainer extends WrappedANN {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("NetworkBuilder [structure()=");
         builder.append(Arrays.toString(this.structure()));
         builder.append(", Error=");
@@ -191,7 +191,7 @@ public final class NetworkTrainer extends WrappedANN {
      * @param givenInput One or more input examples, depending on the batch size
      * @param targetOutput One or more, matching, output targets
      */
-    public void train(final Access1D<Double> givenInput, final Access1D<Double> targetOutput) {
+    public void train( Access1D<Double> givenInput,  Access1D<Double> targetOutput) {
 
         MatrixStore<Double> current = this.invoke(givenInput, myConfiguration);
 
@@ -216,7 +216,7 @@ public final class NetworkTrainer extends WrappedANN {
      * @deprecated Just use {@link #train(Access1D, Access1D)} instead
      */
     @Deprecated
-    public void train(final Iterable<? extends Access1D<Double>> givenInputs, final Iterable<? extends Access1D<Double>> targetOutputs) {
+    public void train( Iterable<? extends Access1D<Double>> givenInputs,  Iterable<? extends Access1D<Double>> targetOutputs) {
 
         Iterator<? extends Access1D<Double>> iterI = givenInputs.iterator();
         Iterator<? extends Access1D<Double>> iterO = targetOutputs.iterator();
@@ -226,12 +226,12 @@ public final class NetworkTrainer extends WrappedANN {
         }
     }
 
-    public NetworkTrainer weight(final int layer, final int input, final int output, final double weight) {
+    public NetworkTrainer weight( int layer,  int input,  int output,  double weight) {
         this.setWeight(layer, input, output, weight);
         return this;
     }
 
-    double error(final Access1D<?> target, final Access1D<?> current) {
+    double error( Access1D<?> target,  Access1D<?> current) {
         return myConfiguration.error.invoke(target, current);
     }
 

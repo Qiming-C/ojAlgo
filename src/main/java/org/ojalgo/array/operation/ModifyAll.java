@@ -27,7 +27,7 @@ public abstract class ModifyAll implements ArrayOperation {
 
     public static int THRESHOLD = 64;
 
-    public static void modifyAll(final double[][] target, final DoubleUnaryOperator function) {
+    public static void modifyAll( double[][] target,  DoubleUnaryOperator function) {
         int tmpLength = target.length;
         for (int i = 0; i < tmpLength; i++) {
             int tmpInnerLength = target[i].length;
@@ -37,20 +37,20 @@ public abstract class ModifyAll implements ArrayOperation {
         }
     }
 
-    public static void modifyColumn(final double[][] target, final int row, final int col, final DoubleUnaryOperator function) {
+    public static void modifyColumn( double[][] target,  int row,  int col,  DoubleUnaryOperator function) {
         for (int i = row, limit = target.length; i < limit; i++) {
             target[i][col] = function.applyAsDouble(target[i][col]);
         }
     }
 
-    public static void modifyDiagonal(final double[][] target, final int row, final int col, final DoubleUnaryOperator function) {
+    public static void modifyDiagonal( double[][] target,  int row,  int col,  DoubleUnaryOperator function) {
         int tmpLength = target.length;
         for (int ij = 0; row + ij < tmpLength && col + ij < target[row + ij].length; ij++) {
             target[row + ij][col + ij] = function.applyAsDouble(target[row + ij][col + ij]);
         }
     }
 
-    public static void modifyRow(final double[][] target, final int row, final int col, final DoubleUnaryOperator function) {
+    public static void modifyRow( double[][] target,  int row,  int col,  DoubleUnaryOperator function) {
         double[] targetRow = target[row];
         for (int j = col, limit = targetRow.length; j < limit; j++) {
             targetRow[j] = function.applyAsDouble(targetRow[j]);

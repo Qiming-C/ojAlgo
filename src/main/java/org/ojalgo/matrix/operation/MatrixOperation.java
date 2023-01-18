@@ -72,7 +72,7 @@ public interface MatrixOperation extends ArrayOperation {
      *
      * @param value The threshold
      */
-    static void setAllOperationThresholds(final int value) {
+    static void setAllOperationThresholds( int value) {
         MatrixOperation.setThresholdsMaxValue(value);
         MatrixOperation.setThresholdsMinValue(value);
     }
@@ -83,7 +83,7 @@ public interface MatrixOperation extends ArrayOperation {
      *
      * @param max The max allowed value
      */
-    static void setThresholdsMaxValue(final int max) {
+    static void setThresholdsMaxValue( int max) {
         AggregateAll.THRESHOLD = Math.min(max, AggregateAll.THRESHOLD);
         AMAX.THRESHOLD = Math.min(max, AMAX.THRESHOLD);
         AMIN.THRESHOLD = Math.min(max, AMIN.THRESHOLD);
@@ -138,7 +138,7 @@ public interface MatrixOperation extends ArrayOperation {
      *
      * @param min The min allowed value
      */
-    static void setThresholdsMinValue(final int min) {
+    static void setThresholdsMinValue( int min) {
         AggregateAll.THRESHOLD = Math.max(min, AggregateAll.THRESHOLD);
         AMAX.THRESHOLD = Math.max(min, AMAX.THRESHOLD);
         AMIN.THRESHOLD = Math.max(min, AMIN.THRESHOLD);

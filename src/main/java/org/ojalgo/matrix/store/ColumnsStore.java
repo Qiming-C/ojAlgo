@@ -33,14 +33,14 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
 
     private final int[] myColumns;
 
-    ColumnsStore(final MatrixStore<N> base, final int[] columns) {
+    ColumnsStore( MatrixStore<N> base,  int[] columns) {
 
         super(base, (int) base.countRows(), columns.length);
 
         myColumns = columns;
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         int colIndex = this.toBaseIndex(col);
         if (colIndex >= 0) {
             return this.base().doubleValue(row, colIndex);
@@ -49,7 +49,7 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public int firstInColumn(final int col) {
+    @Override public int firstInColumn( int col) {
         int colIndex = this.toBaseIndex(col);
         if (colIndex >= 0) {
             return this.base().firstInColumn(colIndex);
@@ -58,7 +58,7 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         int colIndex = this.toBaseIndex(col);
         if (colIndex >= 0) {
             return this.base().get(row, colIndex);
@@ -68,7 +68,7 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
     }
 
     @Override
-    public int limitOfColumn(final int col) {
+    public int limitOfColumn( int col) {
         int colIndex = this.toBaseIndex(col);
         if (colIndex >= 0) {
             return this.base().limitOfColumn(colIndex);
@@ -77,8 +77,8 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public void supplyTo(final TransformableRegion<N> consumer) {
-        final MatrixStore<N> base = this.base();
+    @Override public void supplyTo( TransformableRegion<N> consumer) {
+         MatrixStore<N> base = this.base();
         for (int j = 0; j < myColumns.length; j++) {
             int colIndex = this.toBaseIndex(j);
             if (colIndex >= 0) {
@@ -89,7 +89,7 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    public Scalar<N> toScalar(final long row, final long col) {
+    @Override public Scalar<N> toScalar( long row,  long col) {
         int colIndex = this.toBaseIndex(col);
         if (colIndex >= 0) {
             return this.base().toScalar(row, colIndex);
@@ -98,11 +98,11 @@ final class ColumnsStore<N extends Comparable<N>> extends SelectingStore<N> {
         }
     }
 
-    private int toBaseIndex(final int col) {
+    private int toBaseIndex( int col) {
         return myColumns[col];
     }
 
-    private int toBaseIndex(final long col) {
+    private int toBaseIndex( long col) {
         return myColumns[Math.toIntExact(col)];
     }
 

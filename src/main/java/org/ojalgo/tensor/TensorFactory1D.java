@@ -21,29 +21,29 @@
  */
 package org.ojalgo.tensor;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.scalar.Scalar;
-import org.ojalgo.scalar.Scalar.Factory;
 import org.ojalgo.structure.Access1D;
 import org.ojalgo.structure.Factory1D;
 import org.ojalgo.structure.Mutate1D;
 
 public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> implements Factory1D<T> {
 
-    public static <N extends Comparable<N>, T extends Mutate1D> TensorFactory1D<N, T> of(final Factory1D<T> factory) {
+    public static <N extends Comparable<N>, T extends Mutate1D> TensorFactory1D<N, T> of( Factory1D<T> factory) {
         return new TensorFactory1D<>(factory);
     }
 
     private final Factory1D<T> myFactory;
 
-    TensorFactory1D(final Factory1D<T> factory) {
+    TensorFactory1D( Factory1D<T> factory) {
 
         super();
 
         myFactory = factory;
     }
 
-    public T copy(final Access1D<N> elements) {
+    public T copy( Access1D<N> elements) {
 
         T retVal = myFactory.make(elements);
 
@@ -55,14 +55,14 @@ public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> 
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof TensorFactory1D)) {
             return false;
         }
-        TensorFactory1D other = (TensorFactory1D) obj;
+        var other = (TensorFactory1D) obj;
         if (myFactory == null) {
             if (other.myFactory != null) {
                 return false;
@@ -73,24 +73,24 @@ public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> 
         return true;
     }
 
-    public FunctionSet<N> function() {
+    @Override public FunctionSet<N> function() {
         return (FunctionSet<N>) myFactory.function();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
+         int prime = 31;
+        @Var int result = super.hashCode();
         result = prime * result + (myFactory == null ? 0 : myFactory.hashCode());
         return result;
     }
 
-    public T make(final long count) {
+    @Override public T make( long count) {
         return myFactory.make(count);
     }
 
-    public Scalar.Factory<N> scalar() {
-        return (Factory<N>) myFactory.scalar();
+    @Override public Scalar.Factory<N> scalar() {
+        return (Scalar.Factory<N>) myFactory.scalar();
     }
 
     /**
@@ -98,16 +98,16 @@ public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> 
      *
      * @see TensorFactoryAnyD#sum(Access1D...)
      */
-    public T sum(final Access1D<N>... vectors) {
+    public T sum( Access1D<N>... vectors) {
 
-        long dimensions = 0;
+        @Var long dimensions = 0;
         for (Access1D<N> vector : vectors) {
             dimensions += vector.count();
         }
 
         T retVal = myFactory.make(dimensions);
 
-        long offset = 0L;
+        @Var long offset = 0L;
         for (Access1D<N> vector : vectors) {
             long limit = vector.count();
             for (int i = 0; i < limit; i++) {
@@ -119,7 +119,7 @@ public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> 
         return retVal;
     }
 
-    public T values(final double... elements) {
+    public T values( double... elements) {
 
         T retVal = myFactory.make(elements.length);
 
@@ -130,7 +130,7 @@ public final class TensorFactory1D<N extends Comparable<N>, T extends Mutate1D> 
         return retVal;
     }
 
-    public T values(final N... elements) {
+    public T values( N... elements) {
 
         T retVal = myFactory.make(elements.length);
 

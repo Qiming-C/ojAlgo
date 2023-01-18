@@ -23,6 +23,7 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.operation.AXPY;
@@ -83,12 +84,12 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         super();
     }
 
-    public boolean computeValuesOnly(final Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    @Override public boolean computeValuesOnly( Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
         return this.doDecompose(matrix, false);
     }
 
-    public int countSignificant(final double threshold) {
-        int significant = 0;
+    @Override public int countSignificant( double threshold) {
+        @Var int significant = 0;
         for (int i = 0; i < s.length; i++) {
             if (s[i] > threshold) {
                 significant++;
@@ -97,15 +98,15 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return significant;
     }
 
-    public boolean decompose(final Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    @Override public boolean decompose( Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix) {
         return this.doDecompose(matrix, true);
     }
 
-    public double getCondition() {
+    @Override public double getCondition() {
         return s[0] / s[n - 1];
     }
 
-    public MatrixStore<Double> getCovariance() {
+    @Override public MatrixStore<Double> getCovariance() {
 
         MatrixStore<Double> v = this.getV();
         Access1D<Double> values = this.getSingularValues();
@@ -117,15 +118,15 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return tmp.multiply(tmp.transpose());
     }
 
-    public MatrixStore<Double> getD() {
+    @Override public MatrixStore<Double> getD() {
         return RawDecomposition.makeDiagonal(this.getSingularValues()).get();
     }
 
-    public double getFrobeniusNorm() {
+    @Override public double getFrobeniusNorm() {
 
-        double retVal = ZERO;
+        @Var double retVal = ZERO;
 
-        double tmpVal;
+        @Var double tmpVal;
         for (int i = n - 1; i >= 0; i--) {
             tmpVal = s[i];
             retVal += tmpVal * tmpVal;
@@ -139,13 +140,13 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return this.doGetInverse(this.allocate(this.getColDim(), this.getRowDim()));
     }
 
-    public MatrixStore<Double> getInverse(final PhysicalStore<Double> preallocated) {
+    @Override public MatrixStore<Double> getInverse( PhysicalStore<Double> preallocated) {
         return this.doGetInverse((Primitive64Store) preallocated);
     }
 
-    public double getKyFanNorm(final int k) {
+    @Override public double getKyFanNorm( int k) {
 
-        double retVal = ZERO;
+        @Var double retVal = ZERO;
 
         for (int i = Math.min(s.length, k) - 1; i >= 0; i--) {
             retVal += s[i];
@@ -159,46 +160,46 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
      *
      * @return max(S)
      */
-    public double getOperatorNorm() {
+    @Override public double getOperatorNorm() {
         return s[0];
     }
 
-    public double getRankThreshold() {
+    @Override public double getRankThreshold() {
         return Math.max(MACHINE_SMALLEST, s[0]) * this.getDimensionalEpsilon();
     }
 
-    public Array1D<Double> getSingularValues() {
+    @Override public Array1D<Double> getSingularValues() {
         return Array1D.R064.copy(s);
     }
 
-    public void getSingularValues(final double[] values) {
+    @Override public void getSingularValues( double[] values) {
         System.arraycopy(s, 0, values, 0, Math.min(s.length, values.length));
     }
 
-    public MatrixStore<Double> getSolution(final Collectable<Double, ? super PhysicalStore<Double>> rhs) {
+    @Override public MatrixStore<Double> getSolution( Collectable<Double, ? super PhysicalStore<Double>> rhs) {
         return this.getSolution(rhs, this.allocate(this.getMinDim(), rhs.countColumns()));
     }
 
     @Override
-    public MatrixStore<Double> getSolution(final Collectable<Double, ? super PhysicalStore<Double>> rhs, final PhysicalStore<Double> preallocated) {
+    public MatrixStore<Double> getSolution( Collectable<Double, ? super PhysicalStore<Double>> rhs,  PhysicalStore<Double> preallocated) {
         preallocated.fillByMultiplying(this.getInverse(), this.collect(rhs));
         return preallocated;
     }
 
-    public double getTraceNorm() {
+    @Override public double getTraceNorm() {
         return this.getKyFanNorm(s.length);
     }
 
-    public MatrixStore<Double> getU() {
+    @Override public MatrixStore<Double> getU() {
         return myTransposed ? this.wrap(myVt).transpose() : this.wrap(myUt).transpose();
     }
 
-    public MatrixStore<Double> getV() {
+    @Override public MatrixStore<Double> getV() {
         return myTransposed ? this.wrap(myUt).transpose() : this.wrap(myVt).transpose();
     }
 
     @Override
-    public MatrixStore<Double> invert(final Access2D<?> original, final PhysicalStore<Double> preallocated) throws RecoverableCondition {
+    public MatrixStore<Double> invert( Access2D<?> original,  PhysicalStore<Double> preallocated) throws RecoverableCondition {
 
         this.doDecompose(original.asCollectable2D(), true);
 
@@ -208,15 +209,15 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public boolean isFullRank() {
+    @Override public boolean isFullRank() {
         return s[s.length - 1] > this.getRankThreshold();
     }
 
-    public boolean isFullSize() {
+    @Override public boolean isFullSize() {
         return false;
     }
 
-    public boolean isOrdered() {
+    @Override public boolean isOrdered() {
         return true;
     }
 
@@ -225,11 +226,11 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return super.isSolvable();
     }
 
-    public PhysicalStore<Double> preallocate(final Structure2D template) {
+    @Override public PhysicalStore<Double> preallocate( Structure2D template) {
         return this.allocate(template.countColumns(), template.countRows());
     }
 
-    public PhysicalStore<Double> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public PhysicalStore<Double> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         return this.allocate(templateBody.countColumns(), templateRHS.countColumns());
     }
 
@@ -242,7 +243,7 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
     }
 
     @Override
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> preallocated) throws RecoverableCondition {
+    public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> preallocated) throws RecoverableCondition {
 
         this.doDecompose(body.asCollectable2D(), true);
 
@@ -257,11 +258,11 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return true;
     }
 
-    boolean doDecompose(final Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix, final boolean factors) {
+    boolean doDecompose( Access2D.Collectable<Double, ? super PhysicalStore<Double>> matrix,  boolean factors) {
 
         myTransposed = matrix.countRows() < matrix.countColumns();
 
-        final double[][] input = this.reset(matrix, !myTransposed);
+         double[][] input = this.reset(matrix, !myTransposed);
 
         if (myTransposed) {
             matrix.supplyTo(this.getInternalStore());
@@ -289,18 +290,18 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             myVt = null;
         }
 
-        double[] tmpArr;
-        double tmpVal;
+        @Var double[] tmpArr;
+        @Var double tmpVal;
 
-        double nrm = ZERO;
+        @Var double nrm = ZERO;
 
         // Reduce A to bidiagonal form, storing the diagonal elements
         // in s and the super-diagonal elements in e.
 
-        final int nct = Math.min(m - 1, n); // Number of Column Transformations
-        final int nrt = Math.max(0, n - 2); // Number of Row Transformations
+         int nct = Math.min(m - 1, n); // Number of Column Transformations
+         int nrt = Math.max(0, n - 2); // Number of Row Transformations
 
-        final int limit = Math.max(nct, nrt);
+         int limit = Math.max(nct, nrt);
         for (int k = 0; k < limit; k++) {
             tmpArr = input[k];
 
@@ -390,7 +391,7 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         }
 
         // Set up the final bidiagonal matrix or order p. []
-        final int p = n;
+         int p = n;
         if (nct < n) { // Only happens when m == n, then nct == n-1
             s[nct] = input[nct][nct];
         }
@@ -450,11 +451,11 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             }
         }
 
-        final RotateRight q1RotR = factors ? (low, high, cos, sin) -> {
-            final double[] colLow = myUt[low];
-            final double[] colHigh = myUt[high];
-            double valLow;
-            double valHigh;
+         RotateRight q1RotR = factors ? (low, high, cos, sin) -> {
+             double[] colLow = myUt[low];
+             double[] colHigh = myUt[high];
+            @Var double valLow;
+            @Var double valHigh;
             for (int i = 0; i < m; i++) {
                 valLow = colLow[i];
                 valHigh = colHigh[i];
@@ -463,11 +464,11 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             }
         } : RotateRight.NULL;
 
-        final RotateRight q2RotR = factors ? (low, high, cos, sin) -> {
-            final double[] colLow = myVt[low];
-            final double[] colHigh = myVt[high];
-            double valLow;
-            double valHigh;
+         RotateRight q2RotR = factors ? (low, high, cos, sin) -> {
+             double[] colLow = myVt[low];
+             double[] colHigh = myVt[high];
+            @Var double valLow;
+            @Var double valHigh;
             for (int i = 0; i < n; i++) {
                 valLow = colLow[i];
                 valHigh = colHigh[i];
@@ -476,10 +477,10 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             }
         } : RotateRight.NULL;
 
-        final ExchangeColumns q1XchgCols = factors ? (colA, colB) -> {
-            final double[] col1 = myUt[colA];
-            final double[] col2 = myUt[colB];
-            double tmp;
+         ExchangeColumns q1XchgCols = factors ? (colA, colB) -> {
+             double[] col1 = myUt[colA];
+             double[] col2 = myUt[colB];
+            @Var double tmp;
             for (int i = 0; i < m; i++) {
                 tmp = col1[i];
                 col1[i] = col2[i];
@@ -487,10 +488,10 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             }
         } : ExchangeColumns.NULL;
 
-        final ExchangeColumns q2XchgCols = factors ? (colA, colB) -> {
-            final double[] col1 = myVt[colA];
-            final double[] col2 = myVt[colB];
-            double tmp;
+         ExchangeColumns q2XchgCols = factors ? (colA, colB) -> {
+             double[] col1 = myVt[colA];
+             double[] col2 = myVt[colB];
+            @Var double tmp;
             for (int i = 0; i < n; i++) {
                 tmp = col1[i];
                 col1[i] = col2[i];
@@ -498,8 +499,8 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
             }
         } : ExchangeColumns.NULL;
 
-        final NegateColumn q2NegCol = factors ? col -> {
-            final double[] column = myVt[col];
+         NegateColumn q2NegCol = factors ? col -> {
+             double[] column = myVt[col];
             for (int i = 0; i < column.length; i++) {
                 column[i] = -column[i];
             }
@@ -510,22 +511,22 @@ final class RawSingularValue extends RawDecomposition implements SingularValue<D
         return this.computed(true);
     }
 
-    MatrixStore<Double> doGetInverse(final Primitive64Store preallocated) {
+    MatrixStore<Double> doGetInverse( Primitive64Store preallocated) {
 
         if (myPseudoinverse == null) {
 
-            final double[][] tmpQ1t = myTransposed ? myVt : myUt;
-            final double[] tmpSingular = s;
+             double[][] tmpQ1t = myTransposed ? myVt : myUt;
+             double[] tmpSingular = s;
 
-            final RawStore tmpMtrx = this.newRawStore(tmpSingular.length, tmpQ1t[0].length);
-            final double[][] tmpMtrxData = tmpMtrx.data;
+             RawStore tmpMtrx = this.newRawStore(tmpSingular.length, tmpQ1t[0].length);
+             double[][] tmpMtrxData = tmpMtrx.data;
 
-            final double small = this.getRankThreshold();
+             double small = this.getRankThreshold();
 
             for (int i = 0; i < tmpSingular.length; i++) {
-                final double tmpVal = tmpSingular[i];
+                 double tmpVal = tmpSingular[i];
                 if (tmpVal > small) {
-                    final double[] tmpRow = tmpMtrxData[i];
+                     double[] tmpRow = tmpMtrxData[i];
                     for (int j = 0; j < tmpRow.length; j++) {
                         tmpRow[j] = tmpQ1t[i][j] / tmpVal;
                     }

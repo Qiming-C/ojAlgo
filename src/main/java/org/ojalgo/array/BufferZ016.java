@@ -31,52 +31,52 @@ final class BufferZ016 extends BufferArray {
 
     private final ShortBuffer myBuffer;
 
-    BufferZ016(final BufferArray.Factory factory, final ByteBuffer buffer, final AutoCloseable closeable) {
+    BufferZ016( BufferArray.Factory factory,  ByteBuffer buffer,  AutoCloseable closeable) {
         this(factory, buffer.asShortBuffer(), closeable);
     }
 
-    BufferZ016(final BufferArray.Factory factory, final ShortBuffer buffer, final AutoCloseable closeable) {
+    BufferZ016( BufferArray.Factory factory,  ShortBuffer buffer,  AutoCloseable closeable) {
         super(factory, buffer, closeable);
         myBuffer = buffer;
     }
 
     @Override
-    protected byte byteValue(final int index) {
+    protected byte byteValue( int index) {
         return (byte) myBuffer.get(index);
     }
 
     @Override
-    protected void fillOne(final int index, final NullaryFunction<?> supplier) {
+    protected void fillOne( int index,  NullaryFunction<?> supplier) {
         myBuffer.put(index, supplier.shortValue());
     }
 
     @Override
-    protected float floatValue(final int index) {
+    protected float floatValue( int index) {
         return myBuffer.get(index);
     }
 
     @Override
-    protected void set(final int index, final double value) {
+    protected void set( int index,  double value) {
         myBuffer.put(index, (short) Math.round(value));
     }
 
     @Override
-    protected short shortValue(final int index) {
+    protected short shortValue( int index) {
         return myBuffer.get(index);
     }
 
     @Override
-    protected void set(final int index, final long value) {
+    protected void set( int index,  long value) {
         myBuffer.put(index, (short) value);
     }
 
     @Override
-    protected void set(final int index, final short value) {
+    protected void set( int index,  short value) {
         myBuffer.put(index, value);
     }
 
     @Override
-    protected void add(final int index, final Comparable<?> addend) {
+    protected void add( int index,  Comparable<?> addend) {
         this.set(index, this.shortValue(index) + NumberDefinition.shortValue(addend));
     }
 }

@@ -23,7 +23,7 @@ package org.ojalgo.structure;
 
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.NullaryFunction;
-import org.ojalgo.scalar.Scalar.Factory;
+import org.ojalgo.scalar.Scalar;
 
 public interface FactoryAnyD<I extends StructureAnyD> extends FactorySupplement {
 
@@ -38,7 +38,7 @@ public interface FactoryAnyD<I extends StructureAnyD> extends FactorySupplement 
 
         I makeFilled(long[] structure, NullaryFunction<?> supplier);
 
-        default I makeFilled(final StructureAnyD shape, final NullaryFunction<?> supplier) {
+        default I makeFilled( StructureAnyD shape,  NullaryFunction<?> supplier) {
             return this.makeFilled(shape.shape(), supplier);
         }
 
@@ -53,13 +53,13 @@ public interface FactoryAnyD<I extends StructureAnyD> extends FactorySupplement 
 
         DR makeDense(long... structure);
 
-        default DR makeDense(final StructureAnyD shape) {
+        default DR makeDense( StructureAnyD shape) {
             return this.makeDense(shape.shape());
         }
 
         SR makeSparse(long... structure);
 
-        default SR makeSparse(final StructureAnyD shape) {
+        default SR makeSparse( StructureAnyD shape) {
             return this.makeSparse(shape.shape());
         }
 
@@ -68,22 +68,22 @@ public interface FactoryAnyD<I extends StructureAnyD> extends FactorySupplement 
     default Factory1D<I> asFactory1D() {
         return new Factory1D<>() {
 
-            public FunctionSet<?> function() {
+            @Override public FunctionSet<?> function() {
                 return FactoryAnyD.this.function();
             }
 
-            public I make(final long count) {
+            @Override public I make( long count) {
                 return FactoryAnyD.this.make(count);
             }
 
-            public Factory<?> scalar() {
+            @Override public Scalar.Factory<?> scalar() {
                 return FactoryAnyD.this.scalar();
             }
 
         };
     }
 
-    default I make(final int... structure) {
+    default I make( int... structure) {
         long[] shape = new long[structure.length];
         for (int i = 0; i < shape.length; i++) {
             shape[i] = structure[i];
@@ -93,7 +93,7 @@ public interface FactoryAnyD<I extends StructureAnyD> extends FactorySupplement 
 
     I make(long... structure);
 
-    default I make(final StructureAnyD shape) {
+    default I make( StructureAnyD shape) {
         return this.make(shape.shape());
     }
 

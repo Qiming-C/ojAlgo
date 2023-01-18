@@ -21,6 +21,7 @@
  */
 package org.ojalgo.function.multiary;
 
+import com.google.errorprone.annotations.InlineMe;
 import org.ojalgo.matrix.store.GenericStore;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -43,17 +44,17 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
         private Access2D<?> myCoefficients = null;
         private final PhysicalStore.Factory<N, ?> myFactory;
 
-        Factory(final PhysicalStore.Factory<N, ?> factory) {
+        Factory( PhysicalStore.Factory<N, ?> factory) {
             super();
             myFactory = factory;
         }
 
-        public Factory<N> coefficients(final Access2D<?> coefficients) {
+        public Factory<N> coefficients( Access2D<?> coefficients) {
             myCoefficients = coefficients;
             return this;
         }
 
-        public PureQuadraticFunction<N> make(final int arity) {
+        public PureQuadraticFunction<N> make( int arity) {
             if (myCoefficients != null) {
                 return new PureQuadraticFunction<>(myFactory.copy(myCoefficients));
             } else {
@@ -63,7 +64,7 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
 
     }
 
-    public static <N extends Comparable<N>> Factory<N> factory(final PhysicalStore.Factory<N, ?> factory) {
+    public static <N extends Comparable<N>> Factory<N> factory( PhysicalStore.Factory<N, ?> factory) {
         return new Factory<>(factory);
     }
 
@@ -71,7 +72,7 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static PureQuadraticFunction<ComplexNumber> makeComplex(final Access2D<?> coefficients) {
+    public static PureQuadraticFunction<ComplexNumber> makeComplex( Access2D<?> coefficients) {
         // return new PureQuadraticFunction<>(GenericStore.C128.copy(coefficients));
         return PureQuadraticFunction.factory(GenericStore.C128).coefficients(coefficients).make(coefficients.getMaxDim());
     }
@@ -79,8 +80,9 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static PureQuadraticFunction<ComplexNumber> makeComplex(final int arity) {
+    @InlineMe(replacement = "PureQuadraticFunction.factory(GenericStore.C128).make(arity)", imports = {"org.ojalgo.function.multiary.PureQuadraticFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static PureQuadraticFunction<ComplexNumber> makeComplex( int arity) {
         // return new PureQuadraticFunction<>(GenericStore.C128.make(arity, arity));
         return PureQuadraticFunction.factory(GenericStore.C128).make(arity);
     }
@@ -89,7 +91,7 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static PureQuadraticFunction<Double> makePrimitive(final Access2D<?> coefficients) {
+    public static PureQuadraticFunction<Double> makePrimitive( Access2D<?> coefficients) {
         // return new PureQuadraticFunction<>(Primitive64Store.FACTORY.copy(coefficients));
         return PureQuadraticFunction.factory(Primitive64Store.FACTORY).coefficients(coefficients).make(coefficients.getMaxDim());
     }
@@ -97,8 +99,9 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static PureQuadraticFunction<Double> makePrimitive(final int arity) {
+    @InlineMe(replacement = "PureQuadraticFunction.factory(Primitive64Store.FACTORY).make(arity)", imports = {"org.ojalgo.function.multiary.PureQuadraticFunction", "org.ojalgo.matrix.store.Primitive64Store"})
+@Deprecated
+    public static PureQuadraticFunction<Double> makePrimitive( int arity) {
         // return new PureQuadraticFunction<>(Primitive64Store.FACTORY.make(arity, arity));
         return PureQuadraticFunction.factory(Primitive64Store.FACTORY).make(arity);
     }
@@ -107,7 +110,7 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
     @Deprecated
-    public static PureQuadraticFunction<RationalNumber> makeRational(final Access2D<?> coefficients) {
+    public static PureQuadraticFunction<RationalNumber> makeRational( Access2D<?> coefficients) {
         // return new PureQuadraticFunction<>(GenericStore.Q128.copy(coefficients));
         return PureQuadraticFunction.factory(GenericStore.Q128).coefficients(coefficients).make(coefficients.getMaxDim());
     }
@@ -115,20 +118,21 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
     /**
      * @deprecated v53 Use {@link #factory(PhysicalStore.Factory)} instead.
      */
-    @Deprecated
-    public static PureQuadraticFunction<RationalNumber> makeRational(final int arity) {
+    @InlineMe(replacement = "PureQuadraticFunction.factory(GenericStore.Q128).make(arity)", imports = {"org.ojalgo.function.multiary.PureQuadraticFunction", "org.ojalgo.matrix.store.GenericStore"})
+@Deprecated
+    public static PureQuadraticFunction<RationalNumber> makeRational( int arity) {
         // return new PureQuadraticFunction<>(GenericStore.Q128.make(arity, arity));
         return PureQuadraticFunction.factory(GenericStore.Q128).make(arity);
     }
 
-    public static <N extends Comparable<N>> PureQuadraticFunction<N> wrap(final PhysicalStore<N> coefficients) {
+    public static <N extends Comparable<N>> PureQuadraticFunction<N> wrap( PhysicalStore<N> coefficients) {
         return new PureQuadraticFunction<>(coefficients);
     }
 
     private final MatrixStore<N> myCoefficients;
     private final ConstantFunction<N> myConstant;
 
-    PureQuadraticFunction(final MatrixStore<N> coefficients) {
+    PureQuadraticFunction( MatrixStore<N> coefficients) {
 
         super();
 
@@ -140,18 +144,18 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
         myConstant = new ConstantFunction<>(coefficients.countRows(), coefficients.physical());
     }
 
-    public int arity() {
+    @Override public int arity() {
         return (int) myCoefficients.countColumns();
     }
 
-    public N getConstant() {
+    @Override public N getConstant() {
         return myConstant.getConstant();
     }
 
     @Override
-    public MatrixStore<N> getGradient(final Access1D<N> point) {
+    public MatrixStore<N> getGradient( Access1D<N> point) {
 
-        final PhysicalStore<N> retVal = myCoefficients.physical().make(this.arity(), 1L);
+         PhysicalStore<N> retVal = myCoefficients.physical().make(this.arity(), 1L);
 
         this.getHessian(point).multiply(point, retVal);
 
@@ -159,24 +163,24 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
     }
 
     @Override
-    public MatrixStore<N> getHessian(final Access1D<N> point) {
+    public MatrixStore<N> getHessian( Access1D<N> point) {
         return myCoefficients.add(myCoefficients.conjugate());
     }
 
-    public MatrixStore<N> getLinearFactors(final boolean negated) {
+    @Override public MatrixStore<N> getLinearFactors( boolean negated) {
         return myCoefficients.physical().makeZero(this.arity(), 1L);
     }
 
     @Override
-    public N invoke(final Access1D<N> arg) {
+    public N invoke( Access1D<N> arg) {
         return this.getScalarValue(arg).get();
     }
 
-    public PhysicalStore<N> quadratic() {
+    @Override public PhysicalStore<N> quadratic() {
         return (PhysicalStore<N>) myCoefficients;
     }
 
-    public void setConstant(final Comparable<?> constant) {
+    @Override public void setConstant( Comparable<?> constant) {
         myConstant.setConstant(constant);
     }
 
@@ -184,7 +188,7 @@ public final class PureQuadraticFunction<N extends Comparable<N>> implements Mul
         return myCoefficients.physical();
     }
 
-    Scalar<N> getScalarValue(final Access1D<N> arg) {
+    Scalar<N> getScalarValue( Access1D<N> arg) {
 
         Scalar<N> retVal = myConstant.getScalarConstant();
 

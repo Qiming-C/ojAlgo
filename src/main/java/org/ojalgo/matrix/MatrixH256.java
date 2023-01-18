@@ -51,12 +51,12 @@ public final class MatrixH256 extends BasicMatrix<Quaternion, MatrixH256> {
 
     public static final class DenseReceiver extends Mutator2D<Quaternion, MatrixH256, PhysicalStore<Quaternion>> {
 
-        DenseReceiver(final PhysicalStore<Quaternion> delegate) {
+        DenseReceiver( PhysicalStore<Quaternion> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixH256 instantiate(final MatrixStore<Quaternion> store) {
+        MatrixH256 instantiate( MatrixStore<Quaternion> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -69,12 +69,12 @@ public final class MatrixH256 extends BasicMatrix<Quaternion, MatrixH256> {
         }
 
         @Override
-        MatrixH256.DenseReceiver dense(final PhysicalStore<Quaternion> store) {
+        MatrixH256.DenseReceiver dense( PhysicalStore<Quaternion> store) {
             return new MatrixH256.DenseReceiver(store);
         }
 
         @Override
-        MatrixH256.SparseReceiver sparse(final SparseStore<Quaternion> store) {
+        MatrixH256.SparseReceiver sparse( SparseStore<Quaternion> store) {
             return new MatrixH256.SparseReceiver(store);
         }
 
@@ -82,12 +82,12 @@ public final class MatrixH256 extends BasicMatrix<Quaternion, MatrixH256> {
 
     public static final class SparseReceiver extends Mutator2D<Quaternion, MatrixH256, SparseStore<Quaternion>> {
 
-        SparseReceiver(final SparseStore<Quaternion> delegate) {
+        SparseReceiver( SparseStore<Quaternion> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixH256 instantiate(final MatrixStore<Quaternion> store) {
+        MatrixH256 instantiate( MatrixStore<Quaternion> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -98,7 +98,7 @@ public final class MatrixH256 extends BasicMatrix<Quaternion, MatrixH256> {
     /**
      * This method is for internal use only - YOU should NOT use it!
      */
-    MatrixH256(final ElementsSupplier<Quaternion> supplier) {
+    MatrixH256( ElementsSupplier<Quaternion> supplier) {
         super(FACTORY.getPhysicalFactory(), supplier);
     }
 
@@ -108,52 +108,52 @@ public final class MatrixH256 extends BasicMatrix<Quaternion, MatrixH256> {
     }
 
     @Override
-    Cholesky<Quaternion> newCholesky(final Structure2D typical) {
+    Cholesky<Quaternion> newCholesky( Structure2D typical) {
         return Cholesky.QUATERNION.make(typical);
     }
 
     @Override
-    DeterminantTask<Quaternion> newDeterminantTask(final Structure2D template) {
+    DeterminantTask<Quaternion> newDeterminantTask( Structure2D template) {
         return DeterminantTask.QUATERNION.make(template, this.isHermitian(), false);
     }
 
     @Override
-    Eigenvalue<Quaternion> newEigenvalue(final Structure2D typical) {
+    Eigenvalue<Quaternion> newEigenvalue( Structure2D typical) {
         return Eigenvalue.QUATERNION.make(typical, this.isHermitian());
     }
 
     @Override
-    MatrixH256 newInstance(final ElementsSupplier<Quaternion> store) {
+    MatrixH256 newInstance( ElementsSupplier<Quaternion> store) {
         return new MatrixH256(store);
     }
 
     @Override
-    InverterTask<Quaternion> newInverterTask(final Structure2D template) {
+    InverterTask<Quaternion> newInverterTask( Structure2D template) {
         return InverterTask.QUATERNION.make(template, this.isHermitian(), false);
     }
 
     @Override
-    LDL<Quaternion> newLDL(final Structure2D typical) {
+    LDL<Quaternion> newLDL( Structure2D typical) {
         return LDL.QUATERNION.make(typical);
     }
 
     @Override
-    LU<Quaternion> newLU(final Structure2D typical) {
+    LU<Quaternion> newLU( Structure2D typical) {
         return LU.QUATERNION.make(typical);
     }
 
     @Override
-    QR<Quaternion> newQR(final Structure2D typical) {
+    QR<Quaternion> newQR( Structure2D typical) {
         return QR.QUATERNION.make(typical);
     }
 
     @Override
-    SingularValue<Quaternion> newSingularValue(final Structure2D typical) {
+    SingularValue<Quaternion> newSingularValue( Structure2D typical) {
         return SingularValue.QUATERNION.make(typical);
     }
 
     @Override
-    SolverTask<Quaternion> newSolverTask(final Structure2D templateBody, final Structure2D templateRHS) {
+    SolverTask<Quaternion> newSolverTask( Structure2D templateBody,  Structure2D templateRHS) {
         return SolverTask.QUATERNION.make(templateBody, templateRHS, this.isHermitian(), false);
     }
 

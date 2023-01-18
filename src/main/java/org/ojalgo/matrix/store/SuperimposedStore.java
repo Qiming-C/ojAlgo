@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.store;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.scalar.Scalar;
 import org.ojalgo.structure.Access1D;
 
@@ -37,7 +38,7 @@ final class SuperimposedStore<N extends Comparable<N>> extends ComposingStore<N>
     private final int myRowFirst;
     private final int myRowLimit;
 
-    SuperimposedStore(final MatrixStore<N> base, final long row, final long col, final MatrixStore<N> diff) {
+    SuperimposedStore( MatrixStore<N> base,  long row,  long col,  MatrixStore<N> diff) {
 
         super(base, base.countRows(), base.countColumns());
 
@@ -53,16 +54,16 @@ final class SuperimposedStore<N extends Comparable<N>> extends ComposingStore<N>
         myDiff = diff;
     }
 
-    SuperimposedStore(final MatrixStore<N> base, final MatrixStore<N> diff) {
+    SuperimposedStore( MatrixStore<N> base,  MatrixStore<N> diff) {
         this(base, 0L, 0L, diff);
     }
 
     /**
      * @see org.ojalgo.matrix.store.MatrixStore#doubleValue(long, long)
      */
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
 
-        double retVal = this.base().doubleValue(row, col);
+        @Var double retVal = this.base().doubleValue(row, col);
 
         if (this.isCovered(row, col)) {
             retVal += myDiff.doubleValue(row - myRowFirst, col - myColFirst);
@@ -71,9 +72,9 @@ final class SuperimposedStore<N extends Comparable<N>> extends ComposingStore<N>
         return retVal;
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
 
-        N retVal = this.base().get(row, col);
+        @Var N retVal = this.base().get(row, col);
 
         if (this.isCovered(row, col)) {
             retVal = myDiff.toScalar((int) row - myRowFirst, (int) col - myColFirst).add(retVal).get();
@@ -82,45 +83,45 @@ final class SuperimposedStore<N extends Comparable<N>> extends ComposingStore<N>
         return retVal;
     }
 
-    public void multiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    @Override public void multiply( Access1D<N> right,  TransformableRegion<N> target) {
         // TODO Auto-generated method stub
         super.multiply(right, target);
     }
 
-    public MatrixStore<N> multiply(final double scalar) {
+    @Override public MatrixStore<N> multiply( double scalar) {
         // TODO Auto-generated method stub
         return super.multiply(scalar);
     }
 
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    @Override public MatrixStore<N> multiply( MatrixStore<N> right) {
         // TODO Auto-generated method stub
         return super.multiply(right);
     }
 
-    public MatrixStore<N> multiply(final N scalar) {
+    @Override public MatrixStore<N> multiply( N scalar) {
         // TODO Auto-generated method stub
         return super.multiply(scalar);
     }
 
     @Override
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    public N multiplyBoth( Access1D<N> leftAndRight) {
         // TODO Auto-generated method stub
         return super.multiplyBoth(leftAndRight);
     }
 
-    public ElementsSupplier<N> premultiply(final Access1D<N> left) {
+    @Override public ElementsSupplier<N> premultiply( Access1D<N> left) {
         // TODO Auto-generated method stub
         return super.premultiply(left);
     }
 
-    public void supplyTo(final TransformableRegion<N> consumer) {
+    @Override public void supplyTo( TransformableRegion<N> consumer) {
         consumer.fillMatching(this.base());
         consumer.regionByLimits(myRowLimit, myColLimit).regionByOffsets(myRowFirst, myColFirst).modifyMatching(this.physical().function().add(), myDiff);
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
 
-        Scalar<N> retVal = this.base().toScalar(row, column);
+        @Var Scalar<N> retVal = this.base().toScalar(row, column);
 
         if (this.isCovered(row, column)) {
             retVal = retVal.add(myDiff.get(row - myRowFirst, column - myColFirst));
@@ -129,11 +130,11 @@ final class SuperimposedStore<N extends Comparable<N>> extends ComposingStore<N>
         return retVal;
     }
 
-    private boolean isCovered(final int row, final int col) {
+    private boolean isCovered( int row,  int col) {
         return (myRowFirst <= row) && (myColFirst <= col) && (row < myRowLimit) && (col < myColLimit);
     }
 
-    private boolean isCovered(final long row, final long col) {
+    private boolean isCovered( long row,  long col) {
         return this.isCovered(Math.toIntExact(row), Math.toIntExact(col));
     }
 

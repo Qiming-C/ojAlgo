@@ -23,6 +23,8 @@ package org.ojalgo.array.operation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
+
 /**
  * The ?nrm2 routines perform a vector reduction operation defined as res = ||x||, where: x is a vector, res
  * is a value containing the Euclidean norm of the elements of x.
@@ -31,9 +33,9 @@ import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
  */
 public abstract class NRM2 implements ArrayOperation {
 
-    public static double invoke(final double[] data, final double scale, final int first, final int limit) {
-        double tmpVal;
-        double sum2 = ZERO;
+    public static double invoke( double[] data,  double scale,  int first,  int limit) {
+        @Var double tmpVal;
+        @Var double sum2 = ZERO;
         for (int i = first; i < limit; i++) {
             tmpVal = data[i] / scale;
             sum2 += tmpVal * tmpVal;

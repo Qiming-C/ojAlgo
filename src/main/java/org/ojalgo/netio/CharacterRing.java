@@ -21,12 +21,14 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -49,23 +51,23 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             myRing = new CharacterRing();
         }
 
-        public Optional<Writer> asWriter() {
+        @Override public Optional<Writer> asWriter() {
             return Optional.empty();
         }
 
-        public void clear() {
+        @Override public void clear() {
             myRing.clear();
         }
 
-        public void flush(final Appendable receiver) {
+        @Override public void flush( Appendable receiver) {
             myRing.flush(receiver);
         }
 
-        public void flush(final BasicLogger receiver) {
+        @Override public void flush( BasicLogger receiver) {
             myRing.flush(receiver);
         }
 
-        public void print(final boolean value) {
+        @Override public void print( boolean value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -73,7 +75,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final byte value) {
+        @Override public void print( byte value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -81,7 +83,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final char value) {
+        @Override public void print( char value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -89,7 +91,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final double value) {
+        @Override public void print( double value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -97,7 +99,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final float value) {
+        @Override public void print( float value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -105,7 +107,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final int value) {
+        @Override public void print( int value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -113,7 +115,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final long value) {
+        @Override public void print( long value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -121,7 +123,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final Object object) {
+        @Override public void print( Object object) {
             try {
                 myRing.append(String.valueOf(object));
             } catch (IOException cause) {
@@ -129,7 +131,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final short value) {
+        @Override public void print( short value) {
             try {
                 myRing.append(String.valueOf(value));
             } catch (IOException cause) {
@@ -137,18 +139,18 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
             }
         }
 
-        public void print(final Throwable throwable) {
+        @Override public void print( Throwable throwable) {
             throwable.printStackTrace();
         }
 
-        public void printf(final String format, final Object... args) {
-            if (myFormatter == null || myFormatter.locale() != Locale.getDefault()) {
+        @Override public void printf( String format,  Object... args) {
+            if (myFormatter == null || !Objects.equals(myFormatter.locale(), Locale.getDefault())) {
                 myFormatter = new Formatter(myRing);
             }
             myFormatter.format(Locale.getDefault(), format, args);
         }
 
-        public void println() {
+        @Override public void println() {
             try {
                 myRing.append(ASCII.LF);
             } catch (IOException cause) {
@@ -176,18 +178,18 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
     }
 
     @Override
-    public CharacterRing append(final char c) throws IOException {
+    public CharacterRing append( char c) throws IOException {
         myCharacters[myCursor++] = c;
         return this;
     }
 
     @Override
-    public CharacterRing append(final CharSequence csq) throws IOException {
+    public CharacterRing append( CharSequence csq) throws IOException {
         return this.append(csq, 0, csq.length());
     }
 
     @Override
-    public CharacterRing append(final CharSequence csq, final int start, final int end) throws IOException {
+    public CharacterRing append( CharSequence csq,  int start,  int end) throws IOException {
         for (int i = start; i < end; i++) {
             this.append(csq.charAt(i));
         }
@@ -195,35 +197,35 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
     }
 
     @Override
-    public char charAt(final int index) {
+    public char charAt( int index) {
         return myCharacters[(myCursor + index) % length];
     }
 
-    public void clear() {
+    @Override public void clear() {
         Arrays.fill(myCharacters, ASCII.NULL);
         myCursor = 0;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if ((obj == null) || !(obj instanceof CharacterRing)) {
             return false;
         }
-        CharacterRing other = (CharacterRing) obj;
+        var other = (CharacterRing) obj;
         if (!Arrays.equals(myCharacters, other.myCharacters) || (myCursor != other.myCursor)) {
             return false;
         }
         return true;
     }
 
-    public void flush(final Appendable receiver) {
+    @Override public void flush( Appendable receiver) {
         try {
             synchronized (receiver) {
                 int cursor = myCursor;
-                char tmpChar;
+                @Var char tmpChar;
                 for (int i = cursor; i < length; i++) {
                     tmpChar = myCharacters[i];
                     if (tmpChar != ASCII.NULL) {
@@ -243,10 +245,10 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
         }
     }
 
-    public void flush(final BasicLogger receiver) {
+    @Override public void flush( BasicLogger receiver) {
         synchronized (receiver) {
             int cursor = myCursor;
-            char tmpChar;
+            @Var char tmpChar;
             for (int i = cursor; i < length; i++) {
                 tmpChar = myCharacters[i];
                 if (tmpChar != ASCII.NULL) {
@@ -266,14 +268,14 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
     @Override
     public int hashCode() {
         int prime = 31;
-        int result = 1;
+        @Var int result = 1;
         result = (prime * result) + Arrays.hashCode(myCharacters);
         return (prime * result) + myCursor;
     }
 
-    public int indexOfFirst(final char c) {
+    public int indexOfFirst( char c) {
 
-        int retVal = -1;
+        @Var int retVal = -1;
 
         char cursor = myCursor;
         for (int i = cursor; (retVal < 0) && (i < length); i++) {
@@ -290,9 +292,9 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
         return retVal;
     }
 
-    public int indexOfLast(final char c) {
+    public int indexOfLast( char c) {
 
-        int retVal = -1;
+        @Var int retVal = -1;
 
         char cursor = myCursor;
         for (int i = cursor - 1; (retVal < 0) && (i >= 0); i--) {
@@ -315,7 +317,7 @@ public final class CharacterRing implements CharSequence, Appendable, BasicLogge
     }
 
     @Override
-    public CharSequence subSequence(final int start, final int end) {
+    public CharSequence subSequence( int start,  int end) {
         return CharBuffer.wrap(this, start, end);
     }
 

@@ -39,7 +39,7 @@ final class AboveBelowStore<N extends Comparable<N>> extends ComposingStore<N> {
     private final MatrixStore<N> myBelow;
     private final int mySplit;
 
-    AboveBelowStore(final MatrixStore<N> base, final MatrixStore<N> below) {
+    AboveBelowStore( MatrixStore<N> base,  MatrixStore<N> below) {
 
         super(base, base.countRows() + below.countRows(), base.countColumns());
 
@@ -54,108 +54,108 @@ final class AboveBelowStore<N extends Comparable<N>> extends ComposingStore<N> {
     /**
      * @see org.ojalgo.matrix.store.MatrixStore#doubleValue(long, long)
      */
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return (row >= mySplit) ? myBelow.doubleValue(row - mySplit, col) : this.base().doubleValue(row, col);
     }
 
-    public int firstInColumn(final int col) {
-        final int baseFirst = this.base().firstInColumn(col);
+    @Override public int firstInColumn( int col) {
+         int baseFirst = this.base().firstInColumn(col);
         return (baseFirst < mySplit) ? baseFirst : mySplit + myBelow.firstInColumn(col);
     }
 
-    public int firstInRow(final int row) {
+    @Override public int firstInRow( int row) {
         return (row < mySplit) ? this.base().firstInRow(row) : myBelow.firstInRow(row - mySplit);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return (row >= mySplit) ? myBelow.get(row - mySplit, col) : this.base().get(row, col);
     }
 
     @Override
-    public int limitOfColumn(final int col) {
-        final int belowLimit = myBelow.limitOfColumn(col);
+    public int limitOfColumn( int col) {
+         int belowLimit = myBelow.limitOfColumn(col);
         return (belowLimit == 0) ? this.base().limitOfColumn(col) : mySplit + belowLimit;
     }
 
     @Override
-    public int limitOfRow(final int row) {
+    public int limitOfRow( int row) {
         return (row < mySplit) ? this.base().limitOfRow(row) : myBelow.limitOfRow(row - mySplit);
     }
 
-    public void multiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    @Override public void multiply( Access1D<N> right,  TransformableRegion<N> target) {
 
-        final Future<?> futureAbove = this.executeMultiply(right, target.regionByLimits(mySplit, this.getColDim()));
+         Future<?> futureAbove = this.executeMultiply(right, target.regionByLimits(mySplit, this.getColDim()));
 
         myBelow.multiply(right, target.regionByOffsets(mySplit, 0));
 
         try {
             futureAbove.get();
-        } catch (final InterruptedException | ExecutionException ex) {
+        } catch ( InterruptedException | ExecutionException ex) {
             ex.printStackTrace(System.err);
         }
     }
 
-    public MatrixStore<N> multiply(final double scalar) {
+    @Override public MatrixStore<N> multiply( double scalar) {
 
-        final Future<MatrixStore<N>> futureAbove = this.executeMultiply(scalar);
+         Future<MatrixStore<N>> futureAbove = this.executeMultiply(scalar);
 
-        final MatrixStore<N> below = myBelow.multiply(scalar);
+         MatrixStore<N> below = myBelow.multiply(scalar);
 
         try {
             return new AboveBelowStore<>(futureAbove.get(), below);
-        } catch (final InterruptedException | ExecutionException ex) {
+        } catch ( InterruptedException | ExecutionException ex) {
             ex.printStackTrace(System.err);
             return null;
         }
     }
 
     @Override
-    public MatrixStore<N> multiply(final MatrixStore<N> right) {
+    public MatrixStore<N> multiply( MatrixStore<N> right) {
 
-        final Future<MatrixStore<N>> futureAbove = this.executeMultiply(right);
+         Future<MatrixStore<N>> futureAbove = this.executeMultiply(right);
 
-        final MatrixStore<N> below = myBelow.multiply(right);
+         MatrixStore<N> below = myBelow.multiply(right);
 
         try {
             return new AboveBelowStore<>(futureAbove.get(), below);
-        } catch (final InterruptedException | ExecutionException ex) {
+        } catch ( InterruptedException | ExecutionException ex) {
             ex.printStackTrace(System.err);
             return null;
         }
     }
 
-    public MatrixStore<N> multiply(final N scalar) {
+    @Override public MatrixStore<N> multiply( N scalar) {
 
-        final Future<MatrixStore<N>> futureAbove = this.executeMultiply(scalar);
+         Future<MatrixStore<N>> futureAbove = this.executeMultiply(scalar);
 
-        final MatrixStore<N> below = myBelow.multiply(scalar);
+         MatrixStore<N> below = myBelow.multiply(scalar);
 
         try {
             return new AboveBelowStore<>(futureAbove.get(), below);
-        } catch (final InterruptedException | ExecutionException ex) {
+        } catch ( InterruptedException | ExecutionException ex) {
             ex.printStackTrace(System.err);
             return null;
         }
     }
 
     @Override
-    public N multiplyBoth(final Access1D<N> leftAndRight) {
+    public N multiplyBoth( Access1D<N> leftAndRight) {
         // TODO Auto-generated method stub
         return super.multiplyBoth(leftAndRight);
     }
 
-    public ElementsSupplier<N> premultiply(final Access1D<N> left) {
+    @Override public ElementsSupplier<N> premultiply( Access1D<N> left) {
         // TODO Auto-generated method stub
         return super.premultiply(left);
     }
 
     @Override
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    public void supplyTo( TransformableRegion<N> receiver) {
         this.base().supplyTo(receiver.regionByLimits(mySplit, this.getColDim()));
         myBelow.supplyTo(receiver.regionByOffsets(mySplit, 0));
     }
 
-    public Scalar<N> toScalar(final long row, final long column) {
+    @Override public Scalar<N> toScalar( long row,  long column) {
         return (row >= mySplit) ? myBelow.toScalar(row - mySplit, column) : this.base().toScalar(row, column);
     }
 

@@ -21,10 +21,10 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.netio.EnumeratedColumnsParser.LineView;
 import org.ojalgo.type.context.TypeContext;
@@ -37,23 +37,23 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         private final int myNumberOfColumns;
         private ParseStrategy myStrategy = ParseStrategy.RFC4180;
 
-        Builder(final int numberOfColumns) {
+        Builder( int numberOfColumns) {
 
             super();
 
             myNumberOfColumns = numberOfColumns;
         }
 
-        public Builder delimiter(final char delimiter) {
+        public Builder delimiter( char delimiter) {
             myDelimiter = delimiter;
             return this;
         }
 
-        public EnumeratedColumnsParser get() {
+        @Override public EnumeratedColumnsParser get() {
             return new EnumeratedColumnsParser(myNumberOfColumns, myDelimiter, myStrategy);
         }
 
-        public Builder strategy(final ParseStrategy quoted) {
+        public Builder strategy( ParseStrategy quoted) {
             myStrategy = quoted;
             return this;
         }
@@ -71,7 +71,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             this(0, ',');
         }
 
-        LineView(final int numberOfColumns, final char delimiter) {
+        LineView( int numberOfColumns,  char delimiter) {
 
             super();
 
@@ -79,8 +79,8 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             this.delimiter = delimiter;
         }
 
-        public final double doubleValue(final Enum<?> column) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final double doubleValue( Enum<?> column) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return Double.parseDouble(tmpStringValue);
             } else {
@@ -88,8 +88,8 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             }
         }
 
-        public final double floatValue(final Enum<?> column) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final double floatValue( Enum<?> column) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return Float.parseFloat(tmpStringValue);
             } else {
@@ -97,12 +97,12 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             }
         }
 
-        public final String get(final Enum<?> column) {
+        public final String get( Enum<?> column) {
             return this.get(column.ordinal());
         }
 
-        public final <P> P get(final Enum<?> column, final TypeContext<P> typeContext) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final <P> P get( Enum<?> column,  TypeContext<P> typeContext) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return typeContext.parse(tmpStringValue);
             } else {
@@ -110,10 +110,10 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             }
         }
 
-        public abstract String get(final int column);
+        public abstract String get( int column);
 
-        public final long intValue(final Enum<?> column) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final long intValue( Enum<?> column) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return Integer.parseInt(tmpStringValue);
             } else {
@@ -125,8 +125,8 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             return (line != null) && (line.length() > 0);
         }
 
-        public final long longValue(final Enum<?> column) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final long longValue( Enum<?> column) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return Long.parseLong(tmpStringValue);
             } else {
@@ -134,8 +134,8 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             }
         }
 
-        public final BigDecimal toBigDecimal(final Enum<?> column) {
-            final String tmpStringValue = this.get(column.ordinal());
+        public final BigDecimal toBigDecimal( Enum<?> column) {
+             String tmpStringValue = this.get(column.ordinal());
             if ((tmpStringValue != null) && (tmpStringValue.length() > 0)) {
                 return new BigDecimal(tmpStringValue);
             } else {
@@ -143,7 +143,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
             }
         }
 
-        abstract boolean index(final String line, Supplier<String> lineSupplier);
+        abstract boolean index( String line, Supplier<String> lineSupplier);
 
     }
 
@@ -155,7 +155,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         FAST {
 
             @Override
-            public LineView make(final int numberOfColumns, final char delimiter) {
+            public LineView make( int numberOfColumns,  char delimiter) {
                 return new FastViewStrategy(numberOfColumns, delimiter);
             }
         },
@@ -166,7 +166,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         QUOTED() {
 
             @Override
-            public LineView make(final int numberOfColumns, final char delimiter) {
+            public LineView make( int numberOfColumns,  char delimiter) {
                 return new QuotedViewStrategy(numberOfColumns, delimiter);
             }
         },
@@ -177,7 +177,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         RFC4180 {
 
             @Override
-            public LineView make(final int numberOfColumns, final char delimiter) {
+            public LineView make( int numberOfColumns,  char delimiter) {
                 return new RFC4180(numberOfColumns, delimiter);
             }
         };
@@ -190,7 +190,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
 
         private final int[] myIndices;
 
-        FastViewStrategy(final int numberOfColumns, final char delimiter) {
+        FastViewStrategy( int numberOfColumns,  char delimiter) {
 
             super(numberOfColumns, delimiter);
 
@@ -198,15 +198,15 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         }
 
         @Override
-        public String get(final int column) {
+        public String get( int column) {
             return line.substring(myIndices[column] + 1, myIndices[column + 1]);
         }
 
         @Override
-        boolean index(final String line, final Supplier<String> lineSupplier) {
+        boolean index( String line,  Supplier<String> lineSupplier) {
 
-            int tmpIndex = 0;
-            int tmpPosition = -1;
+            @Var int tmpIndex = 0;
+            @Var int tmpPosition = -1;
             myIndices[tmpIndex] = tmpPosition;
 
             while ((tmpPosition = line.indexOf(delimiter, ++tmpPosition)) >= 0) {
@@ -227,7 +227,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         private final int[] myIndices;
         private final String mySplitter;
 
-        QuotedViewStrategy(final int numberOfColumns, final char delimiter) {
+        QuotedViewStrategy( int numberOfColumns,  char delimiter) {
 
             super(numberOfColumns, delimiter);
 
@@ -236,15 +236,15 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         }
 
         @Override
-        public String get(final int column) {
+        public String get( int column) {
             return line.substring(myIndices[column] + 3, myIndices[column + 1]);
         }
 
         @Override
-        boolean index(final String line, final Supplier<String> lineSupplier) {
+        boolean index( String line,  Supplier<String> lineSupplier) {
 
-            int tmpIndex = 0;
-            int tmpPosition = -2;
+            @Var int tmpIndex = 0;
+            @Var int tmpPosition = -2;
             myIndices[tmpIndex] = tmpPosition;
 
             while ((tmpPosition = line.indexOf(mySplitter, ++tmpPosition)) >= 0) {
@@ -269,7 +269,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         private final int[] myEnd;
         private boolean myEscaped;
 
-        RFC4180(final int numberOfColumns, final char delimiter) {
+        RFC4180( int numberOfColumns,  char delimiter) {
 
             super(numberOfColumns, delimiter);
 
@@ -278,7 +278,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         }
 
         @Override
-        public String get(final int column) {
+        public String get( int column) {
             if (myEscaped) {
                 return line.substring(myBegin[column], myEnd[column]).replace("\"\"", "\"");
             } else {
@@ -287,19 +287,19 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
         }
 
         @Override
-        boolean index(final String line, final Supplier<String> lineSupplier) {
+        boolean index( String line,  Supplier<String> lineSupplier) {
 
             myEscaped = false;
 
-            String tmpLine = line;
+            @Var String tmpLine = line;
 
-            int c = 0;
+            @Var int c = 0;
             myBegin[0] = 0;
-            int tmpMode = 0;
-            int tmpNumberOfQuotes = 0;
+            @Var int tmpMode = 0;
+            @Var int tmpNumberOfQuotes = 0;
 
-            char tmpCurChar;
-            int tmpNextInd;
+            @Var char tmpCurChar;
+            @Var int tmpNextInd;
             for (int i = 0; i < tmpLine.length(); i++) {
                 tmpCurChar = tmpLine.charAt(i);
                 tmpNextInd = i + 1;
@@ -371,34 +371,34 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
 
     }
 
-    public static EnumeratedColumnsParser.Builder make(final Class<? extends Enum<?>> columns) {
+    public static EnumeratedColumnsParser.Builder make( Class<? extends Enum<?>> columns) {
         return new EnumeratedColumnsParser.Builder(columns.getFields().length);
     }
 
-    public static EnumeratedColumnsParser.Builder make(final int numberOfColumns) {
+    public static EnumeratedColumnsParser.Builder make( int numberOfColumns) {
         return new EnumeratedColumnsParser.Builder(numberOfColumns);
     }
 
     private final LineView myLineView;
 
-    EnumeratedColumnsParser(final int columns, final char delimiter, final ParseStrategy strategy) {
+    EnumeratedColumnsParser( int columns,  char delimiter,  ParseStrategy strategy) {
 
         super();
 
         myLineView = strategy.make(columns, delimiter);
     }
 
-    public LineView parse(final String line) {
+    @Override public LineView parse( String line) {
         return this.parseLine(line, null);
     }
 
-    public void parse(final Supplier<String> reader, final boolean skipHeader, final Consumer<LineView> consumer) {
+    @Override public void parse( Supplier<String> reader,  boolean skipHeader,  Consumer<LineView> consumer) {
 
         // A reimplementation of the default method from the BasicParser interface.
         // The only difference is that it keeps a reference to the BufferedReader to enable passing it to other methods.
 
-        String line = null;
-        LineView item = null;
+        @Var String line = null;
+        @Var LineView item = null;
 
         if (skipHeader) {
             line = reader.get();
@@ -413,7 +413,7 @@ public final class EnumeratedColumnsParser implements BasicParser<LineView> {
 
     }
 
-    LineView parseLine(final String line, final Supplier<String> reader) {
+    LineView parseLine( String line,  Supplier<String> reader) {
 
         if (myLineView.index(line, reader)) {
             return myLineView;

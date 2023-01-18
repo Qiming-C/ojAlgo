@@ -23,15 +23,15 @@ package org.ojalgo.optimisation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.function.multiary.MultiaryFunction;
 import org.ojalgo.function.multiary.MultiaryFunction.TwiceDifferentiable;
 import org.ojalgo.matrix.store.MatrixStore;
-import org.ojalgo.matrix.store.PhysicalStore.Factory;
+import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.matrix.store.RowsSupplier;
 import org.ojalgo.matrix.store.SparseStore;
@@ -49,9 +49,9 @@ import org.ojalgo.structure.Access2D.RowView;
  */
 public final class OptimisationData {
 
-    private static final Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
+    private static final PhysicalStore.Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
 
-    private static MatrixStore<Double> add(final RowsSupplier<Double> baseA, final MatrixStore<Double> baseB, final Access2D<?> addA, final Access1D<?> addB) {
+    private static MatrixStore<Double> add( RowsSupplier<Double> baseA,  MatrixStore<Double> baseB,  Access2D<?> addA,  Access1D<?> addB) {
 
         ProgrammingError.throwIfNull(addA, addB);
         ProgrammingError.throwIfNotEqualRowDimensions(addA, addB);
@@ -68,7 +68,7 @@ public final class OptimisationData {
 
         } else {
 
-            double value;
+            @Var double value;
             for (int i = 0; i < addRowDim; i++) {
                 SparseArray<Double> tmpRow = baseA.getRow(baseRowDim + i);
                 for (int j = 0; j < addColDim; j++) {
@@ -147,11 +147,11 @@ public final class OptimisationData {
         }
     }
 
-    public SparseArray<Double> getAE(final int row) {
+    public SparseArray<Double> getAE( int row) {
         return myAE.getRow(row);
     }
 
-    public RowsSupplier<Double> getAE(final int... rows) {
+    public RowsSupplier<Double> getAE( int... rows) {
         return myAE.selectRows(rows);
     }
 
@@ -166,11 +166,11 @@ public final class OptimisationData {
         }
     }
 
-    public SparseArray<Double> getAI(final int row) {
+    public SparseArray<Double> getAI( int row) {
         return myAI.getRow(row);
     }
 
-    public RowsSupplier<Double> getAI(final int... rows) {
+    public RowsSupplier<Double> getAI( int... rows) {
         return myAI.selectRows(rows);
     }
 
@@ -185,7 +185,7 @@ public final class OptimisationData {
         }
     }
 
-    public double getBE(final int row) {
+    public double getBE( int row) {
         return myBE.doubleValue(row);
     }
 
@@ -200,7 +200,7 @@ public final class OptimisationData {
         }
     }
 
-    public double getBI(final int row) {
+    public double getBI( int row) {
         return myBI.doubleValue(row);
     }
 
@@ -208,7 +208,7 @@ public final class OptimisationData {
         return myObjective;
     }
 
-    public <T extends MultiaryFunction.TwiceDifferentiable<Double>> T getObjective(final Class<T> type) {
+    public <T extends MultiaryFunction.TwiceDifferentiable<Double>> T getObjective( Class<T> type) {
         return (T) myObjective;
     }
 
@@ -239,7 +239,7 @@ public final class OptimisationData {
     @Override
     public String toString() {
 
-        StringBuilder retVal = new StringBuilder();
+        var retVal = new StringBuilder();
 
         retVal.append("[ variables=");
         retVal.append(this.countVariables());
@@ -255,14 +255,14 @@ public final class OptimisationData {
         return retVal.toString();
     }
 
-    void addConstraint(final String key, final TwiceDifferentiable<Double> value) {
+    void addConstraint( String key,  TwiceDifferentiable<Double> value) {
         if (myAdditionalConstraints == null) {
             myAdditionalConstraints = new HashMap<>();
         }
         myAdditionalConstraints.put(key, value);
     }
 
-    void addEqualities(final MatrixStore<?> mtrxAE, final MatrixStore<?> mtrxBE) {
+    void addEqualities( MatrixStore<?> mtrxAE,  MatrixStore<?> mtrxBE) {
 
         ProgrammingError.throwIfNull(mtrxAE, mtrxBE);
         ProgrammingError.throwIfNotEqualRowDimensions(mtrxAE, mtrxBE);
@@ -275,7 +275,7 @@ public final class OptimisationData {
         myBE = OptimisationData.add(myAE, myBE, mtrxAE, mtrxBE);
     }
 
-    void addInequalities(final MatrixStore<?> mtrxAI, final MatrixStore<?> mtrxBI) {
+    void addInequalities( MatrixStore<?> mtrxAI,  MatrixStore<?> mtrxBI) {
 
         ProgrammingError.throwIfNull(mtrxAI, mtrxBI);
         ProgrammingError.throwIfNotEqualRowDimensions(mtrxAI, mtrxBI);
@@ -292,7 +292,7 @@ public final class OptimisationData {
         return myLowerBounds;
     }
 
-    Primitive64Store getLowerBounds(final double defaultValue) {
+    Primitive64Store getLowerBounds( double defaultValue) {
         if (myLowerBounds == null) {
             myLowerBounds = FACTORY.make(this.countVariables(), 1);
             myLowerBounds.fillAll(defaultValue);
@@ -304,7 +304,7 @@ public final class OptimisationData {
         return myUpperBounds;
     }
 
-    Primitive64Store getUpperBounds(final double defaultValue) {
+    Primitive64Store getUpperBounds( double defaultValue) {
         if (myUpperBounds == null) {
             myUpperBounds = FACTORY.make(this.countVariables(), 1);
             myUpperBounds.fillAll(defaultValue);
@@ -312,7 +312,7 @@ public final class OptimisationData {
         return myUpperBounds;
     }
 
-    void newEqualities(final int nbEqualities, final int nbVariables) {
+    void newEqualities( int nbEqualities,  int nbVariables) {
 
         MatrixStore<Double> mtrxAE = FACTORY.make(nbEqualities, nbVariables);
         MatrixStore<Double> mtrxBE = FACTORY.make(nbEqualities, 1);
@@ -320,7 +320,7 @@ public final class OptimisationData {
         this.setEqualities(mtrxAE, mtrxBE);
     }
 
-    void newInequalities(final int nbInequalities, final int nbVariables) {
+    void newInequalities( int nbInequalities,  int nbVariables) {
 
         RowsSupplier<Double> mtrxAI = FACTORY.makeRowsSupplier(nbVariables);
         mtrxAI.addRows(nbInequalities);
@@ -329,7 +329,7 @@ public final class OptimisationData {
         this.setInequalities(mtrxAI, mtrxBI);
     }
 
-    void setBounds(final Access1D<Double> lower, final Access1D<Double> upper) {
+    void setBounds( Access1D<Double> lower,  Access1D<Double> upper) {
 
         ProgrammingError.throwIfNull(lower, upper);
 
@@ -346,7 +346,7 @@ public final class OptimisationData {
         }
     }
 
-    void setEqualities(final Access2D<?> mtrxAE, final Access1D<?> mtrxBE) {
+    void setEqualities( Access2D<?> mtrxAE,  Access1D<?> mtrxBE) {
 
         ProgrammingError.throwIfNull(mtrxAE, mtrxBE);
         ProgrammingError.throwIfNotEqualRowDimensions(mtrxAE, mtrxBE);
@@ -357,7 +357,7 @@ public final class OptimisationData {
         myBE = OptimisationData.add(myAE, myBE, mtrxAE, mtrxBE);
     }
 
-    void setInequalities(final Access2D<?> mtrxAI, final Access1D<?> mtrxBI) {
+    void setInequalities( Access2D<?> mtrxAI,  Access1D<?> mtrxBI) {
 
         ProgrammingError.throwIfNull(mtrxAI, mtrxBI);
         ProgrammingError.throwIfNotEqualRowDimensions(mtrxAI, mtrxBI);
@@ -368,7 +368,7 @@ public final class OptimisationData {
         myBI = OptimisationData.add(myAI, myBI, mtrxAI, mtrxBI);
     }
 
-    void setObjective(final MultiaryFunction.TwiceDifferentiable<Double> objective) {
+    void setObjective( MultiaryFunction.TwiceDifferentiable<Double> objective) {
 
         ProgrammingError.throwIfNull(objective);
 

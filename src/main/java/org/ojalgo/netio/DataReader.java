@@ -43,7 +43,7 @@ public final class DataReader<T> implements FromFileReader<T> {
         /**
          * Will return null on EOF
          */
-        default T apply(final DataInput input) {
+        @Override default T apply( DataInput input) {
             try {
                 return this.deserialize(input);
             } catch (IOException cause) {
@@ -55,27 +55,27 @@ public final class DataReader<T> implements FromFileReader<T> {
 
     }
 
-    public static <T> DataReader<T> of(final File file, final DataReader.Deserializer<T> deserializer) {
+    public static <T> DataReader<T> of( File file,  DataReader.Deserializer<T> deserializer) {
         return new DataReader<>(FromFileReader.input(file), deserializer);
     }
 
-    public static <T> DataReader<T> of(final File file, final DataReader.Deserializer<T> deserializer, final OperatorWithException<InputStream> filter) {
+    public static <T> DataReader<T> of( File file,  DataReader.Deserializer<T> deserializer,  OperatorWithException<InputStream> filter) {
         return new DataReader<>(filter.apply(FromFileReader.input(file)), deserializer);
     }
 
-    public static <T> DataReader<T> of(final InMemoryFile file, final DataReader.Deserializer<T> deserializer) {
+    public static <T> DataReader<T> of( InMemoryFile file,  DataReader.Deserializer<T> deserializer) {
         return new DataReader<>(file.newInputStream(), deserializer);
     }
 
-    public static <T> DataReader<T> of(final InMemoryFile file, final DataReader.Deserializer<T> deserializer,
-            final OperatorWithException<InputStream> filter) {
+    public static <T> DataReader<T> of( InMemoryFile file,  DataReader.Deserializer<T> deserializer,
+             OperatorWithException<InputStream> filter) {
         return new DataReader<>(filter.apply(file.newInputStream()), deserializer);
     }
 
     private final Deserializer<T> myDeserializer;
     private final DataInputStream myInput;
 
-    public DataReader(final InputStream inputStream, final DataReader.Deserializer<T> deserializer) {
+    public DataReader( InputStream inputStream,  DataReader.Deserializer<T> deserializer) {
 
         super();
 
@@ -83,11 +83,11 @@ public final class DataReader<T> implements FromFileReader<T> {
         myDeserializer = deserializer;
     }
 
-    public void close() throws IOException {
+    @Override public void close() throws IOException {
         myInput.close();
     }
 
-    public T read() {
+    @Override public T read() {
         return myDeserializer.apply(myInput);
     }
 

@@ -39,25 +39,25 @@ public class Deterministic extends RandomNumber {
         myValue = ZERO;
     }
 
-    public Deterministic(final Comparable<?> aValue) {
+    public Deterministic( Comparable<?> aValue) {
 
         super();
 
         myValue = NumberDefinition.doubleValue(aValue);
     }
 
-    public Deterministic(final double aValue) {
+    public Deterministic( double aValue) {
 
         super();
 
         myValue = aValue;
     }
 
-    public int compareTo(final Deterministic o) {
+    public int compareTo( Deterministic o) {
         return Double.compare(myValue, o.myValue);
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myValue;
     }
 

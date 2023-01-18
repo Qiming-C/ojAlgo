@@ -21,10 +21,12 @@
  */
 package org.ojalgo.netio;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.errorprone.annotations.Var;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import org.ojalgo.random.Uniform;
 
 /**
@@ -37,17 +39,18 @@ public class Password {
     private static MessageDigest INSTANCE;
 
     /**
-     * @param plainTextPassword An unencrypted (plain text) password
-     * @return An encrypted password
+     *Returns an encrypted password.
+ @param plainTextPassword An unencrypted (plain text) password
+     * 
      */
-    public static String encrypt(final String plainTextPassword) {
+    public static String encrypt( String plainTextPassword) {
 
-        String retVal = null;
-        final MessageDigest digest = Password.getInstance();
+        @Var String retVal = null;
+         MessageDigest digest = Password.getInstance();
 
         if (plainTextPassword != null) {
 
-            final byte[] tmpBytes = digest.digest(plainTextPassword.getBytes());
+             byte[] tmpBytes = digest.digest(plainTextPassword.getBytes(UTF_8));
 
             for (int i = 0; i < tmpBytes.length; i++) {
 
@@ -72,30 +75,31 @@ public class Password {
                 }
             }
 
-            retVal = new String(tmpBytes).trim();
+            retVal = new String(tmpBytes, UTF_8).trim();
         }
 
         return retVal;
     }
 
     /**
-     * @param plainTextPassword An unencrypted (plain text) password
-     * @return An encrypted password
+     *Returns an encrypted password.
+ @param plainTextPassword An unencrypted (plain text) password
+     * 
      */
-    public static String encrypt(final String plainTextPassword, final String toBytesEncoding, final String fromBytesEncoding) {
+    public static String encrypt( String plainTextPassword,  String toBytesEncoding,  String fromBytesEncoding) {
 
-        String retVal = null;
-        final MessageDigest digest = Password.getInstance();
+        @Var String retVal = null;
+         MessageDigest digest = Password.getInstance();
 
         if (plainTextPassword != null) {
 
             try {
 
-                final byte[] tmpBytes = digest.digest(plainTextPassword.getBytes(toBytesEncoding));
+                 byte[] tmpBytes = digest.digest(plainTextPassword.getBytes(toBytesEncoding));
 
                 retVal = new String(tmpBytes, fromBytesEncoding).trim();
 
-            } catch (final UnsupportedEncodingException cause) {
+            } catch ( UnsupportedEncodingException cause) {
                 BasicLogger.error(cause.toString());
             }
         }
@@ -103,14 +107,14 @@ public class Password {
         return retVal;
     }
 
-    public static String makePlainText(final int length) {
+    public static String makePlainText( int length) {
 
-        final char[] retVal = new char[length];
+         char[] retVal = new char[length];
 
-        final Uniform random = new Uniform(0, 128);
+         var random = new Uniform(0, 128);
 
         for (int c = 0; c < length; c++) {
-            int tmpChar = ASCII.NBSP;
+            @Var int tmpChar = ASCII.NBSP;
             do {
                 tmpChar = random.intValue();
             } while (!ASCII.isAlphanumeric(tmpChar));
@@ -125,7 +129,7 @@ public class Password {
         if (INSTANCE == null) {
             try {
                 INSTANCE = MessageDigest.getInstance("SHA-512");
-            } catch (final NoSuchAlgorithmException cause) {
+            } catch ( NoSuchAlgorithmException cause) {
                 BasicLogger.error(cause.toString());
             }
         }

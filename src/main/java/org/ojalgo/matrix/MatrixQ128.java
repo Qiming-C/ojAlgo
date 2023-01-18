@@ -51,12 +51,12 @@ public final class MatrixQ128 extends BasicMatrix<RationalNumber, MatrixQ128> {
 
     public static final class DenseReceiver extends Mutator2D<RationalNumber, MatrixQ128, PhysicalStore<RationalNumber>> {
 
-        DenseReceiver(final PhysicalStore<RationalNumber> delegate) {
+        DenseReceiver( PhysicalStore<RationalNumber> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixQ128 instantiate(final MatrixStore<RationalNumber> store) {
+        MatrixQ128 instantiate( MatrixStore<RationalNumber> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -69,12 +69,12 @@ public final class MatrixQ128 extends BasicMatrix<RationalNumber, MatrixQ128> {
         }
 
         @Override
-        MatrixQ128.DenseReceiver dense(final PhysicalStore<RationalNumber> store) {
+        MatrixQ128.DenseReceiver dense( PhysicalStore<RationalNumber> store) {
             return new MatrixQ128.DenseReceiver(store);
         }
 
         @Override
-        MatrixQ128.SparseReceiver sparse(final SparseStore<RationalNumber> store) {
+        MatrixQ128.SparseReceiver sparse( SparseStore<RationalNumber> store) {
             return new MatrixQ128.SparseReceiver(store);
         }
 
@@ -82,12 +82,12 @@ public final class MatrixQ128 extends BasicMatrix<RationalNumber, MatrixQ128> {
 
     public static final class SparseReceiver extends Mutator2D<RationalNumber, MatrixQ128, SparseStore<RationalNumber>> {
 
-        SparseReceiver(final SparseStore<RationalNumber> delegate) {
+        SparseReceiver( SparseStore<RationalNumber> delegate) {
             super(delegate);
         }
 
         @Override
-        MatrixQ128 instantiate(final MatrixStore<RationalNumber> store) {
+        MatrixQ128 instantiate( MatrixStore<RationalNumber> store) {
             return FACTORY.instantiate(store);
         }
 
@@ -98,7 +98,7 @@ public final class MatrixQ128 extends BasicMatrix<RationalNumber, MatrixQ128> {
     /**
      * This method is for internal use only - YOU should NOT use it!
      */
-    MatrixQ128(final ElementsSupplier<RationalNumber> supplier) {
+    MatrixQ128( ElementsSupplier<RationalNumber> supplier) {
         super(FACTORY.getPhysicalFactory(), supplier);
     }
 
@@ -108,52 +108,52 @@ public final class MatrixQ128 extends BasicMatrix<RationalNumber, MatrixQ128> {
     }
 
     @Override
-    Cholesky<RationalNumber> newCholesky(final Structure2D typical) {
+    Cholesky<RationalNumber> newCholesky( Structure2D typical) {
         return Cholesky.RATIONAL.make(typical);
     }
 
     @Override
-    DeterminantTask<RationalNumber> newDeterminantTask(final Structure2D template) {
+    DeterminantTask<RationalNumber> newDeterminantTask( Structure2D template) {
         return DeterminantTask.RATIONAL.make(template, this.isHermitian(), false);
     }
 
     @Override
-    Eigenvalue<RationalNumber> newEigenvalue(final Structure2D typical) {
+    Eigenvalue<RationalNumber> newEigenvalue( Structure2D typical) {
         return Eigenvalue.RATIONAL.make(typical, this.isHermitian());
     }
 
     @Override
-    MatrixQ128 newInstance(final ElementsSupplier<RationalNumber> store) {
+    MatrixQ128 newInstance( ElementsSupplier<RationalNumber> store) {
         return new MatrixQ128(store);
     }
 
     @Override
-    InverterTask<RationalNumber> newInverterTask(final Structure2D template) {
+    InverterTask<RationalNumber> newInverterTask( Structure2D template) {
         return InverterTask.RATIONAL.make(template, this.isHermitian(), false);
     }
 
     @Override
-    LDL<RationalNumber> newLDL(final Structure2D typical) {
+    LDL<RationalNumber> newLDL( Structure2D typical) {
         return LDL.RATIONAL.make(typical);
     }
 
     @Override
-    LU<RationalNumber> newLU(final Structure2D typical) {
+    LU<RationalNumber> newLU( Structure2D typical) {
         return LU.RATIONAL.make(typical);
     }
 
     @Override
-    QR<RationalNumber> newQR(final Structure2D typical) {
+    QR<RationalNumber> newQR( Structure2D typical) {
         return QR.RATIONAL.make(typical);
     }
 
     @Override
-    SingularValue<RationalNumber> newSingularValue(final Structure2D typical) {
+    SingularValue<RationalNumber> newSingularValue( Structure2D typical) {
         return SingularValue.RATIONAL.make(typical);
     }
 
     @Override
-    SolverTask<RationalNumber> newSolverTask(final Structure2D templateBody, final Structure2D templateRHS) {
+    SolverTask<RationalNumber> newSolverTask( Structure2D templateBody,  Structure2D templateRHS) {
         return SolverTask.RATIONAL.make(templateBody, templateRHS, this.isHermitian(), false);
     }
 

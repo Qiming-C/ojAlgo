@@ -21,6 +21,7 @@
  */
 package org.ojalgo.data.domain.finance.series;
 
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +29,6 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.ojalgo.netio.InMemoryFile;
 import org.ojalgo.netio.TextLineReader;
 import org.ojalgo.series.BasicSeries;
@@ -40,30 +40,30 @@ import org.ojalgo.type.keyvalue.KeyValue;
 
 public final class FinanceDataReader<DP extends DatePrice> implements FinanceData<DP>, DataFetcher {
 
-    public static <T extends DatePrice> FinanceDataReader<T> of(final File file, final TextLineReader.Parser<T> parser) {
+    public static <T extends DatePrice> FinanceDataReader<T> of( File file,  TextLineReader.Parser<T> parser) {
         return new FinanceDataReader<>(file, parser, CalendarDateUnit.DAY);
     }
 
-    public static <T extends DatePrice> FinanceDataReader<T> of(final File file, final TextLineReader.Parser<T> parser, final CalendarDateUnit resolution) {
+    public static <T extends DatePrice> FinanceDataReader<T> of( File file,  TextLineReader.Parser<T> parser,  CalendarDateUnit resolution) {
         return new FinanceDataReader<>(file, parser, resolution);
     }
 
-    public static <T extends DatePrice> FinanceDataReader<T> of(final InMemoryFile file, final TextLineReader.Parser<T> parser) {
+    public static <T extends DatePrice> FinanceDataReader<T> of( InMemoryFile file,  TextLineReader.Parser<T> parser) {
         return new FinanceDataReader<>(file, parser, CalendarDateUnit.DAY);
     }
 
-    public static <T extends DatePrice> FinanceDataReader<T> of(final InMemoryFile file, final TextLineReader.Parser<T> parser,
-            final CalendarDateUnit resolution) {
+    public static <T extends DatePrice> FinanceDataReader<T> of( InMemoryFile file,  TextLineReader.Parser<T> parser,
+             CalendarDateUnit resolution) {
         return new FinanceDataReader<>(file, parser, resolution);
     }
 
-    public static String toSymbol(final String fileName) {
+    public static String toSymbol( String fileName) {
 
         if (fileName == null || fileName.length() <= 0) {
             return "UNKNOWN";
         }
 
-        String retVal = fileName;
+        @Var String retVal = fileName;
         int lastDotIndex = retVal.lastIndexOf('.');
         if (lastDotIndex > 0) {
             retVal = retVal.substring(0, lastDotIndex);
@@ -76,7 +76,7 @@ public final class FinanceDataReader<DP extends DatePrice> implements FinanceDat
     private final TextLineReader.Parser<DP> myParser;
     private final CalendarDateUnit myResolution;
 
-    FinanceDataReader(final File file, final TextLineReader.Parser<DP> parser, final CalendarDateUnit resolution) {
+    FinanceDataReader( File file,  TextLineReader.Parser<DP> parser,  CalendarDateUnit resolution) {
         super();
         myFile = file;
         myInMemoryFile = null;
@@ -84,7 +84,7 @@ public final class FinanceDataReader<DP extends DatePrice> implements FinanceDat
         myResolution = resolution;
     }
 
-    FinanceDataReader(final InMemoryFile file, final TextLineReader.Parser<DP> parser, final CalendarDateUnit resolution) {
+    FinanceDataReader( InMemoryFile file,  TextLineReader.Parser<DP> parser,  CalendarDateUnit resolution) {
         super();
         myFile = null;
         myInMemoryFile = file;
@@ -92,7 +92,7 @@ public final class FinanceDataReader<DP extends DatePrice> implements FinanceDat
         myResolution = resolution;
     }
 
-    public KeyValue<String, List<DP>> getHistoricalData() {
+    @Override public KeyValue<String, List<DP>> getHistoricalData() {
         return KeyValue.of(this.getSymbol(), this.getHistoricalPrices());
     }
 
@@ -119,7 +119,7 @@ public final class FinanceDataReader<DP extends DatePrice> implements FinanceDat
         return retVal;
     }
 
-    public InputStream getInputStream() {
+    @Override public InputStream getInputStream() {
         if (myFile != null) {
             try {
                 return new FileInputStream(myFile);
@@ -156,11 +156,11 @@ public final class FinanceDataReader<DP extends DatePrice> implements FinanceDat
         return retVal;
     }
 
-    public CalendarDateUnit getResolution() {
+    @Override public CalendarDateUnit getResolution() {
         return myResolution;
     }
 
-    public String getSymbol() {
+    @Override public String getSymbol() {
         if (myFile != null) {
             return FinanceDataReader.toSymbol(myFile.getName());
         } else if (myInMemoryFile != null) {

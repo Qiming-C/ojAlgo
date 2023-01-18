@@ -27,7 +27,7 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
 
     private final long[] myTimes;
 
-    public ExplicitTimeSeries(final long[] someTimes, final PrimitiveSeries valueSeries) {
+    public ExplicitTimeSeries( long[] someTimes,  PrimitiveSeries valueSeries) {
 
         super(valueSeries);
 
@@ -35,12 +35,12 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ExplicitTimeSeries add(final double addend) {
+    public ExplicitTimeSeries add( double addend) {
         return new ExplicitTimeSeries(this.keys(), super.add(addend));
     }
 
     @Override
-    public ExplicitTimeSeries add(final PrimitiveSeries addend) {
+    public ExplicitTimeSeries add( PrimitiveSeries addend) {
         return new ExplicitTimeSeries(this.keys(), super.add(addend));
     }
 
@@ -55,17 +55,17 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ExplicitTimeSeries differences(final int period) {
+    public ExplicitTimeSeries differences( int period) {
         return new ExplicitTimeSeries(this.keys(), super.differences(period));
     }
 
     @Override
-    public ExplicitTimeSeries divide(final double divisor) {
+    public ExplicitTimeSeries divide( double divisor) {
         return new ExplicitTimeSeries(this.keys(), super.divide(divisor));
     }
 
     @Override
-    public ExplicitTimeSeries divide(final PrimitiveSeries divisor) {
+    public ExplicitTimeSeries divide( PrimitiveSeries divisor) {
         return new ExplicitTimeSeries(this.keys(), super.divide(divisor));
     }
 
@@ -81,11 +81,11 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
 
     @Override
     public long getAverageStepSize() {
-        final int tmpIndexOfLast = myTimes.length - 1;
+         int tmpIndexOfLast = myTimes.length - 1;
         return (myTimes[tmpIndexOfLast] - myTimes[0]) / tmpIndexOfLast;
     }
 
-    public long key(final int index) {
+    public long key( int index) {
         return myTimes[index];
     }
 
@@ -105,12 +105,12 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ExplicitTimeSeries multiply(final double aFactor) {
+    public ExplicitTimeSeries multiply( double aFactor) {
         return new ExplicitTimeSeries(this.keys(), super.multiply(aFactor));
     }
 
     @Override
-    public ExplicitTimeSeries multiply(final PrimitiveSeries multiplicand) {
+    public ExplicitTimeSeries multiply( PrimitiveSeries multiplicand) {
         return new ExplicitTimeSeries(this.keys(), super.multiply(multiplicand));
     }
 
@@ -120,27 +120,27 @@ public final class ExplicitTimeSeries extends PrimitiveTimeSeries {
     }
 
     @Override
-    public ExplicitTimeSeries quotients(final int period) {
+    public ExplicitTimeSeries quotients( int period) {
         return new ExplicitTimeSeries(this.keys(), super.quotients(period));
     }
 
     @Override
-    public ExplicitTimeSeries runningProduct(final double initialValue) {
+    public ExplicitTimeSeries runningProduct( double initialValue) {
         return new ExplicitTimeSeries(this.keys(), super.runningProduct(initialValue));
     }
 
     @Override
-    public ExplicitTimeSeries runningSum(final double initialValue) {
+    public ExplicitTimeSeries runningSum( double initialValue) {
         return new ExplicitTimeSeries(this.keys(), super.runningSum(initialValue));
     }
 
     @Override
-    public ExplicitTimeSeries subtract(final double subtrahend) {
+    public ExplicitTimeSeries subtract( double subtrahend) {
         return new ExplicitTimeSeries(this.keys(), super.subtract(subtrahend));
     }
 
     @Override
-    public ExplicitTimeSeries subtract(final PrimitiveSeries subtrahend) {
+    public ExplicitTimeSeries subtract( PrimitiveSeries subtrahend) {
         return new ExplicitTimeSeries(this.keys(), super.subtract(subtrahend));
     }
 

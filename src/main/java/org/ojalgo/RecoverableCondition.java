@@ -37,7 +37,7 @@ public final class RecoverableCondition extends Exception implements EffectiveTh
         return new RecoverableCondition("Equation System Not Solvable!");
     }
 
-    public static RecoverableCondition newFailedToParseString(final String stringToParse, final Class<?> classToInstantiate) {
+    public static RecoverableCondition newFailedToParseString( String stringToParse,  Class<?> classToInstantiate) {
         return new RecoverableCondition(TypeUtils.format("Failed to parse \"{}\" to a {}!", String.valueOf(stringToParse),
                 classToInstantiate != null ? classToInstantiate.getName() : "unspecified type"));
     }
@@ -46,7 +46,7 @@ public final class RecoverableCondition extends Exception implements EffectiveTh
         return new RecoverableCondition("Matrix Not Invertible!");
     }
 
-    public RecoverableCondition(final String message) {
+    public RecoverableCondition( String message) {
         super(message);
     }
 
@@ -54,22 +54,22 @@ public final class RecoverableCondition extends Exception implements EffectiveTh
         super();
     }
 
-    RecoverableCondition(final String message, final Throwable cause) {
+    RecoverableCondition( String message,  Throwable cause) {
         super(message, cause);
     }
 
-    RecoverableCondition(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+    RecoverableCondition( String message,  Throwable cause,  boolean enableSuppression,  boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    RecoverableCondition(final Throwable cause) {
+    RecoverableCondition( Throwable cause) {
         super(cause);
     }
 
     @Override
-    public String toString() {
-        final String retVal = this.getClass().getSimpleName();
-        final String tmpMessage = this.getLocalizedMessage();
+    public String getMessage() {
+         String retVal = this.getClass().getSimpleName();
+         String tmpMessage = this.getLocalizedMessage();
         return (tmpMessage != null) ? (retVal + ": " + tmpMessage) : retVal;
     }
 

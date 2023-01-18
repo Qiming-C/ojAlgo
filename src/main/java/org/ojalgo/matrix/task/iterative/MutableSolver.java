@@ -52,7 +52,7 @@ public abstract class MutableSolver<D extends IterativeSolverTask & IterativeSol
         mySize = 0L;
     }
 
-    protected MutableSolver(final D delegate, final long size) {
+    protected MutableSolver( D delegate,  long size) {
 
         super();
 
@@ -60,7 +60,7 @@ public abstract class MutableSolver<D extends IterativeSolverTask & IterativeSol
         mySize = size;
     }
 
-    public boolean add(final Equation row) {
+    public boolean add( Equation row) {
         if (row.count() != mySize) {
             BasicLogger.error("row.count(): {} != mySize: {}", row.count(), mySize);
             throw new IllegalArgumentException();
@@ -78,7 +78,7 @@ public abstract class MutableSolver<D extends IterativeSolverTask & IterativeSol
         return myRows.stream().mapToDouble(Equation::getRHS).toArray();
     }
 
-    public boolean remove(final Equation row) {
+    public boolean remove( Equation row) {
         return myRows.remove(row);
     }
 
@@ -86,19 +86,19 @@ public abstract class MutableSolver<D extends IterativeSolverTask & IterativeSol
      * A variation of {@linkplain #solve(Access2D, Access2D, PhysicalStore)} where you do not supply the
      * equation system <code>body</code>. It is assumed to have been set up beforehand.
      */
-    public final double resolve(final PhysicalStore<Double> solution) {
+    public final double resolve( PhysicalStore<Double> solution) {
         return myDelegate.resolve(myRows, solution);
     }
 
-    public final double resolve(final PhysicalStore<Double> solution, final Access1D<?> rhs) {
+    public final double resolve( PhysicalStore<Double> solution,  Access1D<?> rhs) {
         return myDelegate.resolve(myRows, solution, rhs);
     }
 
-    public MatrixStore<Double> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<Double> current) throws RecoverableCondition {
+    @Override public MatrixStore<Double> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<Double> current) throws RecoverableCondition {
         return myDelegate.solve(body, rhs, current);
     }
 
-    protected double doubleValue(final int row, final int col) {
+    protected double doubleValue( int row,  int col) {
         return myRows.get(row).doubleValue(col);
     }
 
@@ -107,19 +107,19 @@ public abstract class MutableSolver<D extends IterativeSolverTask & IterativeSol
     }
 
     @Override
-    protected void setAccuracyContext(final NumberContext accuracyContext) {
+    protected void setAccuracyContext( NumberContext accuracyContext) {
         super.setAccuracyContext(accuracyContext);
         myDelegate.setAccuracyContext(accuracyContext);
     }
 
     @Override
-    protected void setDebugPrinter(final BasicLogger debugPrinter) {
+    protected void setDebugPrinter( BasicLogger debugPrinter) {
         super.setDebugPrinter(debugPrinter);
         myDelegate.setDebugPrinter(debugPrinter);
     }
 
     @Override
-    protected void setIterationsLimit(final int iterationsLimit) {
+    protected void setIterationsLimit( int iterationsLimit) {
         super.setIterationsLimit(iterationsLimit);
         myDelegate.setIterationsLimit(iterationsLimit);
     }

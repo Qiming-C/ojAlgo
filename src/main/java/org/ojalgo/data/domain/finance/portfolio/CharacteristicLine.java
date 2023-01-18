@@ -30,7 +30,7 @@ public final class CharacteristicLine {
 
     private final FinancePortfolio myMarketPortfolio;
 
-    public CharacteristicLine(final FinancePortfolio theMarketPortfolio) {
+    public CharacteristicLine( FinancePortfolio theMarketPortfolio) {
 
         super();
 
@@ -45,22 +45,22 @@ public final class CharacteristicLine {
         ProgrammingError.throwForIllegalInvocation();
     }
 
-    public double calculateBeta(final FinancePortfolio anyAsset) {
+    public double calculateBeta( FinancePortfolio anyAsset) {
         return anyAsset.getMeanReturn() / myMarketPortfolio.getMeanReturn();
     }
 
-    public double calculateCorrelation(final FinancePortfolio anyAsset) {
+    public double calculateCorrelation( FinancePortfolio anyAsset) {
 
-        final double tmpCovar = this.calculateCovariance(anyAsset);
+         double tmpCovar = this.calculateCovariance(anyAsset);
 
-        final double tmpVal = myMarketPortfolio.getReturnVariance() * anyAsset.getReturnVariance();
+         double tmpVal = myMarketPortfolio.getReturnVariance() * anyAsset.getReturnVariance();
 
         return tmpCovar / PrimitiveMath.SQRT.invoke(tmpVal);
     }
 
-    public double calculateCovariance(final FinancePortfolio anyAsset) {
+    public double calculateCovariance( FinancePortfolio anyAsset) {
 
-        final double tmpBeta = this.calculateBeta(anyAsset);
+         double tmpBeta = this.calculateBeta(anyAsset);
 
         return myMarketPortfolio.getReturnVariance() * tmpBeta;
     }

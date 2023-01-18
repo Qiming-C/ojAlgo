@@ -23,8 +23,8 @@ package org.ojalgo.matrix.decomposition;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Optional;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.array.Array1D;
@@ -69,7 +69,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
             super(GenericStore.C128, new DeferredTridiagonal.C128());
         }
 
-        public Eigenpair getEigenpair(final int index) {
+        @Override public Eigenpair getEigenpair( int index) {
 
             ComplexNumber value = this.getD().get(index, index);
             Access1D<ComplexNumber> vector = this.getV().sliceColumn(index);
@@ -111,20 +111,20 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
 
     }
 
-    static void tql2(final double[] d, final double[] e, final RotateRight mtrxV) {
+    static void tql2( double[] d,  double[] e,  RotateRight mtrxV) {
 
         int size = d.length;
         int limit = size - 1;
 
-        double shift = ZERO;
-        double increment;
+        @Var double shift = ZERO;
+        @Var double increment;
 
-        double magnitude = ZERO;
-        double epsilon;
+        @Var double magnitude = ZERO;
+        @Var double epsilon;
 
-        double d_l, e_l;
+        @Var double d_l, e_l;
 
-        int m;
+        @Var int m;
         // Main loop
         for (int l = 0; l < size; l++) {
 
@@ -146,8 +146,8 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
 
                     // Compute implicit shift
 
-                    double p = (d[l + 1] - d_l) / (e_l + e_l);
-                    double r = PrimitiveMath.HYPOT.invoke(p, ONE);
+                    @Var double p = (d[l + 1] - d_l) / (e_l + e_l);
+                    @Var double r = PrimitiveMath.HYPOT.invoke(p, ONE);
                     if (p < ZERO) {
                         r = -r;
                     }
@@ -161,8 +161,8 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
 
                     // Implicit QL transformation
 
-                    double cos1 = ONE, sin1 = ZERO, cos2 = cos1;
-                    double d_i, e_i;
+                    @Var double cos1 = ONE, sin1 = ZERO, cos2 = cos1;
+                    @Var double d_i, e_i;
 
                     p = d[m];
                     for (int i = m - 1; i >= l; i--) {
@@ -204,18 +204,18 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
     private final TridiagonalDecomposition<N> myTridiagonal;
 
     @SuppressWarnings("unused")
-    private HermitianEvD(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    private HermitianEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         this(factory, null);
     }
 
-    protected HermitianEvD(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory, final TridiagonalDecomposition<N> tridiagonal) {
+    protected HermitianEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory,  TridiagonalDecomposition<N> tridiagonal) {
 
         super(factory);
 
         myTridiagonal = tridiagonal;
     }
 
-    public boolean checkAndDecompose(final MatrixStore<N> matrix) {
+    @Override public boolean checkAndDecompose( MatrixStore<N> matrix) {
         if (matrix.isHermitian()) {
             return this.decompose(matrix);
         }
@@ -223,7 +223,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return false;
     }
 
-    public N getDeterminant() {
+    @Override public N getDeterminant() {
 
         AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().product();
 
@@ -232,7 +232,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return this.scalar().cast(tmpVisitor.get());
     }
 
-    public void getEigenvalues(final double[] realParts, final Optional<double[]> imaginaryParts) {
+    @Override public void getEigenvalues( double[] realParts,  Optional<double[]> imaginaryParts) {
 
         int length = realParts.length;
 
@@ -243,14 +243,14 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         }
     }
 
-    public MatrixStore<N> getInverse() {
+    @Override public MatrixStore<N> getInverse() {
 
         if (myInverse == null) {
 
             MatrixStore<N> tmpV = this.getV();
             MatrixStore<N> tmpD = this.getD();
 
-            int tmpDim = (int) tmpD.countRows();
+            var tmpDim = (int) tmpD.countRows();
 
             PhysicalStore<N> tmpMtrx = tmpV.conjugate().copy();
 
@@ -271,14 +271,14 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return myInverse;
     }
 
-    public MatrixStore<N> getInverse(final PhysicalStore<N> preallocated) {
+    @Override public MatrixStore<N> getInverse( PhysicalStore<N> preallocated) {
 
         if (myInverse == null) {
 
             MatrixStore<N> tmpV = this.getV();
             MatrixStore<N> tmpD = this.getD();
 
-            int tmpDim = (int) tmpD.countRows();
+            var tmpDim = (int) tmpD.countRows();
 
             PhysicalStore<N> tmpMtrx = preallocated;
             //tmpMtrx.fillMatching(new TransposedStore<N>(tmpV));
@@ -301,16 +301,16 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return myInverse;
     }
 
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs) {
+    @Override public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs) {
         return this.getInverse().multiply(this.collect(rhs));
     }
 
-    public MatrixStore<N> getSolution(final Collectable<N, ? super PhysicalStore<N>> rhs, final PhysicalStore<N> preallocated) {
+    @Override public MatrixStore<N> getSolution( Collectable<N, ? super PhysicalStore<N>> rhs,  PhysicalStore<N> preallocated) {
         preallocated.fillByMultiplying(this.getInverse(), this.collect(rhs));
         return preallocated;
     }
 
-    public ComplexNumber getTrace() {
+    @Override public ComplexNumber getTrace() {
 
         AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().sum();
 
@@ -319,7 +319,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return tmpVisitor.get();
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original) throws RecoverableCondition {
         this.decompose(this.wrap(original));
         if (this.isSolvable()) {
             return this.getInverse();
@@ -327,7 +327,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public MatrixStore<N> invert(final Access2D<?> original, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> invert( Access2D<?> original,  PhysicalStore<N> preallocated) throws RecoverableCondition {
         this.decompose(this.wrap(original));
         if (this.isSolvable()) {
             return this.getInverse(preallocated);
@@ -335,11 +335,11 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         throw RecoverableCondition.newMatrixNotInvertible();
     }
 
-    public boolean isHermitian() {
+    @Override public boolean isHermitian() {
         return true;
     }
 
-    public boolean isOrdered() {
+    @Override public boolean isOrdered() {
         return false;
     }
 
@@ -348,12 +348,12 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         return super.isSolvable();
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D template) {
+    @Override public PhysicalStore<N> preallocate( Structure2D template) {
         long tmpCountRows = template.countRows();
         return this.allocate(tmpCountRows, tmpCountRows);
     }
 
-    public PhysicalStore<N> preallocate(final Structure2D templateBody, final Structure2D templateRHS) {
+    @Override public PhysicalStore<N> preallocate( Structure2D templateBody,  Structure2D templateRHS) {
         return this.allocate(templateRHS.countRows(), templateRHS.countColumns());
     }
 
@@ -367,7 +367,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         myInverse = null;
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -377,7 +377,7 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
         throw RecoverableCondition.newEquationSystemNotSolvable();
     }
 
-    public MatrixStore<N> solve(final Access2D<?> body, final Access2D<?> rhs, final PhysicalStore<N> preallocated) throws RecoverableCondition {
+    @Override public MatrixStore<N> solve( Access2D<?> body,  Access2D<?> rhs,  PhysicalStore<N> preallocated) throws RecoverableCondition {
 
         this.decompose(this.wrap(body));
 
@@ -393,9 +393,9 @@ abstract class HermitianEvD<N extends Comparable<N>> extends EigenvalueDecomposi
     }
 
     @Override
-    protected boolean doDecompose(final Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly) {
+    protected boolean doDecompose( Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly) {
 
-        int size = (int) matrix.countRows();
+        var size = (int) matrix.countRows();
 
         myTridiagonal.decompose(matrix);
 

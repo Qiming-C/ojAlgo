@@ -28,14 +28,14 @@ import java.util.Objects;
  */
 public interface NumberDefinition {
 
-    static boolean booleanValue(final Comparable<?> number) {
+    static boolean booleanValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
         return NumberDefinition.toBoolean(NumberDefinition.intValue(number));
     }
 
-    static byte byteValue(final Comparable<?> number) {
+    static byte byteValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -48,7 +48,7 @@ public interface NumberDefinition {
         }
     }
 
-    static double doubleValue(final Comparable<?> number) {
+    static double doubleValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -61,7 +61,7 @@ public interface NumberDefinition {
         }
     }
 
-    static float floatValue(final Comparable<?> number) {
+    static float floatValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -74,7 +74,7 @@ public interface NumberDefinition {
         }
     }
 
-    static int intValue(final Comparable<?> number) {
+    static int intValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -87,7 +87,7 @@ public interface NumberDefinition {
         }
     }
 
-    static long longValue(final Comparable<?> number) {
+    static long longValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -100,7 +100,7 @@ public interface NumberDefinition {
         }
     }
 
-    static short shortValue(final Comparable<?> number) {
+    static short shortValue( Comparable<?> number) {
 
         Objects.requireNonNull(number);
 
@@ -113,19 +113,19 @@ public interface NumberDefinition {
         }
     }
 
-    static boolean toBoolean(final int value) {
+    static boolean toBoolean( int value) {
         return value != 0;
     }
 
-    static int toInt(final double value) {
+    static int toInt( double value) {
         return Math.round((float) value);
     }
 
-    static int toInt(final float value) {
+    static int toInt( float value) {
         return Math.round(value);
     }
 
-    static long toLong(final double value) {
+    static long toLong( double value) {
         return Math.round(value);
     }
 

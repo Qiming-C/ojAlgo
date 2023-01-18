@@ -31,77 +31,77 @@ import org.ojalgo.type.NumberDefinition;
 
 public interface UnaryFunction<N extends Comparable<N>> extends BasicFunction, UnaryOperator<N>, DoubleUnaryOperator {
 
-    static <N extends Comparable<N>> boolean isZeroModified(final UnaryFunction<N> function) {
+    static <N extends Comparable<N>> boolean isZeroModified( UnaryFunction<N> function) {
         return !PrimitiveScalar.isSmall(PrimitiveMath.ONE, function.invoke(PrimitiveMath.ZERO));
     }
 
-    default UnaryFunction<N> andThen(final UnaryFunction<N> after) {
+    default UnaryFunction<N> andThen( UnaryFunction<N> after) {
         ProgrammingError.throwIfNull(after);
         return new UnaryFunction<N>() {
 
-            public double invoke(final double arg) {
+            @Override public double invoke( double arg) {
                 return after.invoke(UnaryFunction.this.invoke(arg));
             }
 
-            public float invoke(final float arg) {
+            @Override public float invoke( float arg) {
                 return after.invoke(UnaryFunction.this.invoke(arg));
             }
 
-            public N invoke(final N arg) {
+            @Override public N invoke( N arg) {
                 return after.invoke(UnaryFunction.this.invoke(arg));
             }
 
         };
     }
 
-    default N apply(final N arg) {
+    @Override default N apply( N arg) {
         return this.invoke(arg);
     }
 
-    default double applyAsDouble(final double arg) {
+    @Override default double applyAsDouble( double arg) {
         return this.invoke(arg);
     }
 
-    default UnaryFunction<N> compose(final UnaryFunction<N> before) {
+    default UnaryFunction<N> compose( UnaryFunction<N> before) {
         ProgrammingError.throwIfNull(before);
         return new UnaryFunction<N>() {
 
-            public double invoke(final double arg) {
+            @Override public double invoke( double arg) {
                 return UnaryFunction.this.invoke(before.invoke(arg));
             }
 
-            public float invoke(final float arg) {
+            @Override public float invoke( float arg) {
                 return UnaryFunction.this.invoke(before.invoke(arg));
             }
 
-            public N invoke(final N arg) {
+            @Override public N invoke( N arg) {
                 return UnaryFunction.this.invoke(before.invoke(arg));
             }
 
         };
     }
 
-    default byte invoke(final byte arg) {
+    default byte invoke( byte arg) {
         return (byte) this.invoke((double) arg);
     }
 
     double invoke(double arg);
 
-    default float invoke(final float arg) {
+    default float invoke( float arg) {
         return (float) this.invoke((double) arg);
     }
 
-    default int invoke(final int arg) {
+    default int invoke( int arg) {
         return NumberDefinition.toInt(this.invoke((double) arg));
     }
 
-    default long invoke(final long arg) {
+    default long invoke( long arg) {
         return NumberDefinition.toLong(this.invoke((double) arg));
     }
 
     N invoke(N arg);
 
-    default short invoke(final short arg) {
+    default short invoke( short arg) {
         return (short) this.invoke((double) arg);
     }
 

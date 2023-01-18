@@ -59,25 +59,25 @@ public class ArrayH256 extends ScalarArray<Quaternion> {
         }
 
         @Override
-        PlainArray<Quaternion> makeDenseArray(final long size) {
+        PlainArray<Quaternion> makeDenseArray( long size) {
             return ArrayH256.make((int) size);
         }
 
     };
 
-    public static ArrayH256 make(final int size) {
+    public static ArrayH256 make( int size) {
         return new ArrayH256(size);
     }
 
-    public static ArrayH256 wrap(final Quaternion... data) {
+    public static ArrayH256 wrap( Quaternion... data) {
         return new ArrayH256(data);
     }
 
-    protected ArrayH256(final int size) {
+    protected ArrayH256( int size) {
         super(FACTORY, size);
     }
 
-    protected ArrayH256(final Quaternion[] data) {
+    protected ArrayH256( Quaternion[] data) {
         super(FACTORY, data);
     }
 

@@ -33,7 +33,8 @@ public interface Operation {
     public interface Addition<T> extends Operation {
 
         /**
-         * @param addend What to add
+         *Returns <code>this + addend</code>.
+ @param addend What to add
          * @return <code>this + addend</code>
          */
         T add(T addend);
@@ -46,8 +47,9 @@ public interface Operation {
     public interface Division<T> extends Operation {
 
         /**
-         * @param divisor The divisor
-         * @return <code>this / divisor</code>.
+         *Returns <code>this / divisor</code>.
+ @param divisor The divisor
+         * 
          */
         T divide(T divisor);
 
@@ -59,8 +61,9 @@ public interface Operation {
     public interface Multiplication<T> extends Operation {
 
         /**
-         * @param multiplicand The multiplicand
-         * @return <code>this * multiplicand</code>.
+         *Returns <code>this * multiplicand</code>.
+ @param multiplicand The multiplicand
+         * 
          */
         T multiply(T multiplicand);
 
@@ -77,8 +80,9 @@ public interface Operation {
     public interface Subtraction<T> extends Operation {
 
         /**
-         * @param subtrahend The subtrahend
-         * @return <code>this - subtrahend</code>.
+         *Returns <code>this - subtrahend</code>.
+ @param subtrahend The subtrahend
+         * 
          */
         T subtract(T subtrahend);
     }

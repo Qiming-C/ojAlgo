@@ -23,13 +23,13 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.array.ArrayR064;
@@ -41,7 +41,6 @@ import org.ojalgo.matrix.decomposition.LU;
 import org.ojalgo.matrix.decomposition.MatrixDecomposition;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
-import org.ojalgo.matrix.store.PhysicalStore.Factory;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.matrix.store.RowsSupplier;
 import org.ojalgo.matrix.store.SparseStore;
@@ -109,7 +108,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * @deprecated v50 Use {@link ConvexSolver#newBuilder()} instead.
          */
         @Deprecated
-        public Builder(final MatrixStore<Double> C) {
+        public Builder( MatrixStore<Double> C) {
 
             super();
 
@@ -120,19 +119,19 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * @deprecated v50 Use {@link ConvexSolver#newBuilder()} instead.
          */
         @Deprecated
-        public Builder(final MatrixStore<Double> Q, final MatrixStore<Double> C) {
+        public Builder( MatrixStore<Double> Q,  MatrixStore<Double> C) {
 
             super();
 
             this.objective(Q, C);
         }
 
-        Builder(final int nbVariables) {
+        Builder( int nbVariables) {
             super();
             this.setNumberOfVariables(nbVariables);
         }
 
-        Builder(final MatrixStore<Double>[] matrices) {
+        Builder( MatrixStore<Double>[] matrices) {
 
             super();
 
@@ -154,19 +153,19 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        public Builder inequalities(final Access2D<?> mtrxAI, final Access1D<?> mtrxBI) {
+        public Builder inequalities( Access2D<?> mtrxAI,  Access1D<?> mtrxBI) {
             return super.inequalities(mtrxAI, mtrxBI);
         }
 
         @Override
-        public Builder inequality(final double rhs, final double... factors) {
+        public Builder inequality( double rhs,  double... factors) {
             return super.inequality(rhs, factors);
         }
 
         /**
          * Set the linear part of the objective function
          */
-        public Builder linear(final Access1D<?> factors) {
+        public Builder linear( Access1D<?> factors) {
             this.getObjective().linear().fillMatching(factors);
             return this;
         }
@@ -174,7 +173,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         /**
          * Set the linear part of the objective function
          */
-        public Builder linear(final double... factors) {
+        public Builder linear( double... factors) {
             this.getObjective().linear().fillMatching(FACTORY.column(factors));
             return this;
         }
@@ -182,7 +181,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         /**
          * Set one element of the linear part of the objective function
          */
-        public Builder objective(final int index, final double value) {
+        public Builder objective( int index,  double value) {
             this.getObjective().linear().set(index, value);
             return this;
         }
@@ -190,7 +189,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         /**
          * Set one element of the quadratic part of the objective function
          */
-        public Builder objective(final int row, final int col, final double value) {
+        public Builder objective( int row,  int col,  double value) {
             this.getObjective().quadratic().set(row, col, value);
             return this;
         }
@@ -200,12 +199,12 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          *             {@link LinearSolver}.
          */
         @Deprecated
-        public Builder objective(final MatrixStore<Double> mtrxC) {
+        public Builder objective( MatrixStore<Double> mtrxC) {
             this.setObjective(ConvexSolver.toObjectiveFunction(null, mtrxC));
             return this;
         }
 
-        public Builder objective(final MatrixStore<Double> mtrxQ, final MatrixStore<Double> mtrxC) {
+        public Builder objective( MatrixStore<Double> mtrxQ,  MatrixStore<Double> mtrxC) {
             this.setObjective(ConvexSolver.toObjectiveFunction(mtrxQ, mtrxC));
             return this;
         }
@@ -213,7 +212,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         /**
          * Set the quadratic part of the objective function
          */
-        public Builder quadratic(final Access2D<?> factors) {
+        public Builder quadratic( Access2D<?> factors) {
             this.getObjective().quadratic().fillMatching(factors);
             return this;
         }
@@ -281,7 +280,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * Linearise the objective function (at the specified point) and duplicate all variables to handle the
          * (potential) positive and negative parts separately.
          */
-        public LinearSolver.GeneralBuilder toLinearApproximation(final Access1D<Double> point) {
+        public LinearSolver.GeneralBuilder toLinearApproximation( Access1D<Double> point) {
 
             MatrixStore<Double> mtrxC = this.getObjective().toFirstOrderApproximation(point).getLinearFactors(false);
 
@@ -307,7 +306,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        protected void append(final StringBuilder builder) {
+        protected void append( StringBuilder builder) {
 
             super.append(builder);
 
@@ -315,7 +314,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        protected ConvexSolver doBuild(final Optimisation.Options options) {
+        protected ConvexSolver doBuild( Optimisation.Options options) {
 
             if (this.countInequalityConstraints() > 0) {
                 if (options.sparse == null || options.sparse.booleanValue()) {
@@ -338,8 +337,8 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
             return this.getObjective().linear();
         }
 
-        protected ConvexObjectiveFunction getObjective() {
-            ConvexObjectiveFunction retVal = this.getObjective(ConvexObjectiveFunction.class);
+        ConvexObjectiveFunction getObjective() {
+            @Var ConvexObjectiveFunction retVal = this.getObjective(ConvexObjectiveFunction.class);
             if (retVal == null) {
                 int nbVariables = this.countVariables();
                 Primitive64Store mtrxQ = FACTORY.make(nbVariables, nbVariables);
@@ -358,7 +357,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         /**
          * Quadratic objective: [Q]
          */
-        protected PhysicalStore<Double> getQ() {
+        PhysicalStore<Double> getQ() {
             return this.getObjective().quadratic();
         }
 
@@ -380,17 +379,17 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * step that calculates the Lagrange multipliers (dual variables). The iterative solver used is a
          * {@link ConjugateGradientSolver}.
          */
-        public Configuration iterative(final NumberContext accuracy) {
+        public Configuration iterative( NumberContext accuracy) {
             Objects.requireNonNull(accuracy);
             myIterative = accuracy;
             return this;
         }
 
-        public MatrixDecomposition.Solver<Double> newSolverGeneral(final Structure2D structure) {
+        public MatrixDecomposition.Solver<Double> newSolverGeneral( Structure2D structure) {
             return mySolverGeneral.apply(structure);
         }
 
-        public MatrixDecomposition.Solver<Double> newSolverSPD(final Structure2D structure) {
+        public MatrixDecomposition.Solver<Double> newSolverSPD( Structure2D structure) {
             return mySolverSPD.apply(structure);
         }
 
@@ -408,7 +407,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * <p>
          * This is only meant to handle minor, unexpected, deficiencies.
          */
-        public Configuration smallDiagonal(final double factor) {
+        public Configuration smallDiagonal( double factor) {
             mySmallDiagonal = factor;
             return this;
         }
@@ -417,7 +416,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * This matrix decomposition should be able to "invert" the full KKT systsem body matrix (which is
          * symmetric) and/or its Schur complement with regards to the [Q] matrix (of quadratic terms).
          */
-        public Configuration solverGeneral(final Function<Structure2D, MatrixDecomposition.Solver<Double>> factory) {
+        public Configuration solverGeneral( Function<Structure2D, MatrixDecomposition.Solver<Double>> factory) {
             mySolverGeneral = factory;
             return this;
         }
@@ -427,7 +426,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
          * semidefinite), but in reality there are usually many deficiencies. This matrix decomposition should
          * handle "inverting" the [Q] matrix.
          */
-        public Configuration solverSPD(final Function<Structure2D, MatrixDecomposition.Solver<Double>> factory) {
+        public Configuration solverSPD( Function<Structure2D, MatrixDecomposition.Solver<Double>> factory) {
             mySolverSPD = factory;
             return this;
         }
@@ -436,7 +435,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
 
     public static final class ModelIntegration extends ExpressionsBasedModel.Integration<ConvexSolver> {
 
-        public ConvexSolver build(final ExpressionsBasedModel model) {
+        @Override public ConvexSolver build( ExpressionsBasedModel model) {
 
             ConvexSolver.Builder builder = ConvexSolver.newBuilder();
 
@@ -445,7 +444,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
             return builder.build(model.options);
         }
 
-        public boolean isCapable(final ExpressionsBasedModel model) {
+        @Override public boolean isCapable( ExpressionsBasedModel model) {
             return !model.isAnyVariableInteger() && model.isAnyObjectiveQuadratic() && !model.isAnyConstraintQuadratic();
         }
 
@@ -461,9 +460,9 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
     private static final String Q_NOT_POSITIVE_SEMIDEFINITE = "Q not positive semidefinite!";
     private static final String Q_NOT_SYMMETRIC = "Q not symmetric!";
 
-    static final Factory<Double, Primitive64Store> MATRIX_FACTORY = Primitive64Store.FACTORY;
+    static final PhysicalStore.Factory<Double, Primitive64Store> MATRIX_FACTORY = Primitive64Store.FACTORY;
 
-    public static void copy(final ExpressionsBasedModel sourceModel, final ConvexSolver.Builder destinationBuilder) {
+    public static void copy( ExpressionsBasedModel sourceModel,  ConvexSolver.Builder destinationBuilder) {
 
         destinationBuilder.reset();
 
@@ -474,7 +473,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
 
         // AE & BE
 
-        List<Expression> tmpEqExpr = sourceModel.constraints().filter((final Expression c) -> c.isEqualityConstraint() && !c.isAnyQuadraticFactorNonZero())
+        List<Expression> tmpEqExpr = sourceModel.constraints().filter(( Expression c) -> c.isEqualityConstraint() && !c.isAnyQuadraticFactorNonZero())
                 .collect(Collectors.toList());
         int nbEqExpr = tmpEqExpr.size();
 
@@ -502,7 +501,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         Expression tmpObjExpr = sourceModel.objective().compensate(fixedVariables);
         boolean max = sourceModel.getOptimisationSense() == Optimisation.Sense.MAX;
 
-        PhysicalStore<Double> mtrxQ = null;
+        @Var PhysicalStore<Double> mtrxQ = null;
         if (tmpObjExpr.isAnyQuadraticFactorNonZero()) {
             mtrxQ = Primitive64Store.FACTORY.make(nbVariables, nbVariables);
 
@@ -517,7 +516,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
             }
         }
 
-        PhysicalStore<Double> mtrxC = null;
+        @Var PhysicalStore<Double> mtrxC = null;
         if (tmpObjExpr.isAnyLinearFactorNonZero()) {
             mtrxC = Primitive64Store.FACTORY.make(nbVariables, 1);
             if (max) {
@@ -548,14 +547,14 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
                 .collect(Collectors.toList());
         int nbUpExpr = tmpUpExpr.size();
 
-        List<Variable> tmpUpVar = sourceModel.bounds().filter((final Variable c4) -> c4.isUpperConstraint()).collect(Collectors.toList());
+        List<Variable> tmpUpVar = sourceModel.bounds().filter(( Variable c4) -> c4.isUpperConstraint()).collect(Collectors.toList());
         int nbUpVar = tmpUpVar.size();
 
-        List<Expression> tmpLoExpr = sourceModel.constraints().filter((final Expression c1) -> c1.isLowerConstraint() && !c1.isAnyQuadraticFactorNonZero())
+        List<Expression> tmpLoExpr = sourceModel.constraints().filter(( Expression c1) -> c1.isLowerConstraint() && !c1.isAnyQuadraticFactorNonZero())
                 .collect(Collectors.toList());
         int nbLoExpr = tmpLoExpr.size();
 
-        List<Variable> tmpLoVar = sourceModel.bounds().filter((final Variable c3) -> c3.isLowerConstraint()).collect(Collectors.toList());
+        List<Variable> tmpLoVar = sourceModel.bounds().filter(( Variable c3) -> c3.isLowerConstraint()).collect(Collectors.toList());
         int nbLoVar = tmpLoVar.size();
 
         if (nbUpExpr + nbUpVar + nbLoExpr + nbLoVar > 0) {
@@ -611,32 +610,32 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return new Builder();
     }
 
-    public static Builder newBuilder(final Access2D<?> quadratic) {
-        ConvexSolver.Builder retVal = new ConvexSolver.Builder(quadratic.getMinDim());
+    public static Builder newBuilder( Access2D<?> quadratic) {
+        var retVal = new ConvexSolver.Builder(quadratic.getMinDim());
         retVal.quadratic(quadratic);
         return retVal;
     }
 
-    public static Builder newBuilder(final int nbVariables) {
+    public static Builder newBuilder( int nbVariables) {
         return new ConvexSolver.Builder(nbVariables);
     }
 
-    static ConvexSolver.Builder builder(final MatrixStore<Double>[] matrices) {
+    static ConvexSolver.Builder builder( MatrixStore<Double>[] matrices) {
         return new ConvexSolver.Builder(matrices);
     }
 
-    static ConvexSolver of(final MatrixStore<Double>[] matrices) {
+    static ConvexSolver of( MatrixStore<Double>[] matrices) {
         return ConvexSolver.builder(matrices).build();
     }
 
-    static ConvexObjectiveFunction toObjectiveFunction(final MatrixStore<Double> mtrxQ, final MatrixStore<Double> mtrxC) {
+    static ConvexObjectiveFunction toObjectiveFunction( MatrixStore<Double> mtrxQ,  MatrixStore<Double> mtrxC) {
 
         if (mtrxQ == null && mtrxC == null) {
             ProgrammingError.throwWithMessage("Both parameters can't be null!");
         }
 
-        PhysicalStore<Double> tmpQ = null;
-        PhysicalStore<Double> tmpC = null;
+        @Var PhysicalStore<Double> tmpQ = null;
+        @Var PhysicalStore<Double> tmpC = null;
 
         if (mtrxQ == null) {
             tmpQ = Primitive64Store.FACTORY.make(mtrxC.count(), mtrxC.count());
@@ -664,7 +663,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
     private final MatrixDecomposition.Solver<Double> mySolverQ;
     private boolean myZeroQ = false;
 
-    ConvexSolver(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    ConvexSolver( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
 
         super(optimisationOptions);
 
@@ -678,18 +677,18 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         mySolverGeneral = convexOptions.newSolverGeneral(mtrxQ);
     }
 
-    public void dispose() {
+    @Override public void dispose() {
 
         super.dispose();
 
         myMatrices.reset();
     }
 
-    public UpdatableSolver.EntityMap getEntityMap() {
+    @Override public UpdatableSolver.EntityMap getEntityMap() {
         return null;
     }
 
-    public Optimisation.Result solve(final Optimisation.Result kickStarter) {
+    @Override public Optimisation.Result solve( Optimisation.Result kickStarter) {
 
         if (this.initialise(kickStarter)) {
 
@@ -722,7 +721,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return new Optimisation.Result(state, value, solution);
     }
 
-    protected boolean computeGeneral(final Collectable<Double, ? super PhysicalStore<Double>> matrix) {
+    protected boolean computeGeneral( Collectable<Double, ? super PhysicalStore<Double>> matrix) {
         return mySolverGeneral.compute(matrix);
     }
 
@@ -738,7 +737,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return myMatrices.countVariables();
     }
 
-    protected double evaluateFunction(final Access1D<?> solution) {
+    protected double evaluateFunction( Access1D<?> solution) {
 
         MatrixStore<Double> tmpX = this.getSolutionX();
 
@@ -757,11 +756,11 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return myMatrices.getAE();
     }
 
-    protected SparseArray<Double> getMatrixAE(final int row) {
+    protected SparseArray<Double> getMatrixAE( int row) {
         return myMatrices.getAE(row);
     }
 
-    protected RowsSupplier<Double> getMatrixAE(final int[] rows) {
+    protected RowsSupplier<Double> getMatrixAE( int[] rows) {
         return myMatrices.getAE(rows);
     }
 
@@ -769,11 +768,11 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return myMatrices.getAI();
     }
 
-    protected SparseArray<Double> getMatrixAI(final int row) {
+    protected SparseArray<Double> getMatrixAI( int row) {
         return myMatrices.getAI(row);
     }
 
-    protected RowsSupplier<Double> getMatrixAI(final int[] rows) {
+    protected RowsSupplier<Double> getMatrixAI( int[] rows) {
         return myMatrices.getAI(rows);
     }
 
@@ -785,11 +784,11 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         return myMatrices.getBI();
     }
 
-    protected double getMatrixBI(final int row) {
+    protected double getMatrixBI( int row) {
         return myMatrices.getBI().doubleValue(row);
     }
 
-    protected MatrixStore<Double> getMatrixBI(final int[] selector) {
+    protected MatrixStore<Double> getMatrixBI( int[] selector) {
         return myMatrices.getBI().rows(selector);
     }
 
@@ -811,19 +810,19 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
         }
     }
 
-    protected MatrixStore<Double> getSolutionGeneral(final Collectable<Double, ? super PhysicalStore<Double>> rhs) {
+    protected MatrixStore<Double> getSolutionGeneral( Collectable<Double, ? super PhysicalStore<Double>> rhs) {
         return mySolverGeneral.getSolution(rhs);
     }
 
-    protected MatrixStore<Double> getSolutionGeneral(final Collectable<Double, ? super PhysicalStore<Double>> rhs, final PhysicalStore<Double> preallocated) {
+    protected MatrixStore<Double> getSolutionGeneral( Collectable<Double, ? super PhysicalStore<Double>> rhs,  PhysicalStore<Double> preallocated) {
         return mySolverGeneral.getSolution(rhs, preallocated);
     }
 
-    protected MatrixStore<Double> getSolutionQ(final Collectable<Double, ? super PhysicalStore<Double>> rhs) {
+    protected MatrixStore<Double> getSolutionQ( Collectable<Double, ? super PhysicalStore<Double>> rhs) {
         return mySolverQ.getSolution(rhs);
     }
 
-    protected MatrixStore<Double> getSolutionQ(final Collectable<Double, ? super PhysicalStore<Double>> rhs, final PhysicalStore<Double> preallocated) {
+    protected MatrixStore<Double> getSolutionQ( Collectable<Double, ? super PhysicalStore<Double>> rhs,  PhysicalStore<Double> preallocated) {
         return mySolverQ.getSolution(rhs, preallocated);
     }
 
@@ -843,14 +842,15 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
     }
 
     /**
-     * @return true/false if the main algorithm may start or not
+     *Returns true/false if the main algorithm may start or not.
+ 
      */
-    protected boolean initialise(final Result kickStarter) {
+    protected boolean initialise( Result kickStarter) {
 
         PhysicalStore<Double> matrixQ = this.getMatrixQ();
         this.setState(State.VALID);
 
-        boolean symmetric = true;
+        @Var boolean symmetric = true;
         if (options.validate && !matrixQ.isHermitian()) {
 
             symmetric = false;
@@ -876,7 +876,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
             }
         }
 
-        boolean semidefinite = true;
+        @Var boolean semidefinite = true;
         if (options.validate && !mySolverQ.isSolvable()) {
             // Not symmetric positive definite. Check if at least positive semidefinite.
 
@@ -886,7 +886,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
             decompEvD.reset();
 
             for (ComplexNumber eigval : eigenvalues) {
-                if (eigval.doubleValue() < ZERO && !eigval.isSmall(TEN) || !eigval.isReal()) {
+                if ((eigval.doubleValue() < ZERO && !eigval.isSmall(TEN)) || !eigval.isReal()) {
 
                     semidefinite = false;
                     this.setState(State.INVALID);
@@ -923,7 +923,7 @@ public abstract class ConvexSolver extends GenericSolver implements UpdatableSol
 
     abstract protected void performIteration();
 
-    protected boolean solveFullKKT(final PhysicalStore<Double> preallocated) {
+    protected boolean solveFullKKT( PhysicalStore<Double> preallocated) {
         if (this.computeGeneral(this.getIterationKKT())) {
             this.getSolutionGeneral(this.getIterationRHS(), preallocated);
             return true;

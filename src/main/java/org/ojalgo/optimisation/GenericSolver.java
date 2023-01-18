@@ -24,12 +24,11 @@ package org.ojalgo.optimisation;
 import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.function.multiary.MultiaryFunction.TwiceDifferentiable;
 import org.ojalgo.matrix.store.MatrixStore;
-import org.ojalgo.matrix.store.PhysicalStore.Factory;
+import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.matrix.store.RowsSupplier;
 import org.ojalgo.netio.BasicLogger;
@@ -45,9 +44,9 @@ public abstract class GenericSolver implements Optimisation.Solver {
 
     public static abstract class Builder<B extends Builder<?, ?>, S extends GenericSolver> {
 
-        protected static final Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
+        protected static final PhysicalStore.Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
 
-        protected static final void append(final StringBuilder builder, final String label, final MatrixStore<Double> matrix) {
+        protected static final void append( StringBuilder builder,  String label,  MatrixStore<Double> matrix) {
             if (builder != null && label != null && matrix != null) {
                 builder.append("\n[");
                 builder.append(label);
@@ -68,7 +67,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return this.doBuild(new Optimisation.Options());
         }
 
-        public final S build(final Optimisation.Options options) {
+        public final S build( Optimisation.Options options) {
             ProgrammingError.throwIfNull(options);
             myData.validate();
             return this.doBuild(options);
@@ -97,12 +96,12 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myNumberOfVariables;
         }
 
-        public B equalities(final Access2D<?> mtrxAE, final Access1D<?> mtrxBE) {
+        public B equalities( Access2D<?> mtrxAE,  Access1D<?> mtrxBE) {
             myData.setEqualities(mtrxAE, mtrxBE);
             return (B) this;
         }
 
-        public B equality(final double rhs, final double... factors) {
+        public B equality( double rhs,  double... factors) {
 
             Primitive64Store mBody = FACTORY.make(1, this.countVariables());
             for (int i = 0, limit = Math.min(factors.length, this.countVariables()); i < limit; i++) {
@@ -130,7 +129,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
 
             String simpleName = this.getClass().getSimpleName();
 
-            StringBuilder retVal = new StringBuilder();
+            var retVal = new StringBuilder();
 
             retVal.append("<");
             retVal.append(simpleName);
@@ -153,7 +152,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             myData.validate();
         }
 
-        protected void append(final StringBuilder builder) {
+        protected void append( StringBuilder builder) {
             Builder.append(builder, "AE", this.getAE());
             Builder.append(builder, "BE", this.getBE());
             Builder.append(builder, "AI", this.getAI());
@@ -170,11 +169,11 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getAE();
         }
 
-        protected SparseArray<Double> getAE(final int row) {
+        protected SparseArray<Double> getAE( int row) {
             return myData.getAE(row);
         }
 
-        protected RowsSupplier<Double> getAE(final int... rows) {
+        protected RowsSupplier<Double> getAE( int... rows) {
             return myData.getAE(rows);
         }
 
@@ -185,11 +184,11 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getAI();
         }
 
-        protected SparseArray<Double> getAI(final int row) {
+        protected SparseArray<Double> getAI( int row) {
             return myData.getAI(row);
         }
 
-        protected RowsSupplier<Double> getAI(final int... rows) {
+        protected RowsSupplier<Double> getAI( int... rows) {
             return myData.getAI(rows);
         }
 
@@ -200,7 +199,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getBE();
         }
 
-        protected double getBE(final int row) {
+        protected double getBE( int row) {
             return myData.getBE(row);
         }
 
@@ -211,7 +210,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getBI();
         }
 
-        protected double getBI(final int row) {
+        protected double getBI( int row) {
             return myData.getBI(row);
         }
 
@@ -219,11 +218,11 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getObjective().getLinearFactors(false);
         }
 
-        protected double[] getLowerBounds(final double defaultValue) {
+        protected double[] getLowerBounds( double defaultValue) {
             return myData.getLowerBounds(defaultValue).data;
         }
 
-        protected <T extends TwiceDifferentiable<Double>> T getObjective(final Class<T> type) {
+        protected <T extends TwiceDifferentiable<Double>> T getObjective( Class<T> type) {
             return myData.getObjective(type);
         }
 
@@ -239,16 +238,16 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return myData.getRowsAI();
         }
 
-        protected double[] getUpperBounds(final double defaultValue) {
+        protected double[] getUpperBounds( double defaultValue) {
             return myData.getUpperBounds(defaultValue).data;
         }
 
-        protected B inequalities(final Access2D<?> mtrxAI, final Access1D<?> mtrxBI) {
+        protected B inequalities( Access2D<?> mtrxAI,  Access1D<?> mtrxBI) {
             myData.setInequalities(mtrxAI, mtrxBI);
             return (B) this;
         }
 
-        protected B inequality(final double rhs, final double... factors) {
+        protected B inequality( double rhs,  double... factors) {
 
             Primitive64Store mBody = FACTORY.make(1, this.countVariables());
             for (int i = 0, limit = Math.min(factors.length, this.countVariables()); i < limit; i++) {
@@ -262,7 +261,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             return (B) this;
         }
 
-        protected void setNumberOfVariables(final int numberOfVariables) {
+        protected void setNumberOfVariables( int numberOfVariables) {
             if (numberOfVariables < 0) {
                 throw new IllegalArgumentException();
             }
@@ -272,7 +271,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
             myNumberOfVariables = numberOfVariables;
         }
 
-        protected void setObjective(final TwiceDifferentiable<Double> objective) {
+        protected void setObjective( TwiceDifferentiable<Double> objective) {
             myData.setObjective(objective);
         }
 
@@ -296,7 +295,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
         this(new Optimisation.Options());
     }
 
-    protected GenericSolver(final Optimisation.Options solverOptions) {
+    protected GenericSolver( Optimisation.Options solverOptions) {
 
         super();
 
@@ -316,7 +315,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
         return myStopwatch.countMillis();
     }
 
-    protected final void error(final String messagePattern, final Object... arguments) {
+    protected final void error( String messagePattern,  Object... arguments) {
         BasicLogger.error(messagePattern, arguments);
     }
 
@@ -397,25 +396,25 @@ public abstract class GenericSolver implements Optimisation.Solver {
         }
     }
 
-    protected final void log(final int tabs, final String messagePattern, final Object... arguments) {
+    protected final void log( int tabs,  String messagePattern,  Object... arguments) {
         if (options.logger_appender != null) {
             options.logger_appender.println(tabs, messagePattern, arguments);
         }
     }
 
-    protected final void log(final String descripttion, final Access2D<?> matrix) {
+    protected final void log( String descripttion,  Access2D<?> matrix) {
         if (options.logger_appender != null) {
             options.logger_appender.printmtrx(descripttion, matrix, options.print);
         }
     }
 
-    protected final void log(final String messagePattern, final Object... arguments) {
+    protected final void log( String messagePattern,  Object... arguments) {
         if (options.logger_appender != null) {
             options.logger_appender.println(messagePattern, arguments);
         }
     }
 
-    protected void logProgress(final int iterationsDone, final String classSimpleName, final CalendarDateDuration duration) {
+    protected void logProgress( int iterationsDone,  String classSimpleName,  CalendarDateDuration duration) {
         this.log("Done {} {} iterations in {}.", iterationsDone, classSimpleName, duration);
     }
 
@@ -428,7 +427,7 @@ public abstract class GenericSolver implements Optimisation.Solver {
      * As the solver algorithm reaches various states it should be recorded here. It's particularly important
      * to record when a feasible solution has been reached.
      */
-    protected final void setState(final State state) {
+    protected final void setState( State state) {
         Objects.requireNonNull(state);
         myState = state;
     }

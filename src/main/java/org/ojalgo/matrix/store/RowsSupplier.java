@@ -3,10 +3,8 @@ package org.ojalgo.matrix.store;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.ojalgo.array.SparseArray;
 import org.ojalgo.array.SparseArray.SparseFactory;
-import org.ojalgo.matrix.store.PhysicalStore.Factory;
 import org.ojalgo.structure.Access2D;
 import org.ojalgo.structure.ElementView1D;
 
@@ -16,16 +14,16 @@ public final class RowsSupplier<N extends Comparable<N>> implements Access2D<N>,
 
         private final RowsSupplier<N> mySupplier;
 
-        ItemView(final RowsSupplier<N> access) {
+        ItemView( RowsSupplier<N> access) {
             super(access);
             mySupplier = access;
         }
 
-        public ElementView1D<N, ?> elements() {
+        @Override public ElementView1D<N, ?> elements() {
             return this.getCurrent().elements();
         }
 
-        public ElementView1D<N, ?> nonzeros() {
+        @Override public ElementView1D<N, ?> nonzeros() {
             return this.getCurrent().nonzeros();
         }
 
@@ -39,7 +37,7 @@ public final class RowsSupplier<N extends Comparable<N>> implements Access2D<N>,
     private final PhysicalStore.Factory<N, ?> myFactory;
     private final List<SparseArray<N>> myRows = new ArrayList<>();
 
-    RowsSupplier(final Factory<N, ?> factory, final int numberOfColumns) {
+    RowsSupplier( PhysicalStore.Factory<N, ?> factory,  int numberOfColumns) {
         super();
         myColumnsCount = numberOfColumns;
         myFactory = factory;
@@ -49,50 +47,50 @@ public final class RowsSupplier<N extends Comparable<N>> implements Access2D<N>,
         return this.addRow(SparseArray.factory(myFactory.array()).limit(myColumnsCount).make());
     }
 
-    public void addRows(final int numberToAdd) {
+    public void addRows( int numberToAdd) {
         SparseFactory<N> factory = SparseArray.factory(myFactory.array()).limit(myColumnsCount);
         for (int i = 0; i < numberToAdd; i++) {
             myRows.add(factory.make());
         }
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return myColumnsCount;
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return myRows.size();
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return myRows.get((int) row).doubleValue(col);
     }
 
-    public PhysicalStore<N> get() {
+    @Override public PhysicalStore<N> get() {
         return this.collect(myFactory);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return myRows.get((int) row).get(col);
     }
 
-    public SparseArray<N> getRow(final int index) {
+    public SparseArray<N> getRow( int index) {
         return myRows.get(index);
     }
 
-    public Factory<N, ?> physical() {
+    public PhysicalStore.Factory<N, ?> physical() {
         return myFactory;
     }
 
-    public SparseArray<N> removeRow(final int index) {
+    public SparseArray<N> removeRow( int index) {
         return myRows.remove(index);
     }
 
-    public RowView<N> rows() {
+    @Override public RowView<N> rows() {
         return new ItemView<>(this);
     }
 
-    public RowsSupplier<N> selectRows(final int[] indices) {
+    public RowsSupplier<N> selectRows( int[] indices) {
         RowsSupplier<N> retVal = new RowsSupplier<>(myFactory, myColumnsCount);
         for (int i = 0; i < indices.length; i++) {
             retVal.addRow(this.getRow(indices[i]));
@@ -100,7 +98,7 @@ public final class RowsSupplier<N extends Comparable<N>> implements Access2D<N>,
         return retVal;
     }
 
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    @Override public void supplyTo( TransformableRegion<N> receiver) {
 
         receiver.reset();
 
@@ -114,7 +112,7 @@ public final class RowsSupplier<N extends Comparable<N>> implements Access2D<N>,
         return Access2D.toString(this);
     }
 
-    SparseArray<N> addRow(final SparseArray<N> rowToAdd) {
+    SparseArray<N> addRow( SparseArray<N> rowToAdd) {
         if (myRows.add(rowToAdd)) {
             return rowToAdd;
         } else {

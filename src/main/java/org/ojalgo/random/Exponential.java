@@ -34,7 +34,7 @@ import org.ojalgo.function.constant.PrimitiveMath;
  */
 public class Exponential extends AbstractContinuous {
 
-    public static Exponential of(final double rate) {
+    public static Exponential of( double rate) {
         return new Exponential(rate);
     }
 
@@ -44,14 +44,14 @@ public class Exponential extends AbstractContinuous {
         this(ONE);
     }
 
-    public Exponential(final double rate) {
+    public Exponential( double rate) {
 
         super();
 
         myRate = rate;
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
         if (value < ZERO) {
             return ZERO;
         } else {
@@ -59,7 +59,7 @@ public class Exponential extends AbstractContinuous {
         }
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
         if (value < ZERO) {
             return ZERO;
         } else {
@@ -67,11 +67,11 @@ public class Exponential extends AbstractContinuous {
         }
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return ONE / myRate;
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
         this.checkProbabilty(probability);
 

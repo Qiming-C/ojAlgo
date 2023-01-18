@@ -62,7 +62,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
 
         private final DenseArray.Factory<N> myDenseFactory;
 
-        Factory(final org.ojalgo.array.DenseArray.Factory<N> denseFactory) {
+        Factory( DenseArray.Factory<N> denseFactory) {
             super();
             myDenseFactory = denseFactory;
         }
@@ -93,7 +93,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         }
 
         @Override
-        BasicArray<N> makeStructuredZero(final long... structure) {
+        BasicArray<N> makeStructuredZero( long... structure) {
 
             long total = StructureAnyD.count(structure);
 
@@ -113,7 +113,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         }
 
         @Override
-        BasicArray<N> makeToBeFilled(final long... structure) {
+        BasicArray<N> makeToBeFilled( long... structure) {
 
             long total = StructureAnyD.count(structure);
 
@@ -140,12 +140,12 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         this(null);
     }
 
-    protected BasicArray(final ArrayFactory<N, ?> factory) {
+    protected BasicArray( ArrayFactory<N, ?> factory) {
         super();
         myFactory = factory;
     }
 
-    public N aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    @Override public N aggregateRange( long first,  long limit,  Aggregator aggregator) {
 
         AggregatorFunction<N> visitor = aggregator.getFunction(myFactory.aggregator());
 
@@ -155,14 +155,14 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof BasicArray)) {
             return false;
         }
-        BasicArray<?> other = (BasicArray<?>) obj;
+        var other = (BasicArray<?>) obj;
         if (myFactory == null) {
             if (other.myFactory != null) {
                 return false;
@@ -184,7 +184,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         return prime * result + (myFactory == null ? 0 : myFactory.hashCode());
     }
 
-    public long indexOfLargest() {
+    @Override public long indexOfLargest() {
         return this.indexOfLargest(0L, this.count(), 1L);
     }
 
@@ -192,25 +192,25 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         return myFactory.getMathType().isPrimitive();
     }
 
-    public void modifyAll(final UnaryFunction<N> modifier) {
+    @Override public void modifyAll( UnaryFunction<N> modifier) {
         this.modify(0L, this.count(), 1L, modifier);
     }
 
-    public void modifyMatching(final Access1D<N> left, final BinaryFunction<N> function) {
+    @Override public void modifyMatching( Access1D<N> left,  BinaryFunction<N> function) {
         long limit = Math.min(left.count(), this.count());
         this.modify(0L, limit, 1L, left, function);
     }
 
-    public void modifyMatching(final BinaryFunction<N> function, final Access1D<N> right) {
+    @Override public void modifyMatching( BinaryFunction<N> function,  Access1D<N> right) {
         long limit = Math.min(this.count(), right.count());
         this.modify(0L, limit, 1L, function, right);
     }
 
-    public void modifyRange(final long first, final long limit, final UnaryFunction<N> modifier) {
+    @Override public void modifyRange( long first,  long limit,  UnaryFunction<N> modifier) {
         this.modify(first, limit, 1L, modifier);
     }
 
-    public void supplyTo(final Mutate1D receiver) {
+    @Override public void supplyTo( Mutate1D receiver) {
         long limit = Math.min(this.count(), receiver.count());
         for (long i = 0; i < limit; i++) {
             receiver.set(i, this.get(i));
@@ -222,43 +222,43 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
         return Access1D.toString(this);
     }
 
-    public void visitAll(final VoidFunction<N> visitor) {
+    @Override public void visitAll( VoidFunction<N> visitor) {
         this.visit(0L, this.count(), 1L, visitor);
     }
 
-    public void visitRange(final long first, final long limit, final VoidFunction<N> visitor) {
+    @Override public void visitRange( long first,  long limit,  VoidFunction<N> visitor) {
         this.visit(first, limit, 1L, visitor);
     }
 
-    protected void exchange(final long firstA, final long firstB, final long step, final long count) {
+    protected void exchange( long firstA,  long firstB,  long step,  long count) {
         Exchange.exchange(this, firstA, firstB, step, count);
     }
 
-    protected void fill(final long first, final long limit, final long step, final N value) {
+    protected void fill( long first,  long limit,  long step,  N value) {
         FillAll.fill(this, first, limit, step, value);
     }
 
-    protected void fill(final long first, final long limit, final long step, final NullaryFunction<?> supplier) {
+    protected void fill( long first,  long limit,  long step,  NullaryFunction<?> supplier) {
         FillAll.fill(this, first, limit, step, supplier);
     }
 
-    protected long indexOfLargest(final long first, final long limit, final long step) {
+    protected long indexOfLargest( long first,  long limit,  long step) {
         return AMAX.invoke(this, first, limit, step);
     }
 
-    protected void modify(final long first, final long limit, final long step, final Access1D<N> left, final BinaryFunction<N> function) {
+    protected void modify( long first,  long limit,  long step,  Access1D<N> left,  BinaryFunction<N> function) {
         OperationBinary.invoke(this, first, limit, step, left, function, this);
     }
 
-    protected void modify(final long first, final long limit, final long step, final BinaryFunction<N> function, final Access1D<N> right) {
+    protected void modify( long first,  long limit,  long step,  BinaryFunction<N> function,  Access1D<N> right) {
         OperationBinary.invoke(this, first, limit, step, this, function, right);
     }
 
-    protected void modify(final long first, final long limit, final long step, final UnaryFunction<N> function) {
+    protected void modify( long first,  long limit,  long step,  UnaryFunction<N> function) {
         OperationUnary.invoke(this, first, limit, step, this, function);
     }
 
-    protected void visit(final long first, final long limit, final long step, final VoidFunction<N> visitor) {
+    protected void visit( long first,  long limit,  long step,  VoidFunction<N> visitor) {
         OperationVoid.invoke(this, first, limit, step, visitor);
     }
 
@@ -276,7 +276,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
      * as a two-dimensional array. Note that you will modify the actual array by accessing it through this
      * facade.
      */
-    protected final Array2D<N> wrapInArray2D(final long structure) {
+    protected final Array2D<N> wrapInArray2D( long structure) {
         return new Array2D<>(this, structure);
     }
 
@@ -285,7 +285,7 @@ public abstract class BasicArray<N extends Comparable<N>> implements Access1D<N>
      * as a multi-dimensional array. Note that you will modify the actual array by accessing it through this
      * facade.
      */
-    protected final ArrayAnyD<N> wrapInArrayAnyD(final long[] structure) {
+    protected final ArrayAnyD<N> wrapInArrayAnyD( long[] structure) {
         return new ArrayAnyD<>(this, structure);
     }
 

@@ -44,7 +44,7 @@ public interface ScedasticityModel {
     /**
      * Takes a series of realised values and outputs a series of (locally fluctuating) variances.
      */
-    default PrimitiveSeries variances(final PrimitiveSeries values) {
+    default PrimitiveSeries variances( PrimitiveSeries values) {
 
         SampleSet statistics = SampleSet.wrap(values);
 

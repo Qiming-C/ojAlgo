@@ -23,9 +23,9 @@ package org.ojalgo.data.domain.finance.portfolio;
 
 import static org.ojalgo.function.constant.BigMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.HashMap;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.MatrixR064;
 import org.ojalgo.netio.BasicLogger;
@@ -102,15 +102,15 @@ public final class MarkowitzModel extends OptimisedPortfolio {
     private BigDecimal myTargetReturn;
     private BigDecimal myTargetVariance;
 
-    public MarkowitzModel(final FinancePortfolio.Context portfolioContext) {
+    public MarkowitzModel( FinancePortfolio.Context portfolioContext) {
         super(portfolioContext);
     }
 
-    public MarkowitzModel(final MarketEquilibrium marketEquilibrium, final MatrixR064 expectedExcessReturns) {
+    public MarkowitzModel( MarketEquilibrium marketEquilibrium,  MatrixR064 expectedExcessReturns) {
         super(marketEquilibrium, expectedExcessReturns);
     }
 
-    public MarkowitzModel(final MatrixR064 covarianceMatrix, final MatrixR064 expectedExcessReturns) {
+    public MarkowitzModel( MatrixR064 covarianceMatrix,  MatrixR064 expectedExcessReturns) {
         super(covarianceMatrix, expectedExcessReturns);
     }
 
@@ -118,7 +118,7 @@ public final class MarkowitzModel extends OptimisedPortfolio {
      * Will add a constraint on the sum of the asset weights specified by the asset indices. Either (but not
      * both) of the limits may be null.
      */
-    public LowerUpper addConstraint(final BigDecimal lowerLimit, final BigDecimal upperLimit, final int... assetIndeces) {
+    public LowerUpper addConstraint( BigDecimal lowerLimit,  BigDecimal upperLimit,  int... assetIndeces) {
         return myConstraints.put(assetIndeces, new LowerUpper(lowerLimit, upperLimit));
     }
 
@@ -127,7 +127,7 @@ public final class MarkowitzModel extends OptimisedPortfolio {
         this.reset();
     }
 
-    public void setLowerLimit(final int assetIndex, final BigDecimal lowerLimit) {
+    public void setLowerLimit( int assetIndex,  BigDecimal lowerLimit) {
         this.getVariable(assetIndex).lower(lowerLimit);
         this.reset();
     }
@@ -151,7 +151,7 @@ public final class MarkowitzModel extends OptimisedPortfolio {
      *
      * @see #setTargetVariance(BigDecimal)
      */
-    public void setTargetReturn(final BigDecimal targetReturn) {
+    public void setTargetReturn( BigDecimal targetReturn) {
         myTargetReturn = targetReturn;
         myTargetVariance = null;
         this.reset();
@@ -175,13 +175,13 @@ public final class MarkowitzModel extends OptimisedPortfolio {
      *
      * @see #setTargetReturn(BigDecimal)
      */
-    public void setTargetVariance(final BigDecimal targetVariance) {
+    public void setTargetVariance( BigDecimal targetVariance) {
         myTargetVariance = targetVariance;
         myTargetReturn = null;
         this.reset();
     }
 
-    public void setUpperLimit(final int assetIndex, final BigDecimal upperLimit) {
+    public void setUpperLimit( int assetIndex,  BigDecimal upperLimit) {
         this.getVariable(assetIndex).upper(upperLimit);
         this.reset();
     }
@@ -196,7 +196,7 @@ public final class MarkowitzModel extends OptimisedPortfolio {
         return myOptimisationModel.toString();
     }
 
-    private ExpressionsBasedModel generateOptimisationModel(final double riskAversion) {
+    private ExpressionsBasedModel generateOptimisationModel( double riskAversion) {
 
         if (myOptimisationModel == null) {
             myOptimisationModel = this.makeModel(myConstraints);
@@ -230,11 +230,11 @@ public final class MarkowitzModel extends OptimisedPortfolio {
             BasicLogger.debug();
         }
 
-        Optimisation.Result tmpResult;
+        @Var Optimisation.Result tmpResult;
 
         if ((myTargetReturn != null) || (myTargetVariance != null)) {
 
-            final double tmpTargetValue;
+             double tmpTargetValue;
             if (myTargetVariance != null) {
                 tmpTargetValue = myTargetVariance.doubleValue();
             } else if (myTargetReturn != null) {
@@ -245,15 +245,15 @@ public final class MarkowitzModel extends OptimisedPortfolio {
 
             tmpResult = this.generateOptimisationModel(_0_0).minimise();
 
-            double tmpTargetNow = _0_0;
-            double tmpTargetDiff = _0_0;
-            double tmpTargetLast = _0_0;
+            @Var double tmpTargetNow = _0_0;
+            @Var double tmpTargetDiff = _0_0;
+            @Var double tmpTargetLast = _0_0;
 
             if (tmpResult.getState().isFeasible()) {
 
-                double tmpCurrent;
-                double tmpLow;
-                double tmpHigh;
+                @Var double tmpCurrent;
+                @Var double tmpLow;
+                @Var double tmpHigh;
                 if (this.isDefaultRiskAversion()) {
                     tmpCurrent = INIT;
                     tmpLow = MAX;
@@ -266,7 +266,7 @@ public final class MarkowitzModel extends OptimisedPortfolio {
 
                 do {
 
-                    final ExpressionsBasedModel tmpModel = this.generateOptimisationModel(tmpCurrent);
+                     ExpressionsBasedModel tmpModel = this.generateOptimisationModel(tmpCurrent);
                     tmpResult = tmpModel.minimise();
 
                     tmpTargetLast = tmpTargetNow;
@@ -318,11 +318,11 @@ public final class MarkowitzModel extends OptimisedPortfolio {
 
     }
 
-    Scalar<?> calculatePortfolioReturn(final Access1D<?> weightsVctr, final MatrixR064 returnsVctr) {
+    Scalar<?> calculatePortfolioReturn( Access1D<?> weightsVctr,  MatrixR064 returnsVctr) {
         return super.calculatePortfolioReturn(MATRIX_FACTORY.columns(weightsVctr), returnsVctr);
     }
 
-    Scalar<?> calculatePortfolioVariance(final Access1D<?> weightsVctr) {
+    Scalar<?> calculatePortfolioVariance( Access1D<?> weightsVctr) {
         return super.calculatePortfolioVariance(MATRIX_FACTORY.columns(weightsVctr));
     }
 

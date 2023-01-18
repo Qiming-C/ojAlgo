@@ -100,11 +100,11 @@ public interface Cholesky<N extends Comparable<N>> extends LDU<N>, MatrixDecompo
     @Deprecated
     Factory<RationalNumber> RATIONAL = Q128;
 
-    static <N extends Comparable<N>> boolean equals(final MatrixStore<N> matrix, final Cholesky<N> decomposition, final NumberContext context) {
+    static <N extends Comparable<N>> boolean equals( MatrixStore<N> matrix,  Cholesky<N> decomposition,  NumberContext context) {
 
-        boolean retVal = false;
+        
 
-        final MatrixStore<N> tmpL = decomposition.getL();
+         MatrixStore<N> tmpL = decomposition.getL();
 
         return Access2D.equals(tmpL.multiply(tmpL.conjugate()), matrix, context);
     }
@@ -133,8 +133,8 @@ public interface Cholesky<N extends Comparable<N>> extends LDU<N>, MatrixDecompo
      */
     boolean isSPD();
 
-    default MatrixStore<N> reconstruct() {
-        final MatrixStore<N> mtrxL = this.getL();
+    @Override default MatrixStore<N> reconstruct() {
+         MatrixStore<N> mtrxL = this.getL();
         return mtrxL.multiply(mtrxL.conjugate());
     }
 

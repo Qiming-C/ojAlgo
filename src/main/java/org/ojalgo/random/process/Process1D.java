@@ -52,39 +52,39 @@ public final class Process1D<P extends ComponentProcess<?>> {
     /**
      * Correlated processes
      */
-    public static <P extends ComponentProcess<?>> Process1D<P> of(final Access2D<?> correlations, final List<? extends P> processes) {
+    public static <P extends ComponentProcess<?>> Process1D<P> of( Access2D<?> correlations,  List<? extends P> processes) {
         return new Process1D<>(new Random1D(correlations), Process1D.toArray(processes));
     }
 
     /**
      * Correlated processes
      */
-    public static <P extends ComponentProcess<?>> Process1D<P> of(final Access2D<?> correlations, final P... processes) {
+    public static <P extends ComponentProcess<?>> Process1D<P> of( Access2D<?> correlations,  P... processes) {
         return new Process1D<>(new Random1D(correlations), processes);
     }
 
     /**
      * Uncorrelated processes
      */
-    public static <P extends ComponentProcess<?>> Process1D<P> of(final List<? extends P> processes) {
+    public static <P extends ComponentProcess<?>> Process1D<P> of( List<? extends P> processes) {
         return new Process1D<>(new Random1D(processes.size()), Process1D.toArray(processes));
     }
 
     /**
      * Uncorrelated processes
      */
-    public static <P extends ComponentProcess<?>> Process1D<P> of(final P... processes) {
+    public static <P extends ComponentProcess<?>> Process1D<P> of( P... processes) {
         return new Process1D<>(new Random1D(processes.length), processes);
     }
 
-    static <P extends ComponentProcess<?>> P[] toArray(final Collection<? extends P> processes) {
+    static <P extends ComponentProcess<?>> P[] toArray( Collection<? extends P> processes) {
         return (P[]) processes.toArray(new ComponentProcess[processes.size()]);
     }
 
     private final Random1D myGenerator;
     private final P[] myProcesses;
 
-    Process1D(final Random1D generator, final P... processes) {
+    Process1D( Random1D generator,  P... processes) {
 
         super();
 
@@ -92,7 +92,7 @@ public final class Process1D<P extends ComponentProcess<?>> {
         myProcesses = processes;
     }
 
-    public double getValue(final int index) {
+    public double getValue( int index) {
         return myProcesses[index].getValue();
     }
 
@@ -108,11 +108,11 @@ public final class Process1D<P extends ComponentProcess<?>> {
         return retVal;
     }
 
-    public void setValue(final int index, final double newValue) {
+    public void setValue( int index,  double newValue) {
         myProcesses[index].setValue(newValue);
     }
 
-    public void setValues(final Access1D<?> newValues) {
+    public void setValues( Access1D<?> newValues) {
         for (int p = 0; p < myProcesses.length; p++) {
             myProcesses[p].setValue(newValues.doubleValue(p));
         }
@@ -122,7 +122,7 @@ public final class Process1D<P extends ComponentProcess<?>> {
         return myProcesses.length;
     }
 
-    public Array1D<Double> step(final double stepSize) {
+    public Array1D<Double> step( double stepSize) {
 
         Array1D<Double> retVal = myGenerator.nextGaussian();
 

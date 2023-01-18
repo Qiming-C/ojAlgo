@@ -26,7 +26,7 @@ final class PrunedSeries extends PrimitiveSeries {
     private final PrimitiveSeries myBase;
     private final int myShift;
 
-    PrunedSeries(final PrimitiveSeries base) {
+    PrunedSeries( PrimitiveSeries base) {
 
         super();
 
@@ -34,7 +34,7 @@ final class PrunedSeries extends PrimitiveSeries {
         myShift = 0;
     }
 
-    PrunedSeries(final PrimitiveSeries base, final int shift) {
+    PrunedSeries( PrimitiveSeries base,  int shift) {
 
         super();
 
@@ -48,7 +48,7 @@ final class PrunedSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myBase.value(index - Math.min(myShift, 0));
     }
 

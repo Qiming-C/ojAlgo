@@ -44,19 +44,19 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
 
     public static abstract class Factory<N extends Comparable<N>> {
 
-        public MatrixStore<N> invert(final Access2D<?> original) throws RecoverableCondition {
+        public MatrixStore<N> invert( Access2D<?> original) throws RecoverableCondition {
             return this.make(original, false, false).invert(original);
         }
 
-        public InverterTask<N> make(final int dim, final boolean spd) {
+        public InverterTask<N> make( int dim,  boolean spd) {
 
-            Structure2D template = new Structure2D() {
+            var template = new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return dim;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return dim;
                 }
             };
@@ -64,7 +64,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
             return this.make(template, spd, spd);
         }
 
-        public InverterTask<N> make(final MatrixStore<N> template) {
+        public InverterTask<N> make( MatrixStore<N> template) {
             return this.make(template, template.isHermitian(), false);
         }
 
@@ -74,7 +74,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<ComplexNumber> COMPLEX = new Factory<>() {
 
         @Override
-        public InverterTask<ComplexNumber> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public InverterTask<ComplexNumber> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (symmetric && positiveDefinite) {
                 return Cholesky.COMPLEX.make(template);
             }
@@ -92,7 +92,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Double> PRIMITIVE = new Factory<>() {
 
         @Override
-        public InverterTask<Double> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public InverterTask<Double> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
 
             long tmpDim = template.countRows();
 
@@ -143,7 +143,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Quadruple> QUADRUPLE = new Factory<>() {
 
         @Override
-        public InverterTask<Quadruple> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public InverterTask<Quadruple> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (template.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.QUADRUPLE.make(template);
@@ -161,7 +161,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<Quaternion> QUATERNION = new Factory<>() {
 
         @Override
-        public InverterTask<Quaternion> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public InverterTask<Quaternion> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (template.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.QUATERNION.make(template);
@@ -179,7 +179,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     Factory<RationalNumber> RATIONAL = new Factory<>() {
 
         @Override
-        public InverterTask<RationalNumber> make(final Structure2D template, final boolean symmetric, final boolean positiveDefinite) {
+        public InverterTask<RationalNumber> make( Structure2D template,  boolean symmetric,  boolean positiveDefinite) {
             if (template.isSquare()) {
                 if (symmetric && positiveDefinite) {
                     return Cholesky.RATIONAL.make(template);
@@ -197,7 +197,7 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
     /**
      * The output must be a "right inverse" and a "generalised inverse".
      */
-    default MatrixStore<N> invert(final Access2D<?> original) throws RecoverableCondition {
+    default MatrixStore<N> invert( Access2D<?> original) throws RecoverableCondition {
         return this.invert(original, this.preallocate(original));
     }
 
@@ -220,14 +220,14 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
      */
     MatrixStore<N> invert(Access2D<?> original, PhysicalStore<N> preallocated) throws RecoverableCondition;
 
-    default PhysicalStore<N> preallocate(final int numberOfRows, final int numberOfColumns) {
+    default PhysicalStore<N> preallocate( int numberOfRows,  int numberOfColumns) {
         return this.preallocate(new Structure2D() {
 
-            public long countColumns() {
+            @Override public long countColumns() {
                 return numberOfColumns;
             }
 
-            public long countRows() {
+            @Override public long countRows() {
                 return numberOfRows;
             }
 
@@ -246,8 +246,8 @@ public interface InverterTask<N extends Comparable<N>> extends MatrixTask<N> {
      */
     PhysicalStore<N> preallocate(Structure2D template);
 
-    default Provider2D.Inverse<Optional<MatrixStore<N>>> toInverseProvider(final ElementsSupplier<N> original,
-            final Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
+    default Provider2D.Inverse<Optional<MatrixStore<N>>> toInverseProvider( ElementsSupplier<N> original,
+             Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
         try {
             MatrixStore<N> invert = this.invert(alternativeOriginalSupplier.get());
             return () -> Optional.of(invert);

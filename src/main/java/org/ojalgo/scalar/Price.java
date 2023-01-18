@@ -32,31 +32,31 @@ public final class Price extends ExactDecimal<Price> {
 
     public static final Scalar.Factory<Price> FACTORY = new ExactDecimal.Factory<>() {
 
-        public Price cast(final double value) {
+        @Override public Price cast( double value) {
             return Price.valueOf(value);
         }
 
-        public Price cast(final Comparable<?> number) {
+        @Override public Price cast( Comparable<?> number) {
             return Price.valueOf(number);
         }
 
-        public Price convert(final double value) {
+        @Override public Price convert( double value) {
             return Price.valueOf(value);
         }
 
-        public Price convert(final Comparable<?> number) {
+        @Override public Price convert( Comparable<?> number) {
             return Price.valueOf(number);
         }
 
-        public Descriptor descriptor() {
+        @Override public Descriptor descriptor() {
             return DESCRIPTOR;
         }
 
-        public Price one() {
+        @Override public Price one() {
             return ONE;
         }
 
-        public Price zero() {
+        @Override public Price zero() {
             return ZERO;
         }
 
@@ -70,11 +70,11 @@ public final class Price extends ExactDecimal<Price> {
     public static final Price TWO = new Price(LONG_DENOMINATOR + LONG_DENOMINATOR);
     public static final Price ZERO = new Price();
 
-    public static Price valueOf(final double value) {
+    public static Price valueOf( double value) {
         return new Price(Math.round(value * DOUBLE_DENOMINATOR));
     }
 
-    public static Price valueOf(final Comparable<?> number) {
+    public static Price valueOf( Comparable<?> number) {
 
         if (number == null) {
             return ZERO;
@@ -91,11 +91,11 @@ public final class Price extends ExactDecimal<Price> {
         super(0L);
     }
 
-    Price(final long numerator) {
+    Price( long numerator) {
         super(numerator);
     }
 
-    public Amount multiply(final Quantity quanntity) {
+    public Amount multiply( Quantity quanntity) {
         return new Amount(Amount.DESCRIPTOR.multiply(this, quanntity));
     }
 
@@ -105,7 +105,7 @@ public final class Price extends ExactDecimal<Price> {
     }
 
     @Override
-    protected Price wrap(final long numerator) {
+    protected Price wrap( long numerator) {
         return new Price(numerator);
     }
 

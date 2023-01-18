@@ -1,12 +1,13 @@
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.OjAlgoUtils;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.aggregator.AggregatorSet;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.function.special.PowerOf2;
 import org.ojalgo.machine.Hardware;
-import org.ojalgo.scalar.Scalar.Factory;
+import org.ojalgo.scalar.Scalar;
 import org.ojalgo.type.math.MathType;
 
 /**
@@ -27,9 +28,9 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
     /**
      * Will suggest an initial capacity (for a SparseArray) given the total count.
      */
-    static int capacity(final long count) {
+    static int capacity( long count) {
 
-        double tmpInitialCapacity = count;
+        @Var double tmpInitialCapacity = count;
 
         while (tmpInitialCapacity > PlainArray.MAX_SIZE) {
             tmpInitialCapacity = PrimitiveMath.SQRT.invoke(tmpInitialCapacity);
@@ -45,28 +46,28 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
     private long myLimit = LIMIT;
     private long mySegment = SEGMENT;
 
-    DenseCapacityStrategy(final DenseArray.Factory<N> denseFactory) {
+    DenseCapacityStrategy( DenseArray.Factory<N> denseFactory) {
 
         super();
 
         myDenseFactory = denseFactory;
 
-        final long tmpHalfTopLevelCacheElements = (OjAlgoUtils.ENVIRONMENT.cache / 2L) / denseFactory.getElementSize();
+         long tmpHalfTopLevelCacheElements = (OjAlgoUtils.ENVIRONMENT.cache / 2L) / denseFactory.getElementSize();
         this.segment(tmpHalfTopLevelCacheElements);
 
-        final long tmpMemoryPageElements = Hardware.OS_MEMORY_PAGE_SIZE / denseFactory.getElementSize();
+         long tmpMemoryPageElements = Hardware.OS_MEMORY_PAGE_SIZE / denseFactory.getElementSize();
         this.chunk(tmpMemoryPageElements);
     }
 
-    protected AggregatorSet<N> aggregator() {
+    AggregatorSet<N> aggregator() {
         return myDenseFactory.aggregator();
     }
 
-    protected FunctionSet<N> function() {
+    FunctionSet<N> function() {
         return myDenseFactory.function();
     }
 
-    protected Factory<N> scalar() {
+    Scalar.Factory<N> scalar() {
         return myDenseFactory.scalar();
     }
 
@@ -74,8 +75,8 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         return myChunk;
     }
 
-    DenseCapacityStrategy<N> chunk(final long chunk) {
-        final int power = PowerOf2.powerOf2Smaller(Math.min(chunk, mySegment));
+    DenseCapacityStrategy<N> chunk( long chunk) {
+         int power = PowerOf2.powerOf2Smaller(Math.min(chunk, mySegment));
         myChunk = 1L << power;
         return this;
     }
@@ -84,26 +85,26 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         return myDenseFactory;
     }
 
-    int grow(final int current) {
+    int grow( int current) {
         return (int) this.grow((long) current);
     }
 
-    long grow(final long current) {
+    long grow( long current) {
 
-        final long required = current + 1L;
+         long required = current + 1L;
 
         if (required > myLimit) {
             throw new IllegalStateException("Requires a count/size greater than the limit!");
         }
 
-        long retVal = myChunk;
+        @Var long retVal = myChunk;
 
         if (required >= myChunk) {
             while (retVal < required) {
                 retVal += myChunk;
             }
         } else {
-            long maybe = retVal;
+            @Var long maybe = retVal;
             while ((maybe = Math.round(retVal / PrimitiveMath.GOLDEN_RATIO)) >= required) {
                 retVal = maybe;
             }
@@ -119,16 +120,16 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
     /**
      * Enforced to be &gt;= 1
      */
-    DenseCapacityStrategy<N> initial(final long initial) {
+    DenseCapacityStrategy<N> initial( long initial) {
         myInitial = Math.max(1, initial);
         return this;
     }
 
-    boolean isChunked(final long count) {
+    boolean isChunked( long count) {
         return count > myChunk;
     }
 
-    boolean isSegmented(final long count) {
+    boolean isSegmented( long count) {
         return count > mySegment;
     }
 
@@ -136,12 +137,12 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         return myLimit;
     }
 
-    DenseCapacityStrategy<N> limit(final long limit) {
+    DenseCapacityStrategy<N> limit( long limit) {
         myLimit = limit;
         return this;
     }
 
-    DenseArray<N> make(final long size) {
+    DenseArray<N> make( long size) {
         return myDenseFactory.makeDenseArray(size);
     }
 
@@ -157,7 +158,7 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         return this.make(mySegment);
     }
 
-    SegmentedArray<N> makeSegmented(final BasicArray<N> segment) {
+    SegmentedArray<N> makeSegmented( BasicArray<N> segment) {
         if (segment.count() == mySegment) {
             return myDenseFactory.wrapAsSegments(segment, this.makeChunk());
         } else {
@@ -165,7 +166,7 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         }
     }
 
-    SegmentedArray<N> makeSegmented(final long count) {
+    SegmentedArray<N> makeSegmented( long count) {
         return myDenseFactory.makeSegmented(count);
     }
 
@@ -173,8 +174,8 @@ final class DenseCapacityStrategy<N extends Comparable<N>> {
         return mySegment;
     }
 
-    DenseCapacityStrategy<N> segment(final long segment) {
-        final int power = PowerOf2.powerOf2Smaller(Math.max(myChunk, segment));
+    DenseCapacityStrategy<N> segment( long segment) {
+         int power = PowerOf2.powerOf2Smaller(Math.max(myChunk, segment));
         mySegment = 1L << power;
         return this;
     }

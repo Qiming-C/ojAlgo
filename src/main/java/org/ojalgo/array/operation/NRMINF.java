@@ -23,6 +23,8 @@ package org.ojalgo.array.operation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
+
 /**
  * Infinity norm - largest absolute value
  *
@@ -30,8 +32,8 @@ import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
  */
 public abstract class NRMINF implements ArrayOperation {
 
-    public static double invoke(final double[] data, final int first, final int limit) {
-        double retVal = ZERO;
+    public static double invoke( double[] data,  int first,  int limit) {
+        @Var double retVal = ZERO;
         for (int i = first; i < limit; i++) {
             retVal = Math.max(retVal, Math.abs(data[i]));
         }

@@ -34,7 +34,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
      */
     public static int THRESHOLD = 256;
 
-    public static void fillAll(final double[][] target, final double value) {
+    public static void fillAll( double[][] target,  double value) {
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             int tmpInnerLength = target[i].length;
@@ -44,7 +44,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillAll(final double[][] target, final DoubleSupplier supplier) {
+    public static void fillAll( double[][] target,  DoubleSupplier supplier) {
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             int tmpInnerLength = target[i].length;
@@ -54,33 +54,33 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillColumn(final double[][] target, final int row, final int col, final double value) {
+    public static void fillColumn( double[][] target,  int row,  int col,  double value) {
         for (int i = row, limit = target.length; i < limit; i++) {
             target[i][col] = value;
         }
     }
 
-    public static void fillColumn(final double[][] target, final int row, final int col, final DoubleSupplier supplier) {
+    public static void fillColumn( double[][] target,  int row,  int col,  DoubleSupplier supplier) {
         for (int i = row, limit = target.length; i < limit; i++) {
             target[i][col] = supplier.getAsDouble();
         }
     }
 
-    public static void fillDiagonal(final double[][] target, final int row, final int col, final double value) {
+    public static void fillDiagonal( double[][] target,  int row,  int col,  double value) {
         int limit = target.length;
         for (int ij = 0; row + ij < limit && col + ij < target[row + ij].length; ij++) {
             target[row + ij][col + ij] = value;
         }
     }
 
-    public static void fillDiagonal(final double[][] target, final int row, final int col, final DoubleSupplier supplier) {
+    public static void fillDiagonal( double[][] target,  int row,  int col,  DoubleSupplier supplier) {
         int limit = target.length;
         for (int ij = 0; row + ij < limit && col + ij < target[row + ij].length; ij++) {
             target[row + ij][col + ij] = supplier.getAsDouble();
         }
     }
 
-    public static void fillMatching(final double[][] target, final double left, final DoubleBinaryOperator function, final double[][] right) {
+    public static void fillMatching( double[][] target,  double left,  DoubleBinaryOperator function,  double[][] right) {
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             int tmpInnerLength = target[i].length;
@@ -90,7 +90,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillMatching(final double[][] target, final double[][] left, final DoubleBinaryOperator function, final double right) {
+    public static void fillMatching( double[][] target,  double[][] left,  DoubleBinaryOperator function,  double right) {
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             int tmpInnerLength = target[i].length;
@@ -100,7 +100,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillMatching(final double[][] target, final double[][] left, final DoubleBinaryOperator function, final double[][] right) {
+    public static void fillMatching( double[][] target,  double[][] left,  DoubleBinaryOperator function,  double[][] right) {
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             int tmpInnerLength = target[i].length;
@@ -110,7 +110,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillRange(final double[][] target, final int first, final int limit, final double value) {
+    public static void fillRange( double[][] target,  int first,  int limit,  double value) {
 
         int tmpLength = target.length;
 
@@ -121,7 +121,7 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillRange(final double[][] target, final int first, final int limit, final DoubleSupplier supplier) {
+    public static void fillRange( double[][] target,  int first,  int limit,  DoubleSupplier supplier) {
 
         int tmpLength = target.length;
 
@@ -132,14 +132,14 @@ public abstract class FillMatchingDual implements ArrayOperation {
         }
     }
 
-    public static void fillRow(final double[][] target, final int row, final int col, final double value) {
+    public static void fillRow( double[][] target,  int row,  int col,  double value) {
         double[] targetRow = target[row];
         for (int j = col, limit = targetRow.length; j < limit; j++) {
             targetRow[j] = value;
         }
     }
 
-    public static void fillRow(final double[][] target, final int row, final int col, final DoubleSupplier supplier) {
+    public static void fillRow( double[][] target,  int row,  int col,  DoubleSupplier supplier) {
         double[] targetRow = target[row];
         for (int j = col, limit = targetRow.length; j < limit; j++) {
             targetRow[j] = supplier.getAsDouble();

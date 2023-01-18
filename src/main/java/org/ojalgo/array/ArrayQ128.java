@@ -59,25 +59,25 @@ public class ArrayQ128 extends ScalarArray<RationalNumber> {
         }
 
         @Override
-        PlainArray<RationalNumber> makeDenseArray(final long size) {
+        PlainArray<RationalNumber> makeDenseArray( long size) {
             return ArrayQ128.make((int) size);
         }
 
     };
 
-    public static ArrayQ128 make(final int size) {
+    public static ArrayQ128 make( int size) {
         return new ArrayQ128(size);
     }
 
-    public static ArrayQ128 wrap(final RationalNumber... data) {
+    public static ArrayQ128 wrap( RationalNumber... data) {
         return new ArrayQ128(data);
     }
 
-    protected ArrayQ128(final int size) {
+    protected ArrayQ128( int size) {
         super(FACTORY, size);
     }
 
-    protected ArrayQ128(final RationalNumber[] data) {
+    protected ArrayQ128( RationalNumber[] data) {
         super(FACTORY, data);
     }
 

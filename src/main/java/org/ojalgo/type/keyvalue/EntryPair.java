@@ -21,12 +21,12 @@
  */
 package org.ojalgo.type.keyvalue;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import org.ojalgo.type.NumberDefinition;
 import org.ojalgo.type.PrimitiveNumber;
 
@@ -39,11 +39,11 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
 
     interface KeyedPrimitive<K> extends EntryPair<K, PrimitiveNumber>, PrimitiveNumber {
 
-        default PrimitiveNumber getValue() {
+        @Override default PrimitiveNumber getValue() {
             return this;
         }
 
-        default Collection<PrimitiveNumber> values() {
+        @Override default Collection<PrimitiveNumber> values() {
             return Collections.singleton(this);
         }
     }
@@ -53,44 +53,44 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final byte myValue;
 
-        ObjectByte(final K key, final byte value) {
+        ObjectByte( K key,  byte value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public byte byteValue() {
+        @Override public byte byteValue() {
             return myValue;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Byte.compare(myValue, other.byteValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.byteValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectInt)) {
                 return false;
             }
-            ObjectInt<?> other = (ObjectInt<?>) obj;
+            var other = (ObjectInt<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -104,34 +104,34 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             return prime * result + myValue;
         }
 
-        public int intValue() {
+        @Override public int intValue() {
             return myValue;
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
-        public long longValue() {
+        @Override public long longValue() {
             return myValue;
         }
 
@@ -146,40 +146,40 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final double myValue;
 
-        ObjectDouble(final K key, final double value) {
+        ObjectDouble( K key,  double value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Double.compare(myValue, other.doubleValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.doubleValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectDouble)) {
                 return false;
             }
-            ObjectDouble<?> other = (ObjectDouble<?>) obj;
+            var other = (ObjectDouble<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -193,28 +193,28 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             long temp;
             temp = Double.doubleToLongBits(myValue);
             return prime * result + (int) (temp ^ temp >>> 32);
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
@@ -229,40 +229,40 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final float myValue;
 
-        ObjectFloat(final K key, final float value) {
+        ObjectFloat( K key,  float value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Float.compare(myValue, other.floatValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.floatValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectFloat)) {
                 return false;
             }
-            ObjectFloat<?> other = (ObjectFloat<?>) obj;
+            var other = (ObjectFloat<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -276,30 +276,30 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public float floatValue() {
+        @Override public float floatValue() {
             return myValue;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             return prime * result + Float.floatToIntBits(myValue);
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
@@ -314,40 +314,40 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final int myValue;
 
-        ObjectInt(final K key, final int value) {
+        ObjectInt( K key,  int value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Integer.compare(myValue, other.intValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.intValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectInt)) {
                 return false;
             }
-            ObjectInt<?> other = (ObjectInt<?>) obj;
+            var other = (ObjectInt<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -361,34 +361,34 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             return prime * result + myValue;
         }
 
-        public int intValue() {
+        @Override public int intValue() {
             return myValue;
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
-        public long longValue() {
+        @Override public long longValue() {
             return myValue;
         }
 
@@ -403,40 +403,40 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final long myValue;
 
-        ObjectLong(final K key, final long value) {
+        ObjectLong( K key,  long value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Long.compare(myValue, other.longValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.longValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectLong)) {
                 return false;
             }
-            ObjectLong<?> other = (ObjectLong<?>) obj;
+            var other = (ObjectLong<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -450,34 +450,34 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             return prime * result + (int) (myValue ^ myValue >>> 32);
         }
 
-        public int intValue() {
+        @Override public int intValue() {
             return Math.toIntExact(myValue);
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
-        public long longValue() {
+        @Override public long longValue() {
             return myValue;
         }
 
@@ -492,29 +492,29 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final V myValue;
 
-        ObjectObject(final K key, final V value) {
+        ObjectObject( K key,  V value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = Objects.requireNonNull(value);
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             return myValue.equals(value);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectObject)) {
                 return false;
             }
-            ObjectObject<?, ?> other = (ObjectObject<?, ?>) obj;
+            var other = (ObjectObject<?, ?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -532,30 +532,30 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public V get(final Object key) {
+        @Override public V get( Object key) {
             if (myKey.equals(key)) {
                 return myValue;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
-        public V getValue() {
+        @Override public V getValue() {
             return myValue;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + ((myKey == null) ? 0 : myKey.hashCode());
             return prime * result + ((myValue == null) ? 0 : myValue.hashCode());
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
@@ -564,7 +564,7 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return myKey + "=" + myValue;
         }
 
-        public Collection<V> values() {
+        @Override public Collection<V> values() {
             return Collections.singleton(myValue);
         }
 
@@ -575,40 +575,40 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
         private final K myKey;
         private final short myValue;
 
-        ObjectShort(final K key, final short value) {
+        ObjectShort( K key,  short value) {
             super();
             myKey = Objects.requireNonNull(key);
             myValue = value;
         }
 
-        public int compareTo(final PrimitiveNumber other) {
+        @Override public int compareTo( PrimitiveNumber other) {
             return Short.compare(myValue, other.shortValue());
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myKey.equals(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             if (value instanceof Comparable<?>) {
                 return NumberDefinition.shortValue((Comparable<?>) value) == myValue;
             }
             return false;
         }
 
-        public double doubleValue() {
+        @Override public double doubleValue() {
             return myValue;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof ObjectInt)) {
                 return false;
             }
-            ObjectInt<?> other = (ObjectInt<?>) obj;
+            var other = (ObjectInt<?>) obj;
             if (myKey == null) {
                 if (other.myKey != null) {
                     return false;
@@ -622,38 +622,38 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
             return true;
         }
 
-        public PrimitiveNumber get(final Object key) {
+        @Override public PrimitiveNumber get( Object key) {
             if (myKey.equals(key)) {
                 return this;
             }
             return null;
         }
 
-        public K getKey() {
+        @Override public K getKey() {
             return myKey;
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myKey == null ? 0 : myKey.hashCode());
             return prime * result + myValue;
         }
 
-        public int intValue() {
+        @Override public int intValue() {
             return myValue;
         }
 
-        public Set<K> keySet() {
+        @Override public Set<K> keySet() {
             return Collections.singleton(myKey);
         }
 
-        public long longValue() {
+        @Override public long longValue() {
             return myValue;
         }
 
-        public short shortValue() {
+        @Override public short shortValue() {
             return myValue;
         }
 
@@ -664,123 +664,123 @@ public interface EntryPair<K, V> extends KeyValue<K, V>, Map<K, V>, Map.Entry<K,
 
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final byte value) {
+    static <K> KeyedPrimitive<K> of( K key,  byte value) {
         return new ObjectByte<>(key, value);
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final double value) {
+    static <K> KeyedPrimitive<K> of( K key,  double value) {
         return new ObjectDouble<>(key, value);
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final float value) {
+    static <K> KeyedPrimitive<K> of( K key,  float value) {
         return new ObjectFloat<>(key, value);
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final int value) {
+    static <K> KeyedPrimitive<K> of( K key,  int value) {
         return new ObjectInt<>(key, value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final byte value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  byte value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final double value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  double value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final float value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  float value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final int value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  int value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final long value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  long value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<KeyValue.Dual<K>> of(final K key1, final K key2, final short value) {
+    static <K> KeyedPrimitive<KeyValue.Dual<K>> of( K key1,  K key2,  short value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K, V> EntryPair<KeyValue.Dual<K>, V> of(final K key1, final K key2, final V value) {
+    static <K, V> EntryPair<KeyValue.Dual<K>, V> of( K key1,  K key2,  V value) {
         return EntryPair.of(new KeyValue.Dual<>(key1, key2), value);
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final long value) {
+    static <K> KeyedPrimitive<K> of( K key,  long value) {
         return new ObjectLong<>(key, value);
     }
 
-    static <K> KeyedPrimitive<K> of(final K key, final short value) {
+    static <K> KeyedPrimitive<K> of( K key,  short value) {
         return new ObjectShort<>(key, value);
     }
 
-    static <K, V> EntryPair<K, V> of(final K key, final V value) {
+    static <K, V> EntryPair<K, V> of( K key,  V value) {
         return new ObjectObject<>(key, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final byte value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( byte value) {
         return EntryPair.of(this, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final double value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( double value) {
         return EntryPair.of(this, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final float value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( float value) {
         return EntryPair.of(this, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final int value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( int value) {
         return EntryPair.of(this, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final long value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( long value) {
         return EntryPair.of(this, value);
     }
 
-    default KeyedPrimitive<EntryPair<K, V>> asKeyTo(final short value) {
+    default KeyedPrimitive<EntryPair<K, V>> asKeyTo( short value) {
         return EntryPair.of(this, value);
     }
 
-    default <T> EntryPair<EntryPair<K, V>, T> asKeyTo(final T value) {
+    default <T> EntryPair<EntryPair<K, V>, T> asKeyTo( T value) {
         return EntryPair.of(this, value);
     }
 
-    default <T> EntryPair<T, EntryPair<K, V>> asValueTo(final T key) {
+    default <T> EntryPair<T, EntryPair<K, V>> asValueTo( T key) {
         return EntryPair.of(key, this);
     }
 
-    default void clear() {
+    @Override default void clear() {
         throw new UnsupportedOperationException();
     }
 
-    default Set<Entry<K, V>> entrySet() {
+    @Override default Set<Entry<K, V>> entrySet() {
         return Collections.singleton(this);
     }
 
-    default boolean isEmpty() {
+    @Override default boolean isEmpty() {
         return false;
     }
 
-    default V put(final K key, final V value) {
+    @Override default V put( K key,  V value) {
         throw new UnsupportedOperationException();
     }
 
-    default void putAll(final Map<? extends K, ? extends V> m) {
+    @Override default void putAll( Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
 
-    default V remove(final Object key) {
+    @Override default V remove( Object key) {
         throw new UnsupportedOperationException();
     }
 
-    default V setValue(final V value) {
+    @Override default V setValue( V value) {
         throw new UnsupportedOperationException();
     }
 
-    default int size() {
+    @Override default int size() {
         return 1;
     }
 

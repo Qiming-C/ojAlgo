@@ -27,13 +27,13 @@ public abstract class ApplyCholesky implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void invoke(final double[] data, final int structure, final int firstColumn, final int columnLimit, final double[] multipliers) {
+    public static void invoke( double[] data,  int structure,  int firstColumn,  int columnLimit,  double[] multipliers) {
         for (int j = firstColumn; j < columnLimit; j++) {
             AXPY.invoke(data, j * structure, -multipliers[j], multipliers, 0, j, structure);
         }
     }
 
-    public static <N extends Scalar<N>> void invoke(final N[] data, final int structure, final int firstColumn, final int columnLimit, final N[] multipliers) {
+    public static <N extends Scalar<N>> void invoke( N[] data,  int structure,  int firstColumn,  int columnLimit,  N[] multipliers) {
         for (int j = firstColumn; j < columnLimit; j++) {
             AXPY.invoke(data, j * structure, multipliers[j].conjugate().negate().get(), multipliers, 0, j, structure);
         }

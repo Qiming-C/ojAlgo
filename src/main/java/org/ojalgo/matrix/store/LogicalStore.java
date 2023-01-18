@@ -38,7 +38,7 @@ abstract class LogicalStore<N extends Comparable<N>> extends AbstractStore<N> {
     private final Scalar<N> myOne;
     private final Scalar<N> myZero;
 
-    protected LogicalStore(final MatrixStore<N> base, final int rowsCount, final int columnsCount) {
+    protected LogicalStore( MatrixStore<N> base,  int rowsCount,  int columnsCount) {
 
         super(rowsCount, columnsCount);
 
@@ -48,35 +48,35 @@ abstract class LogicalStore<N extends Comparable<N>> extends AbstractStore<N> {
         myOne = base.physical().scalar().one();
     }
 
-    protected LogicalStore(final MatrixStore<N> base, final long rowsCount, final long columnsCount) {
+    protected LogicalStore( MatrixStore<N> base,  long rowsCount,  long columnsCount) {
         this(base, Math.toIntExact(rowsCount), Math.toIntExact(columnsCount));
     }
 
-    public PhysicalStore.Factory<N, ?> physical() {
+    @Override public PhysicalStore.Factory<N, ?> physical() {
         return myBase.physical();
     }
 
-    protected final Future<?> executeMultiply(final Access1D<N> right, final TransformableRegion<N> target) {
+    protected final Future<?> executeMultiply( Access1D<N> right,  TransformableRegion<N> target) {
         return DaemonPoolExecutor.invoke(() -> myBase.multiply(right, target));
     }
 
-    protected final Future<MatrixStore<N>> executeMultiply(final double scalar) {
+    protected final Future<MatrixStore<N>> executeMultiply( double scalar) {
         return DaemonPoolExecutor.invoke(() -> myBase.multiply(scalar));
     }
 
-    protected final Future<MatrixStore<N>> executeMultiply(final MatrixStore<N> right) {
+    protected final Future<MatrixStore<N>> executeMultiply( MatrixStore<N> right) {
         return DaemonPoolExecutor.invoke(() -> myBase.multiply(right));
     }
 
-    protected final Future<MatrixStore<N>> executeMultiply(final N scalar) {
+    protected final Future<MatrixStore<N>> executeMultiply( N scalar) {
         return DaemonPoolExecutor.invoke(() -> myBase.multiply(scalar));
     }
 
-    protected final Future<N> executeMultiplyBoth(final Access1D<N> leftAndRight) {
+    protected final Future<N> executeMultiplyBoth( Access1D<N> leftAndRight) {
         return DaemonPoolExecutor.invoke(() -> myBase.multiplyBoth(leftAndRight));
     }
 
-    protected final Future<ElementsSupplier<N>> executePremultiply(final Access1D<N> left) {
+    protected final Future<ElementsSupplier<N>> executePremultiply( Access1D<N> left) {
         return DaemonPoolExecutor.invoke(() -> myBase.premultiply(left));
     }
 

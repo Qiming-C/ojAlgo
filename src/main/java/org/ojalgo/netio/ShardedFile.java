@@ -21,13 +21,13 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.LongFunction;
-
 import org.ojalgo.type.format.NumberStyle;
 import org.ojalgo.type.keyvalue.EntryPair;
 import org.ojalgo.type.keyvalue.EntryPair.KeyedPrimitive;
@@ -36,15 +36,15 @@ public final class ShardedFile implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static ShardedFile of(final File template, final int nbShards) {
+    public static ShardedFile of( File template,  int nbShards) {
         return new ShardedFile(template, nbShards);
     }
 
-    public static ShardedFile of(final File templateFolder, final String templateFile, final int nbShards) {
+    public static ShardedFile of( File templateFolder,  String templateFile,  int nbShards) {
         return new ShardedFile(new File(templateFolder, templateFile), nbShards);
     }
 
-    private static File[] splitToShards(final File file, final int numberOfShards) {
+    private static File[] splitToShards( File file,  int numberOfShards) {
 
         File parentDir = file.getParentFile();
         String templateName = file.getName();
@@ -83,7 +83,7 @@ public final class ShardedFile implements Serializable {
 
     private transient File[] myShards = null;
 
-    ShardedFile(final File template, final int nbShards) {
+    ShardedFile( File template,  int nbShards) {
         super();
         single = template;
         numberOfShards = nbShards;
@@ -99,21 +99,22 @@ public final class ShardedFile implements Serializable {
     }
 
     /**
-     * @return A parent directory to all the shards
+     *Returns a parent directory to all the shards.
+ 
      */
     public File directory() {
         return single.getParentFile();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ShardedFile)) {
             return false;
         }
-        ShardedFile other = (ShardedFile) obj;
+        var other = (ShardedFile) obj;
         if (numberOfShards != other.numberOfShards) {
             return false;
         }
@@ -128,14 +129,16 @@ public final class ShardedFile implements Serializable {
     }
 
     /**
-     * @return Same as {@link #shards()} but as a {@link List}.
+     *Returns same as {@link #shards()} but as a {@link List}.
+ 
      */
     public List<File> files() {
         return Arrays.asList(this.shards());
     }
 
     /**
-     * @return Same as {@link #files()} but paired with the shard index.
+     *Returns same as {@link #files()} but paired with the shard index.
+ 
      */
     public List<KeyedPrimitive<File>> filesWithShardIndex() {
 
@@ -152,13 +155,13 @@ public final class ShardedFile implements Serializable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + numberOfShards;
         return prime * result + ((single == null) ? 0 : single.hashCode());
     }
 
-    public File shard(final int index) {
+    public File shard( int index) {
         File[] shards = this.shards();
         return shards[index];
     }

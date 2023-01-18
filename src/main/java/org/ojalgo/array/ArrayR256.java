@@ -67,30 +67,30 @@ public class ArrayR256 extends ReferenceTypeArray<BigDecimal> {
         }
 
         @Override
-        PlainArray<BigDecimal> makeDenseArray(final long size) {
+        PlainArray<BigDecimal> makeDenseArray( long size) {
             return ArrayR256.make((int) size);
         }
 
     };
 
-    public static ArrayR256 make(final int size) {
+    public static ArrayR256 make( int size) {
         return new ArrayR256(size);
     }
 
-    public static ArrayR256 wrap(final BigDecimal... data) {
+    public static ArrayR256 wrap( BigDecimal... data) {
         return new ArrayR256(data);
     }
 
-    protected ArrayR256(final BigDecimal[] data) {
+    protected ArrayR256( BigDecimal[] data) {
         super(FACTORY, data);
     }
 
-    protected ArrayR256(final int size) {
+    protected ArrayR256( int size) {
         super(FACTORY, size);
     }
 
     @Override
-    public void axpy(final double a, final Mutate1D.Modifiable<?> y) {
+    public void axpy( double a,  Mutate1D.Modifiable<?> y) {
         AXPY.invoke(y, a, data);
     }
 
@@ -105,67 +105,67 @@ public class ArrayR256 extends ReferenceTypeArray<BigDecimal> {
     }
 
     @Override
-    protected void add(final int index, final Comparable<?> addend) {
+    protected void add( int index,  Comparable<?> addend) {
         this.fillOne(index, this.get(index).add(this.valueOf(addend)));
     }
 
     @Override
-    protected void add(final int index, final double addend) {
+    protected void add( int index,  double addend) {
         this.fillOne(index, this.get(index).add(this.valueOf(addend)));
     }
 
     @Override
-    protected byte byteValue(final int index) {
+    protected byte byteValue( int index) {
         return this.get(index).byteValue();
     }
 
     @Override
-    protected double doubleValue(final int index) {
+    protected double doubleValue( int index) {
         return data[index].doubleValue();
     }
 
     @Override
-    protected void fillOne(final int index, final Access1D<?> values, final long valueIndex) {
+    protected void fillOne( int index,  Access1D<?> values,  long valueIndex) {
         data[index] = this.valueOf(values.get(valueIndex));
     }
 
     @Override
-    protected float floatValue(final int index) {
+    protected float floatValue( int index) {
         return data[index].floatValue();
     }
 
     @Override
-    protected int indexOfLargest(final int first, final int limit, final int step) {
+    protected int indexOfLargest( int first,  int limit,  int step) {
         return AMAX.invoke(data, first, limit, step);
     }
 
     @Override
-    protected int intValue(final int index) {
+    protected int intValue( int index) {
         return this.get(index).intValue();
     }
 
     @Override
-    protected boolean isAbsolute(final int index) {
+    protected boolean isAbsolute( int index) {
         return BigScalar.isAbsolute(data[index]);
     }
 
     @Override
-    protected boolean isSmall(final int index, final double comparedTo) {
+    protected boolean isSmall( int index,  double comparedTo) {
         return BigScalar.isSmall(comparedTo, data[index]);
     }
 
     @Override
-    protected long longValue(final int index) {
+    protected long longValue( int index) {
         return this.get(index).longValue();
     }
 
     @Override
-    protected short shortValue(final int index) {
+    protected short shortValue( int index) {
         return this.get(index).shortValue();
     }
 
     @Override
-    protected void set(final int index, final long value) {
+    protected void set( int index,  long value) {
         data[index] = new BigDecimal(value);
     }
 

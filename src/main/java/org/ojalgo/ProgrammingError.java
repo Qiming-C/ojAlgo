@@ -57,24 +57,24 @@ public class ProgrammingError extends RuntimeException implements EffectiveThrow
         throw new UnsupportedOperationException();
     }
 
-    public static void throwIfMultiplicationNotPossible(final Access2D<?> left, final Access2D<?> right) {
+    public static void throwIfMultiplicationNotPossible( Access2D<?> left,  Access2D<?> right) {
         if (left.countColumns() != right.countRows()) {
             ProgrammingError.throwForMultiplicationNotPossible();
         }
     }
 
-    public static void throwIfNotEqualColumnDimensions(final Access2D<?> mtrx1, final Access2D<?> mtrx2) {
+    public static void throwIfNotEqualColumnDimensions( Access2D<?> mtrx1,  Access2D<?> mtrx2) {
         if (mtrx1.countColumns() != mtrx2.countColumns()) {
             throw new ProgrammingError("Column dimensions are not equal!");
         }
     }
 
-    public static void throwIfNotEqualDimensions(final Access2D<?> mtrx1, final Access2D<?> mtrx2) {
+    public static void throwIfNotEqualDimensions( Access2D<?> mtrx1,  Access2D<?> mtrx2) {
         ProgrammingError.throwIfNotEqualRowDimensions(mtrx1, mtrx2);
         ProgrammingError.throwIfNotEqualColumnDimensions(mtrx1, mtrx2);
     }
 
-    public static void throwIfNotEqualRowDimensions(final Structure2D mtrx1, final Structure1D mtrx2) {
+    public static void throwIfNotEqualRowDimensions( Structure2D mtrx1,  Structure1D mtrx2) {
         if (mtrx2 instanceof Structure2D) {
             if (mtrx1.countRows() != ((Structure2D) mtrx2).countRows()) {
                 throw new ProgrammingError("Row dimensions are not equal!");
@@ -84,42 +84,42 @@ public class ProgrammingError extends RuntimeException implements EffectiveThrow
         }
     }
 
-    public static void throwIfNotSquare(final Structure2D mtrx) {
+    public static void throwIfNotSquare( Structure2D mtrx) {
         if (mtrx.countRows() != mtrx.countColumns()) {
             throw new ProgrammingError("Matrix is not square!");
         }
     }
 
-    public static void throwIfNull(final Object obj) {
+    public static void throwIfNull( Object obj) {
         Objects.requireNonNull(obj);
     }
 
-    public static void throwIfNull(final Object... objs) {
+    public static void throwIfNull( Object... objs) {
         for (int i = 0; i < objs.length; i++) {
             Objects.requireNonNull(objs[i]);
         }
     }
 
-    public static void throwIfNull(final Object obj1, final Object obj2) {
+    public static void throwIfNull( Object obj1,  Object obj2) {
         Objects.requireNonNull(obj1);
         Objects.requireNonNull(obj2);
     }
 
-    public static void throwIfNull(final Object obj1, final Object obj2, final Object obj3) {
+    public static void throwIfNull( Object obj1,  Object obj2,  Object obj3) {
         Objects.requireNonNull(obj1);
         Objects.requireNonNull(obj2);
         Objects.requireNonNull(obj3);
     }
 
-    public static void throwWithMessage(final String messagePattern, final Object... args) {
+    public static void throwWithMessage( String messagePattern,  Object... args) {
         throw new ProgrammingError(TypeUtils.format(messagePattern, args));
     }
 
-    public ProgrammingError(final String message) {
+    public ProgrammingError( String message) {
         super(message);
     }
 
-    public ProgrammingError(final Throwable cause) {
+    public ProgrammingError( Throwable cause) {
         super(cause);
     }
 
@@ -127,18 +127,18 @@ public class ProgrammingError extends RuntimeException implements EffectiveThrow
         super();
     }
 
-    ProgrammingError(final String message, final Throwable cause) {
+    ProgrammingError( String message,  Throwable cause) {
         super(message, cause);
     }
 
-    ProgrammingError(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+    ProgrammingError( String message,  Throwable cause,  boolean enableSuppression,  boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
     @Override
-    public String toString() {
-        final String retVal = this.getClass().getSimpleName();
-        final String tmpMessage = this.getLocalizedMessage();
+    public String getMessage() {
+         String retVal = this.getClass().getSimpleName();
+         String tmpMessage = this.getLocalizedMessage();
         return tmpMessage != null ? retVal + ": " + tmpMessage : retVal;
     }
 

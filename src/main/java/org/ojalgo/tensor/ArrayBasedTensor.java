@@ -21,6 +21,7 @@
  */
 package org.ojalgo.tensor;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.DenseArray;
 import org.ojalgo.function.FunctionSet;
 import org.ojalgo.function.aggregator.Aggregator;
@@ -36,20 +37,20 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
 
         private final DenseArray.Factory<N> myArrayFactory;
 
-        Factory(final DenseArray.Factory<N> arrayFactory) {
+        Factory( DenseArray.Factory<N> arrayFactory) {
             super();
             myArrayFactory = arrayFactory;
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Factory)) {
                 return false;
             }
-            Factory other = (Factory) obj;
+            var other = (Factory) obj;
             if (myArrayFactory == null) {
                 if (other.myArrayFactory != null) {
                     return false;
@@ -66,8 +67,8 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + (myArrayFactory == null ? 0 : myArrayFactory.hashCode());
             return result;
         }
@@ -87,7 +88,7 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
     private final int myRank;
     private final Scalar.Factory<N> myScalarFactory;
 
-    ArrayBasedTensor(final int rank, final int dimensions, final FunctionSet<N> functionSet, final Scalar.Factory<N> scalarFactory) {
+    ArrayBasedTensor( int rank,  int dimensions,  FunctionSet<N> functionSet,  Scalar.Factory<N> scalarFactory) {
         super();
         myRank = rank;
         myDimensions = dimensions;
@@ -95,19 +96,19 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
         myScalarFactory = scalarFactory;
     }
 
-    public final int dimensions() {
+    @Override public final int dimensions() {
         return myDimensions;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ArrayBasedTensor)) {
             return false;
         }
-        ArrayBasedTensor other = (ArrayBasedTensor) obj;
+        var other = (ArrayBasedTensor) obj;
         if (myDimensions != other.myDimensions) {
             return false;
         }
@@ -133,8 +134,8 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+         int prime = 31;
+        @Var int result = 1;
         result = prime * result + myDimensions;
         result = prime * result + (myFunctionSet == null ? 0 : myFunctionSet.hashCode());
         result = prime * result + myRank;
@@ -142,33 +143,33 @@ abstract class ArrayBasedTensor<N extends Comparable<N>, T extends ArrayBasedTen
         return result;
     }
 
-    public final int rank() {
+    @Override public final int rank() {
         return myRank;
     }
 
-    public T signum() {
+    @Override public T signum() {
         return this.multiply(PrimitiveMath.ONE / this.norm());
     }
 
-    void add(final Mutate1D.Fillable<N> receiver, final Access1D<N> left, final Access1D<N> right) {
+    void add( Mutate1D.Fillable<N> receiver,  Access1D<N> left,  Access1D<N> right) {
         receiver.fillMatching(left, myFunctionSet.add(), right);
     }
 
-    void multiply(final Mutate1D.Fillable<N> receiver, final double left, final Access1D<N> right) {
+    void multiply( Mutate1D.Fillable<N> receiver,  double left,  Access1D<N> right) {
         receiver.fillMatching(myFunctionSet.multiply().first(left), right);
     }
 
-    void multiply(final Mutate1D.Fillable<N> receiver, final N left, final Access1D<N> right) {
+    void multiply( Mutate1D.Fillable<N> receiver,  N left,  Access1D<N> right) {
         receiver.fillMatching(myFunctionSet.multiply().first(left), right);
     }
 
-    void negate(final Mutate1D.Fillable<N> receiver, final Access1D<N> argument) {
+    void negate( Mutate1D.Fillable<N> receiver,  Access1D<N> argument) {
         receiver.fillMatching(myFunctionSet.negate(), argument);
     }
 
     abstract T newSameShape();
 
-    double norm(final Access1D.Aggregatable<N> array) {
+    double norm( Access1D.Aggregatable<N> array) {
 
         double frobeniusNorm = NumberDefinition.doubleValue(array.aggregateAll(Aggregator.NORM2));
 

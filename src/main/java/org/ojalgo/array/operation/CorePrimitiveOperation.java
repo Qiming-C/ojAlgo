@@ -29,8 +29,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
 
     public static int THRESHOLD = 256;
 
-    public static <N extends Comparable<N>> void add(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void add( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -60,8 +60,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void add(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Comparable<?> right) {
+    public static <N extends Comparable<N>> void add( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Comparable<?> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -95,8 +95,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void add(final BasicArray<N> data, final long first, final long limit, final long step, final Comparable<?> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void add( BasicArray<N> data,  long first,  long limit,  long step,  Comparable<?> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -130,116 +130,116 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static void add(final byte[] data, final int first, final int limit, final int step, final byte left, final byte[] right) {
+    public static void add( byte[] data,  int first,  int limit,  int step,  byte left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left + right[i]);
         }
     }
 
-    public static void add(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte right) {
+    public static void add( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] + right);
         }
     }
 
-    public static void add(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte[] right) {
+    public static void add( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] + right[i]);
         }
     }
 
-    public static void add(final double[] data, final int first, final int limit, final int step, final double left, final double[] right) {
+    public static void add( double[] data,  int first,  int limit,  int step,  double left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left + right[i];
         }
     }
 
-    public static void add(final double[] data, final int first, final int limit, final int step, final double[] left, final double right) {
+    public static void add( double[] data,  int first,  int limit,  int step,  double[] left,  double right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right;
         }
     }
 
-    public static void add(final double[] data, final int first, final int limit, final int step, final double[] left, final double[] right) {
+    public static void add( double[] data,  int first,  int limit,  int step,  double[] left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right[i];
         }
     }
 
-    public static void add(final float[] data, final int first, final int limit, final int step, final float left, final float[] right) {
+    public static void add( float[] data,  int first,  int limit,  int step,  float left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left + right[i];
         }
     }
 
-    public static void add(final float[] data, final int first, final int limit, final int step, final float[] left, final float right) {
+    public static void add( float[] data,  int first,  int limit,  int step,  float[] left,  float right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right;
         }
     }
 
-    public static void add(final float[] data, final int first, final int limit, final int step, final float[] left, final float[] right) {
+    public static void add( float[] data,  int first,  int limit,  int step,  float[] left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right[i];
         }
     }
 
-    public static void add(final int[] data, final int first, final int limit, final int step, final int left, final int[] right) {
+    public static void add( int[] data,  int first,  int limit,  int step,  int left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left + right[i];
         }
     }
 
-    public static void add(final int[] data, final int first, final int limit, final int step, final int[] left, final int right) {
+    public static void add( int[] data,  int first,  int limit,  int step,  int[] left,  int right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right;
         }
     }
 
-    public static void add(final int[] data, final int first, final int limit, final int step, final int[] left, final int[] right) {
+    public static void add( int[] data,  int first,  int limit,  int step,  int[] left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right[i];
         }
     }
 
-    public static void add(final long[] data, final int first, final int limit, final int step, final long left, final long[] right) {
+    public static void add( long[] data,  int first,  int limit,  int step,  long left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left + right[i];
         }
     }
 
-    public static void add(final long[] data, final int first, final int limit, final int step, final long[] left, final long right) {
+    public static void add( long[] data,  int first,  int limit,  int step,  long[] left,  long right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right;
         }
     }
 
-    public static void add(final long[] data, final int first, final int limit, final int step, final long[] left, final long[] right) {
+    public static void add( long[] data,  int first,  int limit,  int step,  long[] left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] + right[i];
         }
     }
 
-    public static void add(final short[] data, final int first, final int limit, final int step, final short left, final short[] right) {
+    public static void add( short[] data,  int first,  int limit,  int step,  short left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left + right[i]);
         }
     }
 
-    public static void add(final short[] data, final int first, final int limit, final int step, final short[] left, final short right) {
+    public static void add( short[] data,  int first,  int limit,  int step,  short[] left,  short right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] + right);
         }
     }
 
-    public static void add(final short[] data, final int first, final int limit, final int step, final short[] left, final short[] right) {
+    public static void add( short[] data,  int first,  int limit,  int step,  short[] left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] + right[i]);
         }
     }
 
-    public static <N extends Comparable<N>> void divide(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void divide( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -269,8 +269,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void divide(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Comparable<?> right) {
+    public static <N extends Comparable<N>> void divide( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Comparable<?> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -304,8 +304,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void divide(final BasicArray<N> data, final long first, final long limit, final long step, final Comparable<?> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void divide( BasicArray<N> data,  long first,  long limit,  long step,  Comparable<?> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -339,116 +339,116 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static void divide(final byte[] data, final int first, final int limit, final int step, final byte left, final byte[] right) {
+    public static void divide( byte[] data,  int first,  int limit,  int step,  byte left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left / right[i]);
         }
     }
 
-    public static void divide(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte right) {
+    public static void divide( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] / right);
         }
     }
 
-    public static void divide(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte[] right) {
+    public static void divide( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] / right[i]);
         }
     }
 
-    public static void divide(final double[] data, final int first, final int limit, final int step, final double left, final double[] right) {
+    public static void divide( double[] data,  int first,  int limit,  int step,  double left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left / right[i];
         }
     }
 
-    public static void divide(final double[] data, final int first, final int limit, final int step, final double[] left, final double right) {
+    public static void divide( double[] data,  int first,  int limit,  int step,  double[] left,  double right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right;
         }
     }
 
-    public static void divide(final double[] data, final int first, final int limit, final int step, final double[] left, final double[] right) {
+    public static void divide( double[] data,  int first,  int limit,  int step,  double[] left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right[i];
         }
     }
 
-    public static void divide(final float[] data, final int first, final int limit, final int step, final float left, final float[] right) {
+    public static void divide( float[] data,  int first,  int limit,  int step,  float left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left / right[i];
         }
     }
 
-    public static void divide(final float[] data, final int first, final int limit, final int step, final float[] left, final float right) {
+    public static void divide( float[] data,  int first,  int limit,  int step,  float[] left,  float right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right;
         }
     }
 
-    public static void divide(final float[] data, final int first, final int limit, final int step, final float[] left, final float[] right) {
+    public static void divide( float[] data,  int first,  int limit,  int step,  float[] left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right[i];
         }
     }
 
-    public static void divide(final int[] data, final int first, final int limit, final int step, final int left, final int[] right) {
+    public static void divide( int[] data,  int first,  int limit,  int step,  int left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left / right[i];
         }
     }
 
-    public static void divide(final int[] data, final int first, final int limit, final int step, final int[] left, final int right) {
+    public static void divide( int[] data,  int first,  int limit,  int step,  int[] left,  int right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right;
         }
     }
 
-    public static void divide(final int[] data, final int first, final int limit, final int step, final int[] left, final int[] right) {
+    public static void divide( int[] data,  int first,  int limit,  int step,  int[] left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right[i];
         }
     }
 
-    public static void divide(final long[] data, final int first, final int limit, final int step, final long left, final long[] right) {
+    public static void divide( long[] data,  int first,  int limit,  int step,  long left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left / right[i];
         }
     }
 
-    public static void divide(final long[] data, final int first, final int limit, final int step, final long[] left, final long right) {
+    public static void divide( long[] data,  int first,  int limit,  int step,  long[] left,  long right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right;
         }
     }
 
-    public static void divide(final long[] data, final int first, final int limit, final int step, final long[] left, final long[] right) {
+    public static void divide( long[] data,  int first,  int limit,  int step,  long[] left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] / right[i];
         }
     }
 
-    public static void divide(final short[] data, final int first, final int limit, final int step, final short left, final short[] right) {
+    public static void divide( short[] data,  int first,  int limit,  int step,  short left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left / right[i]);
         }
     }
 
-    public static void divide(final short[] data, final int first, final int limit, final int step, final short[] left, final short right) {
+    public static void divide( short[] data,  int first,  int limit,  int step,  short[] left,  short right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] / right);
         }
     }
 
-    public static void divide(final short[] data, final int first, final int limit, final int step, final short[] left, final short[] right) {
+    public static void divide( short[] data,  int first,  int limit,  int step,  short[] left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] / right[i]);
         }
     }
 
-    public static <N extends Comparable<N>> void multiply(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void multiply( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -478,8 +478,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void multiply(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Comparable<?> right) {
+    public static <N extends Comparable<N>> void multiply( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Comparable<?> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -513,8 +513,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void multiply(final BasicArray<N> data, final long first, final long limit, final long step,
-            final Comparable<?> left, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void multiply( BasicArray<N> data,  long first,  long limit,  long step,
+             Comparable<?> left,  Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -548,116 +548,116 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static void multiply(final byte[] data, final int first, final int limit, final int step, final byte left, final byte[] right) {
+    public static void multiply( byte[] data,  int first,  int limit,  int step,  byte left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left * right[i]);
         }
     }
 
-    public static void multiply(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte right) {
+    public static void multiply( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] * right);
         }
     }
 
-    public static void multiply(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte[] right) {
+    public static void multiply( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] * right[i]);
         }
     }
 
-    public static void multiply(final double[] data, final int first, final int limit, final int step, final double left, final double[] right) {
+    public static void multiply( double[] data,  int first,  int limit,  int step,  double left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left * right[i];
         }
     }
 
-    public static void multiply(final double[] data, final int first, final int limit, final int step, final double[] left, final double right) {
+    public static void multiply( double[] data,  int first,  int limit,  int step,  double[] left,  double right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right;
         }
     }
 
-    public static void multiply(final double[] data, final int first, final int limit, final int step, final double[] left, final double[] right) {
+    public static void multiply( double[] data,  int first,  int limit,  int step,  double[] left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right[i];
         }
     }
 
-    public static void multiply(final float[] data, final int first, final int limit, final int step, final float left, final float[] right) {
+    public static void multiply( float[] data,  int first,  int limit,  int step,  float left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left * right[i];
         }
     }
 
-    public static void multiply(final float[] data, final int first, final int limit, final int step, final float[] left, final float right) {
+    public static void multiply( float[] data,  int first,  int limit,  int step,  float[] left,  float right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right;
         }
     }
 
-    public static void multiply(final float[] data, final int first, final int limit, final int step, final float[] left, final float[] right) {
+    public static void multiply( float[] data,  int first,  int limit,  int step,  float[] left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right[i];
         }
     }
 
-    public static void multiply(final int[] data, final int first, final int limit, final int step, final int left, final int[] right) {
+    public static void multiply( int[] data,  int first,  int limit,  int step,  int left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left * right[i];
         }
     }
 
-    public static void multiply(final int[] data, final int first, final int limit, final int step, final int[] left, final int right) {
+    public static void multiply( int[] data,  int first,  int limit,  int step,  int[] left,  int right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right;
         }
     }
 
-    public static void multiply(final int[] data, final int first, final int limit, final int step, final int[] left, final int[] right) {
+    public static void multiply( int[] data,  int first,  int limit,  int step,  int[] left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right[i];
         }
     }
 
-    public static void multiply(final long[] data, final int first, final int limit, final int step, final long left, final long[] right) {
+    public static void multiply( long[] data,  int first,  int limit,  int step,  long left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left * right[i];
         }
     }
 
-    public static void multiply(final long[] data, final int first, final int limit, final int step, final long[] left, final long right) {
+    public static void multiply( long[] data,  int first,  int limit,  int step,  long[] left,  long right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right;
         }
     }
 
-    public static void multiply(final long[] data, final int first, final int limit, final int step, final long[] left, final long[] right) {
+    public static void multiply( long[] data,  int first,  int limit,  int step,  long[] left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] * right[i];
         }
     }
 
-    public static void multiply(final short[] data, final int first, final int limit, final int step, final short left, final short[] right) {
+    public static void multiply( short[] data,  int first,  int limit,  int step,  short left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left * right[i]);
         }
     }
 
-    public static void multiply(final short[] data, final int first, final int limit, final int step, final short[] left, final short right) {
+    public static void multiply( short[] data,  int first,  int limit,  int step,  short[] left,  short right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] * right);
         }
     }
 
-    public static void multiply(final short[] data, final int first, final int limit, final int step, final short[] left, final short[] right) {
+    public static void multiply( short[] data,  int first,  int limit,  int step,  short[] left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] * right[i]);
         }
     }
 
-    public static <N extends Comparable<N>> void negate(final BasicArray<N> data, final long first, final long limit, final long step,
-            final Access1D<N> values) {
+    public static <N extends Comparable<N>> void negate( BasicArray<N> data,  long first,  long limit,  long step,
+             Access1D<N> values) {
 
         switch (data.getMathType()) {
         case R064:
@@ -687,44 +687,44 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static void negate(final byte[] data, final int first, final int limit, final int step, final byte[] values) {
+    public static void negate( byte[] data,  int first,  int limit,  int step,  byte[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) -values[i];
         }
     }
 
-    public static void negate(final double[] data, final int first, final int limit, final int step, final double[] values) {
+    public static void negate( double[] data,  int first,  int limit,  int step,  double[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = -values[i];
         }
     }
 
-    public static void negate(final float[] data, final int first, final int limit, final int step, final float[] values) {
+    public static void negate( float[] data,  int first,  int limit,  int step,  float[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = -values[i];
         }
     }
 
-    public static void negate(final int[] data, final int first, final int limit, final int step, final int[] values) {
+    public static void negate( int[] data,  int first,  int limit,  int step,  int[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = -values[i];
         }
     }
 
-    public static void negate(final long[] data, final int first, final int limit, final int step, final long[] values) {
+    public static void negate( long[] data,  int first,  int limit,  int step,  long[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = -values[i];
         }
     }
 
-    public static void negate(final short[] data, final int first, final int limit, final int step, final short[] values) {
+    public static void negate( short[] data,  int first,  int limit,  int step,  short[] values) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) -values[i];
         }
     }
 
-    public static <N extends Comparable<N>> void subtract(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Access1D<N> right) {
+    public static <N extends Comparable<N>> void subtract( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -754,8 +754,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void subtract(final BasicArray<N> data, final long first, final long limit, final long step, final Access1D<N> left,
-            final Comparable<?> right) {
+    public static <N extends Comparable<N>> void subtract( BasicArray<N> data,  long first,  long limit,  long step,  Access1D<N> left,
+             Comparable<?> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -789,8 +789,8 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static <N extends Comparable<N>> void subtract(final BasicArray<N> data, final long first, final long limit, final long step,
-            final Comparable<?> left, final Access1D<N> right) {
+    public static <N extends Comparable<N>> void subtract( BasicArray<N> data,  long first,  long limit,  long step,
+             Comparable<?> left,  Access1D<N> right) {
 
         switch (data.getMathType()) {
         case R064:
@@ -824,109 +824,109 @@ public abstract class CorePrimitiveOperation implements ArrayOperation {
         }
     }
 
-    public static void subtract(final byte[] data, final int first, final int limit, final int step, final byte left, final byte[] right) {
+    public static void subtract( byte[] data,  int first,  int limit,  int step,  byte left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left - right[i]);
         }
     }
 
-    public static void subtract(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte right) {
+    public static void subtract( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] - right);
         }
     }
 
-    public static void subtract(final byte[] data, final int first, final int limit, final int step, final byte[] left, final byte[] right) {
+    public static void subtract( byte[] data,  int first,  int limit,  int step,  byte[] left,  byte[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (byte) (left[i] - right[i]);
         }
     }
 
-    public static void subtract(final double[] data, final int first, final int limit, final int step, final double left, final double[] right) {
+    public static void subtract( double[] data,  int first,  int limit,  int step,  double left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left - right[i];
         }
     }
 
-    public static void subtract(final double[] data, final int first, final int limit, final int step, final double[] left, final double right) {
+    public static void subtract( double[] data,  int first,  int limit,  int step,  double[] left,  double right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right;
         }
     }
 
-    public static void subtract(final double[] data, final int first, final int limit, final int step, final double[] left, final double[] right) {
+    public static void subtract( double[] data,  int first,  int limit,  int step,  double[] left,  double[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right[i];
         }
     }
 
-    public static void subtract(final float[] data, final int first, final int limit, final int step, final float left, final float[] right) {
+    public static void subtract( float[] data,  int first,  int limit,  int step,  float left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left - right[i];
         }
     }
 
-    public static void subtract(final float[] data, final int first, final int limit, final int step, final float[] left, final float right) {
+    public static void subtract( float[] data,  int first,  int limit,  int step,  float[] left,  float right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right;
         }
     }
 
-    public static void subtract(final float[] data, final int first, final int limit, final int step, final float[] left, final float[] right) {
+    public static void subtract( float[] data,  int first,  int limit,  int step,  float[] left,  float[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right[i];
         }
     }
 
-    public static void subtract(final int[] data, final int first, final int limit, final int step, final int left, final int[] right) {
+    public static void subtract( int[] data,  int first,  int limit,  int step,  int left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left - right[i];
         }
     }
 
-    public static void subtract(final int[] data, final int first, final int limit, final int step, final int[] left, final int right) {
+    public static void subtract( int[] data,  int first,  int limit,  int step,  int[] left,  int right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right;
         }
     }
 
-    public static void subtract(final int[] data, final int first, final int limit, final int step, final int[] left, final int[] right) {
+    public static void subtract( int[] data,  int first,  int limit,  int step,  int[] left,  int[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right[i];
         }
     }
 
-    public static void subtract(final long[] data, final int first, final int limit, final int step, final long left, final long[] right) {
+    public static void subtract( long[] data,  int first,  int limit,  int step,  long left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left - right[i];
         }
     }
 
-    public static void subtract(final long[] data, final int first, final int limit, final int step, final long[] left, final long right) {
+    public static void subtract( long[] data,  int first,  int limit,  int step,  long[] left,  long right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right;
         }
     }
 
-    public static void subtract(final long[] data, final int first, final int limit, final int step, final long[] left, final long[] right) {
+    public static void subtract( long[] data,  int first,  int limit,  int step,  long[] left,  long[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = left[i] - right[i];
         }
     }
 
-    public static void subtract(final short[] data, final int first, final int limit, final int step, final short left, final short[] right) {
+    public static void subtract( short[] data,  int first,  int limit,  int step,  short left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left - right[i]);
         }
     }
 
-    public static void subtract(final short[] data, final int first, final int limit, final int step, final short[] left, final short right) {
+    public static void subtract( short[] data,  int first,  int limit,  int step,  short[] left,  short right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] - right);
         }
     }
 
-    public static void subtract(final short[] data, final int first, final int limit, final int step, final short[] left, final short[] right) {
+    public static void subtract( short[] data,  int first,  int limit,  int step,  short[] left,  short[] right) {
         for (int i = first; i < limit; i += step) {
             data[i] = (short) (left[i] - right[i]);
         }

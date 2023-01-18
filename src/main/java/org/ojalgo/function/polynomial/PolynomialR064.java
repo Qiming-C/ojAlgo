@@ -29,19 +29,19 @@ import org.ojalgo.structure.Access1D;
 
 public class PolynomialR064 extends AbstractPolynomial<Double> {
 
-    public PolynomialR064(final int degree) {
+    public PolynomialR064( int degree) {
         super(Array1D.R064.make(degree + 1));
     }
 
-    PolynomialR064(final Array1D<Double> coefficients) {
+    PolynomialR064( Array1D<Double> coefficients) {
         super(coefficients);
     }
 
-    public void estimate(final Access1D<?> x, final Access1D<?> y) {
+    @Override public void estimate( Access1D<?> x,  Access1D<?> y) {
         this.estimate(x, y, Primitive64Store.FACTORY, QR.R064);
     }
 
-    public Double integrate(final Double fromPoint, final Double toPoint) {
+    @Override public Double integrate( Double fromPoint,  Double toPoint) {
 
         PolynomialFunction<Double> primitive = this.buildPrimitive();
 
@@ -51,11 +51,11 @@ public class PolynomialR064 extends AbstractPolynomial<Double> {
         return Double.valueOf(toVal - fromVal);
     }
 
-    public Double invoke(final Double arg) {
+    @Override public Double invoke( Double arg) {
         return Double.valueOf(this.invoke(arg.doubleValue()));
     }
 
-    public void set(final Access1D<?> coefficients) {
+    @Override public void set( Access1D<?> coefficients) {
         int limit = Math.min(this.size(), coefficients.size());
         for (int p = 0; p < limit; p++) {
             this.set(p, coefficients.doubleValue(p));
@@ -63,13 +63,13 @@ public class PolynomialR064 extends AbstractPolynomial<Double> {
     }
 
     @Override
-    protected Double getDerivativeFactor(final int power) {
+    protected Double getDerivativeFactor( int power) {
         int nextIndex = power + 1;
         return Double.valueOf(nextIndex * this.doubleValue(nextIndex));
     }
 
     @Override
-    protected Double getPrimitiveFactor(final int power) {
+    protected Double getPrimitiveFactor( int power) {
         if (power <= 0) {
             return Double.valueOf(PrimitiveMath.ZERO);
         }
@@ -77,7 +77,7 @@ public class PolynomialR064 extends AbstractPolynomial<Double> {
     }
 
     @Override
-    protected AbstractPolynomial<Double> makeInstance(final int size) {
+    protected AbstractPolynomial<Double> makeInstance( int size) {
         return new PolynomialR064(Array1D.R064.make(size));
     }
 

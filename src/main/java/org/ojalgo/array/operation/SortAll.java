@@ -21,13 +21,15 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
+
 public abstract class SortAll implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void sort(final long[] primary, final double[] secondary) {
+    public static void sort( long[] primary,  double[] secondary) {
 
-        boolean tmpSwapped;
+        @Var boolean tmpSwapped;
 
         int tmpLimit = Math.min(primary.length, secondary.length) - 1;
 
@@ -47,9 +49,9 @@ public abstract class SortAll implements ArrayOperation {
         } while (tmpSwapped);
     }
 
-    public static void sort(final long[] primary, final Object[] secondary) {
+    public static void sort( long[] primary,  Object[] secondary) {
 
-        boolean tmpSwapped;
+        @Var boolean tmpSwapped;
 
         int tmpLimit = Math.min(primary.length, secondary.length) - 1;
 

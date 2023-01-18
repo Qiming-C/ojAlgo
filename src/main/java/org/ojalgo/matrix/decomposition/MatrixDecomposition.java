@@ -72,10 +72,10 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          *
          * @return The matrix' determinant
          */
-        N getDeterminant();
+        @Override N getDeterminant();
 
-        default Provider2D.Determinant<N> toDeterminantProvider(final ElementsSupplier<N> original,
-                final Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
+        @Override default Provider2D.Determinant<N> toDeterminantProvider( ElementsSupplier<N> original,
+                 Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
             this.decompose(original);
             return this;
         }
@@ -93,7 +93,8 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
     interface EconomySize<N extends Comparable<N>> extends MatrixDecomposition<N> {
 
         /**
-         * @return True if it will generate a full sized decomposition.
+         *Returns true if it will generate a full sized decomposition.
+ 
          */
         boolean isFullSize();
 
@@ -105,14 +106,14 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
             return this.make(TYPICAL);
         }
 
-        default D make(final int numberOfRows, final int numberOfColumns) {
+        default D make( int numberOfRows,  int numberOfColumns) {
             return this.make(new Structure2D() {
 
-                public long countColumns() {
+                @Override public long countColumns() {
                     return numberOfColumns;
                 }
 
-                public long countRows() {
+                @Override public long countRows() {
                     return numberOfRows;
                 }
             });
@@ -137,7 +138,7 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          * @param matrix A matrix to check and then (maybe) decompose
          * @return true if the hermitian check passed and decomposition suceeded; false if not
          */
-        default boolean checkAndDecompose(final MatrixStore<N> matrix) {
+        default boolean checkAndDecompose( MatrixStore<N> matrix) {
 
             this.reset();
 
@@ -193,19 +194,21 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          * faster. Implementing this method, to actually decompose without pivoting, is optional. The default
          * implementation simply calls {@link #decompose(Access2D.Collectable)}.
          */
-        default boolean decomposeWithoutPivoting(final Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
+        default boolean decomposeWithoutPivoting( Access2D.Collectable<N, ? super PhysicalStore<N>> matrix) {
             return this.decompose(matrix);
         }
 
         int[] getReversePivotOrder();
 
         /**
-         * @return The pivot (row and/or columnn) order
+         *Returns the pivot (row and/or columnn) order.
+ 
          */
         int[] getPivotOrder();
 
         /**
-         * @return true if any pivoting was actually done
+         *Returns true if any pivoting was actually done.
+ 
          */
         boolean isPivoted();
 
@@ -233,8 +236,9 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
     interface RankRevealing<N extends Comparable<N>> extends Ordered<N>, Provider2D.Rank {
 
         /**
-         * @param threshold Significance limit
-         * @return The number of elements in the diagonal matrix that are greater than the threshold
+         *Returns the number of elements in the diagonal matrix that are greater than the threshold.
+ @param threshold Significance limit
+         * 
          */
         int countSignificant(double threshold);
 
@@ -244,14 +248,15 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          *
          * @return The effective numerical rank (best estimate)
          */
-        default int getRank() {
+        @Override default int getRank() {
             return this.countSignificant(this.getRankThreshold());
         }
 
         double getRankThreshold();
 
         /**
-         * @return true if the rank is equal to the minimum of the row and column dimensions; false if not
+         *Returns true if the rank is equal to the minimum of the row and column dimensions; false if not.
+ 
          */
         default boolean isFullRank() {
             return this.getRank() == MissingMath.toMinIntExact(this.countRows(), this.countColumns());
@@ -263,10 +268,11 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
             Provider2D.Solution<Optional<MatrixStore<N>>> {
 
         /**
-         * @param matrix A matrix to decompose
-         * @return true if the decomposition suceeded AND {@link #isSolvable()}; false if not
+         *Returns true if the decomposition suceeded AND {@link #isSolvable()}; false if not.
+ @param matrix A matrix to decompose
+         * 
          */
-        default boolean compute(final Collectable<N, ? super PhysicalStore<N>> matrix) {
+        default boolean compute( Collectable<N, ? super PhysicalStore<N>> matrix) {
             return this.decompose(matrix) && this.isSolvable();
         }
 
@@ -323,7 +329,7 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          */
         MatrixStore<N> getSolution(Collectable<N, ? super PhysicalStore<N>> rhs, PhysicalStore<N> preallocated);
 
-        default Optional<MatrixStore<N>> invert() {
+        @Override default Optional<MatrixStore<N>> invert() {
             if (this.isSolvable()) {
                 return Optional.of(this.getInverse());
             }
@@ -341,15 +347,15 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
          */
         boolean isSolvable();
 
-        default Optional<MatrixStore<N>> solve(final Access2D<?> rhs) {
+        @Override default Optional<MatrixStore<N>> solve( Access2D<?> rhs) {
             if (this.isSolvable()) {
                 return Optional.of(this.getSolution(rhs.asCollectable2D()));
             }
             return Optional.empty();
         }
 
-        default Provider2D.Inverse<Optional<MatrixStore<N>>> toInverseProvider(final ElementsSupplier<N> original,
-                final Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
+        @Override default Provider2D.Inverse<Optional<MatrixStore<N>>> toInverseProvider( ElementsSupplier<N> original,
+                 Supplier<MatrixStore<N>> alternativeOriginalSupplier) {
             boolean ok = this.decompose(original);
             if (ok && this.isSolvable()) {
                 return this;
@@ -357,8 +363,8 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
             return Optional::empty;
         }
 
-        default Provider2D.Solution<Optional<MatrixStore<N>>> toSolutionProvider(final ElementsSupplier<N> body,
-                final Supplier<MatrixStore<N>> alternativeBodySupplier, final Access2D<?> rhs) {
+        @Override default Provider2D.Solution<Optional<MatrixStore<N>>> toSolutionProvider( ElementsSupplier<N> body,
+                 Supplier<MatrixStore<N>> alternativeBodySupplier,  Access2D<?> rhs) {
             boolean ok = this.decompose(body);
             if (ok && this.isSolvable()) {
                 return this;
@@ -376,9 +382,10 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
     interface Values<N extends Comparable<N>> extends Ordered<N> {
 
         /**
-         * @param matrix The matrix to decompose
-         * @return The same as {@link Solver#compute(Collectable)} or {@link #decompose(Collectable)} if the
-         *         instance does not implement {@link Solver}.
+         *Returns the same as {@link Solver#compute(Collectable)} or {@link #decompose(Collectable)} if the
+         instance does not implement {@link Solver}.
+ @param matrix The matrix to decompose
+         * 
          */
         boolean computeValuesOnly(Access2D.Collectable<N, ? super PhysicalStore<N>> matrix);
 
@@ -386,25 +393,27 @@ public interface MatrixDecomposition<N extends Comparable<N>> extends Structure2
 
     Structure2D TYPICAL = new Structure2D() {
 
-        public long countColumns() {
+        @Override public long countColumns() {
             return 50L;
         }
 
-        public long countRows() {
+        @Override public long countRows() {
             return 50L;
         }
 
     };
 
     /**
-     * @param matrix A matrix to decompose
-     * @return true if decomposition suceeded; false if not
+     *Returns true if decomposition suceeded; false if not.
+ @param matrix A matrix to decompose
+     * 
      */
     boolean decompose(Access2D.Collectable<N, ? super PhysicalStore<N>> matrix);
 
     /**
-     * @return true if decomposition has been attemped and was successful; false if not.
-     * @see #decompose(Access2D.Collectable)
+     *See {@link #decompose(Access2D.Collectable)}.
+ @return true if decomposition has been attemped and was successful; false if not.
+     * 
      */
     boolean isComputed();
 

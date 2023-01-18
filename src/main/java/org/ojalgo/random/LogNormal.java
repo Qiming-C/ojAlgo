@@ -36,27 +36,27 @@ import org.ojalgo.structure.Access1D;
  */
 public class LogNormal extends AbstractContinuous {
 
-    public static LogNormal estimate(final Access1D<?> rawSamples) {
+    public static LogNormal estimate( Access1D<?> rawSamples) {
 
-        final int size = rawSamples.size();
+         int size = rawSamples.size();
 
-        final Array1D<Double> logSamples = Array1D.R064.make(size);
+         Array1D<Double> logSamples = Array1D.R064.make(size);
 
         for (int i = 0; i < size; i++) {
             logSamples.set(i, LOG.invoke(rawSamples.doubleValue(i)));
         }
 
-        final SampleSet sampleSet = SampleSet.wrap(logSamples);
+         SampleSet sampleSet = SampleSet.wrap(logSamples);
 
         return new LogNormal(sampleSet.getMean(), sampleSet.getStandardDeviation());
     }
 
-    public static LogNormal make(final double mean, final double variance) {
+    public static LogNormal make( double mean,  double variance) {
 
-        final double tmpVar = LOG1P.invoke(variance / (mean * mean));
+         double tmpVar = LOG1P.invoke(variance / (mean * mean));
 
-        final double location = LOG.invoke(mean) - (HALF * tmpVar);
-        final double scale = SQRT.invoke(tmpVar);
+         double location = LOG.invoke(mean) - (HALF * tmpVar);
+         double scale = SQRT.invoke(tmpVar);
 
         return new LogNormal(location, scale);
     }
@@ -71,22 +71,22 @@ public class LogNormal extends AbstractContinuous {
      * The location and scale parameters are the mean and standard deviation of the variable's logarithm (by
      * definition, the variable's logarithm is normally distributed).
      */
-    public LogNormal(final double location, final double scale) {
+    public LogNormal( double location,  double scale) {
 
         super();
 
         myNormal = new Normal(location, scale);
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
         return myNormal.getDensity(LOG.invoke(value)) / value;
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
         return myNormal.getDistribution(LOG.invoke(value));
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return EXP.invoke(myNormal.getExpected() + (myNormal.getVariance() * HALF));
     }
 
@@ -101,7 +101,7 @@ public class LogNormal extends AbstractContinuous {
         return EXP.invoke(myNormal.getStandardDeviation());
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
         this.checkProbabilty(probability);
 
@@ -110,12 +110,12 @@ public class LogNormal extends AbstractContinuous {
 
     @Override
     public double getVariance() {
-        final double tmpVariance = myNormal.getVariance();
+         double tmpVariance = myNormal.getVariance();
         return EXPM1.invoke(tmpVariance) * EXP.invoke((TWO * myNormal.getExpected()) + tmpVariance);
     }
 
     @Override
-    public void setSeed(final long seed) {
+    public void setSeed( long seed) {
         myNormal.setSeed(seed);
     }
 

@@ -29,11 +29,11 @@ public final class FirstOrderApproximation<N extends Comparable<N>> extends Appr
 
     private final AffineFunction<N> myDelegate;
 
-    public FirstOrderApproximation(final MultiaryFunction.TwiceDifferentiable<N> function, final Access1D<N> point) {
+    public FirstOrderApproximation( MultiaryFunction.TwiceDifferentiable<N> function,  Access1D<N> point) {
 
         super(function, point);
 
-        final MatrixStore<N> linear = function.getGradient(point);
+         MatrixStore<N> linear = function.getGradient(point);
 
         N constant = function.invoke(point);
 
@@ -41,19 +41,19 @@ public final class FirstOrderApproximation<N extends Comparable<N>> extends Appr
         myDelegate.setConstant(constant);
     }
 
-    public int arity() {
+    @Override public int arity() {
         return myDelegate.arity();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if ((obj == null) || !(obj instanceof FirstOrderApproximation)) {
             return false;
         }
-        final FirstOrderApproximation<?> other = (FirstOrderApproximation<?>) obj;
+         var other = (FirstOrderApproximation<?>) obj;
         if (myDelegate == null) {
             if (other.myDelegate != null) {
                 return false;
@@ -64,22 +64,22 @@ public final class FirstOrderApproximation<N extends Comparable<N>> extends Appr
         return true;
     }
 
-    public MatrixStore<N> getGradient(final Access1D<N> point) {
+    @Override public MatrixStore<N> getGradient( Access1D<N> point) {
         return myDelegate.getGradient(null);
     }
 
-    public MatrixStore<N> getHessian(final Access1D<N> point) {
+    @Override public MatrixStore<N> getHessian( Access1D<N> point) {
         return myDelegate.getHessian(null);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         return (prime * result) + ((myDelegate == null) ? 0 : myDelegate.hashCode());
     }
 
-    public N invoke(final Access1D<N> arg) {
+    @Override public N invoke( Access1D<N> arg) {
         return myDelegate.invoke(this.shift(arg));
     }
 

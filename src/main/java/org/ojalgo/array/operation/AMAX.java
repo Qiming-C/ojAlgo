@@ -23,8 +23,8 @@ package org.ojalgo.array.operation;
 
 import static org.ojalgo.function.constant.PrimitiveMath.ZERO;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.array.PlainArray;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.scalar.Scalar;
@@ -43,11 +43,11 @@ public abstract class AMAX implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static long invoke(final Access1D<?> data, final long first, final long limit, final long step) {
+    public static long invoke( Access1D<?> data,  long first,  long limit,  long step) {
 
-        long retVal = first;
-        double largest = 0D;
-        double candidate;
+        @Var long retVal = first;
+        @Var double largest = 0D;
+        @Var double candidate;
 
         for (long i = first; i < limit; i += step) {
             candidate = Math.abs(data.doubleValue(i));
@@ -60,11 +60,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final BigDecimal[] data, final int first, final int limit, final int step) {
+    public static int invoke( BigDecimal[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        BigDecimal largest = BigMath.ZERO;
-        BigDecimal candidate;
+        @Var int retVal = first;
+        @Var BigDecimal largest = BigMath.ZERO;
+        @Var BigDecimal candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = data[i].abs();
@@ -77,11 +77,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final byte[] data, final int first, final int limit, final int step) {
+    public static int invoke( byte[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        byte largest = 0;
-        byte candidate;
+        @Var int retVal = first;
+        @Var byte largest = 0;
+        @Var byte candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = (byte) Math.abs(data[i]);
@@ -94,11 +94,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final double[] data, final int first, final int limit, final int step) {
+    public static int invoke( double[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        double largest = 0D;
-        double candidate;
+        @Var int retVal = first;
+        @Var double largest = 0D;
+        @Var double candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = Math.abs(data[i]);
@@ -111,16 +111,16 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static long invoke(final double[][] data) {
+    public static long invoke( double[][] data) {
 
         int nbRows = data.length;
         int nbCols = nbRows != 0 ? data[0].length : 0;
 
-        long retVal = 0;
-        double largest = ZERO;
-        double candidate;
+        @Var long retVal = 0;
+        @Var double largest = ZERO;
+        @Var double candidate;
 
-        double[] tmpRow;
+        @Var double[] tmpRow;
 
         for (int i = 0; i < nbRows; i++) {
             tmpRow = data[i];
@@ -137,28 +137,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final float[] data, final int first, final int limit, final int step) {
+    public static int invoke( float[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        float largest = 0F;
-        float candidate;
-
-        for (int i = first; i < limit; i += step) {
-            candidate = Math.abs(data[i]);
-            if (candidate > largest) {
-                largest = candidate;
-                retVal = i;
-            }
-        }
-
-        return retVal;
-    }
-
-    public static int invoke(final int[] data, final int first, final int limit, final int step) {
-
-        int retVal = first;
-        int largest = 0;
-        int candidate;
+        @Var int retVal = first;
+        @Var float largest = 0F;
+        @Var float candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = Math.abs(data[i]);
@@ -171,11 +154,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final long[] data, final int first, final int limit, final int step) {
+    public static int invoke( int[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        long largest = 0L;
-        long candidate;
+        @Var int retVal = first;
+        @Var int largest = 0;
+        @Var int candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = Math.abs(data[i]);
@@ -188,11 +171,28 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static <N extends Scalar<N>> int invoke(final N[] data, final int first, final int limit, final int step) {
+    public static int invoke( long[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        double largest = 0D;
-        double candidate;
+        @Var int retVal = first;
+        @Var long largest = 0L;
+        @Var long candidate;
+
+        for (int i = first; i < limit; i += step) {
+            candidate = Math.abs(data[i]);
+            if (candidate > largest) {
+                largest = candidate;
+                retVal = i;
+            }
+        }
+
+        return retVal;
+    }
+
+    public static <N extends Scalar<N>> int invoke( N[] data,  int first,  int limit,  int step) {
+
+        @Var int retVal = first;
+        @Var double largest = 0D;
+        @Var double candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = data[i].norm();
@@ -205,11 +205,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final PlainArray<?> data, final int first, final int limit, final int step) {
+    public static int invoke( PlainArray<?> data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        double largest = 0D;
-        double candidate;
+        @Var int retVal = first;
+        @Var double largest = 0D;
+        @Var double candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = Math.abs(data.doubleValue(i));
@@ -222,11 +222,11 @@ public abstract class AMAX implements ArrayOperation {
         return retVal;
     }
 
-    public static int invoke(final short[] data, final int first, final int limit, final int step) {
+    public static int invoke( short[] data,  int first,  int limit,  int step) {
 
-        int retVal = first;
-        short largest = 0;
-        short candidate;
+        @Var int retVal = first;
+        @Var short largest = 0;
+        @Var short candidate;
 
         for (int i = first; i < limit; i += step) {
             candidate = (short) Math.abs(data[i]);

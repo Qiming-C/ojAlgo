@@ -21,9 +21,9 @@
  */
 package org.ojalgo.matrix;
 
+import com.google.errorprone.annotations.Var;
 import java.util.List;
 import java.util.Optional;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.algebra.NormedVectorSpace;
 import org.ojalgo.function.BinaryFunction;
@@ -76,16 +76,17 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      *
      * @return The matrix' Frobenius norm
      */
-    public static <M extends BasicMatrix<?, M>> double calculateFrobeniusNorm(final M matrix) {
+    public static <M extends BasicMatrix<?, M>> double calculateFrobeniusNorm( M matrix) {
         return matrix.norm();
     }
 
     /**
-     * @return The inf-norm or maximum row sum
+     *Returns the inf-norm or maximum row sum.
+ 
      */
-    public static <M extends BasicMatrix<?, M>> double calculateInfinityNorm(final M matrix) {
+    public static <M extends BasicMatrix<?, M>> double calculateInfinityNorm( M matrix) {
 
-        double retVal = PrimitiveMath.ZERO;
+        @Var double retVal = PrimitiveMath.ZERO;
 
         long tmpLimit = matrix.countRows();
         for (long i = 0L; i < tmpLimit; i++) {
@@ -96,11 +97,12 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
     }
 
     /**
-     * @return The 1-norm or maximum column sum
+     *Returns the 1-norm or maximum column sum.
+ 
      */
-    public static <M extends BasicMatrix<?, M>> double calculateOneNorm(final M matrix) {
+    public static <M extends BasicMatrix<?, M>> double calculateOneNorm( M matrix) {
 
-        double retVal = PrimitiveMath.ZERO;
+        @Var double retVal = PrimitiveMath.ZERO;
 
         long tmpLimit = matrix.countColumns();
         for (long j = 0L; j < tmpLimit; j++) {
@@ -119,7 +121,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
     private final ElementsSupplier<N> mySupplier;
     private transient Boolean mySymmetric = null;
 
-    BasicMatrix(final PhysicalStore.Factory<N, ?> factory, final ElementsSupplier<N> supplier) {
+    BasicMatrix( PhysicalStore.Factory<N, ?> factory,  ElementsSupplier<N> supplier) {
 
         super();
 
@@ -134,80 +136,80 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         }
     }
 
-    public M above(final Access2D<N>... above) {
+    @Override public M above( Access2D<N>... above) {
         return this.newInstance(this.store().above(above));
     }
 
-    public M above(final Access2D<N> above) {
+    @Override public M above( Access2D<N> above) {
         return this.newInstance(this.store().above(above));
     }
 
-    public M above(final long numberOfRows) {
+    @Override public M above( long numberOfRows) {
         return this.newInstance(this.store().above(numberOfRows));
     }
 
-    public M add(final double scalarAddend) {
+    @Override public M add( double scalarAddend) {
         return this.newInstance(this.store().add(scalarAddend));
     }
 
-    public M add(final M addend) {
+    @Override public M add( M addend) {
         ProgrammingError.throwIfNotEqualDimensions(this.store(), addend);
         return this.newInstance(this.store().add(addend.store()));
     }
 
-    public M add(final N scalarAddend) {
+    @Override public M add( N scalarAddend) {
         return this.newInstance(this.store().add(scalarAddend));
     }
 
-    public N aggregateColumn(final long row, final long col, final Aggregator aggregator) {
+    @Override public N aggregateColumn( long row,  long col,  Aggregator aggregator) {
         return this.store().aggregateColumn(row, col, aggregator);
     }
 
-    public N aggregateDiagonal(final long row, final long col, final Aggregator aggregator) {
+    @Override public N aggregateDiagonal( long row,  long col,  Aggregator aggregator) {
         return this.store().aggregateDiagonal(row, col, aggregator);
     }
 
-    public N aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    @Override public N aggregateRange( long first,  long limit,  Aggregator aggregator) {
         return this.store().aggregateRange(first, limit, aggregator);
     }
 
-    public N aggregateRow(final long row, final long col, final Aggregator aggregator) {
+    @Override public N aggregateRow( long row,  long col,  Aggregator aggregator) {
         return this.store().aggregateRow(row, col, aggregator);
     }
 
-    public M below(final Access2D<N>... below) {
+    @Override public M below( Access2D<N>... below) {
         return this.newInstance(this.store().below(below));
     }
 
-    public M below(final Access2D<N> below) {
+    @Override public M below( Access2D<N> below) {
         return this.newInstance(this.store().below(below));
     }
 
-    public M below(final long numberOfRows) {
+    @Override public M below( long numberOfRows) {
         return this.newInstance(this.store().below(numberOfRows));
     }
 
-    public M bidiagonal(final boolean upper) {
+    @Override public M bidiagonal( boolean upper) {
         return this.newInstance(this.store().bidiagonal(upper));
     }
 
-    public M column(final int column) {
+    @Override public M column( int column) {
         return this.newInstance(this.store().column(column));
     }
 
-    public M column(final long column) {
+    @Override public M column( long column) {
         return this.newInstance(this.store().column(column));
     }
 
-    public M columns(final int... columns) {
+    @Override public M columns( int... columns) {
         return this.newInstance(this.store().columns(columns));
     }
 
-    public M columns(final long... columns) {
+    @Override public M columns( long... columns) {
         return this.newInstance(this.store().columns(columns));
     }
 
-    public M conjugate() {
+    @Override public M conjugate() {
         return this.newInstance(this.store().conjugate());
     }
 
@@ -220,43 +222,43 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      */
     public abstract Mutator2D<N, M, PhysicalStore<N>> copy();
 
-    public long count() {
+    @Override public long count() {
         return mySupplier.count();
     }
 
-    public long countColumns() {
+    @Override public long countColumns() {
         return mySupplier.countColumns();
     }
 
-    public long countRows() {
+    @Override public long countRows() {
         return mySupplier.countRows();
     }
 
-    public M diagonal() {
+    @Override public M diagonal() {
         return this.newInstance(this.store().diagonal());
     }
 
-    public M diagonally(final Access2D<N>... diagonally) {
+    @Override public M diagonally( Access2D<N>... diagonally) {
         return this.newInstance(this.store().diagonally(diagonally));
     }
 
-    public M divide(final double scalarDivisor) {
+    @Override public M divide( double scalarDivisor) {
         return this.newInstance(this.store().divide(scalarDivisor));
     }
 
-    public M divide(final N scalarDivisor) {
+    @Override public M divide( N scalarDivisor) {
         return this.newInstance(this.store().divide(scalarDivisor));
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return this.store().doubleValue(index);
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return this.store().doubleValue(row, col);
     }
 
-    public M enforce(final NumberContext context) {
+    @Override public M enforce( NumberContext context) {
 
         PhysicalStore<N> tmpCopy = this.store().copy();
 
@@ -270,7 +272,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      * precision (12 significant digits).
      */
     @Override
-    public boolean equals(final Object other) {
+    public boolean equals( Object other) {
         if (other instanceof Access2D<?>) {
             return Access2D.equals(this.store(), (Access2D<?>) other, EQUALS);
         }
@@ -307,11 +309,11 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         return (M) this;
     }
 
-    public N get(final long index) {
+    @Override public N get( long index) {
         return this.store().get(index);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return this.store().get(row, col);
     }
 
@@ -320,18 +322,18 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      *
      * @return ratio of largest to smallest singular value.
      */
-    public double getCondition() {
+    @Override public double getCondition() {
         return this.getConditionProvider().getCondition();
     }
 
     /**
      * @return The matrix' determinant.
      */
-    public N getDeterminant() {
+    @Override public N getDeterminant() {
         return this.getDeterminantProvider().getDeterminant();
     }
 
-    public List<Eigenpair> getEigenpairs() {
+    @Override public List<Eigenpair> getEigenpairs() {
 
         if (!this.isSquare()) {
             throw new ProgrammingError("Only defined for square matrices!");
@@ -347,7 +349,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      * @return The matrix' rank.
      * @see org.ojalgo.matrix.decomposition.MatrixDecomposition.RankRevealing
      */
-    public int getRank() {
+    @Override public int getRank() {
         return this.getRankProvider().getRank();
     }
 
@@ -356,16 +358,16 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      *
      * @return The matrix' trace.
      */
-    public N getTrace() {
+    @Override public N getTrace() {
         return this.aggregateDiagonal(Aggregator.SUM);
     }
 
     @Override
     public int hashCode() {
         if (myHashCode == 0) {
-            final Access1D<?> access = this.store();
+             Access1D<?> access = this.store();
             int limit = access.size();
-            int retVal = limit + 31;
+            @Var int retVal = limit + 31;
             for (int ij = 0; ij < limit; ij++) {
                 retVal *= access.intValue(ij);
             }
@@ -374,15 +376,15 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         return myHashCode;
     }
 
-    public M hermitian(final boolean upper) {
+    @Override public M hermitian( boolean upper) {
         return this.newInstance(this.store().hermitian(upper));
     }
 
-    public M hessenberg(final boolean upper) {
+    @Override public M hessenberg( boolean upper) {
         return this.newInstance(this.store().hessenberg(upper));
     }
 
-    public long indexOfLargest() {
+    @Override public long indexOfLargest() {
         return this.store().indexOfLargest();
     }
 
@@ -411,41 +413,41 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      *
      * @return The "best possible" inverse....
      */
-    public M invert() {
+    @Override public M invert() {
         return this.newInstance(this.getInverseProvider(false).invert().orElseGet(() -> this.getInverseProvider(true).invert().get()));
     }
 
-    public boolean isHermitian() {
+    @Override public boolean isHermitian() {
         if (myHermitian == null) {
             myHermitian = Boolean.valueOf(this.isSquare() && this.store().equals(this.store().conjugate(), EQUALS));
         }
         return myHermitian.booleanValue();
     }
 
-    public boolean isSmall(final double comparedTo) {
+    @Override public boolean isSmall( double comparedTo) {
         return this.store().isSmall(comparedTo);
     }
 
-    public boolean isSymmetric() {
+    @Override public boolean isSymmetric() {
         if (mySymmetric == null) {
             mySymmetric = Boolean.valueOf(this.isSquare() && this.store().equals(this.store().transpose(), EQUALS));
         }
         return mySymmetric.booleanValue();
     }
 
-    public M left(final Access2D<N>... left) {
+    @Override public M left( Access2D<N>... left) {
         return this.newInstance(this.store().left(left));
     }
 
-    public M left(final Access2D<N> left) {
+    @Override public M left( Access2D<N> left) {
         return this.newInstance(this.store().left(left));
     }
 
-    public M left(final long numberOfColumns) {
+    @Override public M left( long numberOfColumns) {
         return this.newInstance(this.store().left(numberOfColumns));
     }
 
-    public M limits(final long rowLimit, final long columnLimit) {
+    @Override public M limits( long rowLimit,  long columnLimit) {
         return this.newInstance(this.store().limits(rowLimit, columnLimit));
     }
 
@@ -462,22 +464,22 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         return (M) this;
     }
 
-    public M multiply(final double scalarMultiplicand) {
+    @Override public M multiply( double scalarMultiplicand) {
         return this.newInstance(this.store().multiply(scalarMultiplicand));
     }
 
-    public M multiply(final M multiplicand) {
+    @Override public M multiply( M multiplicand) {
 
         ProgrammingError.throwIfMultiplicationNotPossible(this.store(), multiplicand);
 
         return this.newInstance(this.store().multiply(multiplicand.store()));
     }
 
-    public M multiply(final N scalarMultiplicand) {
+    @Override public M multiply( N scalarMultiplicand) {
         return this.newInstance(this.store().multiply(scalarMultiplicand));
     }
 
-    public M negate() {
+    @Override public M negate() {
         return this.newInstance(this.store().negate());
     }
 
@@ -488,91 +490,91 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      *
      * @return The matrix' Frobenius norm
      */
-    public double norm() {
+    @Override public double norm() {
         return this.store().norm();
     }
 
-    public M offsets(final long rowOffset, final long columnOffset) {
+    @Override public M offsets( long rowOffset,  long columnOffset) {
         return this.newInstance(this.store().offsets(rowOffset, columnOffset));
     }
 
-    public M onAll(final UnaryFunction<N> operator) {
+    @Override public M onAll( UnaryFunction<N> operator) {
         return this.newInstance(this.supplier().onAll(operator));
     }
 
-    public M onAny(final Transformation2D<N> operator) {
+    @Override public M onAny( Transformation2D<N> operator) {
         return this.newInstance(this.supplier().onAny(operator));
     }
 
-    public M onColumns(final BinaryFunction<N> operator, final Access1D<N> right) {
+    @Override public M onColumns( BinaryFunction<N> operator,  Access1D<N> right) {
         return this.newInstance(this.supplier().onColumns(operator, right));
     }
 
-    public M onMatching(final Access2D<N> left, final BinaryFunction<N> operator) {
+    @Override public M onMatching( Access2D<N> left,  BinaryFunction<N> operator) {
         return this.newInstance(this.supplier().onMatching(left, operator));
     }
 
-    public M onMatching(final BinaryFunction<N> operator, final Access2D<N> right) {
+    @Override public M onMatching( BinaryFunction<N> operator,  Access2D<N> right) {
         return this.newInstance(this.supplier().onMatching(operator, right));
     }
 
-    public M onRows(final BinaryFunction<N> operator, final Access1D<N> right) {
+    @Override public M onRows( BinaryFunction<N> operator,  Access1D<N> right) {
         return this.newInstance(this.supplier().onRows(operator, right));
     }
 
-    public M power(final int power) {
+    @Override public M power( int power) {
         return this.newInstance(this.store().power(power));
     }
 
-    public M reduceColumns(final Aggregator aggregator) {
+    @Override public M reduceColumns( Aggregator aggregator) {
         return this.newInstance(this.store().reduceColumns(aggregator).collect(this.store().physical()));
     }
 
-    public M reduceRows(final Aggregator aggregator) {
+    @Override public M reduceRows( Aggregator aggregator) {
         return this.newInstance(this.store().reduceRows(aggregator).collect(this.store().physical()));
     }
 
-    public M repeat(final int rowsRepetitions, final int columnsRepetitions) {
+    @Override public M repeat( int rowsRepetitions,  int columnsRepetitions) {
         return this.newInstance(this.store().repeat(rowsRepetitions, columnsRepetitions));
     }
 
-    public M right(final Access2D<N>... right) {
+    @Override public M right( Access2D<N>... right) {
         return this.newInstance(this.store().right(right));
     }
 
-    public M right(final Access2D<N> right) {
+    @Override public M right( Access2D<N> right) {
         return this.newInstance(this.store().right(right));
     }
 
-    public M right(final long numberOfColumns) {
+    @Override public M right( long numberOfColumns) {
         return this.newInstance(this.store().right(numberOfColumns));
     }
 
-    public M row(final int row) {
+    @Override public M row( int row) {
         return this.newInstance(this.store().row(row));
     }
 
-    public M row(final long row) {
+    @Override public M row( long row) {
         return this.newInstance(this.store().row(row));
     }
 
-    public M rows(final int... rows) {
+    @Override public M rows( int... rows) {
         return this.newInstance(this.store().rows(rows));
     }
 
-    public M rows(final long... rows) {
+    @Override public M rows( long... rows) {
         return this.newInstance(this.store().rows(rows));
     }
 
-    public M select(final int[] rows, final int[] columns) {
+    @Override public M select( int[] rows,  int[] columns) {
         return this.newInstance(this.store().select(rows, columns));
     }
 
-    public M select(final long[] rows, final long[] columns) {
+    @Override public M select( long[] rows,  long[] columns) {
         return this.newInstance(this.store().select(rows, columns));
     }
 
-    public M signum() {
+    @Override public M signum() {
         return this.newInstance(this.store().signum());
     }
 
@@ -592,32 +594,32 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      * @param rhs The right hand side of the equation.
      * @return The solution, [X].
      */
-    public M solve(final Access2D<?> rhs) {
+    @Override public M solve( Access2D<?> rhs) {
         return this.newInstance(this.getSolutionProvider(false, rhs).solve(rhs).orElseGet(() -> this.getSolutionProvider(true, rhs).solve(rhs).get()));
     }
 
-    public M subtract(final double scalarSubtrahend) {
+    @Override public M subtract( double scalarSubtrahend) {
         return this.newInstance(this.store().subtract(scalarSubtrahend));
     }
 
-    public M subtract(final M subtrahend) {
+    @Override public M subtract( M subtrahend) {
         ProgrammingError.throwIfNotEqualDimensions(this.store(), subtrahend);
         return this.newInstance(this.store().subtract(subtrahend.store()));
     }
 
-    public M subtract(final N scalarSubtrahend) {
+    @Override public M subtract( N scalarSubtrahend) {
         return this.newInstance(this.store().subtract(scalarSubtrahend));
     }
 
-    public M superimpose(final long row, final long col, final Access2D<N> matrix) {
+    @Override public M superimpose( long row,  long col,  Access2D<N> matrix) {
         return this.newInstance(this.store().superimpose(row, col, matrix));
     }
 
-    public void supplyTo(final TransformableRegion<N> receiver) {
+    @Override public void supplyTo( TransformableRegion<N> receiver) {
         this.supplier().supplyTo(receiver);
     }
 
-    public M symmetric(final boolean upper) {
+    @Override public M symmetric( boolean upper) {
         return this.newInstance(this.store().symmetric(upper));
     }
 
@@ -630,7 +632,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      * @deprecated v50 Use {@link #get(long, long)} instead
      */
     @Deprecated
-    public Scalar<N> toScalar(final long row, final long col) {
+    public Scalar<N> toScalar( long row,  long col) {
         return this.store().toScalar(row, col);
     }
 
@@ -645,15 +647,15 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
      * @return A matrix that is the transpose of this matrix.
      * @see org.ojalgo.matrix.BasicMatrix#conjugate()
      */
-    public M transpose() {
+    @Override public M transpose() {
         return this.newInstance(this.supplier().transpose());
     }
 
-    public M triangular(final boolean upper, final boolean assumeOne) {
+    @Override public M triangular( boolean upper,  boolean assumeOne) {
         return this.newInstance(this.store().triangular(upper, assumeOne));
     }
 
-    public M tridiagonal() {
+    @Override public M tridiagonal() {
         return this.newInstance(this.store().tridiagonal());
     }
 
@@ -698,7 +700,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         return provider;
     }
 
-    private Provider2D.Inverse<Optional<MatrixStore<N>>> getInverseProvider(final boolean safe) {
+    private Provider2D.Inverse<Optional<MatrixStore<N>>> getInverseProvider( boolean safe) {
 
         if (safe ? myDecomposition instanceof SingularValue<?> : myDecomposition instanceof Provider2D.Inverse) {
             return (Provider2D.Inverse<Optional<MatrixStore<N>>>) myDecomposition;
@@ -731,7 +733,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
         return (Provider2D.Rank) myDecomposition;
     }
 
-    private Provider2D.Solution<Optional<MatrixStore<N>>> getSolutionProvider(final boolean safe, final Access2D<?> rhs) {
+    private Provider2D.Solution<Optional<MatrixStore<N>>> getSolutionProvider( boolean safe,  Access2D<?> rhs) {
 
         if (safe ? myDecomposition instanceof SingularValue<?> : myDecomposition instanceof Provider2D.Inverse) {
             return (Provider2D.Solution<Optional<MatrixStore<N>>>) myDecomposition;
@@ -758,7 +760,7 @@ public abstract class BasicMatrix<N extends Comparable<N>, M extends BasicMatrix
 
     abstract LDL<N> newLDL(Structure2D typical);
 
-    final LDU<N> newLDU(final Structure2D typical) {
+    final LDU<N> newLDU( Structure2D typical) {
 
         if (mySPD != null && mySPD.booleanValue()) {
             return this.newCholesky(typical);

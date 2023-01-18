@@ -31,15 +31,15 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
     static abstract class RationalAggregatorFunction implements AggregatorFunction<RationalNumber> {
 
-        public final double doubleValue() {
+        @Override public final double doubleValue() {
             return this.get().doubleValue();
         }
 
-        public final void invoke(final double anArg) {
+        @Override public final void invoke( double anArg) {
             this.invoke(RationalNumber.valueOf(anArg));
         }
 
-        public final void invoke(final float anArg) {
+        @Override public final void invoke( float anArg) {
             this.invoke(RationalNumber.valueOf(anArg));
         }
 
@@ -59,20 +59,20 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber.divide(myCount);
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myCount++;
                     myNumber = myNumber.add(anArg);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myCount = 0;
                     myNumber = RationalNumber.ZERO;
                     return this;
@@ -90,21 +90,21 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private int myCount = 0;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return RationalNumber.valueOf(myCount);
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return myCount;
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     if (!PrimitiveScalar.isSmall(PrimitiveMath.ONE, PrimitiveMath.ABS.invoke(anArg.doubleValue()))) {
                         myCount++;
                     }
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myCount = 0;
                     return this;
                 }
@@ -121,19 +121,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = RationalMath.MAX.invoke(myNumber, RationalMath.ABS.invoke(anArg));
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ZERO;
                     return this;
                 }
@@ -150,19 +150,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.NEGATIVE_INFINITY;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = RationalMath.MAX.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.NEGATIVE_INFINITY;
                     return this;
                 }
@@ -179,22 +179,22 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.POSITIVE_INFINITY;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     if (RationalNumber.isInfinite(myNumber)) {
                         return RationalNumber.ZERO;
                     }
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = RationalMath.MIN.invoke(myNumber, anArg);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.POSITIVE_INFINITY;
                     return this;
                 }
@@ -211,19 +211,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = myNumber.add(PrimitiveMath.ABS.invoke(anArg.doubleValue()));
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ZERO;
                     return this;
                 }
@@ -240,20 +240,20 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return RationalNumber.valueOf(PrimitiveMath.SQRT.invoke(PrimitiveMath.ABS.invoke(myNumber.doubleValue())));
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
-                    final double tmpMod = PrimitiveMath.ABS.invoke(anArg.doubleValue());
+                @Override public void invoke( RationalNumber anArg) {
+                     double tmpMod = PrimitiveMath.ABS.invoke(anArg.doubleValue());
                     myNumber = myNumber.add(tmpMod * tmpMod);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ZERO;
                     return this;
                 }
@@ -270,19 +270,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ONE;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = myNumber.multiply(anArg);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ONE;
                     return this;
                 }
@@ -299,19 +299,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ONE;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = myNumber.multiply(anArg.multiply(anArg));
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ONE;
                     return this;
                 }
@@ -330,24 +330,24 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.POSITIVE_INFINITY;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     if (RationalNumber.isInfinite(myNumber)) {
                         return RationalNumber.ZERO;
                     }
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     if (!RationalNumber.isSmall(PrimitiveMath.ONE, anArg)) {
                         myNumber = RationalMath.MIN.invoke(myNumber, RationalMath.ABS.invoke(anArg));
                     }
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.POSITIVE_INFINITY;
                     return this;
                 }
@@ -364,19 +364,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = myNumber.add(anArg);
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ZERO;
                     return this;
                 }
@@ -393,19 +393,19 @@ public final class RationalAggregator extends AggregatorSet<RationalNumber> {
 
                 private RationalNumber myNumber = RationalNumber.ZERO;
 
-                public RationalNumber get() {
+                @Override public RationalNumber get() {
                     return myNumber;
                 }
 
-                public int intValue() {
+                @Override public int intValue() {
                     return this.get().intValue();
                 }
 
-                public void invoke(final RationalNumber anArg) {
+                @Override public void invoke( RationalNumber anArg) {
                     myNumber = myNumber.add(anArg.multiply(anArg));
                 }
 
-                public AggregatorFunction<RationalNumber> reset() {
+                @Override public AggregatorFunction<RationalNumber> reset() {
                     myNumber = RationalNumber.ZERO;
                     return this;
                 }

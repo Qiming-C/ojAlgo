@@ -23,8 +23,8 @@ package org.ojalgo.random.scedasticity;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.matrix.decomposition.QR;
 import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.structure.Access1D;
@@ -40,7 +40,7 @@ abstract class AbstractScedasticity implements ScedasticityModel {
      * @param weights Array of weights (to be set)
      * @param total The total the weights should sum up to
      */
-    static void average(final double[] weights, final double total) {
+    static void average( double[] weights,  double total) {
         Arrays.fill(weights, total / weights.length);
     }
 
@@ -50,10 +50,10 @@ abstract class AbstractScedasticity implements ScedasticityModel {
      * @param weights Array of weights (to be set)
      * @param total The total the weights should sum up to
      */
-    static void decreasing(final double[] weights, final double total) {
+    static void decreasing( double[] weights,  double total) {
 
         int length = weights.length;
-        double weight = total;
+        @Var double weight = total;
 
         if (length == 1) {
             weights[0] = weight;
@@ -66,7 +66,7 @@ abstract class AbstractScedasticity implements ScedasticityModel {
         }
     }
 
-    static Access1D<?> parameters(final Access1D<?> series, final double mean, final int q) {
+    static Access1D<?> parameters( Access1D<?> series,  double mean,  int q) {
 
         int nbVars = q;
         int nbEquations = series.size();

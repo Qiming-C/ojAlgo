@@ -30,7 +30,7 @@ import static org.ojalgo.function.constant.PrimitiveMath.*;
  */
 public class Cauchy extends AbstractContinuous {
 
-    public static Cauchy of(final double location, final double scale) {
+    public static Cauchy of( double location,  double scale) {
         return new Cauchy(location, scale);
     }
 
@@ -45,25 +45,25 @@ public class Cauchy extends AbstractContinuous {
         this(ZERO, ONE);
     }
 
-    public Cauchy(final double location, final double scale) {
+    public Cauchy( double location,  double scale) {
         super();
         myLocation = location;
         myScale = scale;
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
         return ONE / (PI * myScale * (ONE + Math.pow((value - myLocation) / myScale, TWO)));
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
         return HALF + Math.atan((value - myLocation) / myScale) / PI;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return NaN;
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
         return myLocation + myScale * Math.tan(PI * (probability - HALF));
     }
 

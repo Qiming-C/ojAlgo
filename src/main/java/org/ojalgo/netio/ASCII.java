@@ -21,6 +21,7 @@
  */
 package org.ojalgo.netio;
 
+import com.google.errorprone.annotations.Var;
 import java.util.function.IntPredicate;
 
 /**
@@ -241,15 +242,16 @@ public abstract class ASCII {
     public static final char UPPERCASE_Z = 'Z';
 
     /**
-     * @param length The length of the random string
+     *Returns a String of the specified length containing ASCII characters that pass the predicate test.
+ @param length The length of the random string
      * @param predicate Need to pass this test
-     * @return A String of the specified length containing ASCII characters that pass the predicate test.
+     * 
      */
-    public static String generateRandom(final int length, final IntPredicate predicate) {
-        StringBuilder builder = new StringBuilder();
-        int soFar = 0;
+    public static String generateRandom( int length,  IntPredicate predicate) {
+        var builder = new StringBuilder();
+        @Var int soFar = 0;
         while (soFar < length) {
-            int maybe = (int) (Double.doubleToRawLongBits(Math.random()) % 128L);
+            var maybe = (int) (Double.doubleToRawLongBits(Math.random()) % 128L);
             if (predicate.test(maybe)) {
                 builder.append((char) maybe);
                 soFar++;
@@ -258,59 +260,62 @@ public abstract class ASCII {
         return builder.toString();
     }
 
-    public static boolean isAlphabetic(final int aChar) {
+    public static boolean isAlphabetic( int aChar) {
         return ASCII.isLowercase(aChar) || ASCII.isUppercase(aChar);
     }
 
-    public static boolean isAlphanumeric(final int aChar) {
+    public static boolean isAlphanumeric( int aChar) {
         return ASCII.isAlphabetic(aChar) || ASCII.isDigit(aChar);
     }
 
     /**
-     * @return True if aChar is an ASCII character.
+     *Returns true if aChar is an ASCII character.
+ 
      */
-    public static boolean isAscii(final int aChar) {
+    public static boolean isAscii( int aChar) {
         return (NULL <= aChar) && (aChar <= DEL);
     }
 
-    public static boolean isControl(final int aChar) {
+    public static boolean isControl( int aChar) {
         return ((NULL <= aChar) && (aChar < SP)) || (aChar == DEL);
     }
 
-    public static boolean isDigit(final int aChar) {
+    public static boolean isDigit( int aChar) {
         return (DECIMAL_ZERO <= aChar) && (aChar <= DECIMAL_NINE);
     }
 
-    public static boolean isGraph(final int aChar) {
+    public static boolean isGraph( int aChar) {
         return (SP < aChar) && (aChar < DEL);
     }
 
     /**
-     * @return true if aChar is an lowercase character
+     *Returns true if aChar is an lowercase character.
+ 
      */
-    public static boolean isLowercase(final int aChar) {
+    public static boolean isLowercase( int aChar) {
         return (LOWERCASE_A <= aChar) && (aChar <= LOWERCASE_Z);
     }
 
-    public static boolean isPrintable(final int aChar) {
+    public static boolean isPrintable( int aChar) {
         return (SP <= aChar) && (aChar < DEL);
     }
 
     /**
      * Not sure this is correct
      */
-    public static boolean isPunctuation(final int aChar) {
+    public static boolean isPunctuation( int aChar) {
         return ASCII.isGraph(aChar) && !ASCII.isAlphanumeric(aChar);
     }
 
-    public static boolean isSpace(final int aChar) {
+    public static boolean isSpace( int aChar) {
         return (aChar == SP) || ((9 <= aChar) && (aChar <= 13));
     }
 
     /**
-     * @return true if aChar is an uppercase character
+     *Returns true if aChar is an uppercase character.
+ 
      */
-    public static boolean isUppercase(final int aChar) {
+    public static boolean isUppercase( int aChar) {
         return (UPPERCASE_A <= aChar) && (aChar <= UPPERCASE_Z);
     }
 
@@ -318,11 +323,11 @@ public abstract class ASCII {
      * If aChar is an uppercase character it is converted to the corresponding lowercase character. Otherwise
      * it is returned unaltered.
      */
-    public static int toLowercase(final int aChar) {
+    public static int toLowercase( int aChar) {
         return ASCII.isUppercase(aChar) ? aChar + SP : aChar;
     }
 
-    public static int toPrintable(final int aChar) {
+    public static int toPrintable( int aChar) {
         return ASCII.isPrintable(aChar) ? aChar : SP;
     }
 
@@ -330,7 +335,7 @@ public abstract class ASCII {
      * If aChar is a lowercase character it is converted to the corresponding uppercase character. Otherwise
      * it is returned unaltered.
      */
-    public static int toUppercase(final int aChar) {
+    public static int toUppercase( int aChar) {
         return ASCII.isLowercase(aChar) ? aChar - SP : aChar;
     }
 

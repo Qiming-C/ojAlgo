@@ -21,9 +21,9 @@
  */
 package org.ojalgo.scalar;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.MathContext;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -48,22 +48,22 @@ public final class ComplexNumber
     public static final Scalar.Factory<ComplexNumber> FACTORY = new Scalar.Factory<>() {
 
         @Override
-        public ComplexNumber cast(final Comparable<?> number) {
+        public ComplexNumber cast( Comparable<?> number) {
             return ComplexNumber.valueOf(number);
         }
 
         @Override
-        public ComplexNumber cast(final double value) {
+        public ComplexNumber cast( double value) {
             return ComplexNumber.valueOf(value);
         }
 
         @Override
-        public ComplexNumber convert(final Comparable<?> number) {
+        public ComplexNumber convert( Comparable<?> number) {
             return ComplexNumber.valueOf(number);
         }
 
         @Override
-        public ComplexNumber convert(final double value) {
+        public ComplexNumber convert( double value) {
             return ComplexNumber.valueOf(value);
         }
 
@@ -115,7 +115,7 @@ public final class ComplexNumber
     private static final String PLUS = " + ";
     private static final String RIGHT = "i)";
 
-    public static boolean isAbsolute(final ComplexNumber value) {
+    public static boolean isAbsolute( ComplexNumber value) {
         return value.isAbsolute();
     }
 
@@ -126,7 +126,7 @@ public final class ComplexNumber
      * @param value the complex number to test
      * @return true if the specified value is infinite (real and/or imaginary part) otherwise false
      */
-    public static boolean isInfinite(final ComplexNumber value) {
+    public static boolean isInfinite( ComplexNumber value) {
         return Double.isInfinite(value.doubleValue()) || Double.isInfinite(value.i);
     }
 
@@ -136,7 +136,7 @@ public final class ComplexNumber
      * @param value the complex number to test
      * @return true if the specified value is NaN (real and/or imaginary part) otherwise false
      */
-    public static boolean isNaN(final ComplexNumber value) {
+    public static boolean isNaN( ComplexNumber value) {
         return Double.isNaN(value.doubleValue()) || Double.isNaN(value.i);
     }
 
@@ -146,11 +146,11 @@ public final class ComplexNumber
      * @param value the complex number to test
      * @return true if the imaginary part of the specified value is null otherwise false
      */
-    public static boolean isReal(final ComplexNumber value) {
+    public static boolean isReal( ComplexNumber value) {
         return value.isReal();
     }
 
-    public static boolean isSmall(final double comparedTo, final ComplexNumber value) {
+    public static boolean isSmall( double comparedTo,  ComplexNumber value) {
         return value.isSmall(comparedTo);
     }
 
@@ -161,9 +161,9 @@ public final class ComplexNumber
      * @param phase the complex number's phase
      * @return a complex number
      */
-    public static ComplexNumber makePolar(final double norm, final double phase) {
+    public static ComplexNumber makePolar( double norm,  double phase) {
 
-        double tmpStdPhase = phase % PrimitiveMath.TWO_PI;
+        @Var double tmpStdPhase = phase % PrimitiveMath.TWO_PI;
         if (tmpStdPhase < PrimitiveMath.ZERO) {
             tmpStdPhase += PrimitiveMath.TWO_PI;
         }
@@ -178,17 +178,17 @@ public final class ComplexNumber
             return new ComplexNumber(-norm);
 
         }
-        double tmpRe = PrimitiveMath.ZERO;
+        @Var double tmpRe = PrimitiveMath.ZERO;
         if (norm != PrimitiveMath.ZERO) {
-            final double tmpCos = PrimitiveMath.COS.invoke(tmpStdPhase);
+             double tmpCos = PrimitiveMath.COS.invoke(tmpStdPhase);
             if (tmpCos != PrimitiveMath.ZERO) {
                 tmpRe = norm * tmpCos;
             }
         }
 
-        double tmpIm = PrimitiveMath.ZERO;
+        @Var double tmpIm = PrimitiveMath.ZERO;
         if (norm != PrimitiveMath.ZERO) {
-            final double tmpSin = PrimitiveMath.SIN.invoke(tmpStdPhase);
+             double tmpSin = PrimitiveMath.SIN.invoke(tmpStdPhase);
             if (tmpSin != PrimitiveMath.ZERO) {
                 tmpIm = norm * tmpSin;
             }
@@ -197,7 +197,7 @@ public final class ComplexNumber
         return new ComplexNumber(tmpRe, tmpIm);
     }
 
-    public static ComplexNumber makeRotation(final double angle) {
+    public static ComplexNumber makeRotation( double angle) {
         return new ComplexNumber(PrimitiveMath.COS.invoke(angle), PrimitiveMath.SIN.invoke(angle));
     }
 
@@ -208,7 +208,7 @@ public final class ComplexNumber
      * @param imaginary the complex number's imaginary part
      * @return a complex number
      */
-    public static ComplexNumber of(final double real, final double imaginary) {
+    public static ComplexNumber of( double real,  double imaginary) {
         if (PrimitiveScalar.CONTEXT.isSmall(real, imaginary)) {
             return new ComplexNumber(real);
         }
@@ -222,7 +222,7 @@ public final class ComplexNumber
      * @return {@link ComplexNumber#ZERO} if {@code number} is null otherwise the double value of
      *         {@code number}
      */
-    public static ComplexNumber valueOf(final Comparable<?> number) {
+    public static ComplexNumber valueOf( Comparable<?> number) {
 
         if (number == null) {
             return ZERO;
@@ -241,7 +241,7 @@ public final class ComplexNumber
      * @param value the complex number's real part
      * @return a complex number Z = ({@code value} + 0.0i)
      */
-    public static ComplexNumber valueOf(final double value) {
+    public static ComplexNumber valueOf( double value) {
         return new ComplexNumber(value);
     }
 
@@ -257,7 +257,7 @@ public final class ComplexNumber
         this(PrimitiveMath.ZERO);
     }
 
-    private ComplexNumber(final double real) {
+    private ComplexNumber( double real) {
 
         super();
 
@@ -268,7 +268,7 @@ public final class ComplexNumber
         i = PrimitiveMath.ZERO;
     }
 
-    ComplexNumber(final double real, final double imaginary) {
+    ComplexNumber( double real,  double imaginary) {
 
         super();
 
@@ -286,7 +286,7 @@ public final class ComplexNumber
      * @return a complex number {@literal Z = ((Re(this) + Re(arg)) + (Im(this) + Im(arg))i)}
      */
     @Override
-    public ComplexNumber add(final ComplexNumber arg) {
+    public ComplexNumber add( ComplexNumber arg) {
         return new ComplexNumber(myRealValue + arg.doubleValue(), i + arg.i);
     }
 
@@ -297,7 +297,7 @@ public final class ComplexNumber
      * @return a complex number {@literal Z = ((Re(this) + arg) + Im(this)i)}
      */
     @Override
-    public ComplexNumber add(final double arg) {
+    public ComplexNumber add( double arg) {
         return new ComplexNumber(myRealValue + arg, i);
     }
 
@@ -305,7 +305,7 @@ public final class ComplexNumber
      * First compares the real values. Only if they are equal will compare the imaginary part.
      */
     @Override
-    public int compareTo(final ComplexNumber other) {
+    public int compareTo( ComplexNumber other) {
 
         int retVal = Double.compare(myRealValue, other.doubleValue());
 
@@ -349,21 +349,21 @@ public final class ComplexNumber
      * @return a complex number {@literal Z = this / arg}
      */
     @Override
-    public ComplexNumber divide(final ComplexNumber arg) {
+    public ComplexNumber divide( ComplexNumber arg) {
 
-        final double tmpRe = arg.doubleValue();
-        final double tmpIm = arg.i;
+         double tmpRe = arg.doubleValue();
+         double tmpIm = arg.i;
 
         if (PrimitiveMath.ABS.invoke(tmpRe) > PrimitiveMath.ABS.invoke(tmpIm)) {
 
-            final double r = tmpIm / tmpRe;
-            final double d = tmpRe + r * tmpIm;
+             double r = tmpIm / tmpRe;
+             double d = tmpRe + r * tmpIm;
 
             return new ComplexNumber((myRealValue + r * i) / d, (i - r * myRealValue) / d);
 
         }
-        final double r = tmpRe / tmpIm;
-        final double d = tmpIm + r * tmpRe;
+         double r = tmpRe / tmpIm;
+         double d = tmpIm + r * tmpRe;
 
         return new ComplexNumber((r * myRealValue + i) / d, (r * i - myRealValue) / d);
     }
@@ -375,7 +375,7 @@ public final class ComplexNumber
      * @return a complex number {@literal Z = ((Re(this) / arg) + (Im(this) / arg)i)}
      */
     @Override
-    public ComplexNumber divide(final double arg) {
+    public ComplexNumber divide( double arg) {
         return new ComplexNumber(myRealValue / arg, i / arg);
     }
 
@@ -385,7 +385,7 @@ public final class ComplexNumber
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         switch ((int) index) {
         case 0:
             return myRealValue;
@@ -401,7 +401,7 @@ public final class ComplexNumber
     }
 
     @Override
-    public double doubleValue(final long row, final long col) {
+    public double doubleValue( long row,  long col) {
         if (row == col) {
             return myRealValue;
         }
@@ -418,23 +418,23 @@ public final class ComplexNumber
      * Will call {@linkplain NumberContext#enforce(double)} on the real and imaginary parts separately.
      */
     @Override
-    public ComplexNumber enforce(final NumberContext context) {
+    public ComplexNumber enforce( NumberContext context) {
 
-        final double tmpRe = context.enforce(myRealValue);
-        final double tmpIm = context.enforce(i);
+         double tmpRe = context.enforce(myRealValue);
+         double tmpIm = context.enforce(i);
 
         return new ComplexNumber(tmpRe, tmpIm);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof ComplexNumber)) {
             return false;
         }
-        ComplexNumber other = (ComplexNumber) obj;
+        var other = (ComplexNumber) obj;
         if (Double.doubleToLongBits(myRealValue) != Double.doubleToLongBits(other.myRealValue)
                 || Double.doubleToLongBits(i) != Double.doubleToLongBits(other.i)) {
             return false;
@@ -453,12 +453,12 @@ public final class ComplexNumber
     }
 
     @Override
-    public Double get(final long index) {
+    public Double get( long index) {
         return this.doubleValue(index);
     }
 
     @Override
-    public Double get(final long row, final long col) {
+    public Double get( long row,  long col) {
         return this.doubleValue(row, col);
     }
 
@@ -480,9 +480,9 @@ public final class ComplexNumber
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        long temp;
+         int prime = 31;
+        @Var int result = 1;
+        @Var long temp;
         temp = Double.doubleToLongBits(i);
         result = prime * result + (int) (temp ^ temp >>> 32);
         temp = Double.doubleToLongBits(myRealValue);
@@ -517,7 +517,7 @@ public final class ComplexNumber
     }
 
     @Override
-    public boolean isSmall(final double comparedTo) {
+    public boolean isSmall( double comparedTo) {
         return PrimitiveScalar.CONTEXT.isSmall(comparedTo, this.norm());
     }
 
@@ -533,10 +533,10 @@ public final class ComplexNumber
      * @return a complex number {@literal Z = this * arg}
      */
     @Override
-    public ComplexNumber multiply(final ComplexNumber arg) {
+    public ComplexNumber multiply( ComplexNumber arg) {
 
-        final double tmpRe = arg.doubleValue();
-        final double tmpIm = arg.i;
+         double tmpRe = arg.doubleValue();
+         double tmpIm = arg.i;
 
         return new ComplexNumber(myRealValue * tmpRe - i * tmpIm, myRealValue * tmpIm + i * tmpRe);
     }
@@ -548,7 +548,7 @@ public final class ComplexNumber
      * @return a complex number Z = ((Re(this) * arg) + Im(this) * arg))
      */
     @Override
-    public ComplexNumber multiply(final double arg) {
+    public ComplexNumber multiply( double arg) {
         return new ComplexNumber(myRealValue * arg, i * arg);
     }
 
@@ -584,7 +584,7 @@ public final class ComplexNumber
     }
 
     @Override
-    public ComplexNumber power(final int power) {
+    public ComplexNumber power( int power) {
 
         double norm = Math.pow(this.norm(), power);
         double phase = this.phase() * power;
@@ -607,7 +607,7 @@ public final class ComplexNumber
      * @return a complex number Z = this - {@code arg}
      */
     @Override
-    public ComplexNumber subtract(final ComplexNumber arg) {
+    public ComplexNumber subtract( ComplexNumber arg) {
         return new ComplexNumber(myRealValue - arg.doubleValue(), i - arg.i);
     }
 
@@ -618,12 +618,12 @@ public final class ComplexNumber
      * @return a complex number Z = ((Re(this) - arg) + Im(this)i)
      */
     @Override
-    public ComplexNumber subtract(final double arg) {
+    public ComplexNumber subtract( double arg) {
         return new ComplexNumber(myRealValue - arg, i);
     }
 
     @Override
-    public void supplyTo(final Mutate2D receiver) {
+    public void supplyTo( Mutate2D receiver) {
         receiver.set(0L, myRealValue);
         receiver.set(1L, i);
         receiver.set(2L, -i);
@@ -636,14 +636,14 @@ public final class ComplexNumber
     }
 
     public MatrixStore<Double> toMultiplicationMatrix() {
-        final Primitive64Store retVal = Primitive64Store.FACTORY.make(this);
+         Primitive64Store retVal = Primitive64Store.FACTORY.make(this);
         this.supplyTo(retVal);
         return retVal;
     }
 
     public MatrixStore<Double> toMultiplicationVector() {
 
-        final Primitive64Store retVal = Primitive64Store.FACTORY.make(2L, 1L);
+         Primitive64Store retVal = Primitive64Store.FACTORY.make(2L, 1L);
 
         retVal.set(0L, myRealValue);
         retVal.set(1L, i);
@@ -653,17 +653,17 @@ public final class ComplexNumber
 
     public MatrixStore<Double> toRotationMatrix() {
 
-        final Primitive64Store retVal = Primitive64Store.FACTORY.make(2L, 2L);
+         Primitive64Store retVal = Primitive64Store.FACTORY.make(2L, 2L);
 
-        final double s = myRealValue;
+         double s = myRealValue;
 
-        final double ss = s * s;
-        final double ii = i * i;
+         double ss = s * s;
+         double ii = i * i;
 
-        final double invs = 1.0 / (ii + ss);
+         double invs = 1.0 / (ii + ss);
 
-        final double r00 = (ii + ss) * invs;
-        final double r11 = (ss - ii) * invs;
+         double r00 = (ii + ss) * invs;
+         double r11 = (ss - ii) * invs;
 
         retVal.set(0L, r00);
         retVal.set(3L, r11);
@@ -677,10 +677,10 @@ public final class ComplexNumber
     @Override
     public String toString() {
 
-        final StringBuilder retVal = new StringBuilder(LEFT);
+         var retVal = new StringBuilder(LEFT);
 
-        final double tmpRe = myRealValue;
-        final double tmpIm = i;
+         double tmpRe = myRealValue;
+         double tmpIm = i;
 
         retVal.append(Double.toString(tmpRe));
 
@@ -695,12 +695,12 @@ public final class ComplexNumber
     }
 
     @Override
-    public String toString(final NumberContext context) {
+    public String toString( NumberContext context) {
 
-        final StringBuilder retVal = new StringBuilder(LEFT);
+         var retVal = new StringBuilder(LEFT);
 
-        final BigDecimal tmpRe = context.enforce(new BigDecimal(myRealValue, PrimitiveScalar.CONTEXT.getMathContext()));
-        final BigDecimal tmpIm = context.enforce(new BigDecimal(i, PrimitiveScalar.CONTEXT.getMathContext()));
+         BigDecimal tmpRe = context.enforce(new BigDecimal(myRealValue, PrimitiveScalar.CONTEXT.getMathContext()));
+         BigDecimal tmpIm = context.enforce(new BigDecimal(i, PrimitiveScalar.CONTEXT.getMathContext()));
 
         retVal.append(tmpRe.toString());
 
@@ -715,22 +715,22 @@ public final class ComplexNumber
     }
 
     @Override
-    public <T extends ModifiableReceiver<Double>> void transform(final T transformable) {
+    public <T extends ModifiableReceiver<Double>> void transform( T transformable) {
 
-        final double s = myRealValue;
+         double s = myRealValue;
 
-        final double ss = s * s;
-        final double ii = i * i;
+         double ss = s * s;
+         double ii = i * i;
 
-        final double invs = 1.0 / (ii + ss);
+         double invs = 1.0 / (ii + ss);
 
-        final double r00 = (ii + ss) * invs;
-        final double r11 = (ss - ii) * invs;
+         double r00 = (ii + ss) * invs;
+         double r11 = (ss - ii) * invs;
 
         if (transformable.count() == 2L) {
 
-            final double x = transformable.doubleValue(0);
-            final double y = transformable.doubleValue(1);
+             double x = transformable.doubleValue(0);
+             double y = transformable.doubleValue(1);
 
             transformable.set(0, r00 * x);
             transformable.set(1, r11 * y);
@@ -739,8 +739,8 @@ public final class ComplexNumber
 
             for (long c = 0L, limit = transformable.countColumns(); c < limit; c++) {
 
-                final double x = transformable.doubleValue(0, c);
-                final double y = transformable.doubleValue(1, c);
+                 double x = transformable.doubleValue(0, c);
+                 double y = transformable.doubleValue(1, c);
 
                 transformable.set(0, c, r00 * x);
                 transformable.set(1, c, r11 * y);
@@ -750,8 +750,8 @@ public final class ComplexNumber
 
             for (long r = 0L, limit = transformable.countRows(); r < limit; r++) {
 
-                final double x = transformable.doubleValue(r, 0);
-                final double y = transformable.doubleValue(r, 1);
+                 double x = transformable.doubleValue(r, 0);
+                 double y = transformable.doubleValue(r, 1);
 
                 transformable.set(r, 0, r00 * x);
                 transformable.set(r, 1, r11 * y);
@@ -763,20 +763,20 @@ public final class ComplexNumber
         }
     }
 
-    <T extends ModifiableReceiver<Double>> void transformWhenUnit(final T transformable) {
+    <T extends ModifiableReceiver<Double>> void transformWhenUnit( T transformable) {
 
-        final double s = this.doubleValue();
+         double s = this.doubleValue();
 
-        final double ss = s * s;
-        final double ii = i * i;
+         double ss = s * s;
+         double ii = i * i;
 
-        final double r00 = ii + ss;
-        final double r11 = ss - ii;
+         double r00 = ii + ss;
+         double r11 = ss - ii;
 
         if (transformable.count() == 2L) {
 
-            final double x = transformable.doubleValue(0);
-            final double y = transformable.doubleValue(1);
+             double x = transformable.doubleValue(0);
+             double y = transformable.doubleValue(1);
 
             transformable.set(0, r00 * x);
             transformable.set(1, r11 * y);
@@ -785,8 +785,8 @@ public final class ComplexNumber
 
             for (long c = 0L, limit = transformable.countColumns(); c < limit; c++) {
 
-                final double x = transformable.doubleValue(0, c);
-                final double y = transformable.doubleValue(1, c);
+                 double x = transformable.doubleValue(0, c);
+                 double y = transformable.doubleValue(1, c);
 
                 transformable.set(0, c, r00 * x);
                 transformable.set(1, c, r11 * y);
@@ -796,8 +796,8 @@ public final class ComplexNumber
 
             for (long r = 0L, limit = transformable.countRows(); r < limit; r++) {
 
-                final double x = transformable.doubleValue(r, 0);
-                final double y = transformable.doubleValue(r, 1);
+                 double x = transformable.doubleValue(r, 0);
+                 double y = transformable.doubleValue(r, 1);
 
                 transformable.set(r, 0, r00 * x);
                 transformable.set(r, 1, r11 * y);

@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.special.BetaFunction;
 import org.ojalgo.function.special.GammaFunction;
 
@@ -37,17 +38,17 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return myCauchy.getDensity(value);
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return myCauchy.getDistribution(value);
         }
 
         @Override
-        public double getQuantile(final double probability) {
+        public double getQuantile( double probability) {
             return myCauchy.getQuantile(probability);
         }
 
@@ -65,17 +66,17 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return ONE / Math.pow(TWO + (value * value), THREE / TWO);
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return HALF + (value / (TWO * Math.sqrt(TWO + (value * value))));
         }
 
         @Override
-        public double getQuantile(final double probability) {
+        public double getQuantile( double probability) {
             double alpha = FOUR * probability * (ONE - probability);
             return TWO * (probability - HALF) * Math.sqrt(TWO / alpha);
         }
@@ -89,12 +90,12 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return (SIX * Math.sqrt(THREE)) / (PI * Math.pow(THREE + (value * value), TWO));
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return HALF + ((ONE / PI) * (((ONE / SQRT.invoke(THREE)) * (value / (ONE + ((value * value) / THREE)))) + ATAN.invoke(value / SQRT.invoke(THREE))));
         }
     }
@@ -106,18 +107,18 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return THREE / (EIGHT * POW.invoke(ONE + ((value * value) / FOUR), FIVE / TWO));
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             double x = ONE + ((value * value) / FOUR);
             return HALF + (((THREE / EIGHT) * (value / SQRT.invoke(x))) * (ONE - (TWELFTH * ((value * value) / x))));
         }
 
         @Override
-        public double getQuantile(final double probability) {
+        public double getQuantile( double probability) {
             double alpha = FOUR * probability * (ONE - probability);
             double sqrt = Math.sqrt(alpha);
             double q = Math.cos(THIRD * Math.acos(sqrt)) / sqrt;
@@ -135,12 +136,12 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return EIGHT / (THREE * PI * SQRT5 * POW.invoke(ONE + ((value * value) / FIVE), THREE));
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             double x = ONE + ((value * value) / FIVE);
             return HALF + ((((value / (SQRT5 * x)) * (ONE + (TWO / (THREE * x)))) + ATAN.invoke(value / SQRT5)) / PI);
         }
@@ -156,17 +157,17 @@ public class TDistribution extends AbstractContinuous {
         }
 
         @Override
-        public double getDensity(final double value) {
+        public double getDensity( double value) {
             return myNormal.getDensity(value);
         }
 
         @Override
-        public double getDistribution(final double value) {
+        public double getDistribution( double value) {
             return myNormal.getDistribution(value);
         }
 
         @Override
-        public double getQuantile(final double probability) {
+        public double getQuantile( double probability) {
             return myNormal.getQuantile(probability);
         }
 
@@ -180,7 +181,7 @@ public class TDistribution extends AbstractContinuous {
     private static final double _0_0001 = 0.0001;
     private static final Normal NORMAL = new Normal();
 
-    public static TDistribution of(final int degreesOfFreedom) {
+    public static TDistribution of( int degreesOfFreedom) {
         switch (degreesOfFreedom) {
         case 1:
             return new Degree1();
@@ -210,18 +211,18 @@ public class TDistribution extends AbstractContinuous {
 
     private final double myDegreesOfFreedom;
 
-    TDistribution(final double degreesOfFreedom) {
+    TDistribution( double degreesOfFreedom) {
         super();
         myDegreesOfFreedom = Math.min(100, degreesOfFreedom);
         myConstant = GammaFunction.gamma((myDegreesOfFreedom + ONE) / TWO)
                 / (Math.sqrt(myDegreesOfFreedom * PI) * GammaFunction.gamma(myDegreesOfFreedom / TWO));
     }
 
-    public double getDensity(final double value) {
+    @Override public double getDensity( double value) {
         return myConstant * Math.pow(ONE + ((value * value) / myDegreesOfFreedom), (NEG - myDegreesOfFreedom) / TWO);
     }
 
-    public double getDistribution(final double value) {
+    @Override public double getDistribution( double value) {
 
         if (value >= ZERO) {
 
@@ -238,7 +239,7 @@ public class TDistribution extends AbstractContinuous {
         //                * HypergeometricFunction.hypergeometric(HALF, (myDegreesOfFreedom - ONE) / TWO, THREE / TWO, -(value * value) / myDegreesOfFreedom));
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         if (myDegreesOfFreedom > ONE) {
             return ZERO;
         } else {
@@ -246,17 +247,17 @@ public class TDistribution extends AbstractContinuous {
         }
     }
 
-    public double getQuantile(final double probability) {
+    @Override public double getQuantile( double probability) {
 
-        double retVal = this.approximateQuantile(probability);
+        @Var double retVal = this.approximateQuantile(probability);
 
         if (Double.isInfinite(retVal)) {
             return retVal;
         }
 
-        double reverse = this.getDistribution(retVal);
+        @Var double reverse = this.getDistribution(retVal);
 
-        double lower = retVal, higher = retVal;
+        @Var double lower = retVal, higher = retVal;
 
         if ((probability - reverse) > _0_0001) {
             do {
@@ -294,7 +295,7 @@ public class TDistribution extends AbstractContinuous {
         }
     }
 
-    private double approximateQuantile(final double probability) {
+    private double approximateQuantile( double probability) {
         return NORMAL.getQuantile(probability);
     }
 

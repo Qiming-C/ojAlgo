@@ -45,7 +45,7 @@ public abstract class AggregatorSet<N extends Comparable<N>> {
      */
     public abstract AggregatorFunction<N> cardinality();
 
-    public final AggregatorFunction<N> get(final Aggregator aggregator) {
+    public final AggregatorFunction<N> get( Aggregator aggregator) {
 
         switch (aggregator) {
 

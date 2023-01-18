@@ -31,57 +31,57 @@ final class BufferZ064 extends BufferArray {
 
     private final LongBuffer myBuffer;
 
-    BufferZ064(final BufferArray.Factory factory, final ByteBuffer buffer, final AutoCloseable closeable) {
+    BufferZ064( BufferArray.Factory factory,  ByteBuffer buffer,  AutoCloseable closeable) {
         this(factory, buffer.asLongBuffer(), closeable);
     }
 
-    BufferZ064(final BufferArray.Factory factory, final LongBuffer buffer, final AutoCloseable closeable) {
+    BufferZ064( BufferArray.Factory factory,  LongBuffer buffer,  AutoCloseable closeable) {
         super(factory, buffer, closeable);
         myBuffer = buffer;
     }
 
     @Override
-    protected byte byteValue(final int index) {
+    protected byte byteValue( int index) {
         return (byte) myBuffer.get(index);
     }
 
     @Override
-    protected void fillOne(final int index, final NullaryFunction<?> supplier) {
+    protected void fillOne( int index,  NullaryFunction<?> supplier) {
         myBuffer.put(index, supplier.longValue());
     }
 
     @Override
-    protected float floatValue(final int index) {
+    protected float floatValue( int index) {
         return myBuffer.get(index);
     }
 
     @Override
-    protected int intValue(final int index) {
+    protected int intValue( int index) {
         return (int) myBuffer.get(index);
     }
 
     @Override
-    protected long longValue(final int index) {
+    protected long longValue( int index) {
         return myBuffer.get(index);
     }
 
     @Override
-    protected void set(final int index, final double value) {
+    protected void set( int index,  double value) {
         myBuffer.put(index, Math.round(value));
     }
 
     @Override
-    protected short shortValue(final int index) {
+    protected short shortValue( int index) {
         return (short) myBuffer.get(index);
     }
 
     @Override
-    protected void set(final int index, final long value) {
+    protected void set( int index,  long value) {
         myBuffer.put(index, value);
     }
 
     @Override
-    protected void add(final int index, final Comparable<?> addend) {
+    protected void add( int index,  Comparable<?> addend) {
         this.set(index, this.longValue(index) + NumberDefinition.longValue(addend));
     }
 }

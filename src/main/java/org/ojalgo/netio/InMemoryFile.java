@@ -21,6 +21,8 @@
  */
 package org.ojalgo.netio;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -64,16 +66,16 @@ public class InMemoryFile {
         myInputStream = null;
     }
 
-    public InMemoryFile(final byte[] contents) {
+    public InMemoryFile( byte[] contents) {
         super();
         myInitialContents = contents;
         myOutputStream = null;
         myInputStream = null;
     }
 
-    public InMemoryFile(final String contents) {
+    public InMemoryFile( String contents) {
         super();
-        myInitialContents = contents.getBytes();
+        myInitialContents = contents.getBytes(UTF_8);
         myOutputStream = null;
         myInputStream = null;
     }
@@ -90,9 +92,9 @@ public class InMemoryFile {
 
     public String getContentsAsString() {
         if (myInitialContents != null) {
-            return new String(myInitialContents);
+            return new String(myInitialContents, UTF_8);
         } else if (myOutputStream != null) {
-            return myOutputStream.toString();
+            return myOutputStream.toString(UTF_8);
         } else {
             throw new IllegalStateException();
         }
@@ -105,12 +107,12 @@ public class InMemoryFile {
         return Optional.ofNullable(myName);
     }
 
-    public InMemoryFile name(final String name) {
+    public InMemoryFile name( String name) {
         this.setName(name);
         return this;
     }
 
-    public InMemoryFile type(final String type) {
+    public InMemoryFile type( String type) {
         this.setType(type);
         return this;
     }
@@ -150,11 +152,11 @@ public class InMemoryFile {
         return myOutputStream;
     }
 
-    public void setName(final String name) {
+    public void setName( String name) {
         myName = name;
     }
 
-    public void setType(final String type) {
+    public void setType( String type) {
         myType = type;
     }
 

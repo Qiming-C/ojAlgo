@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.transformation;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.scalar.ComplexNumber;
@@ -37,14 +38,14 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
 
         private final Scalar.Factory<N> myFactory;
 
-        public Generic(final Scalar.Factory<N> factory, final Householder<N> aTransf) {
+        public Generic( Scalar.Factory<N> factory,  Householder<N> aTransf) {
 
             this(factory, (int) aTransf.count());
 
             this.copy(aTransf);
         }
 
-        public Generic(final Scalar.Factory<N> factory, final int dim) {
+        public Generic( Scalar.Factory<N> factory,  int dim) {
 
             super();
 
@@ -55,14 +56,14 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             myFactory = factory;
         }
 
-        public Householder.Generic<N> copy(final Householder<N> source) {
+        public Householder.Generic<N> copy( Householder<N> source) {
 
             first = source.first();
 
-            final N[] tmpVector = vector;
-            N tmpNmbr;
-            double tmpVal, tmpVal2 = PrimitiveMath.ZERO;
-            final int tmpSize = (int) source.count();
+             N[] tmpVector = vector;
+            @Var N tmpNmbr;
+            @Var double tmpVal, tmpVal2 = PrimitiveMath.ZERO;
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpNmbr = source.get(i);
                 tmpVal = tmpNmbr.norm();
@@ -75,13 +76,13 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public Householder.Generic<N> copy(final Householder<N> source, final N precalculatedBeta) {
+        public Householder.Generic<N> copy( Householder<N> source,  N precalculatedBeta) {
 
             first = source.first();
 
-            final N[] tmpVector = vector;
+             N[] tmpVector = vector;
 
-            final int tmpSize = (int) source.count();
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpVector[i] = source.get(i);
             }
@@ -91,29 +92,29 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public long count() {
+        @Override public long count() {
             return vector.length;
         }
 
-        public double doubleValue(final long anInd) {
+        @Override public double doubleValue( long anInd) {
             return vector[(int) anInd].doubleValue();
         }
 
-        public int first() {
+        @Override public int first() {
             return first;
         }
 
-        public N get(final long index) {
+        @Override public N get( long index) {
             return vector[(int) index];
         }
 
         @Override
         public String toString() {
 
-            final StringBuilder retVal = new StringBuilder("{");
+             var retVal = new StringBuilder("{");
 
-            final int tmpFirst = first;
-            final int tmpLength = vector.length;
+             int tmpFirst = first;
+             int tmpLength = vector.length;
             for (int i = 0; i < tmpFirst; i++) {
                 retVal.append(ComplexNumber.ZERO);
                 retVal.append(", ");
@@ -137,14 +138,14 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
         public int first;
         public final float[] vector;
 
-        public Primitive32(final Householder<Double> aTransf) {
+        public Primitive32( Householder<Double> aTransf) {
 
             this((int) aTransf.count());
 
             this.copy(aTransf);
         }
 
-        public Primitive32(final int aDim) {
+        public Primitive32( int aDim) {
 
             super();
 
@@ -153,13 +154,13 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             first = 0;
         }
 
-        public Householder.Primitive32 copy(final Householder<Double> source) {
+        public Householder.Primitive32 copy( Householder<Double> source) {
 
             first = source.first();
 
-            final float[] tmpVector = vector;
-            float tmpVal, tmpVal2 = (float) PrimitiveMath.ZERO;
-            final int tmpSize = (int) source.count();
+             float[] tmpVector = vector;
+            @Var float tmpVal, tmpVal2 = (float) PrimitiveMath.ZERO;
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpVal = source.floatValue(i);
                 tmpVal2 += tmpVal * tmpVal;
@@ -171,13 +172,13 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public Householder.Primitive32 copy(final Householder<Double> source, final float precalculatedBeta) {
+        public Householder.Primitive32 copy( Householder<Double> source,  float precalculatedBeta) {
 
             first = source.first();
 
-            final float[] tmpVector = vector;
+             float[] tmpVector = vector;
 
-            final int tmpSize = (int) source.count();
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpVector[i] = source.floatValue(i);
             }
@@ -187,28 +188,28 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public long count() {
+        @Override public long count() {
             return vector.length;
         }
 
-        public double doubleValue(final long anInd) {
+        @Override public double doubleValue( long anInd) {
             return vector[(int) anInd];
         }
 
-        public int first() {
+        @Override public int first() {
             return first;
         }
 
-        public Double get(final long index) {
+        @Override public Double get( long index) {
             return Double.valueOf(vector[(int) index]);
         }
 
         @Override
         public String toString() {
 
-            final StringBuilder retVal = new StringBuilder("{ ");
+             var retVal = new StringBuilder("{ ");
 
-            final int tmpLastIndex = vector.length - 1;
+             int tmpLastIndex = vector.length - 1;
             for (int i = 0; i < tmpLastIndex; i++) {
                 retVal.append(this.get(i));
                 retVal.append(", ");
@@ -228,14 +229,14 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
         public int first;
         public final double[] vector;
 
-        public Primitive64(final Householder<Double> aTransf) {
+        public Primitive64( Householder<Double> aTransf) {
 
             this((int) aTransf.count());
 
             this.copy(aTransf);
         }
 
-        public Primitive64(final int aDim) {
+        public Primitive64( int aDim) {
 
             super();
 
@@ -244,13 +245,13 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             first = 0;
         }
 
-        public Householder.Primitive64 copy(final Householder<Double> source) {
+        public Householder.Primitive64 copy( Householder<Double> source) {
 
             first = source.first();
 
-            final double[] tmpVector = vector;
-            double tmpVal, tmpVal2 = PrimitiveMath.ZERO;
-            final int tmpSize = (int) source.count();
+             double[] tmpVector = vector;
+            @Var double tmpVal, tmpVal2 = PrimitiveMath.ZERO;
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpVal = source.doubleValue(i);
                 tmpVal2 += tmpVal * tmpVal;
@@ -262,13 +263,13 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public Householder.Primitive64 copy(final Householder<Double> source, final double precalculatedBeta) {
+        public Householder.Primitive64 copy( Householder<Double> source,  double precalculatedBeta) {
 
             first = source.first();
 
-            final double[] tmpVector = vector;
+             double[] tmpVector = vector;
 
-            final int tmpSize = (int) source.count();
+             var tmpSize = (int) source.count();
             for (int i = source.first(); i < tmpSize; i++) {
                 tmpVector[i] = source.doubleValue(i);
             }
@@ -278,28 +279,28 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
             return this;
         }
 
-        public long count() {
+        @Override public long count() {
             return vector.length;
         }
 
-        public double doubleValue(final long anInd) {
+        @Override public double doubleValue( long anInd) {
             return vector[(int) anInd];
         }
 
-        public int first() {
+        @Override public int first() {
             return first;
         }
 
-        public Double get(final long index) {
+        @Override public Double get( long index) {
             return vector[(int) index];
         }
 
         @Override
         public String toString() {
 
-            final StringBuilder retVal = new StringBuilder("{ ");
+             var retVal = new StringBuilder("{ ");
 
-            final int tmpLastIndex = vector.length - 1;
+             int tmpLastIndex = vector.length - 1;
             for (int i = 0; i < tmpLastIndex; i++) {
                 retVal.append(this.get(i));
                 retVal.append(", ");
@@ -320,7 +321,7 @@ public interface Householder<N extends Comparable<N>> extends Access1D<N> {
      */
     int first();
 
-    default void transform(final PhysicalStore<N> matrix) {
+    default void transform( PhysicalStore<N> matrix) {
         matrix.transformLeft(this, 0);
     }
 

@@ -30,19 +30,19 @@ final class ManagedConsumer<T> implements AutoConsumer<T> {
     private final Consumer<T> myConsumer;
     private final Throughput myManager;
 
-    ManagedConsumer(final Throughput manager, final Consumer<T> consumer) {
+    ManagedConsumer( Throughput manager,  Consumer<T> consumer) {
         super();
         myManager = manager;
         myConsumer = consumer;
     }
 
-    public void close() throws Exception {
+    @Override public void close() throws Exception {
         if (myConsumer instanceof AutoCloseable) {
             ((AutoCloseable) myConsumer).close();
         }
     }
 
-    public void write(final T item) {
+    @Override public void write( T item) {
         myManager.increment();
         myConsumer.accept(item);
     }

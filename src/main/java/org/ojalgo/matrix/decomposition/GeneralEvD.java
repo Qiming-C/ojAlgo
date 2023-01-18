@@ -21,6 +21,7 @@
  */
 package org.ojalgo.matrix.decomposition;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.BinaryFunction;
@@ -56,17 +57,17 @@ abstract class GeneralEvD<N extends Comparable<N>> extends EigenvalueDecompositi
 
     }
 
-    protected GeneralEvD(final DecompositionStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected GeneralEvD( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         super(factory);
     }
 
-    public boolean checkAndDecompose(final MatrixStore<N> matrix) {
+    @Override public boolean checkAndDecompose( MatrixStore<N> matrix) {
         return this.decompose(matrix);
     }
 
-    public final N getDeterminant() {
+    @Override public final N getDeterminant() {
 
-        final AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().product();
+         AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().product();
 
         this.getEigenvalues().visitAll(tmpVisitor);
 
@@ -78,25 +79,25 @@ abstract class GeneralEvD<N extends Comparable<N>> extends EigenvalueDecompositi
         return null;
     }
 
-    public MatrixStore<N> getInverse(final DecompositionStore<N> newPreallocated) {
+    public MatrixStore<N> getInverse( DecompositionStore<N> newPreallocated) {
         ProgrammingError.throwForUnsupportedOptionalOperation();
         return null;
     }
 
-    public final ComplexNumber getTrace() {
+    @Override public final ComplexNumber getTrace() {
 
-        final AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().sum();
+         AggregatorFunction<ComplexNumber> tmpVisitor = ComplexAggregator.getSet().sum();
 
         this.getEigenvalues().visitAll(tmpVisitor);
 
         return tmpVisitor.get();
     }
 
-    public final boolean isHermitian() {
+    @Override public final boolean isHermitian() {
         return false;
     }
 
-    public boolean isOrdered() {
+    @Override public boolean isOrdered() {
         return false;
     }
 
@@ -106,24 +107,24 @@ abstract class GeneralEvD<N extends Comparable<N>> extends EigenvalueDecompositi
     }
 
     @Override
-    protected boolean doDecompose(final Collectable<N, ? super PhysicalStore<N>> matrix, final boolean valuesOnly) {
+    protected boolean doDecompose( Collectable<N, ? super PhysicalStore<N>> matrix,  boolean valuesOnly) {
 
-        final int tmpDiagDim = (int) matrix.countRows();
+         var tmpDiagDim = (int) matrix.countRows();
 
         // final DecompositionStore<N> tmpMtrxA = this.copy(matrix.get());
-        final DecompositionStore<N> tmpMtrxA = this.makeZero(tmpDiagDim, tmpDiagDim);
+         DecompositionStore<N> tmpMtrxA = this.makeZero(tmpDiagDim, tmpDiagDim);
         matrix.supplyTo(tmpMtrxA);
 
-        final DecompositionStore<N> tmpV = this.makeEye(tmpDiagDim, tmpDiagDim);
+         DecompositionStore<N> tmpV = this.makeEye(tmpDiagDim, tmpDiagDim);
 
-        final Array1D<ComplexNumber> tmpEigenvalues = tmpMtrxA.computeInPlaceSchur(tmpV, true);
+         Array1D<ComplexNumber> tmpEigenvalues = tmpMtrxA.computeInPlaceSchur(tmpV, true);
 
         this.setV(tmpV);
         this.setEigenvalues(tmpEigenvalues);
 
-        final PhysicalStore<N> tmpD = this.makeZero(tmpDiagDim, tmpDiagDim);
-        ComplexNumber tmpValue;
-        double tmpImaginary;
+         PhysicalStore<N> tmpD = this.makeZero(tmpDiagDim, tmpDiagDim);
+        @Var ComplexNumber tmpValue;
+        @Var double tmpImaginary;
         for (int ij = 0; ij < tmpDiagDim; ij++) {
 
             tmpValue = tmpEigenvalues.get(ij);
@@ -160,15 +161,15 @@ abstract class GeneralEvD<N extends Comparable<N>> extends EigenvalueDecompositi
 
     protected final MatrixStore<N> makeInverse() {
 
-        final MatrixStore<N> tmpV = this.getV();
-        final MatrixStore<N> tmpD = this.getD();
+         MatrixStore<N> tmpV = this.getV();
+         MatrixStore<N> tmpD = this.getD();
 
-        final int tmpDim = (int) tmpD.countRows();
+         var tmpDim = (int) tmpD.countRows();
 
-        final PhysicalStore<N> tmpMtrx = tmpV.transpose().copy();
+         PhysicalStore<N> tmpMtrx = tmpV.transpose().copy();
 
-        final N tmpZero = this.scalar().zero().get();
-        final BinaryFunction<N> tmpDivide = this.function().divide();
+         N tmpZero = this.scalar().zero().get();
+         BinaryFunction<N> tmpDivide = this.function().divide();
 
         for (int i = 0; i < tmpDim; i++) {
             if (tmpD.isSmall(i, i, PrimitiveMath.ONE)) {

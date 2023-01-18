@@ -23,10 +23,10 @@ package org.ojalgo.optimisation.linear;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.SparseArray;
@@ -72,12 +72,12 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        public LinearSolver.GeneralBuilder inequalities(final Access2D<?> mtrxAI, final Access1D<?> mtrxBI) {
+        public LinearSolver.GeneralBuilder inequalities( Access2D<?> mtrxAI,  Access1D<?> mtrxBI) {
             return super.inequalities(mtrxAI, mtrxBI);
         }
 
         @Override
-        public LinearSolver.GeneralBuilder inequality(final double rhs, final double... factors) {
+        public LinearSolver.GeneralBuilder inequality( double rhs,  double... factors) {
             return super.inequality(rhs, factors);
         }
 
@@ -92,10 +92,10 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
 
             StandardBuilder retVal = LinearSolver.newStandardBuilder();
 
-            PhysicalStore<Double> mtrxC = null;
+            @Var PhysicalStore<Double> mtrxC = null;
 
-            PhysicalStore<Double> mtrxAE = null;
-            PhysicalStore<Double> mtrxBE = null;
+            @Var PhysicalStore<Double> mtrxAE = null;
+            @Var PhysicalStore<Double> mtrxBE = null;
 
             if (nbEqualites > 0) {
 
@@ -147,13 +147,13 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        protected LinearSolver doBuild(final Options options) {
+        protected LinearSolver doBuild( Options options) {
 
             int nbInequalites = this.countInequalityConstraints();
             int nbEqualites = this.countEqualityConstraints();
             int nbVariables = this.countVariables();
 
-            IndexSelector ineqSign = new IndexSelector(nbInequalites);
+            var ineqSign = new IndexSelector(nbInequalites);
 
             if (nbInequalites > 0) {
 
@@ -182,8 +182,8 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
 
             if (nbInequalites > 0) {
 
-                int insIdSlack = 0;
-                int insGnSlack = 0;
+                @Var int insIdSlack = 0;
+                @Var int insGnSlack = 0;
 
                 for (int i = 0; i < nbInequalites; i++) {
 
@@ -240,8 +240,8 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
 
     public static final class ModelIntegration extends ExpressionsBasedModel.Integration<LinearSolver> {
 
-        private static ArrayR064 toModelVariableValues(final Access1D<?> solverVariableValues, final ExpressionsBasedModel model,
-                final ArrayR064 modelVariableValues) {
+        private static ArrayR064 toModelVariableValues( Access1D<?> solverVariableValues,  ExpressionsBasedModel model,
+                 ArrayR064 modelVariableValues) {
 
             List<Variable> positiveVariables = model.getPositiveVariables();
             for (int p = 0; p < positiveVariables.size(); p++) {
@@ -260,26 +260,26 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
             return modelVariableValues;
         }
 
-        public LinearSolver build(final ExpressionsBasedModel model) {
+        @Override public LinearSolver build( ExpressionsBasedModel model) {
 
             SimplexTableau tableau = PrimalSimplex.build(model);
 
             return new PrimalSimplex(tableau, model.options);
         }
 
-        public LinearSolver build(final OptimisationData convexBuilder, final Optimisation.Options options) {
+        public LinearSolver build( OptimisationData convexBuilder,  Optimisation.Options options) {
 
             SimplexTableau tableau = PrimalSimplex.build(convexBuilder, options, false);
 
             return new PrimalSimplex(tableau, options);
         }
 
-        public boolean isCapable(final ExpressionsBasedModel model) {
+        @Override public boolean isCapable( ExpressionsBasedModel model) {
             return !model.isAnyVariableInteger() && !model.isAnyExpressionQuadratic();
         }
 
         @Override
-        public Result toModelState(final Result solverState, final ExpressionsBasedModel model) {
+        public Result toModelState( Result solverState,  ExpressionsBasedModel model) {
 
             ArrayR064 modelSolution = ArrayR064.make(model.countVariables());
 
@@ -293,7 +293,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        public Result toSolverState(final Result modelState, final ExpressionsBasedModel model) {
+        public Result toSolverState( Result modelState,  ExpressionsBasedModel model) {
 
             List<Variable> tmpPositives = model.getPositiveVariables();
             List<Variable> tmpNegatives = model.getNegativeVariables();
@@ -319,13 +319,13 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        protected int getIndexInSolver(final ExpressionsBasedModel model, final Variable variable) {
+        protected int getIndexInSolver( ExpressionsBasedModel model,  Variable variable) {
 
-            int retVal = -1;
+            @Var int retVal = -1;
 
             BigDecimal value = variable.getValue();
 
-            if ((value != null && value.signum() >= 0 || variable.isPositive()) && (retVal = model.indexOfPositiveVariable(variable)) >= 0) {
+            if (((value != null && value.signum() >= 0) || variable.isPositive()) && (retVal = model.indexOfPositiveVariable(variable)) >= 0) {
                 return retVal;
             }
 
@@ -383,7 +383,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
          * @deprecated v50 Use {@link LinearSolver#newBuilder()} instead.
          */
         @Deprecated
-        public StandardBuilder(final MatrixStore<Double> mtrxC) {
+        public StandardBuilder( MatrixStore<Double> mtrxC) {
 
             super();
 
@@ -391,7 +391,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         @Override
-        protected LinearSolver doBuild(final Optimisation.Options options) {
+        protected LinearSolver doBuild( Optimisation.Options options) {
 
             SimplexTableau tableau = SimplexTableau.make(this.getOptimisationData(), options);
 
@@ -406,7 +406,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
             super();
         }
 
-        public final B lower(final double... bounds) {
+        public final B lower( double... bounds) {
             double[] lowerBounds = this.getLowerBounds(ZERO);
             for (int i = 0, limit = Math.min(lowerBounds.length, bounds.length); i < limit; i++) {
                 lowerBounds[i] = bounds[i];
@@ -414,29 +414,29 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
             return (B) this;
         }
 
-        public final B lower(final double bound) {
+        public final B lower( double bound) {
             double[] lowerBounds = this.getLowerBounds(ZERO);
             Arrays.fill(lowerBounds, bound);
             return (B) this;
         }
 
-        public final B objective(final double... factors) {
+        public final B objective( double... factors) {
             this.setNumberOfVariables(factors.length);
             this.getObjective().linear().fillMatching(FACTORY.column(factors));
             return (B) this;
         }
 
-        public final B objective(final int index, final double value) {
+        public final B objective( int index,  double value) {
             this.getObjective().linear().set(index, value);
             return (B) this;
         }
 
-        public final B objective(final MatrixStore<Double> mtrxC) {
+        public final B objective( MatrixStore<Double> mtrxC) {
             this.setObjective(LinearSolver.toObjectiveFunction(mtrxC));
             return (B) this;
         }
 
-        public final B upper(final double... bounds) {
+        public final B upper( double... bounds) {
             double[] upperBounds = this.getUpperBounds(POSITIVE_INFINITY);
             for (int i = 0, limit = Math.min(upperBounds.length, bounds.length); i < limit; i++) {
                 upperBounds[i] = bounds[i];
@@ -444,7 +444,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
             return (B) this;
         }
 
-        public final B upper(final double bound) {
+        public final B upper( double bound) {
             double[] upperBounds = this.getUpperBounds(POSITIVE_INFINITY);
             Arrays.fill(upperBounds, bound);
             return (B) this;
@@ -455,7 +455,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         }
 
         protected final LinearFunction<Double> getObjective() {
-            LinearFunction<Double> retVal = super.getObjective(LinearFunction.class);
+            @Var LinearFunction<Double> retVal = super.getObjective(LinearFunction.class);
             if (retVal == null) {
                 retVal = LinearFunction.factory(FACTORY).make(this.countVariables());
                 super.setObjective(retVal);
@@ -480,11 +480,11 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         return new LinearSolver.GeneralBuilder();
     }
 
-    public static LinearSolver.GeneralBuilder newGeneralBuilder(final double... objective) {
+    public static LinearSolver.GeneralBuilder newGeneralBuilder( double... objective) {
         return LinearSolver.newGeneralBuilder().objective(objective);
     }
 
-    public static LinearSolver newSolver(final ExpressionsBasedModel model) {
+    public static LinearSolver newSolver( ExpressionsBasedModel model) {
 
         SimplexTableau tableau = PrimalSimplex.build(model);
 
@@ -495,11 +495,11 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         return new LinearSolver.StandardBuilder();
     }
 
-    public static LinearSolver.StandardBuilder newStandardBuilder(final double... objective) {
+    public static LinearSolver.StandardBuilder newStandardBuilder( double... objective) {
         return LinearSolver.newStandardBuilder().objective(objective);
     }
 
-    public static Optimisation.Result solve(final OptimisationData convex, final Optimisation.Options options, final boolean zeroC) {
+    public static Optimisation.Result solve( OptimisationData convex,  Optimisation.Options options,  boolean zeroC) {
 
         int dualSize = DualSimplex.size(convex);
         int primSize = PrimalSimplex.size(convex);
@@ -508,11 +508,11 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         return dual ? DualSimplex.doSolve(convex, options, zeroC) : PrimalSimplex.doSolve(convex, options, zeroC);
     }
 
-    static LinearFunction<Double> toObjectiveFunction(final MatrixStore<Double> mtrxC) {
+    static LinearFunction<Double> toObjectiveFunction( MatrixStore<Double> mtrxC) {
 
         ProgrammingError.throwIfNull(mtrxC);
 
-        PhysicalStore<Double> tmpC = null;
+        @Var PhysicalStore<Double> tmpC = null;
 
         if (mtrxC instanceof PhysicalStore) {
             tmpC = (PhysicalStore<Double>) mtrxC;
@@ -523,7 +523,7 @@ public abstract class LinearSolver extends GenericSolver implements UpdatableSol
         return LinearFunction.wrap(tmpC);
     }
 
-    protected LinearSolver(final Options solverOptions) {
+    protected LinearSolver( Options solverOptions) {
         super(solverOptions);
     }
 

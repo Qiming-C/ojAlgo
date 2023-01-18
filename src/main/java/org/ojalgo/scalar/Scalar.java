@@ -63,23 +63,25 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         Scalar<N> convert(double value);
 
         @SuppressWarnings("unchecked")
-        default N[] newArrayInstance(final int length) {
+        default N[] newArrayInstance( int length) {
             return (N[]) Array.newInstance(this.zero().get().getClass(), length);
         }
 
         /**
-         * @return The multiplicative identity element
+         *Returns the multiplicative identity element.
+ 
          */
         Scalar<N> one();
 
         /**
-         * @return The additive identity element
+         *Returns the additive identity element.
+ 
          */
         Scalar<N> zero();
 
     }
 
-    static boolean booleanValue(final Comparable<?> number) {
+    static boolean booleanValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.booleanValue(number);
         } else {
@@ -87,7 +89,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static byte byteValue(final Comparable<?> number) {
+    static byte byteValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.byteValue(number);
         } else {
@@ -95,7 +97,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static double doubleValue(final Comparable<?> number) {
+    static double doubleValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.doubleValue(number);
         } else {
@@ -103,7 +105,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static float floatValue(final Comparable<?> number) {
+    static float floatValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.floatValue(number);
         } else {
@@ -111,7 +113,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static int intValue(final Comparable<?> number) {
+    static int intValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.intValue(number);
         } else {
@@ -119,7 +121,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static long longValue(final Comparable<?> number) {
+    static long longValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.longValue(number);
         } else {
@@ -127,7 +129,7 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
         }
     }
 
-    static short shortValue(final Comparable<?> number) {
+    static short shortValue( Comparable<?> number) {
         if (number != null) {
             return NumberDefinition.shortValue(number);
         } else {
@@ -136,43 +138,44 @@ public interface Scalar<N extends Comparable<N>> extends AccessScalar<N>, Field<
     }
 
     @Override
-    default Scalar<N> add(final Scalar<N> addend) {
+    default Scalar<N> add( Scalar<N> addend) {
         return this.add(addend.get());
     }
 
-    default int dimensions() {
+    @Override default int dimensions() {
         return 1;
     }
 
     @Override
-    default Scalar<N> divide(final Scalar<N> divisor) {
+    default Scalar<N> divide( Scalar<N> divisor) {
         return this.divide(divisor.get());
     }
 
     /**
-     * @return true if this is equal to its own norm, modulus or absolute value (non-negative real part and no
+     *See {@link #isAbsolute()}.
+ @return true if this is equal to its own norm, modulus or absolute value (non-negative real part and no
      *         imaginary part); otherwise false.
-     * @see #isAbsolute()
+     * 
      */
     boolean isAbsolute();
 
     @Override
-    default Scalar<N> multiply(final Scalar<N> multiplicand) {
+    default Scalar<N> multiply( Scalar<N> multiplicand) {
         return this.multiply(multiplicand.get());
     }
 
-    default int rank() {
+    @Override default int rank() {
         return 0;
     }
 
     @Override
-    default Scalar<N> subtract(final Scalar<N> subtrahend) {
+    default Scalar<N> subtract( Scalar<N> subtrahend) {
         return this.subtract(subtrahend.get());
     }
 
     BigDecimal toBigDecimal();
 
-    default String toPlainString(final NumberContext context) {
+    default String toPlainString( NumberContext context) {
         return context.enforce(this.toBigDecimal()).toPlainString();
     }
 

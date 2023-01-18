@@ -161,7 +161,7 @@ public abstract class StandardType {
     public static final StringContext TEXT = StandardType.string(0);
     public static final DateContext TIME = new DateContext(DatePart.TIME);
 
-    public static NumberContext amount(final Locale locale) {
+    public static NumberContext amount( Locale locale) {
         return NumberContext.getCurrency(locale);
     }
 
@@ -181,18 +181,18 @@ public abstract class StandardType {
         return NumberContext.getInteger(Locale.getDefault());
     }
 
-    public static NumberContext percent(final Locale locale) {
-        final NumberContext retVal = NumberContext.getPercent(locale);
+    public static NumberContext percent( Locale locale) {
+         NumberContext retVal = NumberContext.getPercent(locale);
         retVal.format(new BigDecimal("0.5000"));
         return retVal;
     }
 
-    public static StringContext string(final int length) {
+    public static StringContext string( int length) {
         return new StringContext(length);
     }
 
     public static NumberContext wholePercentage() {
-        final NumberContext retVal = NumberContext.getPercent(2, Locale.getDefault());
+         NumberContext retVal = NumberContext.getPercent(2, Locale.getDefault());
         retVal.format(0.01);
         return retVal;
     }

@@ -43,105 +43,105 @@ abstract class TreeSeries<K extends Comparable<? super K>, V extends Comparable<
     private final NavigableMap<K, V> myDelegate;
     private String myName = null;
 
-    protected TreeSeries(final NavigableMap<K, V> delegate) {
+    protected TreeSeries( NavigableMap<K, V> delegate) {
         super();
         myDelegate = delegate;
     }
 
-    public Entry<K, V> ceilingEntry(final K key) {
+    @Override public Entry<K, V> ceilingEntry( K key) {
         return myDelegate.ceilingEntry(key);
     }
 
-    public K ceilingKey(final K key) {
+    @Override public K ceilingKey( K key) {
         return myDelegate.ceilingKey(key);
     }
 
-    public void clear() {
+    @Override public void clear() {
         myDelegate.clear();
     }
 
-    public final I colour(final ColourData colour) {
+    @Override public final I colour( ColourData colour) {
         return (I) BasicSeries.super.colour(colour);
     }
 
-    public Comparator<? super K> comparator() {
+    @Override public Comparator<? super K> comparator() {
         return myDelegate.comparator();
     }
 
-    public V compute(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    @Override public V compute( K key,  BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         return myDelegate.compute(key, remappingFunction);
     }
 
-    public V computeIfAbsent(final K key, final Function<? super K, ? extends V> mappingFunction) {
+    @Override public V computeIfAbsent( K key,  Function<? super K, ? extends V> mappingFunction) {
         return myDelegate.computeIfAbsent(key, mappingFunction);
     }
 
-    public V computeIfPresent(final K key, final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    @Override public V computeIfPresent( K key,  BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         return myDelegate.computeIfPresent(key, remappingFunction);
     }
 
-    public boolean containsKey(final Object key) {
+    @Override public boolean containsKey( Object key) {
         return myDelegate.containsKey(key);
     }
 
-    public boolean containsValue(final Object value) {
+    @Override public boolean containsValue( Object value) {
         return myDelegate.containsValue(value);
     }
 
-    public NavigableSet<K> descendingKeySet() {
+    @Override public NavigableSet<K> descendingKeySet() {
         return myDelegate.descendingKeySet();
     }
 
-    public NavigableMap<K, V> descendingMap() {
+    @Override public NavigableMap<K, V> descendingMap() {
         return myDelegate.descendingMap();
     }
 
-    public Set<Entry<K, V>> entrySet() {
+    @Override public Set<Entry<K, V>> entrySet() {
         return myDelegate.entrySet();
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals( Object o) {
         return myDelegate.equals(o);
     }
 
-    public Entry<K, V> firstEntry() {
+    @Override public Entry<K, V> firstEntry() {
         return myDelegate.firstEntry();
     }
 
-    public K firstKey() {
+    @Override public K firstKey() {
         return myDelegate.firstKey();
     }
 
-    public Entry<K, V> floorEntry(final K key) {
+    @Override public Entry<K, V> floorEntry( K key) {
         return myDelegate.floorEntry(key);
     }
 
-    public K floorKey(final K key) {
+    @Override public K floorKey( K key) {
         return myDelegate.floorKey(key);
     }
 
-    public void forEach(final BiConsumer<? super K, ? super V> action) {
+    @Override public void forEach( BiConsumer<? super K, ? super V> action) {
         myDelegate.forEach(action);
     }
 
-    public V get(final K key) {
+    @Override public V get( K key) {
         return myDelegate.get(key);
     }
 
-    public V get(final Object key) {
+    @Override public V get( Object key) {
         return myDelegate.get(key);
     }
 
-    public ColourData getColour() {
+    @Override public ColourData getColour() {
         return myColour;
     }
 
-    public String getName() {
+    @Override public String getName() {
         return myName;
     }
 
-    public V getOrDefault(final Object key, final V defaultValue) {
+    @Override public V getOrDefault( Object key,  V defaultValue) {
         return myDelegate.getOrDefault(key, defaultValue);
     }
 
@@ -150,123 +150,123 @@ abstract class TreeSeries<K extends Comparable<? super K>, V extends Comparable<
         return myDelegate.hashCode();
     }
 
-    public SortedMap<K, V> headMap(final K toKey) {
+    @Override public SortedMap<K, V> headMap( K toKey) {
         return myDelegate.headMap(toKey);
     }
 
-    public NavigableMap<K, V> headMap(final K toKey, final boolean inclusive) {
+    @Override public NavigableMap<K, V> headMap( K toKey,  boolean inclusive) {
         return myDelegate.headMap(toKey, inclusive);
     }
 
-    public Entry<K, V> higherEntry(final K key) {
+    @Override public Entry<K, V> higherEntry( K key) {
         return myDelegate.higherEntry(key);
     }
 
-    public K higherKey(final K key) {
+    @Override public K higherKey( K key) {
         return myDelegate.higherKey(key);
     }
 
-    public boolean isEmpty() {
+    @Override public boolean isEmpty() {
         return myDelegate.isEmpty();
     }
 
-    public Set<K> keySet() {
+    @Override public Set<K> keySet() {
         return myDelegate.keySet();
     }
 
-    public Entry<K, V> lastEntry() {
+    @Override public Entry<K, V> lastEntry() {
         return myDelegate.lastEntry();
     }
 
-    public K lastKey() {
+    @Override public K lastKey() {
         return myDelegate.lastKey();
     }
 
-    public Entry<K, V> lowerEntry(final K key) {
+    @Override public Entry<K, V> lowerEntry( K key) {
         return myDelegate.lowerEntry(key);
     }
 
-    public K lowerKey(final K key) {
+    @Override public K lowerKey( K key) {
         return myDelegate.lowerKey(key);
     }
 
-    public V merge(final K key, final V value, final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    @Override public V merge( K key,  V value,  BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         return myDelegate.merge(key, value, remappingFunction);
     }
 
-    public final I name(final String name) {
+    @Override public final I name( String name) {
         return (I) BasicSeries.super.name(name);
     }
 
-    public NavigableSet<K> navigableKeySet() {
+    @Override public NavigableSet<K> navigableKeySet() {
         return myDelegate.navigableKeySet();
     }
 
-    public Entry<K, V> pollFirstEntry() {
+    @Override public Entry<K, V> pollFirstEntry() {
         return myDelegate.pollFirstEntry();
     }
 
-    public Entry<K, V> pollLastEntry() {
+    @Override public Entry<K, V> pollLastEntry() {
         return myDelegate.pollLastEntry();
     }
 
-    public V put(final K key, final V value) {
+    @Override public V put( K key,  V value) {
         return myDelegate.put(key, value);
     }
 
-    public void putAll(final Map<? extends K, ? extends V> m) {
+    @Override public void putAll( Map<? extends K, ? extends V> m) {
         myDelegate.putAll(m);
     }
 
-    public V putIfAbsent(final K key, final V value) {
+    @Override public V putIfAbsent( K key,  V value) {
         return myDelegate.putIfAbsent(key, value);
     }
 
-    public V remove(final Object key) {
+    @Override public V remove( Object key) {
         return myDelegate.remove(key);
     }
 
-    public boolean remove(final Object key, final Object value) {
+    @Override public boolean remove( Object key,  Object value) {
         return myDelegate.remove(key, value);
     }
 
-    public V replace(final K key, final V value) {
+    @Override public V replace( K key,  V value) {
         return myDelegate.replace(key, value);
     }
 
-    public boolean replace(final K key, final V oldValue, final V newValue) {
+    @Override public boolean replace( K key,  V oldValue,  V newValue) {
         return myDelegate.replace(key, oldValue, newValue);
     }
 
-    public void replaceAll(final BiFunction<? super K, ? super V, ? extends V> function) {
+    @Override public void replaceAll( BiFunction<? super K, ? super V, ? extends V> function) {
         myDelegate.replaceAll(function);
     }
 
-    public void setColour(final ColourData colour) {
+    @Override public void setColour( ColourData colour) {
         myColour = colour;
     }
 
-    public void setName(final String name) {
+    @Override public void setName( String name) {
         myName = name;
     }
 
-    public int size() {
+    @Override public int size() {
         return myDelegate.size();
     }
 
-    public NavigableMap<K, V> subMap(final K fromKey, final boolean fromInclusive, final K toKey, final boolean toInclusive) {
+    @Override public NavigableMap<K, V> subMap( K fromKey,  boolean fromInclusive,  K toKey,  boolean toInclusive) {
         return myDelegate.subMap(fromKey, fromInclusive, toKey, toInclusive);
     }
 
-    public SortedMap<K, V> subMap(final K fromKey, final K toKey) {
+    @Override public SortedMap<K, V> subMap( K fromKey,  K toKey) {
         return myDelegate.subMap(fromKey, toKey);
     }
 
-    public SortedMap<K, V> tailMap(final K fromKey) {
+    @Override public SortedMap<K, V> tailMap( K fromKey) {
         return myDelegate.tailMap(fromKey);
     }
 
-    public NavigableMap<K, V> tailMap(final K fromKey, final boolean inclusive) {
+    @Override public NavigableMap<K, V> tailMap( K fromKey,  boolean inclusive) {
         return myDelegate.tailMap(fromKey, inclusive);
     }
 
@@ -280,11 +280,11 @@ abstract class TreeSeries<K extends Comparable<? super K>, V extends Comparable<
         return retVal.toString();
     }
 
-    public Collection<V> values() {
+    @Override public Collection<V> values() {
         return myDelegate.values();
     }
 
-    final void appendLastPartToString(final StringBuilder builder) {
+    final void appendLastPartToString( StringBuilder builder) {
 
         if (myColour != null) {
             builder.append(TypeUtils.toHexString(myColour.getRGB()));
@@ -311,7 +311,7 @@ abstract class TreeSeries<K extends Comparable<? super K>, V extends Comparable<
 
     final StringBuilder toStringFirstPart() {
 
-        final StringBuilder retVal = new StringBuilder();
+         var retVal = new StringBuilder();
 
         if (myName != null) {
             retVal.append(myName);

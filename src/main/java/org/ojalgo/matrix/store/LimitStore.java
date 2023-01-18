@@ -23,19 +23,19 @@ package org.ojalgo.matrix.store;
 
 final class LimitStore<N extends Comparable<N>> extends SelectingStore<N> {
 
-    LimitStore(final int rowsCount, final int columnsCount, final MatrixStore<N> base) {
+    LimitStore( int rowsCount,  int columnsCount,  MatrixStore<N> base) {
         super(base, rowsCount, columnsCount);
     }
 
-    LimitStore(final long rowsCount, final long columnsCount, final MatrixStore<N> base) {
+    LimitStore( long rowsCount,  long columnsCount,  MatrixStore<N> base) {
         super(base, rowsCount, columnsCount);
     }
 
-    public double doubleValue(final long row, final long col) {
+    @Override public double doubleValue( long row,  long col) {
         return this.base().doubleValue(row, col);
     }
 
-    public N get(final long row, final long col) {
+    @Override public N get( long row,  long col) {
         return this.base().get(row, col);
     }
 

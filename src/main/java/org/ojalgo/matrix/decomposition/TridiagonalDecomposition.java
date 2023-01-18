@@ -29,18 +29,18 @@ abstract class TridiagonalDecomposition<N extends Comparable<N>> extends InPlace
     private transient MatrixStore<N> myD = null;
     private transient DecompositionStore<N> myQ = null;
 
-    protected TridiagonalDecomposition(final PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
+    protected TridiagonalDecomposition( PhysicalStore.Factory<N, ? extends DecompositionStore<N>> factory) {
         super(factory);
     }
 
-    public final MatrixStore<N> getD() {
+    @Override public final MatrixStore<N> getD() {
         if (myD == null) {
             myD = this.makeD();
         }
         return myD;
     }
 
-    public final MatrixStore<N> getQ() {
+    @Override public final MatrixStore<N> getQ() {
         return this.getDecompositionQ();
     }
 

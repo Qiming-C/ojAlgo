@@ -21,6 +21,8 @@
  */
 package org.ojalgo.array.operation;
 
+import com.google.errorprone.annotations.Var;
+
 /**
  * Given two vectors x and y, the ?swap routines return vectors y and x swapped, each replacing the other.
  *
@@ -30,8 +32,8 @@ public abstract class SWAP implements ArrayOperation {
 
     public static int THRESHOLD = 128;
 
-    public static void exchangeColumns(final double[][] target, final int colA, final int colB) {
-        double tmpElem;
+    public static void exchangeColumns( double[][] target,  int colA,  int colB) {
+        @Var double tmpElem;
         int limit = target.length;
         for (int i = 0; i < limit; i++) {
             tmpElem = target[i][colA];
@@ -40,7 +42,7 @@ public abstract class SWAP implements ArrayOperation {
         }
     }
 
-    public static void exchangeRows(final double[][] target, final int rowA, final int rowB) {
+    public static void exchangeRows( double[][] target,  int rowA,  int rowB) {
         double[] tmpRow = target[rowA];
         target[rowA] = target[rowB];
         target[rowB] = tmpRow;

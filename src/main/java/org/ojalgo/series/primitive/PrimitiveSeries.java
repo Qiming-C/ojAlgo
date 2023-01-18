@@ -21,6 +21,7 @@
  */
 package org.ojalgo.series.primitive;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.random.scedasticity.ScedasticityModel;
@@ -28,11 +29,11 @@ import org.ojalgo.structure.Access1D;
 
 public abstract class PrimitiveSeries implements Access1D<Double> {
 
-    public static PrimitiveSeries copy(final Access1D<?> template) {
+    public static PrimitiveSeries copy( Access1D<?> template) {
         return new AccessSeries(Array1D.R064.copy(template));
     }
 
-    public static PrimitiveSeries wrap(final Access1D<?> base) {
+    public static PrimitiveSeries wrap( Access1D<?> base) {
         return new AccessSeries(base);
     }
 
@@ -40,11 +41,11 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         super();
     }
 
-    public PrimitiveSeries add(final double addend) {
+    public PrimitiveSeries add( double addend) {
         return new UnaryFunctionSeries(this, PrimitiveMath.ADD.second(addend));
     }
 
-    public PrimitiveSeries add(final PrimitiveSeries addend) {
+    public PrimitiveSeries add( PrimitiveSeries addend) {
         return new BinaryFunctionSeries(this, PrimitiveMath.ADD, addend);
     }
 
@@ -52,7 +53,7 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return this.toDataSeries();
     }
 
-    public long count() {
+    @Override public long count() {
         return this.size();
     }
 
@@ -63,19 +64,19 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return new DifferencesSeries(this, 1);
     }
 
-    public PrimitiveSeries differences(final int period) {
+    public PrimitiveSeries differences( int period) {
         return new DifferencesSeries(this, period);
     }
 
-    public PrimitiveSeries divide(final double divisor) {
+    public PrimitiveSeries divide( double divisor) {
         return new UnaryFunctionSeries(this, PrimitiveMath.DIVIDE.second(divisor));
     }
 
-    public PrimitiveSeries divide(final PrimitiveSeries divisor) {
+    public PrimitiveSeries divide( PrimitiveSeries divisor) {
         return new BinaryFunctionSeries(this, PrimitiveMath.DIVIDE, divisor);
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return this.value((int) index);
     }
 
@@ -83,11 +84,11 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return new UnaryFunctionSeries(this, PrimitiveMath.EXP);
     }
 
-    public Double get(final int index) {
+    public Double get( int index) {
         return this.value(index);
     }
 
-    public Double get(final long index) {
+    @Override public Double get( long index) {
         return this.value((int) index);
     }
 
@@ -95,11 +96,11 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return new UnaryFunctionSeries(this, PrimitiveMath.LOG);
     }
 
-    public PrimitiveSeries multiply(final double multiplicand) {
+    public PrimitiveSeries multiply( double multiplicand) {
         return new UnaryFunctionSeries(this, PrimitiveMath.MULTIPLY.second(multiplicand));
     }
 
-    public PrimitiveSeries multiply(final PrimitiveSeries multiplicand) {
+    public PrimitiveSeries multiply( PrimitiveSeries multiplicand) {
         return new BinaryFunctionSeries(this, PrimitiveMath.MULTIPLY, multiplicand);
     }
 
@@ -107,7 +108,7 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
      * A positive valued shift will prune that many elements off the head of the series. A negative valued
      * shift will prune that many elements off the tail of the series.
      */
-    public PrimitiveSeries prune(final int shift) {
+    public PrimitiveSeries prune( int shift) {
         return new PrunedSeries(this, shift);
     }
 
@@ -118,17 +119,17 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return new QuotientsSeries(this, 1);
     }
 
-    public PrimitiveSeries quotients(final int period) {
+    public PrimitiveSeries quotients( int period) {
         return new QuotientsSeries(this, period);
     }
 
-    public PrimitiveSeries runningProduct(final double initialValue) {
+    public PrimitiveSeries runningProduct( double initialValue) {
 
         int tmpNewSize = this.size() + 1;
 
         double[] tmpValues = new double[tmpNewSize];
 
-        double tmpAggrVal = tmpValues[0] = initialValue;
+        @Var double tmpAggrVal = tmpValues[0] = initialValue;
         for (int i = 1; i < tmpNewSize; i++) {
             tmpValues[i] = tmpAggrVal *= this.value(i - 1);
         }
@@ -136,13 +137,13 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return DataSeries.wrap(tmpValues);
     }
 
-    public PrimitiveSeries runningSum(final double initialValue) {
+    public PrimitiveSeries runningSum( double initialValue) {
 
         int tmpNewSize = this.size() + 1;
 
         double[] tmpValues = new double[tmpNewSize];
 
-        double tmpAggrVal = tmpValues[0] = initialValue;
+        @Var double tmpAggrVal = tmpValues[0] = initialValue;
         for (int i = 1; i < tmpNewSize; i++) {
             tmpValues[i] = tmpAggrVal += this.value(i - 1);
         }
@@ -150,13 +151,13 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
         return DataSeries.wrap(tmpValues);
     }
 
-    public abstract int size();
+    @Override public abstract int size();
 
-    public PrimitiveSeries subtract(final double subtrahend) {
+    public PrimitiveSeries subtract( double subtrahend) {
         return new UnaryFunctionSeries(this, PrimitiveMath.SUBTRACT.second(subtrahend));
     }
 
-    public PrimitiveSeries subtract(final PrimitiveSeries subtrahend) {
+    public PrimitiveSeries subtract( PrimitiveSeries subtrahend) {
         return new BinaryFunctionSeries(this, PrimitiveMath.SUBTRACT, subtrahend);
     }
 
@@ -189,7 +190,7 @@ public abstract class PrimitiveSeries implements Access1D<Double> {
      *
      * @see ScedasticityModel#variances(PrimitiveSeries)
      */
-    public PrimitiveSeries variances(final ScedasticityModel model) {
+    public PrimitiveSeries variances( ScedasticityModel model) {
         return model.variances(this);
     }
 

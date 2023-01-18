@@ -38,23 +38,23 @@ public interface DataInterpreter<T> extends DataReader.Deserializer<T>, DataWrit
 
     DataInterpreter<String> STRING = new DataInterpreter<>() {
 
-        public String deserialize(final DataInput input) throws IOException {
+        @Override public String deserialize( DataInput input) throws IOException {
             return input.readUTF();
         }
 
-        public void serialize(final String data, final DataOutput output) throws IOException {
+        @Override public void serialize( String data,  DataOutput output) throws IOException {
             output.writeUTF(data);
         }
 
     };
 
-    static <N extends Comparable<N>> DataInterpreter<ArrayAnyD<N>> newIDX(final DenseArray.Factory<N> denseArray) {
+    static <N extends Comparable<N>> DataInterpreter<ArrayAnyD<N>> newIDX( DenseArray.Factory<N> denseArray) {
 
         ArrayAnyD.Factory<N> factory = ArrayAnyD.factory(denseArray);
 
         return new DataInterpreter<>() {
 
-            public ArrayAnyD<N> deserialize(final DataInput input) throws IOException {
+            @Override public ArrayAnyD<N> deserialize( DataInput input) throws IOException {
 
                 input.readByte();
                 input.readByte();
@@ -96,7 +96,7 @@ public interface DataInterpreter<T> extends DataReader.Deserializer<T>, DataWrit
                 return data;
             }
 
-            public void serialize(final ArrayAnyD<N> data, final DataOutput output) throws IOException {
+            @Override public void serialize( ArrayAnyD<N> data,  DataOutput output) throws IOException {
 
                 int rank = data.rank();
 
@@ -118,15 +118,15 @@ public interface DataInterpreter<T> extends DataReader.Deserializer<T>, DataWrit
         };
     }
 
-    static <T> DataInterpreter<EntryPair.KeyedPrimitive<KeyValue.Dual<T>>> newScoredDual(final DataInterpreter<T> keyInterpreter) {
+    static <T> DataInterpreter<EntryPair.KeyedPrimitive<KeyValue.Dual<T>>> newScoredDual( DataInterpreter<T> keyInterpreter) {
 
         return new DataInterpreter<>() {
 
-            public EntryPair.KeyedPrimitive<KeyValue.Dual<T>> deserialize(final DataInput input) throws IOException {
+            @Override public EntryPair.KeyedPrimitive<KeyValue.Dual<T>> deserialize( DataInput input) throws IOException {
                 return EntryPair.of(keyInterpreter.deserialize(input), keyInterpreter.deserialize(input), input.readFloat());
             }
 
-            public void serialize(final EntryPair.KeyedPrimitive<KeyValue.Dual<T>> data, final DataOutput output) throws IOException {
+            @Override public void serialize( EntryPair.KeyedPrimitive<KeyValue.Dual<T>> data,  DataOutput output) throws IOException {
                 KeyValue.Dual<T> key = data.getKey();
                 keyInterpreter.serialize(key.first, output);
                 keyInterpreter.serialize(key.second, output);
@@ -136,19 +136,19 @@ public interface DataInterpreter<T> extends DataReader.Deserializer<T>, DataWrit
         };
     }
 
-    default DataReader<T> newReader(final File file) {
+    default DataReader<T> newReader( File file) {
         return DataReader.of(file, this);
     }
 
-    default DataReader<T> newReader(final File file, final OperatorWithException<InputStream> filter) {
+    default DataReader<T> newReader( File file,  OperatorWithException<InputStream> filter) {
         return DataReader.of(file, this, filter);
     }
 
-    default DataWriter<T> newWriter(final File file) {
+    default DataWriter<T> newWriter( File file) {
         return DataWriter.of(file, this);
     }
 
-    default DataWriter<T> newWriter(final File file, final OperatorWithException<OutputStream> filter) {
+    default DataWriter<T> newWriter( File file,  OperatorWithException<OutputStream> filter) {
         return DataWriter.of(file, this, filter);
     }
 

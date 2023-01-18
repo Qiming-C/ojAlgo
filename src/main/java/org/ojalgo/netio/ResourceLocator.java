@@ -21,6 +21,10 @@
  */
 package org.ojalgo.netio;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.common.base.Splitter;
+import com.google.errorprone.annotations.Var;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -33,12 +37,12 @@ import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.ojalgo.ProgrammingError;
 
 /**
@@ -72,36 +76,36 @@ public final class ResourceLocator {
             myValues = new Properties();
         }
 
-        KeyedValues(final Properties defaults) {
+        KeyedValues( Properties defaults) {
             super();
             myValues = new Properties(defaults);
         }
 
-        public void clear() {
+        @Override public void clear() {
             myOrderedKeys.clear();
             myValues.clear();
         }
 
-        public boolean containsKey(final Object key) {
+        @Override public boolean containsKey( Object key) {
             return myValues.containsKey(key);
         }
 
-        public boolean containsValue(final Object value) {
+        @Override public boolean containsValue( Object value) {
             return myValues.containsValue(value);
         }
 
-        public Set<Entry<String, String>> entrySet() {
+        @Override public Set<Entry<String, String>> entrySet() {
             return myValues.entrySet().stream().map(e -> new Entry<String, String>() {
 
-                public String getKey() {
+                @Override public String getKey() {
                     return e.getKey().toString();
                 }
 
-                public String getValue() {
+                @Override public String getValue() {
                     return e.getValue().toString();
                 }
 
-                public String setValue(final String value) {
+                @Override public String setValue( String value) {
                     String prev = e.getValue().toString();
                     e.setValue(value);
                     return prev;
@@ -110,18 +114,18 @@ public final class ResourceLocator {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if ((obj == null) || !(obj instanceof KeyedValues)) {
                 return false;
             }
-            KeyedValues other = (KeyedValues) obj;
+            var other = (KeyedValues) obj;
             return Objects.equals(myOrderedKeys, other.myOrderedKeys) && Objects.equals(myValues, other.myValues);
         }
 
-        public String get(final Object key) {
+        @Override public String get( Object key) {
             return myValues.getProperty(key.toString());
         }
 
@@ -130,11 +134,11 @@ public final class ResourceLocator {
             return Objects.hash(myOrderedKeys, myValues);
         }
 
-        public boolean isEmpty() {
+        @Override public boolean isEmpty() {
             return myValues.isEmpty();
         }
 
-        public Set<String> keySet() {
+        @Override public Set<String> keySet() {
             return myValues.stringPropertyNames();
         }
 
@@ -143,11 +147,11 @@ public final class ResourceLocator {
          *
          * @param keysAndValues A query (or form) string
          */
-        public void parse(final String keysAndValues) {
+        public void parse( String keysAndValues) {
             if (keysAndValues != null) {
-                String[] pairs = keysAndValues.split("&");
-                for (int i = 0; i < pairs.length; i++) {
-                    String pair = pairs[i];
+                List<String> pairs = Splitter.on('&').splitToList(keysAndValues);
+                for (int i = 0; i < pairs.size(); i++) {
+                    String pair = pairs.get(i);
                     int split = pair.indexOf("=");
                     String key = pair.substring(0, split);
                     String value = pair.substring(split + 1);
@@ -156,22 +160,22 @@ public final class ResourceLocator {
             }
         }
 
-        public String put(final String key, final String value) {
+        @Override public String put( String key,  String value) {
             myOrderedKeys.add(key);
             return String.valueOf(myValues.setProperty(key, value));
         }
 
-        public void putAll(final Map<? extends String, ? extends String> m) {
+        @Override public void putAll( Map<? extends String, ? extends String> m) {
             myValues.putAll(m);
         }
 
-        public String remove(final Object key) {
+        @Override public String remove( Object key) {
             myOrderedKeys.remove(key);
             Object removed = myValues.remove(key);
             return removed != null ? removed.toString() : null;
         }
 
-        public int size() {
+        @Override public int size() {
             return myValues.size();
         }
 
@@ -183,7 +187,7 @@ public final class ResourceLocator {
             return myOrderedKeys.stream().map(key -> key + "=" + myValues.getProperty(key)).collect(Collectors.joining("&"));
         }
 
-        public Collection<String> values() {
+        @Override public Collection<String> values() {
             return myValues.values().stream().map(Object::toString).collect(Collectors.toList());
         }
 
@@ -208,27 +212,27 @@ public final class ResourceLocator {
         private final ResourceSpecification myResourceSpecification;
         private final ResourceLocator.Session mySession;
 
-        Request(final ResourceLocator.Session session) {
+        Request( ResourceLocator.Session session) {
             super();
             mySession = session;
             myResourceSpecification = new ResourceSpecification();
         }
 
-        Request(final ResourceLocator.Session session, final URL url) {
+        Request( ResourceLocator.Session session,  URL url) {
             super();
             mySession = session;
             myResourceSpecification = new ResourceSpecification(url);
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Request)) {
                 return false;
             }
-            Request other = (Request) obj;
+            var other = (Request) obj;
             if (!myForm.equals(other.myForm) || (myMethod != other.myMethod)) {
                 return false;
             }
@@ -249,12 +253,12 @@ public final class ResourceLocator {
             return true;
         }
 
-        public ResourceLocator.Request form(final String form) {
+        public ResourceLocator.Request form( String form) {
             myForm.parse(form);
             return this;
         }
 
-        public ResourceLocator.Request form(final String key, final String value) {
+        public ResourceLocator.Request form( String key,  String value) {
             ProgrammingError.throwIfNull(key);
             if (value != null) {
                 myForm.put(key, value);
@@ -264,40 +268,40 @@ public final class ResourceLocator {
             return this;
         }
 
-        public ResourceLocator.Request fragment(final String fragment) {
+        public ResourceLocator.Request fragment( String fragment) {
             myResourceSpecification.setFragment(fragment);
             return this;
         }
 
-        public String getFormValue(final String key) {
+        public String getFormValue( String key) {
             return myForm.get(key);
         }
 
-        public String getQueryValue(final String key) {
+        public String getQueryValue( String key) {
             return myResourceSpecification.getQueryValue(key);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + myForm.hashCode();
             result = prime * result + ((myMethod == null) ? 0 : myMethod.hashCode());
             result = prime * result + ((myResourceSpecification == null) ? 0 : myResourceSpecification.hashCode());
             return prime * result + ((mySession == null) ? 0 : mySession.hashCode());
         }
 
-        public ResourceLocator.Request host(final String host) {
+        public ResourceLocator.Request host( String host) {
             myResourceSpecification.setHost(host);
             return this;
         }
 
-        public ResourceLocator.Request method(final Method method) {
+        public ResourceLocator.Request method( Method method) {
             myMethod = method;
             return this;
         }
 
-        public ResourceLocator.Request path(final String path) {
+        public ResourceLocator.Request path( String path) {
             myResourceSpecification.setPath(path);
             return this;
         }
@@ -305,12 +309,12 @@ public final class ResourceLocator {
         /**
          * The default (null) value is -1.
          */
-        public ResourceLocator.Request port(final int port) {
+        public ResourceLocator.Request port( int port) {
             myResourceSpecification.setPort(port);
             return this;
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             mySession.print(receiver);
             receiver.println("Request URL: {}", this.toURL());
             if (myForm.size() > 0) {
@@ -318,12 +322,12 @@ public final class ResourceLocator {
             }
         }
 
-        public ResourceLocator.Request query(final String query) {
+        public ResourceLocator.Request query( String query) {
             myResourceSpecification.setQuery(query);
             return this;
         }
 
-        public ResourceLocator.Request query(final String key, final String value) {
+        public ResourceLocator.Request query( String key,  String value) {
             myResourceSpecification.putQueryEntry(key, value);
             return this;
         }
@@ -335,7 +339,7 @@ public final class ResourceLocator {
         /**
          * Protocol The default value is "https"
          */
-        public ResourceLocator.Request scheme(final String scheme) {
+        public ResourceLocator.Request scheme( String scheme) {
             myResourceSpecification.setScheme(scheme);
             return this;
         }
@@ -345,15 +349,13 @@ public final class ResourceLocator {
             return this.toURL().toString();
         }
 
-        private String query() {
-            return myResourceSpecification.getQuery();
-        }
+        
 
         private URL toURL() {
             return myResourceSpecification.toURL();
         }
 
-        void configure(final HttpURLConnection connection) {
+        void configure( HttpURLConnection connection) {
             try {
                 connection.setRequestMethod(myMethod.name());
             } catch (ProtocolException exception) {
@@ -375,11 +377,11 @@ public final class ResourceLocator {
 
         URLConnection newConnection() {
 
-            URLConnection retVal = null;
+            @Var URLConnection retVal = null;
             try {
                 CookieHandler.setDefault(mySession.getCookieManager());
                 retVal = this.toURL().openConnection();
-            } catch (final IOException exception) {
+            } catch ( IOException exception) {
                 exception.printStackTrace();
             }
             return retVal;
@@ -394,7 +396,7 @@ public final class ResourceLocator {
 
         private transient String myString;
 
-        Response(final ResourceLocator.Request request) {
+        Response( ResourceLocator.Request request) {
 
             super();
 
@@ -426,8 +428,9 @@ public final class ResourceLocator {
         }
 
         /**
-         * @return The http response status code, or -1 if this is not http/hhtps or if the code cannot be
-         *         discerned from the response
+         *Returns the http response status code, or -1 if this is not http/hhtps or if the code cannot be
+         discerned from the response.
+ 
          */
         public int getStatusCode() {
             if (myConnection instanceof HttpURLConnection) {
@@ -447,11 +450,12 @@ public final class ResourceLocator {
          * (Those methods can be called multiple timea.)
          */
         public Reader getStreamReader() {
-            return new InputStreamReader(this.getInputStream());
+            return new InputStreamReader(this.getInputStream(), UTF_8);
         }
 
         /**
-         * @return true if the status (response) code is in [200,300)
+         *Returns true if the status (response) code is in [200,300).
+ 
          */
         public boolean isResponseOK() {
             int statusCode = this.getStatusCode();
@@ -462,7 +466,7 @@ public final class ResourceLocator {
             }
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             receiver.println("Response body: {}", this.toString());
             receiver.println("Response headers: {}", myConnection.getHeaderFields());
             receiver.println("<Recreated>");
@@ -476,8 +480,8 @@ public final class ResourceLocator {
 
             if (myString == null) {
 
-                StringBuilder builder = new StringBuilder();
-                String line = null;
+                var builder = new StringBuilder();
+                @Var String line = null;
                 try (BufferedReader reader = new BufferedReader(this.getStreamReader())) {
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
@@ -495,10 +499,10 @@ public final class ResourceLocator {
          * Open a connection and get the input stream.
          */
         public InputStream getInputStream() {
-            InputStream retVal = null;
+            @Var InputStream retVal = null;
             try {
                 retVal = myConnection.getInputStream();
-            } catch (final IOException exception) {
+            } catch ( IOException exception) {
                 exception.printStackTrace();
             }
             return retVal;
@@ -517,33 +521,33 @@ public final class ResourceLocator {
         }
 
         @Override
-        public boolean equals(final Object obj) {
+        public boolean equals( Object obj) {
             if (this == obj) {
                 return true;
             }
             if (!(obj instanceof Session)) {
                 return false;
             }
-            Session other = (Session) obj;
+            var other = (Session) obj;
             if (!myCookieManager.equals(other.myCookieManager) || !myParameters.equals(other.myParameters)) {
                 return false;
             }
             return true;
         }
 
-        public String getParameterValue(final String key) {
+        public String getParameterValue( String key) {
             return myParameters.get(key);
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
+             int prime = 31;
+            @Var int result = 1;
             result = prime * result + myCookieManager.hashCode();
             return prime * result + myParameters.hashCode();
         }
 
-        public ResourceLocator.Session parameter(final String key, final String value) {
+        public ResourceLocator.Session parameter( String key,  String value) {
             if (value != null) {
                 myParameters.put(key, value);
             } else {
@@ -552,7 +556,7 @@ public final class ResourceLocator {
             return this;
         }
 
-        public void print(final BasicLogger receiver) {
+        @Override public void print( BasicLogger receiver) {
             receiver.println("Session parameters: {}", myParameters);
             receiver.println("Session cookies: {}", myCookieManager.getCookieStore().getCookies());
         }
@@ -561,7 +565,7 @@ public final class ResourceLocator {
             return new Request(this);
         }
 
-        public Request request(final String url) {
+        public Request request( String url) {
             try {
                 return new Request(this, new URL(url));
             } catch (MalformedURLException exception) {
@@ -591,7 +595,7 @@ public final class ResourceLocator {
         return new Session();
     }
 
-    static String urldecode(final String encoded) {
+    static String urldecode( String encoded) {
         try {
             return URLDecoder.decode(encoded, UTF_8);
         } catch (UnsupportedEncodingException exception) {
@@ -599,7 +603,7 @@ public final class ResourceLocator {
         }
     }
 
-    static String urlencode(final String unencoded) {
+    static String urlencode( String unencoded) {
         try {
             return URLEncoder.encode(unencoded, UTF_8);
         } catch (UnsupportedEncodingException exception) {
@@ -614,17 +618,17 @@ public final class ResourceLocator {
         super();
     }
 
-    public ResourceLocator(final String url) {
+    public ResourceLocator( String url) {
         super();
         myRequest = mySession.request(url);
     }
 
-    public ResourceLocator form(final String key, final String value) {
+    public ResourceLocator form( String key,  String value) {
         this.request().form(key, value);
         return this;
     }
 
-    public ResourceLocator fragment(final String fragment) {
+    public ResourceLocator fragment( String fragment) {
         this.request().fragment(fragment);
         return this;
     }
@@ -640,17 +644,17 @@ public final class ResourceLocator {
         return this.response().getInputStream();
     }
 
-    public ResourceLocator host(final String host) {
+    public ResourceLocator host( String host) {
         this.request().host(host);
         return this;
     }
 
-    public ResourceLocator method(final Method method) {
+    public ResourceLocator method( Method method) {
         this.request().method(method);
         return this;
     }
 
-    public ResourceLocator path(final String path) {
+    public ResourceLocator path( String path) {
         this.request().path(path);
         return this;
     }
@@ -658,12 +662,12 @@ public final class ResourceLocator {
     /**
      * The default (null) value is -1.
      */
-    public ResourceLocator port(final int port) {
+    public ResourceLocator port( int port) {
         this.request().port(port);
         return this;
     }
 
-    public ResourceLocator query(final String key, final String value) {
+    public ResourceLocator query( String key,  String value) {
         this.request().query(key, value);
         return this;
     }
@@ -671,7 +675,7 @@ public final class ResourceLocator {
     /**
      * Protocol The default value is "https"
      */
-    public ResourceLocator scheme(final String scheme) {
+    public ResourceLocator scheme( String scheme) {
         this.request().scheme(scheme);
         return this;
     }

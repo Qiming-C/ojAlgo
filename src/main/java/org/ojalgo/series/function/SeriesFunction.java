@@ -48,14 +48,14 @@ public abstract class SeriesFunction<K extends Comparable<? super K>> {
         myData = null;
     }
 
-    protected SeriesFunction(final BasicSeries<K, ? extends Comparable<?>> data) {
+    protected SeriesFunction( BasicSeries<K, ? extends Comparable<?>> data) {
 
         super();
 
         myData = Collections.singletonMap(data.getName(), data);
     }
 
-    protected SeriesFunction(final Map<String, ? extends BasicSeries<K, ? extends Comparable<?>>> data) {
+    protected SeriesFunction( Map<String, ? extends BasicSeries<K, ? extends Comparable<?>>> data) {
 
         super();
 
@@ -63,9 +63,10 @@ public abstract class SeriesFunction<K extends Comparable<? super K>> {
     }
 
     /**
-     * @param key One or more time series keys
-     * @return A map with one entry per series. Each entry/series has the same number of elements as there
-     *         were input keys.
+     *Returns a map with one entry per series. Each entry/series has the same number of elements as there
+         were input keys.
+ @param key One or more time series keys
+     * 
      */
     public abstract Map<String, Access1D<?>> invoke(K... key);
 
@@ -73,7 +74,7 @@ public abstract class SeriesFunction<K extends Comparable<? super K>> {
         return new ArrayList<>(myData.keySet());
     }
 
-    protected BasicSeries<K, ? extends Comparable<?>> getSeries(final String name) {
+    protected BasicSeries<K, ? extends Comparable<?>> getSeries( String name) {
         return myData.get(name);
     }
 

@@ -29,37 +29,37 @@ final class BlackLittermanContext implements FinancePortfolio.Context {
         super();
     }
 
-    public double calculatePortfolioReturn(final FinancePortfolio weightsPortfolio) {
+    @Override public double calculatePortfolioReturn( FinancePortfolio weightsPortfolio) {
         // TODO Auto-generated method stub
         return 0;
     }
 
-    public double calculatePortfolioVariance(final FinancePortfolio weightsPortfolio) {
+    @Override public double calculatePortfolioVariance( FinancePortfolio weightsPortfolio) {
         // TODO Auto-generated method stub
         return 0;
     }
 
-    public MatrixR064 getAssetReturns() {
+    @Override public MatrixR064 getAssetReturns() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public MatrixR064 getAssetVolatilities() {
+    @Override public MatrixR064 getAssetVolatilities() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public MatrixR064 getCorrelations() {
+    @Override public MatrixR064 getCorrelations() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public MatrixR064 getCovariances() {
+    @Override public MatrixR064 getCovariances() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public int size() {
+    @Override public int size() {
         // TODO Auto-generated method stub
         return 0;
     }

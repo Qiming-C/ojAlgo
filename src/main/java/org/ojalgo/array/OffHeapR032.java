@@ -28,22 +28,22 @@ final class OffHeapR032 extends OffHeapArray {
 
     private final long myPointer;
 
-    OffHeapR032(final long count) {
+    OffHeapR032( long count) {
 
         super(OffHeapArray.R032, count);
 
         myPointer = NativeMemory.allocateFloatArray(this, count);
     }
 
-    public void add(final long index, final Comparable<?> addend) {
+    @Override public void add( long index,  Comparable<?> addend) {
         this.add(index, Scalar.floatValue(addend));
     }
 
-    public double doubleValue(final long index) {
+    @Override public double doubleValue( long index) {
         return NativeMemory.getFloat(myPointer, index);
     }
 
-    public float floatValue(final long index) {
+    @Override public float floatValue( long index) {
         return NativeMemory.getFloat(myPointer, index);
     }
 
@@ -52,15 +52,15 @@ final class OffHeapR032 extends OffHeapArray {
         NativeMemory.initialiseFloatArray(myPointer, this.count());
     }
 
-    public void set(final long index, final Comparable<?> value) {
+    @Override public void set( long index,  Comparable<?> value) {
         this.set(index, Scalar.floatValue(value));
     }
 
-    public void set(final long index, final double value) {
+    @Override public void set( long index,  double value) {
         NativeMemory.setFloat(myPointer, index, (float) value);
     }
 
-    public void set(final long index, final float value) {
+    @Override public void set( long index,  float value) {
         NativeMemory.setFloat(myPointer, index, value);
     }
 

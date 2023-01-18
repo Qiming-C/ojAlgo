@@ -28,19 +28,19 @@ package org.ojalgo.array;
 @Deprecated
 public final class Primitive64Array extends ArrayR064 {
 
-    public static Primitive64Array make(final int size) {
+    public static Primitive64Array make( int size) {
         return new Primitive64Array(size);
     }
 
-    public static Primitive64Array wrap(final double... data) {
+    public static Primitive64Array wrap( double... data) {
         return new Primitive64Array(data);
     }
 
-    Primitive64Array(final double[] data) {
+    Primitive64Array( double[] data) {
         super(data);
     }
 
-    Primitive64Array(final int size) {
+    Primitive64Array( int size) {
         super(size);
     }
 

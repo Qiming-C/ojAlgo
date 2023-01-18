@@ -29,7 +29,7 @@ public final class SecondOrderApproximation<N extends Comparable<N>> extends App
 
     private final QuadraticFunction<N> myDelegate;
 
-    public SecondOrderApproximation(final MultiaryFunction.TwiceDifferentiable<N> function, final Access1D<N> point) {
+    public SecondOrderApproximation( MultiaryFunction.TwiceDifferentiable<N> function,  Access1D<N> point) {
 
         super(function, point);
 
@@ -44,19 +44,19 @@ public final class SecondOrderApproximation<N extends Comparable<N>> extends App
         myDelegate.setConstant(constant);
     }
 
-    public int arity() {
+    @Override public int arity() {
         return myDelegate.arity();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!super.equals(obj) || !(obj instanceof SecondOrderApproximation)) {
             return false;
         }
-        final SecondOrderApproximation<?> other = (SecondOrderApproximation<?>) obj;
+         var other = (SecondOrderApproximation<?>) obj;
         if (myDelegate == null) {
             if (other.myDelegate != null) {
                 return false;
@@ -67,22 +67,22 @@ public final class SecondOrderApproximation<N extends Comparable<N>> extends App
         return true;
     }
 
-    public MatrixStore<N> getGradient(final Access1D<N> point) {
+    @Override public MatrixStore<N> getGradient( Access1D<N> point) {
         return myDelegate.getGradient(this.shift(point));
     }
 
-    public MatrixStore<N> getHessian(final Access1D<N> point) {
+    @Override public MatrixStore<N> getHessian( Access1D<N> point) {
         return myDelegate.getHessian(null);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = super.hashCode();
         return (prime * result) + ((myDelegate == null) ? 0 : myDelegate.hashCode());
     }
 
-    public N invoke(final Access1D<N> arg) {
+    @Override public N invoke( Access1D<N> arg) {
         return myDelegate.invoke(this.shift(arg));
     }
 

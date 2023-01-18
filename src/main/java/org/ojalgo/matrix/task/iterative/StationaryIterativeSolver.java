@@ -40,7 +40,7 @@ public abstract class StationaryIterativeSolver extends IterativeSolverTask {
         return myRelaxationFactor;
     }
 
-    public final void setRelaxationFactor(final double relaxation) {
+    public final void setRelaxationFactor( double relaxation) {
         myRelaxationFactor = relaxation;
     }
 

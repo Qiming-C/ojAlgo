@@ -45,7 +45,7 @@ public final class DateContext extends FormatContext<Date> {
     private static final DatePart DEFAULT_PART = DatePart.DATETIME;
     private static final DateStyle DEFAULT_STYLE = DateStyle.SHORT;
 
-    public static Format toFormat(final DatePart part, final DateStyle style, final Locale locale) {
+    public static Format toFormat( DatePart part,  DateStyle style,  Locale locale) {
         return part != null ? part.getFormat(style, locale) : DEFAULT_PART.getFormat(style, locale);
     }
 
@@ -60,11 +60,11 @@ public final class DateContext extends FormatContext<Date> {
         myStyle = DEFAULT_STYLE;
     }
 
-    public DateContext(final DatePart part) {
+    public DateContext( DatePart part) {
         this(part, DEFAULT_STYLE, Locale.getDefault());
     }
 
-    public DateContext(final DatePart part, final DateStyle style, final Locale locale) {
+    public DateContext( DatePart part,  DateStyle style,  Locale locale) {
 
         super(part != null ? part.getFormat(style, locale) : DEFAULT_PART.getFormat(style, locale));
 
@@ -73,7 +73,7 @@ public final class DateContext extends FormatContext<Date> {
     }
 
     @Override
-    public Date enforce(final Date object) {
+    public Date enforce( Date object) {
 
         switch (myPart) {
 
@@ -119,7 +119,7 @@ public final class DateContext extends FormatContext<Date> {
         }
     }
 
-    public TypeContext<Date> withFormat(final DatePart part, final DateStyle style, final Locale locale) {
+    public TypeContext<Date> withFormat( DatePart part,  DateStyle style,  Locale locale) {
 
         DatePart tmpPart = part != null ? part : this.getPart();
         DateStyle tmpStyle = style != null ? style : this.getStyle();
@@ -129,17 +129,17 @@ public final class DateContext extends FormatContext<Date> {
     }
 
     @Override
-    protected void configureFormat(final Format format, final Object object) {
+    protected void configureFormat( Format format,  Object object) {
         // No need to do anything
     }
 
     @Override
-    protected String handleFormatException(final Format format, final Object object) {
+    protected String handleFormatException( Format format,  Object object) {
         return "";
     }
 
     @Override
-    protected Date handleParseException(final Format format, final String string) {
+    protected Date handleParseException( Format format,  String string) {
         return new Date();
     }
 

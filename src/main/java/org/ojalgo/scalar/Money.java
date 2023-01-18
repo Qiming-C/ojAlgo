@@ -35,22 +35,22 @@ public final class Money extends ExactDecimal<Money> {
     public static final Scalar.Factory<Money> FACTORY = new ExactDecimal.Factory<>() {
 
         @Override
-        public Money cast(final Comparable<?> number) {
+        public Money cast( Comparable<?> number) {
             return Money.valueOf(number);
         }
 
         @Override
-        public Money cast(final double value) {
+        public Money cast( double value) {
             return Money.valueOf(value);
         }
 
         @Override
-        public Money convert(final Comparable<?> number) {
+        public Money convert( Comparable<?> number) {
             return Money.valueOf(number);
         }
 
         @Override
-        public Money convert(final double value) {
+        public Money convert( double value) {
             return Money.valueOf(value);
         }
 
@@ -79,23 +79,23 @@ public final class Money extends ExactDecimal<Money> {
     public static final Money TWO = new Money(LONG_DENOMINATOR + LONG_DENOMINATOR);
     public static final Money ZERO = new Money();
 
-    public static boolean isAbsolute(final Money value) {
+    public static boolean isAbsolute( Money value) {
         return value.isAbsolute();
     }
 
-    public static boolean isInfinite(final Money value) {
+    public static boolean isInfinite( Money value) {
         return false;
     }
 
-    public static boolean isNaN(final Money value) {
+    public static boolean isNaN( Money value) {
         return false;
     }
 
-    public static boolean isSmall(final double comparedTo, final Money value) {
+    public static boolean isSmall( double comparedTo,  Money value) {
         return value.isSmall(comparedTo);
     }
 
-    public static Money valueOf(final Comparable<?> number) {
+    public static Money valueOf( Comparable<?> number) {
 
         if (number != null) {
 
@@ -114,7 +114,7 @@ public final class Money extends ExactDecimal<Money> {
         }
     }
 
-    public static Money valueOf(final double value) {
+    public static Money valueOf( double value) {
         return new Money(Math.round(value * DOUBLE_DENOMINATOR));
     }
 
@@ -122,7 +122,7 @@ public final class Money extends ExactDecimal<Money> {
         super(0L);
     }
 
-    Money(final long numerator) {
+    Money( long numerator) {
         super(numerator);
     }
 
@@ -132,7 +132,7 @@ public final class Money extends ExactDecimal<Money> {
     }
 
     @Override
-    protected Money wrap(final long numerator) {
+    protected Money wrap( long numerator) {
         return new Money(numerator);
     }
 

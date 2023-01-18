@@ -27,7 +27,7 @@ final class AccessSeries extends PrimitiveSeries {
 
     private final Access1D<?> myValues;
 
-    AccessSeries(final Access1D<?> values) {
+    AccessSeries( Access1D<?> values) {
 
         super();
 
@@ -40,7 +40,7 @@ final class AccessSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myValues.doubleValue(index);
     }
 

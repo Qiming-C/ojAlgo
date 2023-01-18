@@ -26,7 +26,7 @@ import java.util.function.UnaryOperator;
 @FunctionalInterface
 public interface OperatorWithException<T> extends UnaryOperator<T> {
 
-    default T apply(final T type) {
+    @Override default T apply( T type) {
         try {
             return this.invoke(type);
         } catch (Exception cause) {

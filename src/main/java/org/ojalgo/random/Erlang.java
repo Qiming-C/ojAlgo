@@ -23,6 +23,7 @@ package org.ojalgo.random;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import org.ojalgo.function.constant.PrimitiveMath;
 
 /**
@@ -39,7 +40,7 @@ public class Erlang extends RandomNumber {
         this((int) ONE, ONE);
     }
 
-    public Erlang(final int aCount, final double aRate) {
+    public Erlang( int aCount,  double aRate) {
 
         super();
 
@@ -47,7 +48,7 @@ public class Erlang extends RandomNumber {
         myRate = aRate;
     }
 
-    public double getExpected() {
+    @Override public double getExpected() {
         return myCount / myRate;
     }
 
@@ -59,7 +60,7 @@ public class Erlang extends RandomNumber {
     @Override
     protected double generate() {
 
-        double tmpVal = ZERO;
+        @Var double tmpVal = ZERO;
 
         for (int i = 0; i < myCount; i++) {
             tmpVal -= PrimitiveMath.LOG.invoke(this.random().nextDouble());

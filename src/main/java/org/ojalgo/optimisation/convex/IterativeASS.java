@@ -23,8 +23,8 @@ package org.ojalgo.optimisation.convex;
 
 import static org.ojalgo.function.constant.PrimitiveMath.*;
 
+import com.google.errorprone.annotations.Var;
 import java.util.Arrays;
-
 import org.ojalgo.array.ArrayR064;
 import org.ojalgo.array.BasicArray;
 import org.ojalgo.array.SparseArray;
@@ -87,18 +87,18 @@ final class IterativeASS extends ActiveSetSolver {
 
         @Override
         public long countColumns() {
-            return IterativeASS.this.countEqualityConstraints() + IterativeASS.this.countIncluded();
+            return (long) IterativeASS.this.countEqualityConstraints() + IterativeASS.this.countIncluded();
         }
 
         @Override
         public long countRows() {
-            return IterativeASS.this.countEqualityConstraints() + IterativeASS.this.countIncluded();
+            return (long) IterativeASS.this.countEqualityConstraints() + IterativeASS.this.countIncluded();
         }
 
-        public double doubleValue(final long row, final long col) {
+        @Override public double doubleValue( long row,  long col) {
 
-            int intRow = (int) row;
-            int intCol = (int) col;
+            var intRow = (int) row;
+            @Var int intCol = (int) col;
 
             if (intCol >= myCountE) {
                 intCol = myCountE + IterativeASS.this.getIncluded(intCol - myCountE);
@@ -107,15 +107,15 @@ final class IterativeASS extends ActiveSetSolver {
             return this.doubleValue(intRow, intCol);
         }
 
-        public Double get(final long row, final long col) {
+        @Override public Double get( long row,  long col) {
             return Double.valueOf(this.doubleValue(row, col));
         }
 
-        public PhysicalStore.Factory<Double, ?> physical() {
+        @Override public PhysicalStore.Factory<Double, ?> physical() {
             return MATRIX_FACTORY;
         }
 
-        void add(final int j, final Access1D<Double> column, final double rhs) {
+        void add( int j,  Access1D<Double> column,  double rhs) {
 
             int[] incl = IterativeASS.this.getIncluded();
 
@@ -154,7 +154,7 @@ final class IterativeASS extends ActiveSetSolver {
             tmpNewRow.initialise(IterativeASS.this.getSolutionL());
         }
 
-        void remove(final int i) {
+        void remove( int i) {
 
             Equation rowI = myIterationRows[i];
             if (rowI != null) {
@@ -174,7 +174,7 @@ final class IterativeASS extends ActiveSetSolver {
 
         private final int myCount;
 
-        SparseArrayPool(final int count) {
+        SparseArrayPool( int count) {
             super();
             myCount = count;
         }
@@ -185,7 +185,7 @@ final class IterativeASS extends ActiveSetSolver {
         }
 
         @Override
-        protected void reset(final BasicArray<Double> object) {
+        protected void reset( BasicArray<Double> object) {
             object.reset();
         }
 
@@ -198,7 +198,7 @@ final class IterativeASS extends ActiveSetSolver {
      */
     private final SchurComplementSolver myS;
 
-    IterativeASS(final ConvexSolver.Builder convexSolverBuilder, final Optimisation.Options optimisationOptions) {
+    IterativeASS( ConvexSolver.Builder convexSolverBuilder,  Optimisation.Options optimisationOptions) {
 
         super(convexSolverBuilder, optimisationOptions);
 
@@ -207,7 +207,7 @@ final class IterativeASS extends ActiveSetSolver {
     }
 
     @Override
-    protected void exclude(final int toExclude) {
+    protected void exclude( int toExclude) {
         super.exclude(toExclude);
         myS.remove(this.countEqualityConstraints() + toExclude);
     }
@@ -226,7 +226,7 @@ final class IterativeASS extends ActiveSetSolver {
         int[] incl = this.getIncluded();
         int[] excl = this.getExcluded();
 
-        boolean solved = false;
+        @Var boolean solved = false;
 
         if (toInclude >= 0) {
 
@@ -259,7 +259,7 @@ final class IterativeASS extends ActiveSetSolver {
                     this.log("Relative error {} in solution for L={}", relativeError, Arrays.toString(this.getIterationL(incl).toRawCopy1D()));
                 }
 
-                if (solved = options.convex().iterative().isZero(relativeError)) {
+                if ((solved = options.convex().iterative().isZero(relativeError))) {
 
                     ElementsSupplier<Double> rhsX = this.getIterationL(incl).premultiply(this.getIterationA().transpose()).onMatching(this.getIterationC(),
                             SUBTRACT);
@@ -273,7 +273,7 @@ final class IterativeASS extends ActiveSetSolver {
 
             Primitive64Store tmpXL = MATRIX_FACTORY.make(this.countVariables() + this.countIterationConstraints(), 1L);
 
-            if (solved = this.solveFullKKT(tmpXL)) {
+            if ((solved = this.solveFullKKT(tmpXL))) {
 
                 iterX.fillMatching(tmpXL.limits(this.countVariables(), 1));
 
@@ -291,7 +291,7 @@ final class IterativeASS extends ActiveSetSolver {
         this.handleIterationResults(solved, iterX, incl, excl);
     }
 
-    void addConstraint(final int constrIndex, final SparseArray<Double> constrBody, final double constrRHS) {
+    void addConstraint( int constrIndex,  SparseArray<Double> constrBody,  double constrRHS) {
 
         MatrixStore<Double> body = this.getSolutionQ(Access2D.newPrimitiveColumnCollectable(constrBody), myColumnInvQAt);
 
@@ -306,7 +306,7 @@ final class IterativeASS extends ActiveSetSolver {
         super.resetActivator();
 
         int nbEqus = this.countEqualityConstraints();
-        int nbVars = this.countVariables();
+        
 
         myS.clear();
         int[] incl = this.getIncluded();

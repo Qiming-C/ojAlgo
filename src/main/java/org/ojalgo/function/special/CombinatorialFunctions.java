@@ -21,6 +21,8 @@
  */
 package org.ojalgo.function.special;
 
+import com.google.errorprone.annotations.Var;
+
 /**
  * https://reference.wolfram.com/language/tutorial/CombinatorialFunctions.html
  *
@@ -29,12 +31,13 @@ package org.ojalgo.function.special;
 public abstract class CombinatorialFunctions {
 
     /**
-     * @param n The number of elements in the set
+     *Returns the number of ways the set can be partitioned in to subsets of the given sizes.
+ @param n The number of elements in the set
      * @param k A vector of subset sizes the sum of which must equal the size of the full set
-     * @return The number of ways the set can be partitioned in to subsets of the given sizes
+     * 
      */
-    public static long partitions(final int n, final int[] k) {
-        double retVal = MissingMath.factorial(n);
+    public static long partitions( int n,  int[] k) {
+        @Var double retVal = MissingMath.factorial(n);
         for (int i = 0, limit = k.length; i < limit; i++) {
             retVal /= MissingMath.factorial(k[i]);
         }
@@ -42,28 +45,31 @@ public abstract class CombinatorialFunctions {
     }
 
     /**
-     * @param n The number of elements in the set
-     * @return The number of permutations of the set
+     *Returns the number of permutations of the set.
+ @param n The number of elements in the set
+     * 
      */
-    public static long permutations(final int n) {
+    public static long permutations( int n) {
         return Math.round(MissingMath.factorial(n));
     }
 
     /**
-     * @param n The number of elements in the set
+     *Returns the number of subsets to the set.
+ @param n The number of elements in the set
      * @param k The number of elements in the subset
-     * @return The number of subsets to the set
+     * 
      */
-    public static long subsets(final int n, final int k) {
+    public static long subsets( int n,  int k) {
         return Math.round(MissingMath.factorial(n) / (MissingMath.factorial(k) * MissingMath.factorial(n - k)));
     }
 
     /**
-     * @param n The number of elements in the set
+     *Returns the number of ordered k-tuples (variations) of the set.
+ @param n The number of elements in the set
      * @param k The size of the tuple
-     * @return The number of ordered k-tuples (variations) of the set
+     * 
      */
-    public static long variations(final int n, final int k) {
+    public static long variations( int n,  int k) {
         return Math.round(MissingMath.factorial(n) / MissingMath.factorial(n - k));
     }
 

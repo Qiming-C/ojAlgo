@@ -30,20 +30,22 @@ import org.ojalgo.function.special.PowerOf2;
 public interface ParallelismSupplier extends IntSupplier {
 
     /**
-     * @see PowerOf2#adjustDown(double)
+     *See {@link PowerOf2#adjustDown(double)}.
+ 
      */
     default ParallelismSupplier adjustDown() {
         return () -> PowerOf2.adjustDown(this.getAsInt());
     }
 
     /**
-     * @see PowerOf2#adjustUp(double)
+     *See {@link PowerOf2#adjustUp(double)}.
+ 
      */
     default ParallelismSupplier adjustUp() {
         return () -> PowerOf2.adjustUp(this.getAsInt());
     }
 
-    default ParallelismSupplier average(final IntSupplier other) {
+    default ParallelismSupplier average( IntSupplier other) {
         return () -> (this.getAsInt() + other.getAsInt()) / 2;
     }
 
@@ -54,7 +56,7 @@ public interface ParallelismSupplier extends IntSupplier {
     /**
      * Round up as in: 9 / 2 = 5 and 1 / 9 = 1
      */
-    default ParallelismSupplier divideBy(final int divisor) {
+    default ParallelismSupplier divideBy( int divisor) {
         if (divisor > 1) {
             return () -> Math.max(1, (this.getAsInt() + divisor - 1) / divisor);
         }
@@ -69,19 +71,19 @@ public interface ParallelismSupplier extends IntSupplier {
         return () -> Math.max(1, this.getAsInt() + 1);
     }
 
-    default ParallelismSupplier limit(final int notMoreThan) {
+    default ParallelismSupplier limit( int notMoreThan) {
         return () -> Math.min(this.getAsInt(), notMoreThan);
     }
 
-    default ParallelismSupplier limit(final IntSupplier notMoreThan) {
+    default ParallelismSupplier limit( IntSupplier notMoreThan) {
         return () -> Math.min(this.getAsInt(), notMoreThan.getAsInt());
     }
 
-    default ParallelismSupplier require(final int atLeast) {
+    default ParallelismSupplier require( int atLeast) {
         return () -> Math.max(this.getAsInt(), atLeast);
     }
 
-    default ParallelismSupplier require(final IntSupplier atLeast) {
+    default ParallelismSupplier require( IntSupplier atLeast) {
         return () -> Math.max(this.getAsInt(), atLeast.getAsInt());
     }
 
@@ -89,35 +91,39 @@ public interface ParallelismSupplier extends IntSupplier {
      * Make sure there's this much memory per thread by, if necessary, limiting the parallelism. The total
      * amount of memory available is defined by {@link OjAlgoUtils#ENVIRONMENT}
      */
-    default ParallelismSupplier reserveBytes(final long bytesPerThread) {
-        return () -> Math.max(1, Math.min(this.getAsInt(), PowerOf2.adjustDown(OjAlgoUtils.ENVIRONMENT.memory / bytesPerThread)));
+    default ParallelismSupplier reserveBytes( long bytesPerThread) {
+        return () -> Math.max(1, Math.min(this.getAsInt(), PowerOf2.adjustDown((double) (OjAlgoUtils.ENVIRONMENT.memory / bytesPerThread))));
     }
 
     /**
-     * @see #reserveBytes(long)
+     *See {@link #reserveBytes(long)}.
+ 
      */
-    default ParallelismSupplier reserveGigaBytes(final long gigaBytesPerThread) {
+    default ParallelismSupplier reserveGigaBytes( long gigaBytesPerThread) {
         return this.reserveMegaBytes(1024L * gigaBytesPerThread);
     }
 
     /**
-     * @see #reserveBytes(long)
+     *See {@link #reserveBytes(long)}.
+ 
      */
-    default ParallelismSupplier reserveKiloBytes(final long kiloBytesPerThread) {
+    default ParallelismSupplier reserveKiloBytes( long kiloBytesPerThread) {
         return this.reserveBytes(1024L * kiloBytesPerThread);
     }
 
     /**
-     * @see #reserveBytes(long)
+     *See {@link #reserveBytes(long)}.
+ 
      */
-    default ParallelismSupplier reserveMegaBytes(final long megaBytesPerThread) {
+    default ParallelismSupplier reserveMegaBytes( long megaBytesPerThread) {
         return this.reserveKiloBytes(1024L * megaBytesPerThread);
     }
 
     /**
-     * @see #reserveBytes(long)
+     *See {@link #reserveBytes(long)}.
+ 
      */
-    default ParallelismSupplier reserveTeraBytes(final long teraBytesPerThread) {
+    default ParallelismSupplier reserveTeraBytes( long teraBytesPerThread) {
         return this.reserveGigaBytes(1024L * teraBytesPerThread);
     }
 

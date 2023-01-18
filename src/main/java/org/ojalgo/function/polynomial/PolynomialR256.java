@@ -21,8 +21,8 @@
  */
 package org.ojalgo.function.polynomial;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
-
 import org.ojalgo.array.Array1D;
 import org.ojalgo.function.constant.BigMath;
 import org.ojalgo.structure.Access1D;
@@ -35,24 +35,24 @@ import org.ojalgo.type.TypeUtils;
  */
 public class PolynomialR256 extends AbstractPolynomial<BigDecimal> {
 
-    public PolynomialR256(final int degree) {
+    public PolynomialR256( int degree) {
         super(Array1D.R256.make(degree + 1));
     }
 
-    PolynomialR256(final Array1D<BigDecimal> coefficients) {
+    PolynomialR256( Array1D<BigDecimal> coefficients) {
         super(coefficients);
     }
 
-    public void estimate(final Access1D<?> x, final Access1D<?> y) {
+    @Override public void estimate( Access1D<?> x,  Access1D<?> y) {
 
-        PolynomialQ128 delegate = new PolynomialQ128(this.degree());
+        var delegate = new PolynomialQ128(this.degree());
 
         delegate.estimate(x, y);
 
         this.set(delegate);
     }
 
-    public BigDecimal integrate(final BigDecimal fromPoint, final BigDecimal toPoint) {
+    @Override public BigDecimal integrate( BigDecimal fromPoint,  BigDecimal toPoint) {
 
         PolynomialFunction<BigDecimal> primitive = this.buildPrimitive();
 
@@ -62,11 +62,11 @@ public class PolynomialR256 extends AbstractPolynomial<BigDecimal> {
         return toVal.subtract(fromVal);
     }
 
-    public BigDecimal invoke(final BigDecimal arg) {
+    @Override public BigDecimal invoke( BigDecimal arg) {
 
-        int power = this.degree();
+        @Var int power = this.degree();
 
-        BigDecimal retVal = this.get(power);
+        @Var BigDecimal retVal = this.get(power);
 
         while (--power >= 0) {
             retVal = this.get(power).add(arg.multiply(retVal));
@@ -75,7 +75,7 @@ public class PolynomialR256 extends AbstractPolynomial<BigDecimal> {
         return retVal;
     }
 
-    public void set(final Access1D<?> coefficients) {
+    @Override public void set( Access1D<?> coefficients) {
         int limit = Math.min(this.size(), coefficients.size());
         for (int p = 0; p < limit; p++) {
             this.set(p, TypeUtils.toBigDecimal(coefficients.get(p)));
@@ -83,13 +83,13 @@ public class PolynomialR256 extends AbstractPolynomial<BigDecimal> {
     }
 
     @Override
-    protected BigDecimal getDerivativeFactor(final int power) {
+    protected BigDecimal getDerivativeFactor( int power) {
         int nextIndex = power + 1;
         return this.get(nextIndex).multiply(new BigDecimal(nextIndex));
     }
 
     @Override
-    protected BigDecimal getPrimitiveFactor(final int power) {
+    protected BigDecimal getPrimitiveFactor( int power) {
         if (power <= 0) {
             return BigMath.ZERO;
         }
@@ -97,7 +97,7 @@ public class PolynomialR256 extends AbstractPolynomial<BigDecimal> {
     }
 
     @Override
-    protected AbstractPolynomial<BigDecimal> makeInstance(final int size) {
+    protected AbstractPolynomial<BigDecimal> makeInstance( int size) {
         return new PolynomialR256(Array1D.R256.make(size));
     }
 

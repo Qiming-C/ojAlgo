@@ -21,9 +21,9 @@
  */
 package org.ojalgo.scalar;
 
+import com.google.errorprone.annotations.Var;
 import java.math.BigDecimal;
 import java.math.MathContext;
-
 import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.type.NumberDefinition;
 import org.ojalgo.type.context.NumberContext;
@@ -34,22 +34,22 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     public static final Scalar.Factory<Double> FACTORY = new Scalar.Factory<>() {
 
         @Override
-        public Double cast(final Comparable<?> number) {
+        public Double cast( Comparable<?> number) {
             return NumberDefinition.doubleValue(number);
         }
 
         @Override
-        public Double cast(final double value) {
+        public Double cast( double value) {
             return value;
         }
 
         @Override
-        public PrimitiveScalar convert(final Comparable<?> number) {
+        public PrimitiveScalar convert( Comparable<?> number) {
             return PrimitiveScalar.valueOf(number);
         }
 
         @Override
-        public PrimitiveScalar convert(final double value) {
+        public PrimitiveScalar convert( double value) {
             return PrimitiveScalar.of(value);
         }
 
@@ -75,31 +75,31 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
 
     static final NumberContext CONTEXT = NumberContext.ofMath(MathContext.DECIMAL64);
 
-    public static boolean isAbsolute(final double value) {
+    public static boolean isAbsolute( double value) {
         return value >= PrimitiveMath.ZERO;
     }
 
-    public static boolean isInfinite(final double value) {
+    public static boolean isInfinite( double value) {
         return Double.isInfinite(value);
     }
 
-    public static boolean isNaN(final double value) {
+    public static boolean isNaN( double value) {
         return Double.isNaN(value);
     }
 
-    public static boolean isSmall(final double comparedTo, final double value) {
+    public static boolean isSmall( double comparedTo,  double value) {
         return PrimitiveScalar.CONTEXT.isSmall(comparedTo, value);
     }
 
-    public static PrimitiveScalar of(final double value) {
+    public static PrimitiveScalar of( double value) {
         return new PrimitiveScalar(value);
     }
 
-    public static PrimitiveScalar valueOf(final Comparable<?> number) {
+    public static PrimitiveScalar valueOf( Comparable<?> number) {
         return PrimitiveScalar.of(NumberDefinition.doubleValue(number));
     }
 
-    public static PrimitiveScalar valueOf(final double value) {
+    public static PrimitiveScalar valueOf( double value) {
         return PrimitiveScalar.of(value);
     }
 
@@ -112,7 +112,7 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
         myValue = PrimitiveMath.ZERO;
     }
 
-    private PrimitiveScalar(final double value) {
+    private PrimitiveScalar( double value) {
 
         super();
 
@@ -120,22 +120,22 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar add(final double arg) {
+    public PrimitiveScalar add( double arg) {
         return new PrimitiveScalar(myValue + arg);
     }
 
     @Override
-    public PrimitiveScalar add(final Double arg) {
+    public PrimitiveScalar add( Double arg) {
         return new PrimitiveScalar(myValue + arg);
     }
 
     @Override
-    public PrimitiveScalar add(final float scalarAddend) {
+    public PrimitiveScalar add( float scalarAddend) {
         return this.add((double) scalarAddend);
     }
 
     @Override
-    public int compareTo(final Double reference) {
+    public int compareTo( Double reference) {
         return NumberContext.compare(myValue, reference);
     }
 
@@ -145,17 +145,17 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar divide(final double arg) {
+    public PrimitiveScalar divide( double arg) {
         return new PrimitiveScalar(myValue / arg);
     }
 
     @Override
-    public PrimitiveScalar divide(final Double arg) {
+    public PrimitiveScalar divide( Double arg) {
         return new PrimitiveScalar(myValue / arg);
     }
 
     @Override
-    public PrimitiveScalar divide(final float scalarDivisor) {
+    public PrimitiveScalar divide( float scalarDivisor) {
         return this.divide((double) scalarDivisor);
     }
 
@@ -165,19 +165,19 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar enforce(final NumberContext context) {
+    public PrimitiveScalar enforce( NumberContext context) {
         return new PrimitiveScalar(context.enforce(myValue));
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals( Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof PrimitiveScalar)) {
             return false;
         }
-        PrimitiveScalar other = (PrimitiveScalar) obj;
+        var other = (PrimitiveScalar) obj;
         if (Double.doubleToLongBits(myValue) != Double.doubleToLongBits(other.myValue)) {
             return false;
         }
@@ -196,7 +196,7 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+         int prime = 31;
         int result = 1;
         long temp;
         temp = Double.doubleToLongBits(myValue);
@@ -219,7 +219,7 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public boolean isSmall(final double comparedTo) {
+    public boolean isSmall( double comparedTo) {
         return PrimitiveScalar.isSmall(comparedTo, myValue);
     }
 
@@ -229,17 +229,17 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar multiply(final double arg) {
+    public PrimitiveScalar multiply( double arg) {
         return new PrimitiveScalar(myValue * arg);
     }
 
     @Override
-    public PrimitiveScalar multiply(final Double arg) {
+    public PrimitiveScalar multiply( Double arg) {
         return new PrimitiveScalar(myValue * arg);
     }
 
     @Override
-    public PrimitiveScalar multiply(final float scalarMultiplicand) {
+    public PrimitiveScalar multiply( float scalarMultiplicand) {
         return this.multiply((double) scalarMultiplicand);
     }
 
@@ -254,9 +254,9 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar power(final int power) {
+    public PrimitiveScalar power( int power) {
 
-        double retVal = PrimitiveMath.ONE;
+        @Var double retVal = PrimitiveMath.ONE;
 
         for (int p = 0; p < power; p++) {
             retVal *= myValue;
@@ -271,17 +271,17 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public PrimitiveScalar subtract(final double arg) {
+    public PrimitiveScalar subtract( double arg) {
         return new PrimitiveScalar(myValue - arg);
     }
 
     @Override
-    public PrimitiveScalar subtract(final Double arg) {
+    public PrimitiveScalar subtract( Double arg) {
         return new PrimitiveScalar(myValue - arg);
     }
 
     @Override
-    public PrimitiveScalar subtract(final float scalarSubtrahend) {
+    public PrimitiveScalar subtract( float scalarSubtrahend) {
         return this.subtract((double) scalarSubtrahend);
     }
 
@@ -296,7 +296,7 @@ public final class PrimitiveScalar implements Scalar<Double>, Enforceable<Primit
     }
 
     @Override
-    public String toString(final NumberContext context) {
+    public String toString( NumberContext context) {
         return context.enforce(this.toBigDecimal()).toString();
     }
 

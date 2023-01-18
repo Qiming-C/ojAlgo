@@ -51,16 +51,16 @@ public abstract class OptimisationService {
         private Boolean myCapable = null;
         private final String myHost;
 
-        Integration(final String host) {
+        Integration( String host) {
             super();
             myHost = host;
         }
 
-        public OptimisationService.Solver build(final ExpressionsBasedModel model) {
+        @Override public OptimisationService.Solver build( ExpressionsBasedModel model) {
             return new OptimisationService.Solver(model, myHost);
         }
 
-        public boolean isCapable(final ExpressionsBasedModel model) {
+        @Override public boolean isCapable( ExpressionsBasedModel model) {
 
             if (myCapable == null) {
                 Response<String> response = ServiceClient.get(myHost + PATH_TEST);
@@ -91,16 +91,16 @@ public abstract class OptimisationService {
         private final ExpressionsBasedModel myModel;
         private final Optimisation.Sense myOptimisationSense;
 
-        Solver(final ExpressionsBasedModel model, final String host) {
+        Solver( ExpressionsBasedModel model,  String host) {
             super();
             myModel = model;
             myOptimisationSense = model.getOptimisationSense();
             myHost = host;
         }
 
-        public Result solve(final Result kickStarter) {
+        @Override public Result solve( Result kickStarter) {
 
-            InMemoryFile file = new InMemoryFile();
+            var file = new InMemoryFile();
 
             myModel.simplify().writeTo(file);
 
@@ -116,7 +116,7 @@ public abstract class OptimisationService {
 
     }
 
-    public static OptimisationService.Integration newIntegration(final String host) {
+    public static OptimisationService.Integration newIntegration( String host) {
         return new Integration(host);
     }
 

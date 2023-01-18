@@ -29,7 +29,7 @@ final class BinaryFunctionSeries extends PrimitiveSeries {
     private final PrimitiveSeries myLeftSeries;
     private final PrimitiveSeries myRightSeries;
 
-    public BinaryFunctionSeries(final PrimitiveSeries leftSeries, final BinaryFunction<Double> function, final PrimitiveSeries rightSeries) {
+    public BinaryFunctionSeries( PrimitiveSeries leftSeries,  BinaryFunction<Double> function,  PrimitiveSeries rightSeries) {
 
         super();
 
@@ -44,7 +44,7 @@ final class BinaryFunctionSeries extends PrimitiveSeries {
     }
 
     @Override
-    public double value(final int index) {
+    public double value( int index) {
         return myFunction.invoke(myLeftSeries.value(index), myRightSeries.value(index));
     }
 

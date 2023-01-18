@@ -21,6 +21,7 @@
  */
 package org.ojalgo.array;
 
+import com.google.errorprone.annotations.Var;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,7 +33,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-
 import org.ojalgo.ProgrammingError;
 import org.ojalgo.function.BinaryFunction;
 import org.ojalgo.function.VoidFunction;
@@ -53,7 +53,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
 
     public static final class ListFactory<N extends Comparable<N>> extends StrategyBuildingFactory<N, NumberList<N>, ListFactory<N>> {
 
-        ListFactory(final DenseArray.Factory<N> denseFactory) {
+        ListFactory( DenseArray.Factory<N> denseFactory) {
             super(denseFactory);
         }
 
@@ -64,18 +64,18 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
 
     }
 
-    public static <N extends Comparable<N>> Collector<N, NumberList<N>, NumberList<N>> collector(final DenseArray.Factory<N> arrayFactory) {
-        final Supplier<NumberList<N>> tmpSupplier = () -> NumberList.factory(arrayFactory).make();
-        final BiConsumer<NumberList<N>, N> tmpAccumulator = NumberList::add;
-        final BinaryOperator<NumberList<N>> tmpCombiner = (part1, part2) -> {
+    public static <N extends Comparable<N>> Collector<N, NumberList<N>, NumberList<N>> collector( DenseArray.Factory<N> arrayFactory) {
+         Supplier<NumberList<N>> tmpSupplier = () -> NumberList.factory(arrayFactory).make();
+         BiConsumer<NumberList<N>, N> tmpAccumulator = NumberList::add;
+         BinaryOperator<NumberList<N>> tmpCombiner = (part1, part2) -> {
             part1.addAll(part2);
             return part1;
         };
-        final Function<NumberList<N>, NumberList<N>> tmpIdentity = Function.identity();
+         Function<NumberList<N>, NumberList<N>> tmpIdentity = Function.identity();
         return Collector.of(tmpSupplier, tmpAccumulator, tmpCombiner, tmpIdentity, Collector.Characteristics.IDENTITY_FINISH);
     }
 
-    public static <N extends Comparable<N>> ListFactory<N> factory(final DenseArray.Factory<N> arrayFactory) {
+    public static <N extends Comparable<N>> ListFactory<N> factory( DenseArray.Factory<N> arrayFactory) {
         return new ListFactory<>(arrayFactory);
     }
 
@@ -83,7 +83,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     private BasicArray<N> myStorage;
     private final DenseCapacityStrategy<N> myStrategy;
 
-    NumberList(final BasicArray<N> storage, final DenseCapacityStrategy<N> strategy, final long actualCount) {
+    NumberList( BasicArray<N> storage,  DenseCapacityStrategy<N> strategy,  long actualCount) {
 
         super();
 
@@ -93,7 +93,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
         myActualCount = actualCount;
     }
 
-    NumberList(final DenseCapacityStrategy<N> strategy) {
+    NumberList( DenseCapacityStrategy<N> strategy) {
 
         super();
 
@@ -103,7 +103,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
         myActualCount = 0L;
     }
 
-    public boolean add(final double element) {
+    public boolean add( double element) {
 
         this.ensureCapacity();
 
@@ -113,7 +113,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public void add(final int index, final N element) {
+    public void add( int index,  N element) {
 
         this.ensureCapacity();
 
@@ -126,7 +126,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean add(final N element) {
+    public boolean add( N element) {
 
         this.ensureCapacity();
 
@@ -136,30 +136,30 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean addAll(final Collection<? extends N> elements) {
-        for (final N tmpElement : elements) {
+    public boolean addAll( Collection<? extends N> elements) {
+        for ( N tmpElement : elements) {
             this.add(tmpElement);
         }
         return true;
     }
 
-    public boolean addAll(final double[] elements) {
-        for (final double tmpElement : elements) {
+    public boolean addAll( double[] elements) {
+        for ( double tmpElement : elements) {
             this.add(tmpElement);
         }
         return true;
     }
 
     @Override
-    public boolean addAll(final int index, final Collection<? extends N> elements) {
-        int counter = 0;
-        for (final N value : elements) {
+    public boolean addAll( int index,  Collection<? extends N> elements) {
+        @Var int counter = 0;
+        for ( N value : elements) {
             this.add(index + counter++, value);
         }
         return elements.size() > 0;
     }
 
-    public N aggregateRange(final long first, final long limit, final Aggregator aggregator) {
+    public N aggregateRange( long first,  long limit,  Aggregator aggregator) {
         AggregatorFunction<N> visitor = aggregator.getFunction(myStorage.factory().aggregator());
         this.visitRange(first, limit, visitor);
         return visitor.get();
@@ -180,7 +180,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean contains(final Object object) {
+    public boolean contains( Object object) {
         if (object instanceof Comparable) {
             return this.indexOf(object) >= 0;
         } else {
@@ -189,8 +189,8 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean containsAll(final Collection<?> c) {
-        for (final Object tmpObject : c) {
+    public boolean containsAll( Collection<?> c) {
+        for ( Object tmpObject : c) {
             if (!this.contains(tmpObject)) {
                 return false;
             }
@@ -204,7 +204,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public double doubleValue(final long index) {
+    public double doubleValue( long index) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -213,7 +213,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public N get(final int index) {
+    public N get( int index) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -222,7 +222,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public N get(final long index) {
+    public N get( long index) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -231,8 +231,8 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public int indexOf(final Object object) {
-        final ListIterator<N> tmpIterator = this.listIterator();
+    public int indexOf( Object object) {
+         ListIterator<N> tmpIterator = this.listIterator();
         if (object == null) {
             while (tmpIterator.hasNext()) {
                 if (tmpIterator.next() == null) {
@@ -260,8 +260,8 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public int lastIndexOf(final Object object) {
-        final ListIterator<N> tmpIterator = this.listIterator(this.size());
+    public int lastIndexOf( Object object) {
+         ListIterator<N> tmpIterator = this.listIterator(this.size());
         if (object == null) {
             while (tmpIterator.hasPrevious()) {
                 if (tmpIterator.previous() == null) {
@@ -284,19 +284,19 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public ListIterator<N> listIterator(final int index) {
+    public ListIterator<N> listIterator( int index) {
         return new Iterator1D<>(this, index);
     }
 
     @Override
-    public double mix(final long index, final BinaryFunction<N> mixer, final double addend) {
+    public double mix( long index,  BinaryFunction<N> mixer,  double addend) {
         ProgrammingError.throwIfNull(mixer);
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
             synchronized (myStorage) {
-                final double oldValue = myStorage.doubleValue(index);
-                final double newValue = mixer.invoke(oldValue, addend);
+                 double oldValue = myStorage.doubleValue(index);
+                 double newValue = mixer.invoke(oldValue, addend);
                 myStorage.set(index, newValue);
                 return newValue;
             }
@@ -304,14 +304,14 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public N mix(final long index, final BinaryFunction<N> mixer, final N addend) {
+    public N mix( long index,  BinaryFunction<N> mixer,  N addend) {
         ProgrammingError.throwIfNull(mixer);
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
             synchronized (myStorage) {
-                final N oldValue = myStorage.get(index);
-                final N newValue = mixer.invoke(oldValue, addend);
+                 N oldValue = myStorage.get(index);
+                 N newValue = mixer.invoke(oldValue, addend);
                 myStorage.set(index, newValue);
                 return newValue;
             }
@@ -319,9 +319,9 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public N remove(final int index) {
+    public N remove( int index) {
 
-        final N oldValue = myStorage.get(index);
+         N oldValue = myStorage.get(index);
 
         myActualCount--;
 
@@ -333,8 +333,8 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean remove(final Object o) {
-        final int index = this.indexOf(o);
+    public boolean remove( Object o) {
+         int index = this.indexOf(o);
         if (index >= 0) {
             this.remove(index);
             return true;
@@ -344,19 +344,19 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public boolean removeAll(final Collection<?> c) {
-        boolean retVal = false;
-        for (final Object o : c) {
+    public boolean removeAll( Collection<?> c) {
+        @Var boolean retVal = false;
+        for ( Object o : c) {
             retVal &= this.remove(o);
         }
         return retVal;
     }
 
     @Override
-    public boolean retainAll(final Collection<?> onlyKeep) {
-        boolean retVal = false;
-        final Object[] values = this.toArray();
-        for (final Object v : values) {
+    public boolean retainAll( Collection<?> onlyKeep) {
+        @Var boolean retVal = false;
+         Object[] values = this.toArray();
+        for ( Object v : values) {
             if (!onlyKeep.contains(v)) {
                 retVal &= this.remove(v);
             }
@@ -365,18 +365,18 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public N set(final int index, final N element) {
+    public N set( int index,  N element) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
-            final N previous = myStorage.get(index);
+             N previous = myStorage.get(index);
             myStorage.set(index, element);
             return previous;
         }
     }
 
     @Override
-    public void set(final long index, final Comparable<?> value) {
+    public void set( long index,  Comparable<?> value) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -385,7 +385,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public void set(final long index, final double value) {
+    public void set( long index,  double value) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -394,7 +394,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public void set(final long index, final float value) {
+    public void set( long index,  float value) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -408,8 +408,8 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public NumberList<N> subList(final int fromIndex, final int toIndex) {
-        final NumberList<N> retVal = new NumberList<>(myStrategy);
+    public NumberList<N> subList( int fromIndex,  int toIndex) {
+         NumberList<N> retVal = new NumberList<>(myStrategy);
         if (myStorage instanceof ArrayR064) {
             for (int i = 0; i < toIndex; i++) {
                 retVal.add(this.doubleValue(i));
@@ -429,7 +429,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T[] toArray(final T[] array) {
+    public <T> T[] toArray( T[] array) {
         for (int i = 0; i < array.length; i++) {
             array[i] = (T) myStorage.get(i);
         }
@@ -442,7 +442,7 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
     }
 
     @Override
-    public void visitOne(final long index, final VoidFunction<N> visitor) {
+    public void visitOne( long index,  VoidFunction<N> visitor) {
         if (index >= myActualCount) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
@@ -466,9 +466,9 @@ public final class NumberList<N extends Comparable<N>> implements List<N>, Rando
         } else {
             // Doesn't fit, grow, then add
 
-            final long tmoNewTotalCount = myStrategy.grow(myActualCount);
+             long tmoNewTotalCount = myStrategy.grow(myActualCount);
 
-            final BasicArray<N> tmpStorage = myStrategy.make(tmoNewTotalCount);
+             BasicArray<N> tmpStorage = myStrategy.make(tmoNewTotalCount);
             tmpStorage.fillMatching(myStorage);
             myStorage = tmpStorage;
         }

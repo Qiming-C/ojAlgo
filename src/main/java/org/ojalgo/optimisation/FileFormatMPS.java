@@ -21,8 +21,11 @@
  */
 package org.ojalgo.optimisation;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.ojalgo.function.constant.BigMath.*;
 
+import com.google.common.base.Splitter;
+import com.google.errorprone.annotations.Var;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +33,8 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import org.ojalgo.netio.ASCII;
 
 /**
@@ -44,7 +47,7 @@ final class FileFormatMPS {
     /**
      * BoundType used with the BOUNDS section.
      *
-     * <pre>
+     * <pre>{@code 
      *  type            meaning
      * ---------------------------------------------------
      *   LO    lower bound        b <= x (< +inf)
@@ -59,7 +62,7 @@ final class FileFormatMPS {
      *   SC    semi-cont variable x = 0 or l <= x <= b
      *         l is the lower bound on the variable
      *         If none set then defaults to 1
-     * </pre>
+     * }</pre>
      *
      * @author apete
      */
@@ -72,7 +75,7 @@ final class FileFormatMPS {
         private boolean mySemicontinuous = false;
         private final Variable myVariable;
 
-        Column(final String name) {
+        Column( String name) {
 
             super();
 
@@ -82,7 +85,7 @@ final class FileFormatMPS {
             this.bound(BoundType.PL, null);
         }
 
-        Column bound(final BoundType type, final BigDecimal value) {
+        Column bound( BoundType type,  BigDecimal value) {
 
             switch (type) {
 
@@ -183,7 +186,7 @@ final class FileFormatMPS {
             return myVariable;
         }
 
-        Column integer(final boolean flag) {
+        Column integer( boolean flag) {
             myVariable.setInteger(flag);
             return this;
         }
@@ -192,7 +195,7 @@ final class FileFormatMPS {
             return mySemicontinuous;
         }
 
-        void setRowValue(final String rowName, final BigDecimal value) {
+        void setRowValue( String rowName,  BigDecimal value) {
             Row row = myRows.get(rowName);
             Expression expression = row.getExpression();
             expression.set(myVariable, value);
@@ -259,7 +262,7 @@ final class FileFormatMPS {
         private final Expression myExpression;
         private final RowType myType;
 
-        Row(final String name, final RowType rowType, final String objName) {
+        Row( String name,  RowType rowType,  String objName) {
 
             super();
 
@@ -290,7 +293,7 @@ final class FileFormatMPS {
             return myType;
         }
 
-        Row range(final BigDecimal value) {
+        Row range( BigDecimal value) {
 
             switch (myType) {
 
@@ -325,7 +328,7 @@ final class FileFormatMPS {
             return this;
         }
 
-        Row rhs(final BigDecimal value) {
+        Row rhs( BigDecimal value) {
 
             switch (myType) {
 
@@ -361,7 +364,7 @@ final class FileFormatMPS {
             return this;
         }
 
-        void setColumnValue(final String columnName, final BigDecimal value) {
+        void setColumnValue( String columnName,  BigDecimal value) {
             myExpression.set(myColumns.get(columnName).getVariable(), value);
         }
 
@@ -405,14 +408,14 @@ final class FileFormatMPS {
     private static final String MAX = "MAX";
     private static final String SPACE = " ";
 
-    static ExpressionsBasedModel read(final InputStream input) {
+    static ExpressionsBasedModel read( InputStream input) {
 
-        FileFormatMPS retVal = new FileFormatMPS();
+        var retVal = new FileFormatMPS();
 
-        String line;
-        FileSection section = null;
+        @Var String line;
+        @Var FileSection section = null;
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, UTF_8))) {
 
             while ((line = reader.readLine()) != null) {
 
@@ -476,7 +479,7 @@ final class FileFormatMPS {
         return this.nameRows(line, field);
     };
     private final ExpressionsBasedModel myModel;
-    private String myName;
+    
     private Expression myQuadObjExpr = null;
     private final FieldPredicate[] myVerifierBOUNDS;
     private final FieldPredicate[] myVerifierCOLUMNS;
@@ -515,12 +518,12 @@ final class FileFormatMPS {
         return myModel.toString();
     }
 
-    private void extractFields(final String line, final FieldPredicate[] verifiers) {
+    private void extractFields( String line,  FieldPredicate[] verifiers) {
 
-        char tecken;
-        int first = -1;
-        int limit = -1;
-        boolean word = false;
+        @Var char tecken;
+        @Var int first = -1;
+        @Var int limit = -1;
+        @Var boolean word = false;
 
         for (int i = 1, length = line.length(), f = 0; i < length; i++) {
 
@@ -561,7 +564,7 @@ final class FileFormatMPS {
         return myModel;
     }
 
-    private FileSection identifySection(final String line) {
+    private FileSection identifySection( String line) {
 
         int tmpSplit = line.indexOf(SPACE);
         String tmpSection;
@@ -580,7 +583,7 @@ final class FileFormatMPS {
 
         case NAME:
 
-            myName = tmpArgument;
+            
 
             break;
 
@@ -592,7 +595,7 @@ final class FileFormatMPS {
         return retVal;
     }
 
-    private void parseSectionLine(final FileSection section, final String line) {
+    private void parseSectionLine( FileSection section,  String line) {
 
         Arrays.fill(myFields, null);
 
@@ -720,7 +723,7 @@ final class FileFormatMPS {
 
             Variable var1 = myColumns.get(myFields[1]).getVariable();
             Variable var2 = myColumns.get(myFields[2]).getVariable();
-            BigDecimal param3 = new BigDecimal(myFields[3]);
+            var param3 = new BigDecimal(myFields[3]);
 
             myQuadObjExpr.set(var1, var2, param3);
             if (!var1.equals(var2)) {
@@ -739,7 +742,7 @@ final class FileFormatMPS {
 
             Variable varA = myColumns.get(myFields[1]).getVariable();
             Variable varB = myColumns.get(myFields[2]).getVariable();
-            BigDecimal paramC = new BigDecimal(myFields[3]);
+            var paramC = new BigDecimal(myFields[3]);
 
             myQuadObjExpr.set(varA, varB, paramC);
 
@@ -755,48 +758,48 @@ final class FileFormatMPS {
         }
     }
 
-    boolean nameColumns(final String line, final String field) {
+    boolean nameColumns( String line,  String field) {
 
-        String[] parts = line.split("\\s+");
+        List<String> parts = Splitter.onPattern("\\s+").splitToList(line);
 
-        if (parts.length == 7 && field.equals(parts[parts.length - 5]) && myColumns.containsKey(parts[parts.length - 4])
-                && myColumns.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 7 && field.equals(parts.get(parts.size() - 5)) && myColumns.containsKey(parts.get(parts.size() - 4))
+                && myColumns.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 5 && field.equals(parts[parts.length - 3]) && myColumns.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 5 && field.equals(parts.get(parts.size() - 3)) && myColumns.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 6 && myColumns.containsKey(parts[parts.length - 4]) && myColumns.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 6 && myColumns.containsKey(parts.get(parts.size() - 4)) && myColumns.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 4 && myColumns.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 4 && myColumns.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
         return line.substring(FIELD_START[1], FIELD_START[2]).trim().equals(field);
     }
 
-    boolean nameRows(final String line, final String field) {
+    boolean nameRows( String line,  String field) {
 
-        String[] parts = line.split("\\s+");
+        List<String> parts = Splitter.onPattern("\\s+").splitToList(line);
 
-        if (parts.length == 6 && field.equals(parts[parts.length - 5]) && myRows.containsKey(parts[parts.length - 4])
-                && myRows.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 6 && field.equals(parts.get(parts.size() - 5)) && myRows.containsKey(parts.get(parts.size() - 4))
+                && myRows.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 4 && field.equals(parts[parts.length - 3]) && myRows.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 4 && field.equals(parts.get(parts.size() - 3)) && myRows.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 5 && myRows.containsKey(parts[parts.length - 4]) && myRows.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 5 && myRows.containsKey(parts.get(parts.size() - 4)) && myRows.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
-        if (parts.length == 3 && myRows.containsKey(parts[parts.length - 2])) {
+        if (parts.size() == 3 && myRows.containsKey(parts.get(parts.size() - 2))) {
             return true;
         }
 
